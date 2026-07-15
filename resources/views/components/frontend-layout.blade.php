@@ -8,6 +8,12 @@
     @vite('resources/css/app.css', 'resources/js/app.js')
 
     <link rel="stylesheet" href="{{ asset('frontend/style.css') }}">
+    <style>
+        .container{
+                width: 97%;
+                height:100%;
+            }
+    </style>
 </head>
 <body>
     <x-frontend-header />

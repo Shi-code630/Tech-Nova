@@ -1,3 +1,5 @@
-<x-frontend-layout>
-    <h1>Welcome to the Home Page</h1>
+<x-frontend-layout >
+   <div class="container">
+     <h1>Welcome to the Home Page</h1>
+   </div>
 </x-frontend-layout>
