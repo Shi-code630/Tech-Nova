@@ -1,0 +1,27 @@
+:root {
+  /* Core Colors */
+  --color-primary: #2563EB;
+  --color-secondary: #FFFFFF;
+  --color-accent: #F59E0B;
+
+  /* Text Colors */
+  --color-text-dark: #111827;
+  --color-text-body: #374151;
+
+  /* UI / Functional Colors */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #FBBF24;
+
+  /* Layout & Utility Colors */
+  --color-bg-header: #2563EB;
+  --color-bg-app: #FFFFFF;
+  --color-bg-card: #FFFFFF;
+  --color-border: #E5E7EB;
+}
+
+.container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 0 15px;
+}
