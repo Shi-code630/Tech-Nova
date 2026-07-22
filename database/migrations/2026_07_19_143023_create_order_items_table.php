@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('variant_id')->nullable()->constrained('product_variants')->onDelete('set null');
+            $table->foreignId('variant_id')->nullable()->constrained('product_varients')->nullOnDelete();
             $table->decimal('price', 10, 2);
             $table->integer('quantity');
             $table->decimal('total', 10, 2);
