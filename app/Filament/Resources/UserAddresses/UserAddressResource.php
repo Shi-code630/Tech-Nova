@@ -8,8 +8,6 @@ use App\Filament\Resources\UserAddresses\Pages\ListUserAddresses;
 use App\Filament\Resources\UserAddresses\Schemas\UserAddressForm;
 use App\Filament\Resources\UserAddresses\Tables\UserAddressesTable;
 use App\Models\Address;
-
-use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -19,7 +17,16 @@ class UserAddressResource extends Resource
 {
     protected static ?string $model = Address::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::MapPin;
+
+    protected static ?string $navigationLabel = 'Addresses';
+
+    protected static ?string $modelLabel = 'Address';
+
+    protected static ?string $pluralModelLabel = 'Addresses';
+
+    protected static ?string $recordTitleAttribute = 'city';
+
     public static function getNavigationGroup(): ?string
     {
         return 'Customer Management';
@@ -29,9 +36,6 @@ class UserAddressResource extends Resource
     {
         return 2;
     }
-
-
-    protected static ?string $recordTitleAttribute = 'city';
 
     public static function form(Schema $schema): Schema
     {
@@ -45,9 +49,7 @@ class UserAddressResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
@@ -57,5 +59,15 @@ class UserAddressResource extends Resource
             'create' => CreateUserAddress::route('/create'),
             'edit' => EditUserAddress::route('/{record}/edit'),
         ];
+    }
+
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     return (string) static::getModel()::count();
+    // }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'info';
     }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Users\Tables;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
@@ -172,6 +173,15 @@ class UsersTable
                     ->slideOver()
                     ->modalWidth('md'),
 
+                DeleteAction::make()
+    ->icon('heroicon-o-trash')
+    ->tooltip('Delete User')
+    ->color('danger')
+    ->requiresConfirmation()
+    ->modalHeading('Delete User')
+    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+    ->modalSubmitActionLabel('Delete')
+    ->successNotificationTitle('User deleted successfully'),
                 Action::make('view_orders')
                     ->label('View Orders')
                     ->icon('heroicon-o-shopping-cart')

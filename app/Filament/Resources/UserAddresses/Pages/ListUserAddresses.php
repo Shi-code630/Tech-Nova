@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UserAddresses\Pages;
 
 use App\Filament\Resources\UserAddresses\UserAddressResource;
-use Filament\Actions\CreateAction;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListUserAddresses extends ListRecords
@@ -13,7 +13,9 @@ class ListUserAddresses extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('New Address')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }
