@@ -4,6 +4,7 @@ namespace App\Filament\Pages;
 
 use App\Models\Order;
 use Carbon\Carbon;
+use BackedEnum;
 use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Form;
@@ -11,8 +12,9 @@ use Filament\Schemas\Components\Form;
 
 class SalesReport extends Page
 {
-   protected static $navigationIcon = 'heroicon-o-chart-bar';
-    protected static string $view = 'filament.pages.sales-report';
+   protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
+
+   // protected static string $view = 'filament.pages.sales-report';
 
      public static function getNavigationGroup(): ?string
     {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use BackedEnum;
 use App\Models\Product;
 use App\Models\OrderItem;
 use Carbon\Carbon;
@@ -9,9 +10,9 @@ use Filament\Pages\Page;
 
 class CustomerReport extends Page
 {
-    protected static $navigationIcon = 'heroicon-o-chart-bar';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected static string $view = 'filament.pages.customer-report';
+    //protected static string $view = 'filament.pages.customer-report';
 
     public static function getNavigationGroup(): ?string
     {
