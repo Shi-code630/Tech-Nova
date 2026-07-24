@@ -9,3 +9,4 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/limited-time-offer', [PageController::class, 'limitedTimeOffer'])->name('limited-time-offer');

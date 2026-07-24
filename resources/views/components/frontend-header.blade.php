@@ -6,7 +6,7 @@
             <div class="flex items-center justify-between container mx-auto">
 
                 <!-- Logo -->
-                <a href="#" class="flex-shrink-0">
+                <a href="{{ route('home')}}" class="flex-shrink-0">
                     <img src="{{ asset('image/logo.png') }}" alt="logo" class="w-auto h-11 drop-shadow-sm">
                 </a>
 
@@ -244,7 +244,7 @@
                             <ul class="py-2">
                                 <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🆕 New Products</a></li>
                                 <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔥 Trending Best Sellers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⏳ Limited Time Offers</a></li>
+                                <li><a href="{{ route('limited-time-offer')}}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⏳ Limited Time Offers</a></li>
                                 <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💥 Today's Deals</a></li>
                                 <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎉 Dashain Sale</a></li>
                             </ul>

@@ -13,4 +13,10 @@ class PageController extends Controller
     {
         return view('frontend.home');
     }
+
+
+    public function limitedTimeOffer()
+    {
+        return view('frontend.limited-time-offer');
+    }
 }
