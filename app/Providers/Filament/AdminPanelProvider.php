@@ -27,6 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
+            // ->registration()
             ->login()
             ->profile()
             ->brandName('Tech Nova Admin')
@@ -55,7 +56,7 @@ class AdminPanelProvider extends PanelProvider
             ])
 
             ->widgets([])
-             ->navigationGroups([
+            ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Customer Management')
 
@@ -78,7 +79,7 @@ class AdminPanelProvider extends PanelProvider
                     ->collapsible(),
                 NavigationGroup::make()
                     ->label('shipping')
-                  
+
                     ->collapsible(),
                 NavigationGroup::make()
                     ->label('Administration')
