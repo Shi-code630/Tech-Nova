@@ -1,7 +1,7 @@
 <x-frontend-layout >
     <div class="bg-[#f0f9ff]">
         <div class="container mx-auto px-4" style="margin-top:10px;">
-    <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl">
+              <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl">
             <!-- Slides Wrapper -->
             <div id="slider" class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
                 <img src="https://picsum.photos/seed/1/800/400" alt="Slide 1" class="w-full h-full object-cover flex-shrink-0">
