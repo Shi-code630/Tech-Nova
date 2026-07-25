@@ -29,6 +29,7 @@ class AdminPanelProvider extends PanelProvider
             ->authGuard('admin')
             ->login()
             ->profile()
+            //->registration()
             ->brandName('Tech Nova Admin')
             ->colors([
                 'primary' => Color::Amber,
@@ -78,7 +79,7 @@ class AdminPanelProvider extends PanelProvider
                     ->collapsible(),
                 NavigationGroup::make()
                     ->label('shipping')
-                  
+
                     ->collapsible(),
                 NavigationGroup::make()
                     ->label('Administration')

@@ -19,4 +19,9 @@ class PageController extends Controller
     {
         return view('frontend.limited-time-offer');
     }
+
+    public function NewProduct()
+    {
+        return view('frontend.new-product');
+    }
 }
