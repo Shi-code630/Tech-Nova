@@ -10,16 +10,10 @@ use Filament\Actions\Action;
 
 class ProductReport extends Page
 {
-    // ✅ Navigation icon as method
-    public static function getNavigationIcon(): string
-    {
-        return 'heroicon-o-chart-bar';
-    }
+   protected static $navigationIcon = 'heroicon-o-chart-bar';
 
-    // ✅ Non-static view property
-    protected string $view = 'filament.pages.product-report';
+    protected static string $view = 'filament.pages.product-report';
 
-    // ✅ Navigation properties with proper return types
     public static function getNavigationGroup(): string
     {
         return 'Reports & Analytics';
@@ -34,18 +28,15 @@ class ProductReport extends Page
     protected static ?string $title = 'Product Report';
     protected static ?string $slug = 'product-report';
 
-    // ✅ Properties with type hints
     public string $startDate;
     public string $endDate;
     public string $dateRange = 'this_month';
 
-    // ✅ Added void return type
     public function mount(): void
     {
         $this->setDateRange('this_month');
     }
 
-    // ✅ Added method for date range
     public function setDateRange(string $range): void
     {
         $this->dateRange = $range;
@@ -82,7 +73,6 @@ class ProductReport extends Page
         $start = Carbon::parse($this->startDate)->startOfDay();
         $end = Carbon::parse($this->endDate)->endOfDay();
 
-        // Top selling products
         $topProducts = OrderItem::whereBetween('created_at', [$start, $end])
             ->selectRaw('product_id, SUM(quantity) as total_quantity, SUM(price * quantity) as total_revenue')
             ->with('product')
@@ -91,7 +81,6 @@ class ProductReport extends Page
             ->limit(10)
             ->get();
 
-        // Product statistics
         $totalProducts = Product::count();
         $activeProducts = Product::where('status', 'active')->count();
         $inactiveProducts = Product::where('status', 'inactive')->count();

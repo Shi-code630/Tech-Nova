@@ -11,17 +11,8 @@ use Filament\Actions\Action;
 
 class CustomerReport extends Page
 {
-    // ✅ Navigation icon as method (proper for v5)
-    public static function getNavigationIcon(): string
-    {
-        return 'heroicon-o-chart-bar';
-    }
-
-    // ✅ Non-static view property
-    protected string $view = 'filament.pages.customer-report';
-
-    // ✅ Navigation properties
-    protected static ?string $navigationLabel = 'Customer Report';
+    
+    protected static string $view = 'filament.pages.customer-report';
 
     public static function getNavigationGroup(): string
     {
@@ -36,7 +27,6 @@ class CustomerReport extends Page
     protected static ?string $title = 'Customer Report';
     protected static ?string $slug = 'customer-report';
 
-    // ✅ Properties with type hints
     public string $startDate;
     public string $endDate;
     public string $dateRange = 'this_month';
@@ -82,7 +72,6 @@ class CustomerReport extends Page
         $start = Carbon::parse($this->startDate)->startOfDay();
         $end = Carbon::parse($this->endDate)->endOfDay();
 
-        // Top selling products
         $topProducts = OrderItem::whereBetween('created_at', [$start, $end])
             ->selectRaw('product_id, SUM(quantity) as total_quantity, SUM(price * quantity) as total_revenue')
             ->with('product')
@@ -91,12 +80,10 @@ class CustomerReport extends Page
             ->limit(10)
             ->get();
 
-        // Product statistics
         $totalProducts = Product::count();
         $activeProducts = Product::where('status', 'active')->count();
         $outOfStockProducts = Product::where('stock', '<=', 0)->count();
 
-        // Customer statistics
         $totalCustomers = User::count();
         $newCustomers = User::whereBetween('created_at', [$start, $end])->count();
 

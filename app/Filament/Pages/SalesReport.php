@@ -5,22 +5,14 @@ namespace App\Filament\Pages;
 use App\Models\Order;
 use Carbon\Carbon;
 use Filament\Actions\Action;
-use Filament\Forms\Components\DatePicker;
+
 use Filament\Pages\Page;
-use Filament\Schemas\Components\Form;
 
 class SalesReport extends Page
 {
-    // ✅ Navigation icon as method
-    public static function getNavigationIcon(): string
-    {
-        return 'heroicon-o-chart-bar';
-    }
+   
+    protected static string $view = 'filament.pages.sales-report';
 
-    // ✅ Non-static view property
-    protected string $view = 'filament.pages.sales-report';
-
-    // ✅ Navigation properties with proper return types
     public static function getNavigationGroup(): string
     {
         return 'Reports & Analytics';
@@ -35,12 +27,9 @@ class SalesReport extends Page
     protected static ?string $title = 'Sales Report';
     protected static ?string $slug = 'sales-report';
 
-    // ✅ Properties with type hints
     public string $startDate;
     public string $endDate;
     public string $dateRange = 'this_month';
-
-    // ✅ Fixed: Use proper form data structure
     public ?array $formData = [];
 
     public function mount(): void
@@ -83,22 +72,6 @@ class SalesReport extends Page
         }
     }
 
-    // ✅ Fixed: Proper form with correct namespace
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                DatePicker::make('startDate')
-                    ->label('Start Date')
-                    ->default($this->startDate),
-                DatePicker::make('endDate')
-                    ->label('End Date')
-                    ->default($this->endDate),
-            ])
-            ->statePath('formData');
-    }
-
-    // ✅ Method to apply filters from form
     public function applyFilters(): void
     {
         $this->startDate = $this->formData['startDate'] ?? $this->startDate;
@@ -110,7 +83,6 @@ class SalesReport extends Page
         $start = Carbon::parse($this->startDate)->startOfDay();
         $end = Carbon::parse($this->endDate)->endOfDay();
 
-        // ✅ Fixed: Use correct order status column
         $orders = Order::whereBetween('created_at', [$start, $end])
             ->where('order_status', '!=', 'cancelled')
             ->get();
@@ -119,7 +91,6 @@ class SalesReport extends Page
         $totalOrders = $orders->count();
         $averageOrder = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
 
-        // Daily sales data for chart
         $dailySales = Order::whereBetween('created_at', [$start, $end])
             ->where('order_status', '!=', 'cancelled')
             ->selectRaw('DATE(created_at) as date, SUM(grand_total) as total, COUNT(*) as count')
@@ -127,7 +98,6 @@ class SalesReport extends Page
             ->orderBy('date')
             ->get();
 
-        // Payment method breakdown
         $paymentMethods = Order::whereBetween('created_at', [$start, $end])
             ->where('order_status', '!=', 'cancelled')
             ->selectRaw('payment_method, COUNT(*) as count, SUM(grand_total) as total')
