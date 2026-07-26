@@ -4,15 +4,16 @@ namespace App\Filament\Pages;
 
 use App\Models\Product;
 use App\Models\OrderItem;
+use BackedEnum;
 use Carbon\Carbon;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 
 class ProductReport extends Page
 {
-   protected static $navigationIcon = 'heroicon-o-chart-bar';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected static string $view = 'filament.pages.product-report';
+    protected  string $view = 'filament.pages.product-report';
 
     public static function getNavigationGroup(): string
     {

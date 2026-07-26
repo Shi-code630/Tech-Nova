@@ -5,14 +5,15 @@ namespace App\Filament\Pages;
 use App\Models\Product;
 use App\Models\OrderItem;
 use App\Models\User;
+use BackedEnum;
 use Carbon\Carbon;
 use Filament\Pages\Page;
 use Filament\Actions\Action;
 
 class CustomerReport extends Page
 {
-    
-    protected static string $view = 'filament.pages.customer-report';
+      protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
+    protected  string $view = 'filament.pages.customer-report';
 
     public static function getNavigationGroup(): string
     {
