@@ -6,6 +6,7 @@ use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Notifications\Notification;
@@ -113,14 +114,14 @@ class UserAddressesTable
 
                 SelectFilter::make('province')
                     ->label('Province')
-                    ->options(fn () => \App\Models\Address::distinct()->pluck('province', 'province'))
+                    ->options(fn() => \App\Models\Address::distinct()->pluck('province', 'province'))
                     ->searchable()
                     ->preload()
                     ->placeholder('All Provinces'),
 
                 SelectFilter::make('district')
                     ->label('District')
-                    ->options(fn () => \App\Models\Address::distinct()->pluck('district', 'district'))
+                    ->options(fn() => \App\Models\Address::distinct()->pluck('district', 'district'))
                     ->searchable()
                     ->preload()
                     ->placeholder('All Districts'),
@@ -131,8 +132,8 @@ class UserAddressesTable
                     ->trueLabel('Default Address')
                     ->falseLabel('Non-Default Address')
                     ->queries(
-                        true: fn ($query) => $query->where('is_default', true),
-                        false: fn ($query) => $query->where('is_default', false),
+                        true: fn($query) => $query->where('is_default', true),
+                        false: fn($query) => $query->where('is_default', false),
                     ),
             ])
             ->filtersFormColumns(2)
@@ -143,13 +144,21 @@ class UserAddressesTable
                     ->tooltip('Edit Address')
                     ->slideOver()
                     ->modalWidth('md'),
-
+                DeleteAction::make()
+                    ->icon('heroicon-o-trash')
+                    ->tooltip('Delete User')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete User')
+                    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+                    ->modalSubmitActionLabel('Delete')
+                    ->successNotificationTitle('User deleted successfully'),
                 Action::make('set_default')
                     ->label('Set as Default')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->tooltip('Set this as default address')
-                    ->visible(fn ($record) => !$record->is_default)
+                    ->visible(fn($record) => !$record->is_default)
                     ->action(function ($record) {
                         // Set this address as default
                         $record->update(['is_default' => true]);
@@ -170,7 +179,8 @@ class UserAddressesTable
                     ->label('View User')
                     ->icon('heroicon-o-user')
                     ->tooltip('View this user')
-                    ->url(fn ($record) =>
+                    ->url(
+                        fn($record) =>
                         '/admin/users/' . $record->user_id . '/edit'
                     )
                     ->openUrlInNewTab(),

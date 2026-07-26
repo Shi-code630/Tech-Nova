@@ -174,14 +174,14 @@ class UsersTable
                     ->modalWidth('md'),
 
                 DeleteAction::make()
-    ->icon('heroicon-o-trash')
-    ->tooltip('Delete User')
-    ->color('danger')
-    ->requiresConfirmation()
-    ->modalHeading('Delete User')
-    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
-    ->modalSubmitActionLabel('Delete')
-    ->successNotificationTitle('User deleted successfully'),
+                ->icon('heroicon-o-trash')
+                ->tooltip('Delete User')
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading('Delete User')
+                ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+                ->modalSubmitActionLabel('Delete')
+                ->successNotificationTitle('User deleted successfully'),
                 Action::make('view_orders')
                     ->label('View Orders')
                     ->icon('heroicon-o-shopping-cart')
