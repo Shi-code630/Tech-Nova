@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Filament\Resources;
+
+namespace  App\Filament\Resources\DeliveryCharges;
 
 use App\Filament\Resources\DeliveryCharges\Pages\CreateDeliveryCharges;
 use App\Filament\Resources\DeliveryCharges\Pages\EditDeliveryCharges;
@@ -10,7 +11,7 @@ use App\Filament\Resources\DeliveryCharges\Tables\DeliveryChargesTable;
 use App\Models\DeliveryCharge;
 use BackedEnum;
 use Filament\Resources\Resource;
-use Filament\Schemas\Components\Form;
+use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
@@ -32,10 +33,10 @@ class DeliveryChargesResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'district';
 
-    // public static function form(Form $form): Form
-    // {
-    //     return DeliveryChargesForm::configure($form);
-    // }
+   public static function form(Schema $schema): Schema
+    {
+        return DeliveryChargesForm::configure($schema);
+    }
 
     public static function table(Table $table): Table
     {

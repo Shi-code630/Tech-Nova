@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Filament\Resources\Categories; 
+namespace App\Filament\Resources\Categories;
 
 use App\Filament\Resources\Categories\Pages\CreateCategories;
 use App\Filament\Resources\Categories\Pages\EditCategories;
@@ -15,7 +15,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class CategoriesResource extends Resource  // ✅ Class name
+class CategoriesResource extends Resource
 {
     protected static ?string $model = Categorie::class;
 

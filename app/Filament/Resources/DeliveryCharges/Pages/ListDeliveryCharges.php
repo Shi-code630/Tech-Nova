@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\DeliveryCharges\Pages;
 
-use App\Filament\Resources\DeliveryChargesResource;
+use App\Filament\Resources\DeliveryCharges\DeliveryChargesResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 

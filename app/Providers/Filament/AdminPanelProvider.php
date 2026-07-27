@@ -27,7 +27,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
-            ->registration()
+            // ->registration()
             ->login()
             ->profile()
             ->brandName('Tech Nova Admin')

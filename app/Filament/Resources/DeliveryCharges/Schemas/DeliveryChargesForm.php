@@ -4,14 +4,14 @@ namespace App\Filament\Resources\DeliveryCharges\Schemas;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Form;
+use Filament\Schemas\Schema;
 
 class DeliveryChargesForm
 {
-    public static function configure(Form $form): Form  // ✅ Use Form
+    public static function configure(Schema $schema): Schema
     {
-        return $form
-            ->schema([  // ✅ Use schema() method
+        return $schema
+            ->components([
                 TextInput::make('district')
                     ->label('District')
                     ->required()

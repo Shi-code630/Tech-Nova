@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\DeliveryCharges\Pages;
 
-use App\Filament\Resources\DeliveryChargesResource;
+use App\Filament\Resources\DeliveryCharges\DeliveryChargesResource;
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateDeliveryCharges extends CreateRecord
