@@ -2,18 +2,23 @@
 
 namespace App\Filament\Resources\ProductVariants\Pages;
 
-use App\Filament\Resources\ProductVariants\ProductVariantsResource;
+use App\Filament\Resources\ProductVariants\ProductVariantResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditProductVariants extends EditRecord
 {
-    protected static string $resource = ProductVariantsResource::class;
+    protected static string $resource = ProductVariantResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
             DeleteAction::make(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

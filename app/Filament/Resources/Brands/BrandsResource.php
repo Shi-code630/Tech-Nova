@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources\Brands;
 
-use App\Filament\Resources\Users\Pages\CreateUser;
-use App\Filament\Resources\Users\Pages\EditUser;
-use App\Filament\Resources\Users\Pages\ListUsers;
-use App\Filament\Resources\Users\Schemas\UserForm;
-use App\Filament\Resources\Users\Tables\UsersTable;
+use App\Filament\Resources\Brands\Pages\CreateBrands;
+use App\Filament\Resources\Brands\Pages\EditBrands;
+use App\Filament\Resources\Brands\Pages\ListBrands;
+use App\Filament\Resources\Brands\Schemas\BrandsForm;
+use App\Filament\Resources\Brands\Tables\BrandsTable;
 use App\Models\Brand;
-
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -22,7 +21,8 @@ class BrandsResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
-      public static function getNavigationGroup(): ?string
+
+    public static function getNavigationGroup(): ?string
     {
         return 'Product Management';
     }
@@ -32,15 +32,14 @@ class BrandsResource extends Resource
         return 4;
     }
 
-
     public static function form(Schema $schema): Schema
     {
-        return UserForm::configure($schema);
+        return BrandsForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return UsersTable::configure($table);
+        return BrandsTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -53,9 +52,9 @@ class BrandsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListUsers::route('/'),
-            'create' => CreateUser::route('/create'),
-            'edit' => EditUser::route('/{record}/edit'),
+            'index' => ListBrands::route('/'),
+            'create' => CreateBrands::route('/create'),
+            'edit' => EditBrands::route('/{record}/edit'),
         ];
     }
 }

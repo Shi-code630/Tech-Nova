@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_varients', function (Blueprint $table) {
+        Schema::create('product_variants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
             $table->string('color')->nullable();
@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
+
+            // Optional: unique constraint to prevent duplicate variants for same product+color+size
+            // $table->unique(['product_id', 'color', 'size']);
         });
     }
 
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_varients');
+        Schema::dropIfExists('product_variants');
     }
 };

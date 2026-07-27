@@ -1,35 +1,71 @@
 <x-frontend-layout >
     <Section class="bg-[#f0f9ff]">
         <div class=" container mx-auto">
-        <div class="" style="margin-top:10px;">
-              <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl">
-            <!-- Slides Wrapper -->
-            <div id="slider" class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
-                <img src="https://picsum.photos/seed/1/800/400" alt="Slide 1" class="w-full h-full object-cover flex-shrink-0">
-                <img src="https://picsum.photos/seed/2/800/400" alt="Slide 2" class="w-full h-full object-cover flex-shrink-0">
-                <img src="https://picsum.photos/seed/3/800/400" alt="Slide 3" class="w-full h-full object-cover flex-shrink-0">
-            </div>
+        <div class="mt-[10px]">
+    <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl">
 
-            <!-- Left Arrow -->
-            <button onclick="moveSlide(-1)"
-            class="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full cursor-pointer border-none text-xl hover:bg-black/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 z-10">
+        <!-- Slides Wrapper -->
+  <div id="slider" class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
 
-            </button>
+            @foreach($banners as $banner)
+                <div class="relative w-full h-full flex-shrink-0">
+
+                    <img
+                        src="{{ asset('storage/' . $banner->image) }}"
+                        alt="{{ $banner->alt_text }}"
+                        class="w-full h-full object-cover">
+
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-black/40 ">
+                        <div class="max-w-4xl px-12 py-60 text-white">
+
+                            <h1 class="text-3xl font-bold ">
+                                {{ $banner->title }}
+                            </h1>
+
+                            <p class="text-lg mb-6">
+                                {{ $banner->subtitle }}
+                            </p>
+
+                            @if($banner->button_text)
+                                <a href="{{ $banner->button_link }}"
+                                   class="inline-block bg-blue-600 hover:bg-blue-900 px-6 py-3 rounded-lg font-semibold transition">
+                                    {{ $banner->button_text }}
+                                </a>
+                            @endif
+
+                        </div>
+                    </div>
+
+                </div>
+            @endforeach
+
+        </div>
+
+        <!-- Left Arrow -->
+        <button onclick="moveSlide(-1)"
+            class="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full z-10">
+            ❮
+        </button>
 
         <!-- Right Arrow -->
-             <button onclick="moveSlide(1)"
-                 class="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full cursor-pointer border-none text-xl hover:bg-black/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white/50 z-10">
+        <button onclick="moveSlide(1)"
+            class="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full z-10">
+            ❯
+        </button>
 
-                </button>
+        <!-- Dots -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+            @foreach($banners as $index => $banner)
+                <span
+                    class="dot w-3 h-3 rounded-full bg-white/50 cursor-pointer"
+                    data-index="{{ $index }}">
+                </span>
+            @endforeach
+        </div>
 
-            <!-- Optional: Dots / Indicators -->
-            <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                <span class="dot w-3 h-3 rounded-full bg-white/50 cursor-pointer transition-colors duration-300" data-index="0"></span>
-                <span class="dot w-3 h-3 rounded-full bg-white/50 cursor-pointer transition-colors duration-300" data-index="1"></span>
-                <span class="dot w-3 h-3 rounded-full bg-white/50 cursor-pointer transition-colors duration-300" data-index="2"></span>
-            </div>
-        </div>
-        </div>
+    </div>
+</div>
 
     <div class="py-3 bg-[#f0f9ff]">
         <div class=" mb-6 ">
@@ -44,7 +80,7 @@
             </div>
 
         <!-- Right Side: View More -->
-            <a href="{{ route('limited-time-offer')}}"
+            <a href=""
            class="flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium transition-colors group">
             View More
             <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
@@ -296,7 +332,7 @@
             </div>
 
             <!-- Right Side -->
-            <a href="{{ route('new-product')}}"
+            <a href=""
                class="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium transition-colors group">
                 View More
                 <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>

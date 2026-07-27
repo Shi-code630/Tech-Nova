@@ -8,7 +8,6 @@ use App\Filament\Resources\Categories\Pages\ListCategories;
 use App\Filament\Resources\Categories\Schemas\CategorieForm;
 use App\Filament\Resources\Categories\Tables\CategoriesTable;
 use App\Models\Categorie;
-use App\Models\Categories;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -22,7 +21,8 @@ class CategoriesResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
-      public static function getNavigationGroup(): ?string
+
+    public static function getNavigationGroup(): ?string
     {
         return 'Product Management';
     }
@@ -31,7 +31,6 @@ class CategoriesResource extends Resource
     {
         return 3;
     }
-
 
     public static function form(Schema $schema): Schema
     {

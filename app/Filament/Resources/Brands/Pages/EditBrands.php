@@ -16,4 +16,17 @@ class EditBrands extends EditRecord
             DeleteAction::make(),
         ];
     }
+
+    protected function getRedirectUrl(): string
+    {
+        // Redirect to the index page after successful update
+        return $this->getResource()::getUrl('index');
+    }
+
+    // Optional: customize the save button label
+    // protected function getSaveFormAction(): \Filament\Actions\Action
+    // {
+    //     return parent::getSaveFormAction()
+    //         ->label('Update Brand');
+    // }
 }

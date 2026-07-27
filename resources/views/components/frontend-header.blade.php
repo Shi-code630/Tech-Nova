@@ -243,7 +243,7 @@
                         <div class="absolute right-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
                                 <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🆕 New Products</a></li>
-                                <li><a href="{{ route('limited-time-offer')}}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⏳ Limited Time Offers</a></li>
+                                <li><a href="" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⏳ Limited Time Offers</a></li>
                                 <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💥 Today's Deals</a></li>
                                 <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎉 Dhamaka Sale</a></li>
                             </ul>

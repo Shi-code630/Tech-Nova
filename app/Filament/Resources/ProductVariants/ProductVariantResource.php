@@ -5,20 +5,24 @@ namespace App\Filament\Resources\ProductVariants;
 use App\Filament\Resources\ProductVariants\Pages\CreateProductVariants;
 use App\Filament\Resources\ProductVariants\Pages\EditProductVariants;
 use App\Filament\Resources\ProductVariants\Pages\ListProductVariants;
-use App\Filament\Resources\ProductVariants\Schemas\ProductVariantsForm;
+use App\Filament\Resources\ProductVariants\Schemas\ProductVariantForm;
 use App\Filament\Resources\ProductVariants\Tables\ProductVariantsTable;
 use App\Models\ProductVariant;
-use App\Models\ProductVariants;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class ProductVariantsResource extends Resource
+class ProductVariantResource extends Resource
 {
     protected static ?string $model = ProductVariant::class;
-  public static function getNavigationGroup(): ?string
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSwatch;
+
+    protected static ?string $recordTitleAttribute = 'size';
+
+    public static function getNavigationGroup(): ?string
     {
         return 'Product Management';
     }
@@ -28,13 +32,9 @@ class ProductVariantsResource extends Resource
         return 6;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    protected static ?string $recordTitleAttribute = 'size';
-
     public static function form(Schema $schema): Schema
     {
-        return ProductVariantsForm::configure($schema);
+        return ProductVariantForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -45,7 +45,7 @@ class ProductVariantsResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // You can add relation managers here if needed
         ];
     }
 
