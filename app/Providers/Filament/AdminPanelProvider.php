@@ -27,10 +27,9 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
-            // ->registration()
+            ->registration()
             ->login()
             ->profile()
-            //->registration()
             ->brandName('Tech Nova Admin')
             ->colors([
                 'primary' => Color::Amber,
@@ -54,6 +53,7 @@ class AdminPanelProvider extends PanelProvider
 
             ->pages([
                 Dashboard::class,
+
             ])
 
             ->widgets([])
@@ -79,11 +79,16 @@ class AdminPanelProvider extends PanelProvider
 
                     ->collapsible(),
                 NavigationGroup::make()
-                    ->label('shipping')
+                    ->label('Shipping & Delivery')
 
                     ->collapsible(),
                 NavigationGroup::make()
                     ->label('Administration')
+
+                    ->collapsible(),
+
+                NavigationGroup::make()
+                    ->label('Reports & Analytics')
 
                     ->collapsible(),
             ])

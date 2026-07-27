@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\DeliveryCharges\Pages;
 
-use App\Filament\Resources\DeliveryCharges\DeliveryChargesResource;
+use App\Filament\Resources\DeliveryChargesResource;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
@@ -15,5 +15,10 @@ class EditDeliveryCharges extends EditRecord
         return [
             DeleteAction::make(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

@@ -4,12 +4,11 @@ namespace App\Filament\Resources\Categories\Tables;
 
 use App\Filament\Resources\Categories\CategoriesResource;
 use App\Models\Categorie;
-
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -88,8 +87,8 @@ class CategoriesTable
                     ->trueLabel('Active')
                     ->falseLabel('Inactive')
                     ->queries(
-                        true: fn ($query) => $query->where('status', true),
-                        false: fn ($query) => $query->where('status', false),
+                        true: fn($query) => $query->where('status', true),
+                        false: fn($query) => $query->where('status', false),
                     ),
             ])
             ->actions([
@@ -97,14 +96,26 @@ class CategoriesTable
                     ->icon('heroicon-o-pencil')
                     ->tooltip('Edit Category'),
 
+
+                DeleteAction::make()
+                    ->icon('heroicon-o-trash')
+                    ->tooltip('Delete User')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete User')
+                    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+                    ->modalSubmitActionLabel('Delete')
+                    ->successNotificationTitle('categories deleted successfully'),
                 Action::make('view')
                     ->label('View Subcategories')
                     ->icon('heroicon-o-squares-2x2')
-                    ->url(fn (Categorie $record): string =>
+                    ->url(
+                        fn(Categorie $record): string =>
                         CategoriesResource::getUrl('index', ['tableFilters[parent_id][value]' => $record->id])
                     )
                     ->openUrlInNewTab()
                     ->tooltip('View subcategories'),
+                    
             ])
             ->bulkActions([
                 BulkActionGroup::make([

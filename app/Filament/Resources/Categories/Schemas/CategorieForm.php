@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Categories\Schemas;
+namespace App\Filament\Resources\Categories\Schemas;  // ✅ Correct namespace
 
 use App\Models\Categorie;
 use Filament\Forms\Components\RichEditor;

@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Filament\Resources\Categories;
+
+namespace App\Filament\Resources\Categories; 
 
 use App\Filament\Resources\Categories\Pages\CreateCategories;
 use App\Filament\Resources\Categories\Pages\EditCategories;
@@ -8,21 +9,21 @@ use App\Filament\Resources\Categories\Pages\ListCategories;
 use App\Filament\Resources\Categories\Schemas\CategorieForm;
 use App\Filament\Resources\Categories\Tables\CategoriesTable;
 use App\Models\Categorie;
-use App\Models\Categories;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class CategoriesResource extends Resource
+class CategoriesResource extends Resource  // ✅ Class name
 {
     protected static ?string $model = Categorie::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
-      public static function getNavigationGroup(): ?string
+
+    public static function getNavigationGroup(): ?string
     {
         return 'Product Management';
     }
@@ -31,7 +32,6 @@ class CategoriesResource extends Resource
     {
         return 3;
     }
-
 
     public static function form(Schema $schema): Schema
     {
@@ -45,9 +45,7 @@ class CategoriesResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

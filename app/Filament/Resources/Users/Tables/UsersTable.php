@@ -181,7 +181,7 @@ class UsersTable
                 ->modalHeading('Delete User')
                 ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
                 ->modalSubmitActionLabel('Delete')
-                ->successNotificationTitle('User deleted successfully'),
+                ->successNotificationTitle('User address deleted successfully'),
                 Action::make('view_orders')
                     ->label('View Orders')
                     ->icon('heroicon-o-shopping-cart')
