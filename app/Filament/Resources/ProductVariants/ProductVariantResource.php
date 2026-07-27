@@ -5,7 +5,7 @@ namespace App\Filament\Resources\ProductVariants;
 use App\Filament\Resources\ProductVariants\Pages\CreateProductVariants;
 use App\Filament\Resources\ProductVariants\Pages\EditProductVariants;
 use App\Filament\Resources\ProductVariants\Pages\ListProductVariants;
-use App\Filament\Resources\ProductVariants\Schemas\ProductVariantForm;
+use App\Filament\Resources\ProductVariants\Schemas\ProductVariantsForm;
 use App\Filament\Resources\ProductVariants\Tables\ProductVariantsTable;
 use App\Models\ProductVariant;
 use BackedEnum;
@@ -14,7 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class ProductVariantResource extends Resource
+class ProductVariantsResource extends Resource
 {
     protected static ?string $model = ProductVariant::class;
 
@@ -34,7 +34,7 @@ class ProductVariantResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return ProductVariantForm::configure($schema);
+        return ProductVariantsForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -45,7 +45,7 @@ class ProductVariantResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // You can add relation managers here if needed
+            //
         ];
     }
 

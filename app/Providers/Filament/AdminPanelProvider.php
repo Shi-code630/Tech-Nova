@@ -30,10 +30,7 @@ class AdminPanelProvider extends PanelProvider
             // ->registration()
             ->login()
             ->profile()
-<<<<<<< HEAD
             ->registration()
-=======
->>>>>>> 20cda3c69db6227f5f7c3a80902938fab95abb35
             ->brandName('Tech Nova Admin')
             ->colors([
                 'primary' => Color::Amber,

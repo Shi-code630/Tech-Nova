@@ -8,7 +8,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
-class ProductVariantForm
+class ProductVariantsForm
 {
     public static function configure(Schema $schema): Schema
     {
