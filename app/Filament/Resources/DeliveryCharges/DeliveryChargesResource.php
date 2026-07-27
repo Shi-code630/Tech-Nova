@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Filament\Resources\DeliveryCharges;
+
+namespace  App\Filament\Resources\DeliveryCharges;
 
 use App\Filament\Resources\DeliveryCharges\Pages\CreateDeliveryCharges;
 use App\Filament\Resources\DeliveryCharges\Pages\EditDeliveryCharges;
@@ -8,7 +9,6 @@ use App\Filament\Resources\DeliveryCharges\Pages\ListDeliveryCharges;
 use App\Filament\Resources\DeliveryCharges\Schemas\DeliveryChargesForm;
 use App\Filament\Resources\DeliveryCharges\Tables\DeliveryChargesTable;
 use App\Models\DeliveryCharge;
-use App\Models\DeliveryCharges;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -21,7 +21,7 @@ class DeliveryChargesResource extends Resource
 
     public static function getNavigationGroup(): ?string
     {
-        return 'Shipping';
+        return 'Shipping & Delivery';
     }
 
     public static function getNavigationSort(): ?int
@@ -33,7 +33,7 @@ class DeliveryChargesResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'district';
 
-    public static function form(Schema $schema): Schema
+   public static function form(Schema $schema): Schema
     {
         return DeliveryChargesForm::configure($schema);
     }
@@ -45,9 +45,7 @@ class DeliveryChargesResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

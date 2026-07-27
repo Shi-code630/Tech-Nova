@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateDeliveryCharges extends CreateRecord
 {
     protected static string $resource = DeliveryChargesResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

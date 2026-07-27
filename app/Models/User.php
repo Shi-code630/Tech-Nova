@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Faker\Provider\Address;
+use App\Models\Address;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -359,7 +359,7 @@ class User extends Authenticatable
             return false;
         } else {
             $this->wishlists()->create(['product_id' => $productId]);
-            return true; 
+            return true;
         }
     }
 

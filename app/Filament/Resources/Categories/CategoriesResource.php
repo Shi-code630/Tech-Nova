@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Filament\Resources\Categories;
 
 use App\Filament\Resources\Categories\Pages\CreateCategories;
@@ -44,9 +45,7 @@ class CategoriesResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
