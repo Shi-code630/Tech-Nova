@@ -29,7 +29,7 @@ class ProductVariantsResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 6;
+        return 5;
     }
 
     public static function form(Schema $schema): Schema

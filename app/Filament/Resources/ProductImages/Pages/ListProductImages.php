@@ -2,18 +2,20 @@
 
 namespace App\Filament\Resources\ProductImages\Pages;
 
-use App\Filament\Resources\ProductImages\ProductImageResource;
+use App\Filament\Resources\ProductImages\ProductImagesResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
 class ListProductImages extends ListRecords
 {
-    protected static string $resource = ProductImageResource::class;
+    protected static string $resource = ProductImagesResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Add Image')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }
