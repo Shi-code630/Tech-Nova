@@ -3,7 +3,8 @@
 namespace App\Filament\Resources\Categories\Tables;
 
 use App\Filament\Resources\Categories\CategoriesResource;
-use App\Models\Categorie;
+
+use App\Models\Category;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -76,7 +77,7 @@ class CategoriesTable
             ->filters([
                 SelectFilter::make('parent_id')
                     ->label('Parent Category')
-                    ->options(Categorie::query()->pluck('name', 'id'))
+                    ->options(Category::query()->pluck('name', 'id'))
                     ->searchable()
                     ->preload()
                     ->placeholder('All Categories'),
@@ -110,12 +111,12 @@ class CategoriesTable
                     ->label('View Subcategories')
                     ->icon('heroicon-o-squares-2x2')
                     ->url(
-                        fn(Categorie $record): string =>
+                        fn(Category $record): string =>
                         CategoriesResource::getUrl('index', ['tableFilters[parent_id][value]' => $record->id])
                     )
                     ->openUrlInNewTab()
                     ->tooltip('View subcategories'),
-                    
+
             ])
             ->bulkActions([
                 BulkActionGroup::make([

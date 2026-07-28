@@ -11,6 +11,6 @@ class ProductImage extends Model
 
     public function product()
     {
-        return $this->belongsTo(ProductImage::class);
+        return $this->belongsTo(Product::class);
     }
 }
