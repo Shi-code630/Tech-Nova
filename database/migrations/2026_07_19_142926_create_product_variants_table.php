@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('image')->nullable();
             $table->boolean('status')->default(true);
             $table->timestamps();
+
+            // Optional: Add unique constraint to prevent duplicate variants
+            $table->unique(['product_id', 'color', 'size'], 'unique_variant_per_product');
         });
     }
 

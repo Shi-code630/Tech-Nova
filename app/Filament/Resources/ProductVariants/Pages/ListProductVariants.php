@@ -13,7 +13,9 @@ class ListProductVariants extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('New Variant')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }
