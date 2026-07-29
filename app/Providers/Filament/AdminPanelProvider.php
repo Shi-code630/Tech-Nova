@@ -17,7 +17,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Resources\ProductVariants\ProductVariantsResource;
+
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
-            // ->registration()
+            ->registration()
             ->login()
             ->profile()
             ->brandName('Tech Nova Admin')

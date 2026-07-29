@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -119,12 +120,34 @@ class ProductVariantsTable
                     ),
             ])
             ->recordActions([
-                EditAction::make(),
-                DeleteAction::make(),
+
+                ViewAction::make()
+                    ->label('View')
+                    ->color('warning')
+                    ->icon('heroicon-o-eye'),
+
+
+                EditAction::make()
+                    ->label('Edit')
+                  ->color('warning')
+                    ->icon('heroicon-o-pencil-square'),
+
+
+
+
+                DeleteAction::make()
+                    ->label('Delete')
+                    ->color('warning')
+                    ->icon('heroicon-o-trash')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete Product Variant')
+                    ->modalDescription('Are you sure you want to delete this product variant? This action cannot be undone.')
+                    ->modalSubmitActionLabel('Yes, Delete'),
             ])
             ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->color('danger'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

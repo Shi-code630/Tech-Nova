@@ -4,6 +4,8 @@ namespace App\Filament\Resources\Banners\Pages;
 
 use App\Filament\Resources\Banners\BannerResource;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditBanners extends EditRecord
@@ -14,6 +16,13 @@ class EditBanners extends EditRecord
     {
         return [
             DeleteAction::make(),
+            ForceDeleteAction::make(),
+            RestoreAction::make(),
         ];
+    }
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
     }
 }

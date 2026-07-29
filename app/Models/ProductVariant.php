@@ -9,7 +9,7 @@ class ProductVariant extends Model
 {
     use HasFactory;
 
-       protected $table = 'product_variants';
+    protected $table = 'product_variants';
 
     protected $fillable = [
         'product_id',
@@ -108,6 +108,16 @@ class ProductVariant extends Model
         } else {
             return 'secondary';
         }
+    }
+    public function scopeSearchFullName($query, $search)
+    {
+        return $query->where('color', 'LIKE', "%{$search}%")
+            ->orWhere('size', 'LIKE', "%{$search}%");
+    }
+
+    public function getFullNameSortableAttribute()
+    {
+        return $this->color . ' ' . $this->size;
     }
 
     //SCOPES

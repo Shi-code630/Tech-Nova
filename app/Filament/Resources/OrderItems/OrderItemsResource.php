@@ -8,7 +8,6 @@ use App\Filament\Resources\OrderItems\Pages\ListOrderItems;
 use App\Filament\Resources\OrderItems\Schemas\OrderItemsForm;
 use App\Filament\Resources\OrderItems\Tables\OrderItemsTable;
 use App\Models\OrderItem;
-use App\Models\OrderItems;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -19,7 +18,7 @@ class OrderItemsResource extends Resource
 {
     protected static ?string $model = OrderItem::class;
 
-     public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): ?string
     {
         return 'Sales Management';
     }
@@ -31,7 +30,10 @@ class OrderItemsResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'name';
+       public static function canViewAny(): bool
+    {
+        return true;
+    }
 
     public static function form(Schema $schema): Schema
     {

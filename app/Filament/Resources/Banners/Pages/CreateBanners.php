@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateBanners extends CreateRecord
 {
     protected static string $resource = BannerResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

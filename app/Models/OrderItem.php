@@ -12,7 +12,8 @@ class OrderItem extends Model
 
     protected $casts = [
         'price' => 'decimal:2',
-        'total' => 'decimal:2'
+        'total' => 'decimal:2',
+         'quantity' => 'integer'
     ];
 
     // Relationships
@@ -23,7 +24,7 @@ class OrderItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(ProductImage::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function variant()
@@ -38,5 +39,14 @@ class OrderItem extends Model
             return $this->variant->full_name;
         }
         return 'Standard';
+    }
+    public function getFormattedPriceAttribute()
+    {
+        return 'Rs. ' . number_format($this->price, 2);
+    }
+
+    public function getFormattedTotalAttribute()
+    {
+        return 'Rs. ' . number_format($this->total, 2);
     }
 }

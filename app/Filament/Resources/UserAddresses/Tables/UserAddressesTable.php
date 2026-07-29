@@ -153,27 +153,27 @@ class UserAddressesTable
                     ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
                     ->modalSubmitActionLabel('Delete')
                     ->successNotificationTitle('User deleted successfully'),
-                Action::make('set_default')
-                    ->label('Set as Default')
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->tooltip('Set this as default address')
-                    ->visible(fn($record) => !$record->is_default)
-                    ->action(function ($record) {
-                        // Set this address as default
-                        $record->update(['is_default' => true]);
+                // Action::make('set_default')
+                //     ->label('Set as Default')
+                //     ->icon('heroicon-o-check-circle')
+                //     ->color('success')
+                //     ->tooltip('Set this as default address')
+                //     ->visible(fn($record) => !$record->is_default)
+                //     ->action(function ($record) {
+                //         // Set this address as default
+                //         $record->update(['is_default' => true]);
 
-                        // Update other addresses of same user
-                        \App\Models\Address::where('user_id', $record->user_id)
-                            ->where('id', '!=', $record->id)
-                            ->update(['is_default' => false]);
+                //         // Update other addresses of same user
+                //         \App\Models\Address::where('user_id', $record->user_id)
+                //             ->where('id', '!=', $record->id)
+                //             ->update(['is_default' => false]);
 
-                        Notification::make()
-                            ->title('Default Address Updated')
-                            ->body('This address has been set as default.')
-                            ->success()
-                            ->send();
-                    }),
+                //         Notification::make()
+                //             ->title('Default Address Updated')
+                //             ->body('This address has been set as default.')
+                //             ->success()
+                //             ->send();
+                //     }),
 
                 Action::make('view_user')
                     ->label('View User')
