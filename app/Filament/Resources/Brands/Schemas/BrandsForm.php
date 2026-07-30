@@ -75,13 +75,9 @@ class BrandsForm
                                 FileUpload::make('image')
                                     ->label('Brand Image')
                                     ->image()
-                                    ->directory('brands/images')
-                                    ->maxSize(5120)
-                                    ->imageResizeMode('cover')
-                                    ->imageCropAspectRatio('16:9')
-                                    ->imageResizeTargetWidth('800')
-                                    ->imageResizeTargetHeight('450')
-                                    ->helperText('Upload a banner image (max 5MB)'),
+                                    ->directory('brands')
+                                    ->maxSize(5120) // 5MB
+                                    ->helperText('Upload a banner image (max 5MB). Recommended size: 1200x400px'),
                             ]),
                     ]),
 

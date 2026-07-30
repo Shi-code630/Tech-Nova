@@ -32,6 +32,11 @@ class ProductImageResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'image';
 
+     public static function canViewAny(): bool
+    {
+        return true;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ProductImageForm::configure($schema);

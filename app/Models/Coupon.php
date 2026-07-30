@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Str;
 
-class Coupon extends Model 
+class Coupon extends Model
 {
     use HasFactory;
 
@@ -41,14 +41,14 @@ class Coupon extends Model
         'usage_percentage'
     ];
 
-    //RELATIONSHIPS
+    // RELATIONSHIPS
 
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    //ACCESSORS
+    // ACCESSORS
 
     public function getIsValidAttribute()
     {
@@ -64,7 +64,8 @@ class Coupon extends Model
         if ($this->type === 'percentage') {
             return $this->amount . '%';
         }
-        return 'Rs. ' . number_format($this->amounts, 2);
+        // FIXED: changed 'amounts' to 'amount'
+        return 'Rs. ' . number_format($this->amount, 2);
     }
 
     public function getRemainingUsageAttribute()
@@ -199,11 +200,10 @@ class Coupon extends Model
             ];
         }
 
-        // Check minimum amount
         if ($this->minimum_amount && $subtotal < $this->minimum_amount) {
             return [
                 'valid' => false,
-                'message' => 'Minimum order amount of Rs. ' . number_format($this->minimum_amounts, 2) . ' required'
+                'message' => 'Minimum order amount of Rs. ' . number_format($this->minimum_amount, 2) . ' required'
             ];
         }
 
@@ -211,17 +211,13 @@ class Coupon extends Model
 
         if ($this->type === 'percentage') {
             $discount = ($subtotal * $this->amount) / 100;
-
-            // Apply maximum discount limit
             if ($this->maximum_discount && $discount > $this->maximum_discount) {
                 $discount = $this->maximum_discount;
             }
         } else {
-            // Fixed amount
             $discount = $this->amount;
         }
 
-        // Ensure discount doesn't exceed subtotal
         $discount = min($discount, $subtotal);
 
         return [
@@ -271,16 +267,12 @@ class Coupon extends Model
     public static function getValidCoupon($code, $subtotal = 0)
     {
         $coupon = self::byCode($code)->first();
-
         if (!$coupon) {
             return null;
         }
-
         $result = $coupon->apply($subtotal);
         return $result['valid'] ? $coupon : null;
     }
-
-    // ============ GENERATE UNIQUE CODE ============
 
     public static function generateUniqueCode($length = 10)
     {

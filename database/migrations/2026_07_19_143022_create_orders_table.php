@@ -21,6 +21,7 @@ return new class extends Migration
             $table->decimal('discount', 10, 2)->default(0);
             $table->decimal('delivery_charge', 10, 2)->default(0);
             $table->decimal('tax', 10, 2)->default(0);
+            $table->decimal('tax_percentage', 5, 2)->default(13);
             $table->decimal('grand_total', 10, 2);
             $table->string('payment_method')->nullable();
             $table->enum('payment_status', ['pending', 'paid', 'failed', 'refunded'])->default('pending');

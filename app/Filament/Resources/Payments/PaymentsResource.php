@@ -8,7 +8,6 @@ use App\Filament\Resources\Payments\Pages\ListPayments;
 use App\Filament\Resources\Payments\Schemas\PaymentsForm;
 use App\Filament\Resources\Payments\Tables\PaymentsTable;
 use App\Models\Payment;
-use App\Models\Payments;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -19,7 +18,7 @@ class PaymentsResource extends Resource
 {
     protected static ?string $model = Payment::class;
 
-     public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): ?string
     {
         return 'Sales Management';
     }
@@ -31,7 +30,39 @@ class PaymentsResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+    // ✅ Use transaction_id as record title
     protected static ?string $recordTitleAttribute = 'transaction_id';
+
+    // ✅ ADD THIS - Makes resource visible
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     $pendingCount = static::getModel()::where('status', 'pending')->count();
+    //     return $pendingCount > 0 ? $pendingCount : null;
+    // }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['transaction_id', 'order.order_number', 'payment_method'];
+    }
+
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Order' => $record->order?->order_number,
+            'Amount' => $record->formatted_amount,
+            'Status' => $record->status_label,
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {

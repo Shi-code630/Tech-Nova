@@ -9,7 +9,9 @@ class ProductVariant extends Model
 {
     use HasFactory;
 
-        protected $fillable = [
+    protected $table = 'product_variants';
+
+    protected $fillable = [
         'product_id',
         'color',
         'size',
@@ -75,10 +77,10 @@ class ProductVariant extends Model
     /**
      * Get formatted price
      */
-   public function getFormattedPriceAttribute()
-{
-    return 'Rs. ' . number_format($this->price ?? 0, 2);
-}
+    public function getFormattedPriceAttribute()
+    {
+        return 'Rs. ' . number_format($this->price ?? 0, 2);
+    }
 
     /**
      * Get stock status label
@@ -107,8 +109,18 @@ class ProductVariant extends Model
             return 'secondary';
         }
     }
+    public function scopeSearchFullName($query, $search)
+    {
+        return $query->where('color', 'LIKE', "%{$search}%")
+            ->orWhere('size', 'LIKE', "%{$search}%");
+    }
 
-    // ============ SCOPES ============
+    public function getFullNameSortableAttribute()
+    {
+        return $this->color . ' ' . $this->size;
+    }
+
+    //SCOPES
 
     /**
      * Scope a query to only include active variants

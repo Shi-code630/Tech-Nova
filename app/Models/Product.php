@@ -39,9 +39,9 @@ class Product extends Model
     /**
      * Get the category that owns the product
      */
-    public function categories()
+    public function category()
     {
-        return $this->belongsTo(Categorie::class);
+        return $this->belongsTo(Category::class);
     }
 
     /**
@@ -159,7 +159,7 @@ class Product extends Model
     public function getFormattedDiscountPriceAttribute()
     {
         if (isset($this->discount_price) && $this->discount_price > 0) {
-
+            return 'Rs. ' . number_format($this->discount_price, 2);
         }
         return null;
     }

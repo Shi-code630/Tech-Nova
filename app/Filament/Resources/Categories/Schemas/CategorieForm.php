@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Categories\Schemas;  // ✅ Correct namespace
 
 use App\Models\Categorie;
+use App\Models\Category;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -24,7 +25,7 @@ class CategorieForm
                             ->schema([
                                 Select::make('parent_id')
                                     ->label('Parent Category')
-                                    ->options(Categorie::query()->pluck('name', 'id'))
+                                    ->options(Category::query()->pluck('name', 'id'))
                                     ->searchable()
                                     ->preload()
                                     ->nullable()

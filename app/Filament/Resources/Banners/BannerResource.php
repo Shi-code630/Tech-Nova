@@ -2,13 +2,12 @@
 
 namespace App\Filament\Resources\Banners;
 
-use App\Filament\Resources\Users\Pages\CreateUser;
-use App\Filament\Resources\Users\Pages\EditUser;
-use App\Filament\Resources\Users\Pages\ListUsers;
-use App\Filament\Resources\Users\Schemas\UserForm;
-use App\Filament\Resources\Users\Tables\UsersTable;
+use App\Filament\Resources\Banners\Pages\CreateBanners;
+use App\Filament\Resources\Banners\Pages\EditBanners;
+use App\Filament\Resources\Banners\Pages\ListBanners;
+use App\Filament\Resources\Banners\Schemas\BannerForm;
+use App\Filament\Resources\Banners\Tables\BannerTable;
 use App\Models\Banner;
-
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -19,7 +18,7 @@ class BannerResource extends Resource
 {
     protected static ?string $model = Banner::class;
 
-     public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): ?string
     {
         return 'Marketing';
     }
@@ -29,18 +28,48 @@ class BannerResource extends Resource
         return 12;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
 
-    protected static ?string $recordTitleAttribute = 'name';
+    protected static ?string $recordTitleAttribute = 'title';
+
+
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     $count = static::getModel()::where('status', true)->count();
+    //     return $count > 0 ? (string) $count : null;
+    // }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['title', 'subtitle', 'alt_text'];
+    }
+
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Status' => $record->status_label,
+            'Order' => $record->sort_order,
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {
-        return UserForm::configure($schema);
+        return BannerForm::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return UsersTable::configure($table);
+        return BannerTable::configure($table);
     }
 
     public static function getRelations(): array
@@ -53,19 +82,9 @@ class BannerResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListUsers::route('/'),
-            'create' => CreateUser::route('/create'),
-            'edit' => EditUser::route('/{record}/edit'),
+            'index' => ListBanners::route('/'),
+            'create' => CreateBanners::route('/create'),
+            'edit' => EditBanners::route('/{record}/edit'),
         ];
-    }
-     public static function getNavigationBadge(): ?string
-    {
-        $count = static::getModel()::where('status', true)->count();
-        return $count > 0 ? (string) $count : null;
-    }
-
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'success';
     }
 }

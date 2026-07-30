@@ -8,4 +8,18 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateProducts extends CreateRecord
 {
     protected static string $resource = ProductsResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        // If thumbnails is empty, set to null
+        if (empty($data['thumbnails'])) {
+            $data['thumbnails'] = null;
+        }
+        return $data;
+    }
 }
