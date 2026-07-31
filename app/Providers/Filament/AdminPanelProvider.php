@@ -51,6 +51,7 @@ class AdminPanelProvider extends PanelProvider
                 in: app_path('Filament/Widgets'),
                 for: 'App\\Filament\\Widgets'
             )
+            
 
             ->pages([
                 Dashboard::class,

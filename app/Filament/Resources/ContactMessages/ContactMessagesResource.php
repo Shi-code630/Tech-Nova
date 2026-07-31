@@ -8,7 +8,6 @@ use App\Filament\Resources\ContactMessages\Pages\ListContactMessages;
 use App\Filament\Resources\ContactMessages\Schemas\ContactMessagesForm;
 use App\Filament\Resources\ContactMessages\Tables\ContactMessagesTable;
 use App\Models\ContactMessage;
-use App\Models\ContactMessages;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -29,9 +28,53 @@ class ContactMessagesResource extends Resource
         return 19;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
-    protected static ?string $recordTitleAttribute = 'name';
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    //  - Navigation badge for unread messages
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     $count = static::getModel()::where('status', false)->count();
+    //     return $count > 0 ? (string) $count : null;
+    // }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
+    //  - Global search attributes
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['name', 'email', 'subject', 'message', 'phone'];
+    }
+
+    //  - Global search result details
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'From' => $record->name . ' (' . $record->email . ')',
+            'Subject' => $record->subject,
+            'Status' => $record->status_label,
+            'Received' => $record->formatted_date,
+        ];
+    }
+
+    //  Global search result title
+    public static function getGlobalSearchResultTitle($record): string
+    {
+        return $record->subject ?? 'Contact Message';
+    }
+
+    //  Global search result URL
+    public static function getGlobalSearchResultUrl($record): ?string
+    {
+        return static::getUrl('edit', ['record' => $record]);
+    }
 
     public static function form(Schema $schema): Schema
     {

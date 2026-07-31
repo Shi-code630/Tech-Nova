@@ -13,7 +13,9 @@ class ListSettings extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Add Settings')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

@@ -32,17 +32,17 @@ class CouponsResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'code';
 
-   
+
     public static function canViewAny(): bool
     {
         return true;
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        $count = static::getModel()::valid()->count();
-        return $count > 0 ? $count : null;
-    }
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     $count = static::getModel()::valid()->count();
+    //     return $count > 0 ? $count : null;
+    // }
 
     public static function getNavigationBadgeColor(): ?string
     {
