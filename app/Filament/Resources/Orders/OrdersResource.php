@@ -18,7 +18,7 @@ use Filament\Tables\Table;
 class OrdersResource extends Resource
 {
     protected static ?string $model = Order::class;
-      public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): ?string
     {
         return 'Sales Management';
     }
@@ -32,7 +32,10 @@ class OrdersResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'order_number';
-
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
     public static function form(Schema $schema): Schema
     {
         return OrdersForm::configure($schema);

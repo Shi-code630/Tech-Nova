@@ -8,6 +8,7 @@ use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Filament\Resources\Products\Schemas\ProductForm;
 use App\Filament\Resources\Products\Tables\ProductsTable;
 use App\Models\Product;
+use App\Models\Category;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -18,10 +19,6 @@ class ProductsResource extends Resource
 {
     protected static ?string $model = Product::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCube;
-
-    protected static ?string $recordTitleAttribute = 'name';
-
     public static function getNavigationGroup(): ?string
     {
         return 'Product Management';
@@ -30,6 +27,16 @@ class ProductsResource extends Resource
     public static function getNavigationSort(): ?int
     {
         return 2; // Place after categories and brands if you like
+    }
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static ?string $recordTitleAttribute = 'name';
+
+
+    public static function canViewAny(): bool
+    {
+        return true;
     }
 
     public static function form(Schema $schema): Schema

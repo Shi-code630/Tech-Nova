@@ -50,10 +50,14 @@ class BrandsForm
                     ->maxSize(2048)
                     ->nullable(),
 
-                Textarea::make('description')
-                    ->label('Description')
-                    ->rows(5)
-                    ->nullable(),
+                                FileUpload::make('image')
+                                    ->label('Brand Image')
+                                    ->image()
+                                    ->directory('brands')
+                                    ->maxSize(5120) // 5MB
+                                    ->helperText('Upload a banner image (max 5MB). Recommended size: 1200x400px'),
+                            ]),
+                    ]),
 
                 Toggle::make('status')
                     ->label('Active')

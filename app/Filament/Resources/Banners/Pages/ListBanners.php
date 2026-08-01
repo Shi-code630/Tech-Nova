@@ -13,7 +13,9 @@ class ListBanners extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('New Banner')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

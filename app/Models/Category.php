@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Categorie extends Model
+class Category extends Model
 {
     use HasFactory;
 
@@ -31,21 +31,20 @@ class Categorie extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Categorie::class, 'parent_id');
+        return $this->belongsTo(Category::class, 'parent_id');
     }
   // Children categories relationship - FIXED: renamed to children()
 
     public function children()
     {
-        return $this->hasMany(Categorie::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
 
     // Products relationship
     public function products()
     {
-        return $this->hasMany(Product::class); // Make sure Product model exists
-
+        return $this->hasMany(Product::class);
     }
 
 

@@ -4,12 +4,14 @@ namespace App\Filament\Resources\Products\Tables;
 
 use App\Models\Product;
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -20,32 +22,33 @@ class ProductsTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
                 ImageColumn::make('thumbnails')
-                    ->label('Thumbnail')
-                    ->circular()
-                    ->size(40)
-                    ->getStateUsing(fn ($record) => $record->thumbnails[0] ?? null),
+                    ->label('Image')
+                    ->square()
+                    ->size(50)
+                    ->defaultImageUrl(function ($record) {
+                        if ($record->thumbnails && is_array($record->thumbnails) && count($record->thumbnails) > 0) {
+                            return asset('storage/' . $record->thumbnails[0]);
+                        }
+                        return null;
+                    }),
 
                 TextColumn::make('name')
-                    ->label('Name')
-                    ->searchable()
-                    ->sortable()
-                    ->limit(40),
-
-                TextColumn::make('categories.name')
-                    ->label('Category')
+                    ->label('Product Name')
                     ->searchable()
                     ->sortable(),
+
+                TextColumn::make('category.name')
+                    ->label('Category')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('brand.name')
                     ->label('Brand')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('price')
                     ->label('Price')
@@ -56,40 +59,51 @@ class ProductsTable
                     ->label('Discount')
                     ->money('Rs.')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
-                BadgeColumn::make('status')
-                    ->label('Status')
-                    ->colors([
-                        'success' => 'active',
-                        'danger' => 'inactive',
-                        'warning' => 'out_of_stock',
-                    ])
-                    ->sortable(),
-
-                IconColumn::make('featured')
-                    ->label('Featured')
-                    ->boolean()
+                TextColumn::make('final_price')
+                    ->label('Final Price')
+                    ->money('Rs.')
                     ->sortable(),
 
                 TextColumn::make('stock')
                     ->label('Stock')
+                    ->numeric()
                     ->sortable()
-                    ->toggleable(),
+                    ->color(fn ($record) => $record->stock > 10 ? 'success' : ($record->stock > 0 ? 'warning' : 'danger')),
+
+                TextColumn::make('status')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn ($record) => match($record->status) {
+                        'active' => 'success',
+                        'inactive' => 'danger',
+                        'out_of_stock' => 'warning',
+                        default => 'secondary',
+                    }),
+
+                ToggleColumn::make('featured')
+                    ->label('Featured')
+                    ->sortable(),
 
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('updated_at')
-                    ->label('Updated')
-                    ->dateTime()
-                    ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('category_id')
+                    ->label('Category')
+                    ->relationship('category', 'name')
+                    ->preload()
+                    ->searchable(),
+
+                SelectFilter::make('brand_id')
+                    ->label('Brand')
+                    ->relationship('brand', 'name')
+                    ->preload()
+                    ->searchable(),
+
                 SelectFilter::make('status')
                     ->label('Status')
                     ->options([
@@ -100,27 +114,42 @@ class ProductsTable
 
                 TernaryFilter::make('featured')
                     ->label('Featured')
-                    ->boolean()
-                    ->trueLabel('Featured only')
-                    ->falseLabel('Not featured')
-                    ->native(false),
+                    ->placeholder('All Products')
+                    ->trueLabel('Featured Only')
+                    ->falseLabel('Non-Featured Only'),
 
-                SelectFilter::make('category_id')
-                    ->label('Category')
-                    ->relationship('categories', 'name')
-                    ->searchable()
-                    ->preload(),
-
-                SelectFilter::make('brand_id')
-                    ->label('Brand')
-                    ->relationship('brand', 'name')
-                    ->searchable()
-                    ->preload(),
+                TernaryFilter::make('stock')
+                    ->label('Stock Status')
+                    ->placeholder('All Stock Levels')
+                    ->trueLabel('In Stock (> 0)')
+                    ->falseLabel('Out of Stock (0)')
+                    ->queries(
+                        true: fn ($query) => $query->where('stock', '>', 0),
+                        false: fn ($query) => $query->where('stock', '=', 0),
+                    ),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->label('Edit')
+                    ->color('warning')
+                    ->icon('heroicon-o-pencil-square')
+
+                    ->size('sm'),
+
+                DeleteAction::make()
+                    ->label('Delete')
+                    ->color('warning')
+                    ->icon('heroicon-o-trash')
+
+                    ->size('sm'),
+
+                ViewAction::make()
+                    ->label('View')
+                   ->color('warning')
+                    ->icon('heroicon-o-eye')
+                    ->size('sm'),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

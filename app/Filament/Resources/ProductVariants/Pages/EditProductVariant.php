@@ -4,6 +4,8 @@ namespace App\Filament\Resources\ProductVariants\Pages;
 
 use App\Filament\Resources\ProductVariants\ProductVariantsResource;
 use Filament\Actions\DeleteAction;
+use Filament\Actions\ForceDeleteAction;
+use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
 class EditProductVariants extends EditRecord
@@ -14,6 +16,8 @@ class EditProductVariants extends EditRecord
     {
         return [
             DeleteAction::make(),
+            ForceDeleteAction::make(),
+            RestoreAction::make(),
         ];
     }
 

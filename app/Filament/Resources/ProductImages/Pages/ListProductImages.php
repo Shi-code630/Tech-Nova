@@ -14,7 +14,11 @@ class ListProductImages extends ListRecords
     {
         return [
             CreateAction::make()
+<<<<<<< HEAD
                 ->label('Add Image')
+=======
+                ->label('New Image')
+>>>>>>> 81e6788f98b84bc680e004fdfca6cf661a1af07b
                 ->icon('heroicon-o-plus'),
         ];
     }

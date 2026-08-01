@@ -3,10 +3,12 @@
 namespace App\Filament\Resources\ProductImages\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\TextColumn;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -16,15 +18,16 @@ class ProductImagesTable
     {
         return $table
             ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
                 ImageColumn::make('image')
                     ->label('Image')
                     ->square()
-                    ->size(60),
+                    ->size(80)
+                    ->defaultImageUrl(function ($record) {
+                        if ($record->image) {
+                            return asset('storage/' . $record->image);
+                        }
+                        return null;
+                    }),
 
                 TextColumn::make('product.name')
                     ->label('Product')
@@ -34,21 +37,43 @@ class ProductImagesTable
                 TextColumn::make('created_at')
                     ->label('Uploaded')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('product_id')
                     ->label('Product')
                     ->relationship('product', 'name')
-                    ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->searchable(),
             ])
             ->recordActions([
-                EditAction::make(),
+                EditAction::make()
+                    ->label('Edit')
+                    ->color('warning')
+                    ->icon('heroicon-o-pencil-square')
+
+                    ->size('sm'),
+
+                DeleteAction::make()
+                    ->label('Delete')
+                    ->color('danger')
+                    ->icon('heroicon-o-trash')
+
+                    ->size('sm')
+                    ->requiresConfirmation(),
+
+                ViewAction::make()
+                    ->label('View')
+                    ->color('danger')
+                    ->icon('heroicon-o-eye')
+
+                    ->size('sm'),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->color('danger'),
                 ]),
             ])
             ->defaultSort('created_at', 'desc');

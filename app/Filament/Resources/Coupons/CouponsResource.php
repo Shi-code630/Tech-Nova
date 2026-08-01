@@ -8,7 +8,6 @@ use App\Filament\Resources\Coupons\Pages\ListCoupons;
 use App\Filament\Resources\Coupons\Schemas\CouponsForm;
 use App\Filament\Resources\Coupons\Tables\CouponsTable;
 use App\Models\Coupon;
-use App\Models\Coupons;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -19,7 +18,7 @@ class CouponsResource extends Resource
 {
     protected static ?string $model = Coupon::class;
 
-     public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): ?string
     {
         return 'Sales Management';
     }
@@ -29,9 +28,40 @@ class CouponsResource extends Resource
         return 11;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
     protected static ?string $recordTitleAttribute = 'code';
+
+   
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    public static function getNavigationBadge(): ?string
+    {
+        $count = static::getModel()::valid()->count();
+        return $count > 0 ? $count : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'success';
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['code'];
+    }
+
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Type' => $record->type,
+            'Discount' => $record->discount_formatted,
+            'Status' => $record->status_badge,
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {

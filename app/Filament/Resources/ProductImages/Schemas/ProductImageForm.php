@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\ProductImages\Schemas;
 
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class ProductImageForm
@@ -12,23 +14,28 @@ class ProductImageForm
     {
         return $schema
             ->components([
-                Select::make('product_id')
-                    ->label('Product')
-                    ->relationship('product', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload()
-                    ->helperText('Select the product this image belongs to.'),
+                Section::make('Product Image')
+                    ->schema([
+                        Grid::make(1)
+                            ->schema([
+                                Select::make('product_id')
+                                    ->label('Product')
+                                    ->relationship('product', 'name')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->helperText('Select the product for this image'),
 
-                FileUpload::make('image')
-                    ->label('Image')
-                    ->image()
-                    ->imagePreviewHeight('200')
-                    ->directory('products/images')
-                    ->disk('public')
-                    ->maxSize(2048)
-                    ->required()
-                    ->helperText('Upload a product image (max 2MB).'),
+                                FileUpload::make('image')
+                                    ->label('Image')
+                                    ->image()
+                                    ->required()
+                                    ->directory('product-images')
+                                    ->imageResizeTargetWidth('800')
+                                    ->imageResizeTargetHeight('800')
+                                    ->helperText('Upload product image (recommended: 800x800)'),
+                            ]),
+                    ]),
             ]);
     }
 }

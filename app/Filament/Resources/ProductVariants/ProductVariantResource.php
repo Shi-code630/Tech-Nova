@@ -11,16 +11,12 @@ use App\Models\ProductVariant;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Filament\Support\Icons\Heroicon;
 
 class ProductVariantsResource extends Resource
 {
     protected static ?string $model = ProductVariant::class;
-
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedSwatch;
-
-    protected static ?string $recordTitleAttribute = 'size';
 
     public static function getNavigationGroup(): ?string
     {
@@ -31,6 +27,37 @@ class ProductVariantsResource extends Resource
     {
         return 5;
     }
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static ?string $recordTitleAttribute = 'full_name';
+
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     $count = static::getModel()::count();
+    //     return $count > 0 ? (string) $count : null;
+    // }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'info';
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['color', 'size', 'product.name'];
+    }
+
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Product' => $record->product?->name,
+            'Variant' => $record->full_name,
+            'Price' => $record->formatted_price,
+            'Stock' => $record->stock,
+        ];
+    }
+
 
     public static function form(Schema $schema): Schema
     {

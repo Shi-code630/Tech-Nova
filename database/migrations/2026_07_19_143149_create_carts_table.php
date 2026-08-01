@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
 
-            // FIXED: Use 'product_variants' (with 'e') instead of 'product_variants'
+            // FIXED: Use 'product_varients' (with 'e') instead of 'product_variants'
             $table->foreignId('variant_id')->nullable()->constrained('product_variants')->onDelete('cascade');
 
             $table->integer('quantity')->default(1);

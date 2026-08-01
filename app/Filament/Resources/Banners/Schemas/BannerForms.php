@@ -3,62 +3,87 @@
 namespace App\Filament\Resources\Banners\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class BannerForms
+class BannerForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
-                TextInput::make('title')
-                    ->label('Title')
-                    ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                Section::make('Banner Information')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('title')
+                                    ->label('Title')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->placeholder('Enter banner title'),
 
-                TextInput::make('subtitle')
-                    ->label('Subtitle')
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                                TextInput::make('subtitle')
+                                    ->label('Subtitle')
+                                    ->maxLength(255)
+                                    ->nullable()
+                                    ->placeholder('Enter banner subtitle'),
 
-                TextInput::make('button_text')
-                    ->label('Button Text')
-                    ->maxLength(100),
+                                Textarea::make('alt_text')
+                                    ->label('Alt Text (SEO)')
+                                    ->maxLength(65535)
+                                    ->nullable()
+                                    ->helperText('Alternative text for SEO and accessibility'),
 
-                TextInput::make('button_link')
-                    ->label('Button Link')
-                    ->url()
-                    ->maxLength(255),
+                                TextInput::make('button_text')
+                                    ->label('Button Text')
+                                    ->maxLength(255)
+                                    ->nullable()
+                                    ->placeholder('e.g. Shop Now, Learn More'),
 
-                FileUpload::make('image')
-                    ->label('Banner Image')
-                    ->image()
-                    ->directory('banners')
-                    ->disk('public')
-                    ->visibility('public')
-                    ->imageEditor()
-                    ->required()
-                    ->maxSize(2048)
-                    ->columnSpanFull(),
+                                TextInput::make('button_link')
+                                    ->label('Button Link')
+                                    ->url()
+                                    ->maxLength(255)
+                                    ->nullable()
+                                    ->placeholder('e.g. /products or https://example.com'),
 
-                TextInput::make('alt_text')
-                    ->label('Alt Text')
-                    ->maxLength(255)
-                    ->columnSpanFull(),
+                                FileUpload::make('image')
+                                    ->label('Banner Image')
+                                    ->image()
+                                    ->directory('banners')
+                                    ->maxSize(5120)
+                                    ->imageResizeMode('cover')
+                                    ->imageCropAspectRatio('16:9')
+                                    ->imageResizeTargetWidth('1200')
+                                    ->imageResizeTargetHeight('675')
+                                    ->imageResizeUpscale(false)
 
-                Toggle::make('status')
-                    ->label('Active')
-                    ->default(true),
+                                    ->required()
+                                    ->helperText('Upload a banner image (max 5MB). 16:9 ratio recommended (1200x675px)'),
+                            ]),
+                    ]),
 
-                TextInput::make('sort_order')
-                    ->label('Sort Order')
-                    ->numeric()
-                    ->default(0)
-                    ->required(),
-            ])
-            ->columns(2);
+                Section::make('Display Settings')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('sort_order')
+                                    ->label('Sort Order')
+                                    ->numeric()
+                                    ->default(0)
+                                    ->minValue(0)
+                                    ->helperText('Lower numbers appear first'),
+
+                                Toggle::make('status')
+                                    ->label('Active')
+                                    ->default(true)
+                                    ->helperText('Enable or disable this banner'),
+                            ]),
+                    ]),
+            ]);
     }
 }

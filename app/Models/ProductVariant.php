@@ -9,6 +9,8 @@ class ProductVariant extends Model
 {
     use HasFactory;
 
+    protected $table = 'product_variants';
+
     protected $fillable = [
         'product_id',
         'color',
@@ -50,10 +52,56 @@ class ProductVariant extends Model
      */
     public function getIsActiveAttribute(): bool
     {
-        return $this->status;
+        return $this->stock > 0 && $this->status;
     }
 
-    // ============ SCOPES ============
+    /**
+     * Get formatted price
+     */
+    public function getFormattedPriceAttribute()
+    {
+        return 'Rs. ' . number_format($this->price ?? 0, 2);
+    }
+
+    /**
+     * Get stock status label
+     */
+    public function getStockStatusAttribute()
+    {
+        if ($this->stock > 0 && $this->status) {
+            return 'In Stock';
+        } elseif ($this->stock <= 0 && $this->status) {
+            return 'Out of Stock';
+        } else {
+            return 'Inactive';
+        }
+    }
+
+    /**
+     * Get stock status color
+     */
+    public function getStockStatusColorAttribute()
+    {
+        if ($this->stock > 0 && $this->status) {
+            return 'success';
+        } elseif ($this->stock <= 0 && $this->status) {
+            return 'danger';
+        } else {
+            return 'secondary';
+        }
+    }
+    public function scopeSearchFullName($query, $search)
+    {
+        return $query->where('color', 'LIKE', "%{$search}%")
+            ->orWhere('size', 'LIKE', "%{$search}%");
+    }
+
+    public function getFullNameSortableAttribute()
+    {
+        return $this->color . ' ' . $this->size;
+    }
+
+    //SCOPES
 
     /**
      * Scope a query to only include active variants.

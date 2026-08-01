@@ -34,6 +34,16 @@ class ProductImagesResource extends Resource
         return 1;
     }
 
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    protected static ?string $recordTitleAttribute = 'image';
+
+     public static function canViewAny(): bool
+    {
+        return true;
+    }
+
     public static function form(Schema $schema): Schema
     {
         return ProductImageForm::configure($schema);

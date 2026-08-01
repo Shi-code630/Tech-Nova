@@ -2,7 +2,10 @@
 
 namespace App\Filament\Resources\Categories\Tables;
 
-use App\Models\Categorie;
+use App\Filament\Resources\Categories\CategoriesResource;
+
+use App\Models\Category;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -68,11 +71,46 @@ class CategoriesTable
 
                 SelectFilter::make('parent_id')
                     ->label('Parent Category')
-                    ->options(fn () => Categorie::pluck('name', 'id')->toArray())
-                    ->searchable(),
+                    ->options(Category::query()->pluck('name', 'id'))
+                    ->searchable()
+                    ->preload()
+                    ->placeholder('All Categories'),
+
+                TernaryFilter::make('status')
+                    ->label('Status')
+                    ->placeholder('All Statuses')
+                    ->trueLabel('Active')
+                    ->falseLabel('Inactive')
+                    ->queries(
+                        true: fn($query) => $query->where('status', true),
+                        false: fn($query) => $query->where('status', false),
+                    ),
             ])
-            ->recordActions([
-                EditAction::make(),
+            ->actions([
+                EditAction::make()
+                    ->icon('heroicon-o-pencil')
+                    ->tooltip('Edit Category'),
+
+
+                DeleteAction::make()
+                    ->icon('heroicon-o-trash')
+                    ->tooltip('Delete User')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete User')
+                    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+                    ->modalSubmitActionLabel('Delete')
+                    ->successNotificationTitle('categories deleted successfully'),
+                Action::make('view')
+                    ->label('View Subcategories')
+                    ->icon('heroicon-o-squares-2x2')
+                    ->url(
+                        fn(Category $record): string =>
+                        CategoriesResource::getUrl('index', ['tableFilters[parent_id][value]' => $record->id])
+                    )
+                    ->openUrlInNewTab()
+                    ->tooltip('View subcategories'),
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

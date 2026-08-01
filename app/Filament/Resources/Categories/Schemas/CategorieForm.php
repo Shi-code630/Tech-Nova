@@ -3,6 +3,8 @@
 namespace App\Filament\Resources\Categories\Schemas;
 
 use App\Models\Categorie;
+use App\Models\Category;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -16,14 +18,17 @@ class CategorieForm
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->label('Category Name')
-                    ->required()
-                    ->maxLength(255)
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        $set('slug', \Illuminate\Support\Str::slug($state));
-                    }),
+                Section::make('Basic Information')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                Select::make('parent_id')
+                                    ->label('Parent Category')
+                                    ->options(Category::query()->pluck('name', 'id'))
+                                    ->searchable()
+                                    ->preload()
+                                    ->nullable()
+                                    ->helperText('Select a parent category if this is a subcategory'),
 
                 TextInput::make('slug')
                     ->label('Slug')

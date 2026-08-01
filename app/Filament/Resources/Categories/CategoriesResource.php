@@ -7,7 +7,8 @@ use App\Filament\Resources\Categories\Pages\EditCategories;
 use App\Filament\Resources\Categories\Pages\ListCategories;
 use App\Filament\Resources\Categories\Schemas\CategorieForm;
 use App\Filament\Resources\Categories\Tables\CategoriesTable;
-use App\Models\Categorie;
+
+use App\Models\Category;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -16,7 +17,7 @@ use Filament\Tables\Table;
 
 class CategoriesResource extends Resource
 {
-    protected static ?string $model = Categorie::class;
+    protected static ?string $model = Category::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
