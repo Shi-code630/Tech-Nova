@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Filament\Resources\Banners\Tables;
+
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
+use Filament\Tables\Table;
+
+class BannerTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                ImageColumn::make('image')
+                    ->label('Image')
+                    ->square()
+                    ->size(60)
+                    ->defaultImageUrl(fn($record) => $record->image ? asset('storage/' . $record->image) : null),
+
+                TextColumn::make('title')
+                    ->label('Title')
+                    ->searchable()
+                    ->sortable()
+                    ->weight('bold'),
+
+                TextColumn::make('subtitle')
+                    ->label('Subtitle')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('button_text')
+                    ->label('Button')
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('sort_order')
+                    ->label('Order')
+                    ->sortable()
+                    ->toggleable(),
+
+                ToggleColumn::make('status')
+                    ->label('Active')
+                    ->sortable(),
+
+                TextColumn::make('status_label')
+                    ->label('Status')
+                    ->badge()
+                    ->color(fn($record) => $record->status_badge),
+
+                TextColumn::make('created_at')
+                    ->label('Created')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('updated_at')
+                    ->label('Updated')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->defaultSort('sort_order', 'asc')
+            ->filters([
+                TernaryFilter::make('status')
+                    ->label('Active Status')
+                    ->placeholder('All Banners')
+                    ->trueLabel('Active Only')
+                    ->falseLabel('Inactive Only'),
+            ])
+            ->recordActions([
+                ViewAction::make()
+                    ->label('View')
+                   ->color('warning')
+                    ->icon('heroicon-o-eye'),
+
+
+                EditAction::make()
+                    ->label('Edit')
+                    ->color('warning')
+                    ->icon('heroicon-o-pencil-square'),
+
+
+                DeleteAction::make()
+                    ->label('Delete')
+
+                    ->icon('heroicon-o-trash')
+                    ->color('warning')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete Banner')
+                    ->modalDescription('Are you sure you want to delete this banner? This action cannot be undone.')
+                    ->modalSubmitActionLabel('Yes, Delete'),
+            ])
+            ->bulkActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make()
+                        ->label('Delete Selected')
+                        ->color('danger')
+                        ->icon('heroicon-o-trash')
+                        ->requiresConfirmation()
+                        ->modalHeading('Delete Selected Banners')
+                        ->modalDescription('Are you sure you want to delete the selected banners? This action cannot be undone.'),
+                ]),
+            ])
+            ->defaultSort('sort_order', 'asc')
+            ->striped()
+            ->paginated([10, 25, 50, 100])
+            ->searchable();
+    }
+}
