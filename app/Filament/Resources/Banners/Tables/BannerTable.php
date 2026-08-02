@@ -67,6 +67,7 @@ class BannerTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('sort_order', 'asc')
             ->filters([
                 TernaryFilter::make('status')
                     ->label('Active Status')

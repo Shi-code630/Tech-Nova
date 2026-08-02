@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProductVariants\Tables;
 
+use App\Models\ProductVariant;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;

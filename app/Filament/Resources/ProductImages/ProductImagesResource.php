@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources\ProductImages;
 
-use App\Filament\Resources\ProductImages\Pages\CreateProductImage;
-use App\Filament\Resources\ProductImages\Pages\EditProductImage;
+use App\Filament\Resources\ProductImages\Pages\CreateProductImages;
+use App\Filament\Resources\ProductImages\Pages\EditProductImages;
 use App\Filament\Resources\ProductImages\Pages\ListProductImages;
 use App\Filament\Resources\ProductImages\Schemas\ProductImageForm;
 use App\Filament\Resources\ProductImages\Tables\ProductImagesTable;
@@ -14,17 +14,22 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
-class ProductImageResource extends Resource
+class ProductImagesResource extends Resource
 {
     protected static ?string $model = ProductImage::class;
-      public static function getNavigationGroup(): ?string
+
+
+
+   
+
+    public static function getNavigationGroup(): ?string
     {
         return 'Product Management';
     }
 
     public static function getNavigationSort(): ?int
     {
-        return 7;
+        return 1;
     }
 
 
@@ -49,17 +54,15 @@ class ProductImageResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
     {
         return [
             'index' => ListProductImages::route('/'),
-            'create' => CreateProductImage::route('/create'),
-            'edit' => EditProductImage::route('/{record}/edit'),
+            'create' => CreateProductImages::route('/create'),
+            'edit' => EditProductImages::route('/{record}/edit'),
         ];
     }
 }

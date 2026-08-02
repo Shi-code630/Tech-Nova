@@ -13,8 +13,9 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\Rule;
 
-class ProductsForm
+class ProductForm
 {
     public static function configure(Schema $schema): Schema
     {

@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Products;
 use App\Filament\Resources\Products\Pages\CreateProducts;
 use App\Filament\Resources\Products\Pages\EditProducts;
 use App\Filament\Resources\Products\Pages\ListProducts;
-use App\Filament\Resources\Products\Schemas\ProductsForm;
+use App\Filament\Resources\Products\Schemas\ProductForm;
 use App\Filament\Resources\Products\Tables\ProductsTable;
 use App\Models\Product;
 use App\Models\Category;
@@ -26,10 +26,10 @@ class ProductsResource extends Resource
 
     public static function getNavigationSort(): ?int
     {
-        return 5;
+        return 2; // Place after categories and brands if you like
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+   protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -41,7 +41,7 @@ class ProductsResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return ProductsForm::configure($schema);
+        return ProductForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -52,7 +52,7 @@ class ProductsResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            // You can add relation managers here (e.g., images, variants)
         ];
     }
 

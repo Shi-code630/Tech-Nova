@@ -2,22 +2,18 @@
 
 namespace App\Filament\Resources\ProductImages\Pages;
 
-use App\Filament\Resources\ProductImages\ProductImageResource;
+use App\Filament\Resources\ProductImages\ProductImagesResource;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\ForceDeleteAction;
-use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditProductImage extends EditRecord
+class EditProductImages extends EditRecord
 {
-    protected static string $resource = ProductImageResource::class;
+    protected static string $resource = ProductImagesResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
             DeleteAction::make(),
-            ForceDeleteAction::make(),
-            RestoreAction::make(),
         ];
     }
 

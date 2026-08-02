@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Filament\Resources\Categories\Schemas;  // ✅ Correct namespace
+namespace App\Filament\Resources\Categories\Schemas;
 
 use App\Models\Categorie;
-use App\Models\Category;
-use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class CategorieForm
 {
@@ -23,13 +23,6 @@ class CategorieForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-                                Select::make('parent_id')
-                                    ->label('Parent Category')
-                                    ->options(Category::query()->pluck('name', 'id'))
-                                    ->searchable()
-                                    ->preload()
-                                    ->nullable()
-                                    ->helperText('Select a parent category if this is a subcategory'),
 
                                 TextInput::make('name')
                                     ->label('Category Name')
@@ -39,62 +32,98 @@ class CategorieForm
                                     ->afterStateUpdated(function ($state, callable $set) {
                                         $set('slug', Str::slug($state));
                                     }),
+
+                                TextInput::make('slug')
+                                    ->label('Slug')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->unique(ignoreRecord: true),
+
+                                Select::make('parent_id')
+                                    ->label('Parent Category')
+                                    ->options(fn ($record) => static::getParentOptions($record))
+                                    ->searchable()
+                                    ->preload()
+                                    ->nullable()
+                                    ->helperText('Optional')
+                                    ->rule(function ($record) {
+                                        $excludedIds = [];
+
+                                        if ($record) {
+                                            $descendants = $record->allChildren()->pluck('id')->toArray();
+                                            $excludedIds = array_merge([$record->id], $descendants);
+                                        }
+
+                                        return Rule::notIn($excludedIds);
+                                    })
+                                    ->validationMessages([
+                                        'not_in' => 'You cannot select this category or its children as parent.',
+                                    ]),
+
+                                Toggle::make('status')
+                                    ->label('Active')
+                                    ->default(true),
+
                             ]),
 
-                        TextInput::make('slug')
-                            ->label('Slug')
-                            ->required()
-                            ->maxLength(255)
-                            ->unique(ignoreRecord: true)
-                            ->helperText('URL-friendly version of the category name'),
-
-                        RichEditor::make('description')
+                        Textarea::make('description')
                             ->label('Description')
-                            ->required()
-                            ->maxLength(65535)
-                            ->toolbarButtons([
-                                'bold',
-                                'italic',
-                                'underline',
-                                'strike',
-                                'link',
-                                'bulletList',
-                                'orderedList',
-                                'h2',
-                                'h3',
-                                'blockquote',
-                            ])
-                            ->columnSpanFull(),
-                    ]),
+                            ->rows(5),
 
-                Section::make('Status')
-                    ->schema([
-                        Toggle::make('status')
-                            ->label('Active')
-                            ->default(true)
-                            ->helperText('Enable or disable this category'),
-                    ]),
-
-                Section::make('SEO Information')
-                    ->schema([
-                        Grid::make(1)
+                        Section::make('SEO')
                             ->schema([
-                                TextInput::make('meta_title')
-                                    ->label('Meta Title')
-                                    ->maxLength(255)
-                                    ->helperText('Recommended length: 50-60 characters'),
 
-                                TextInput::make('meta_description')
-                                    ->label('Meta Description')
-                                    ->maxLength(255)
-                                    ->helperText('Recommended length: 150-160 characters'),
+                                TextInput::make('meta_title')
+                                    ->maxLength(255),
+
+                                Textarea::make('meta_description')
+                                    ->rows(3),
 
                                 TextInput::make('meta_keywords')
-                                    ->label('Meta Keywords')
-                                    ->maxLength(255)
-                                    ->helperText('Comma-separated keywords'),
+                                    ->maxLength(255),
+
                             ]),
                     ]),
             ]);
+    }
+
+    private static function getParentOptions($record = null): array
+    {
+        $excludeIds = [];
+
+        if ($record) {
+            $descendants = $record->allChildren()->pluck('id')->toArray();
+            $excludeIds = array_merge([$record->id], $descendants);
+        }
+
+        $categories = Category::query()
+            ->when(!empty($excludeIds), function ($query) use ($excludeIds) {
+                $query->whereNotIn('id', $excludeIds);
+            })
+            ->orderBy('name')
+            ->get();
+
+        return static::buildTree($categories);
+    }
+
+    private static function buildTree($categories, $parentId = null, $level = 0): array
+    {
+        $options = [];
+
+        foreach ($categories as $category) {
+            if ($category->parent_id == $parentId) {
+
+                $options[$category->id] =
+                    str_repeat('— ', $level) . $category->name;
+
+                $options += static::buildTree(
+                    $categories,
+                    $category->id,
+                    $level + 1
+                );
+            }
+        }
+
+        return $options;
     }
 }

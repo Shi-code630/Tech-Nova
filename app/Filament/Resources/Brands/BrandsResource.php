@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Brands;
 
 use App\Filament\Resources\Brands\Pages\CreateBrands;
@@ -45,7 +44,9 @@ class BrandsResource extends Resource
 
     public static function getRelations(): array
     {
-        return [];
+        return [
+            //
+        ];
     }
 
     public static function getPages(): array

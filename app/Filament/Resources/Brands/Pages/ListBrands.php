@@ -13,7 +13,19 @@ class ListBrands extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('New Brand')
+                ->icon('heroicon-o-plus'),
         ];
+    }
+
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'name';
+    }
+
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'asc';
     }
 }

@@ -26,31 +26,40 @@ class Category extends Model
         'status' => 'boolean',
     ];
 
+
     // Parent category relationship
+
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
+  // Children categories relationship - FIXED: renamed to children()
 
-    // Children categories relationship - FIXED: renamed to children()
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
 
+
     // Products relationship
     public function products()
     {
-        return $this->hasMany(Product::class); 
+        return $this->hasMany(Product::class);
     }
 
-    // Get all subcategories recursively
+
+    /**
+     * Recursive Child Categories
+     */
     public function allChildren()
     {
         return $this->children()->with('allChildren');
     }
 
-    // Get all parent categories recursively
+
+    /**
+     * Recursive Parent Categories
+     */
     public function allParents()
     {
         return $this->parent()->with('allParents');
@@ -76,9 +85,11 @@ class Category extends Model
         return $query->where('status', true);
     }
 
+
     // Scope for root categories (no parent)
     public function scopeRoot($query)
     {
         return $query->whereNull('parent_id');
     }
+
 }

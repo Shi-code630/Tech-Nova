@@ -61,7 +61,7 @@ class BannerForm
                                     ->imageResizeTargetWidth('1200')
                                     ->imageResizeTargetHeight('675')
                                     ->imageResizeUpscale(false)
-                                   
+
                                     ->required()
                                     ->helperText('Upload a banner image (max 5MB). 16:9 ratio recommended (1200x675px)'),
                             ]),

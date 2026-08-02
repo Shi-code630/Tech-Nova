@@ -7,11 +7,11 @@ use App\Filament\Resources\Categories\CategoriesResource;
 use App\Models\Category;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
@@ -28,53 +28,47 @@ class CategoriesTable
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('name')
-                    ->label('Category Name')
+                    ->label('Name')
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->limit(30),
 
-                TextColumn::make('parent.name')
-                    ->label('Parent Category')
+                TextColumn::make('parents.name')
+                    ->label('Parent')
                     ->searchable()
                     ->sortable()
-                    ->placeholder('Root Category')
-                    ->badge()
-                    ->color('gray'),
+                    ->placeholder('None'),
 
                 TextColumn::make('slug')
                     ->label('Slug')
                     ->searchable()
                     ->toggleable(),
 
-                TextColumn::make('description')
-                    ->label('Description')
-                    ->limit(50)
-                    ->html()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                ToggleColumn::make('status')
-                    ->label('Status')
+                IconColumn::make('status')
+                    ->label('Active')
+                    ->boolean()
                     ->sortable(),
 
-                TextColumn::make('children_count')
-                    ->label('Subcategories')
-                    ->counts('children')
-                    ->sortable()
-                    ->toggleable(),
-
                 TextColumn::make('created_at')
-                    ->label('Created At')
+                    ->label('Created')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label('Updated At')
+                    ->label('Updated')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                TernaryFilter::make('status')
+                    ->label('Active')
+                    ->boolean()
+                    ->trueLabel('Active only')
+                    ->falseLabel('Inactive only')
+                    ->native(false),
+
                 SelectFilter::make('parent_id')
                     ->label('Parent Category')
                     ->options(Category::query()->pluck('name', 'id'))
@@ -118,20 +112,11 @@ class CategoriesTable
                     ->tooltip('View subcategories'),
 
             ])
-            ->bulkActions([
+            ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()
-                        ->icon('heroicon-o-trash')
-                        ->tooltip('Delete Selected')
-                        ->requiresConfirmation()
-                        ->modalHeading('Delete Categories')
-                        ->modalDescription('Are you sure you want to delete these categories? This action cannot be undone.')
-                        ->modalSubmitActionLabel('Yes, Delete'),
+                    DeleteBulkAction::make(),
                 ]),
             ])
-            ->defaultSort('name', 'asc')
-            ->searchable()
-            ->paginated([10, 25, 50, 100])
-            ->persistFiltersInSession();
+            ->defaultSort('name', 'asc');
     }
 }

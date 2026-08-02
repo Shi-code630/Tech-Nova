@@ -2,12 +2,12 @@
 
 namespace App\Filament\Resources\ProductImages\Pages;
 
-use App\Filament\Resources\ProductImages\ProductImageResource;
+use App\Filament\Resources\ProductImages\ProductImagesResource;
 use Filament\Resources\Pages\CreateRecord;
 
-class CreateProductImage extends CreateRecord
+class CreateProductImages extends CreateRecord
 {
-    protected static string $resource = ProductImageResource::class;
+    protected static string $resource = ProductImagesResource::class;
 
     protected function getRedirectUrl(): string
     {
