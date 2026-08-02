@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources\Banners;
 
-use App\Filament\Resources\Banners\Pages\CreateBanners;
+use App\Filament\Resources\Banners\Pages\CreateBanner;
 use App\Filament\Resources\Banners\Pages\EditBanners;
 use App\Filament\Resources\Banners\Pages\ListBanners;
 use App\Filament\Resources\Banners\Schemas\BannerForm;
@@ -81,7 +81,7 @@ class BannerResource extends Resource
     {
         return [
             'index' => ListBanners::route('/'),
-            'create' => CreateBanners::route('/create'),
+            'create' => CreateBanner::route('/create'),
             'edit' => EditBanners::route('/{record}/edit'),
         ];
     }

@@ -8,7 +8,7 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
 use Filament\Resources\Pages\EditRecord;
 
-class EditBanner extends EditRecord
+class EditBanners extends EditRecord
 {
     protected static string $resource = BannerResource::class;
 

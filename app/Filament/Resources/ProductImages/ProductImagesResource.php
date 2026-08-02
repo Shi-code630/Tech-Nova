@@ -20,9 +20,7 @@ class ProductImagesResource extends Resource
 
 
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
-
-    protected static ?string $recordTitleAttribute = 'id';
+   
 
     public static function getNavigationGroup(): ?string
     {
