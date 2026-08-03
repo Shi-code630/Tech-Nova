@@ -64,10 +64,11 @@ public function smartLocks(){return view('category.smart-home.smart-door-locks')
 public function smartSensors(){return view('category.smart-home.smart-sensors');}
 
 // Electrical
-public function lighting(){return view('category.electrical.lighting');}
-public function switchesSockets(){return view('category.electrical.switches-sockets');}
-public function wiresCables(){return view('category.electrical.wires-cables');}
-public function extensionBoards(){return view('category.electrical.extension-boards');}
-public function circuitBreakers(){return view('category.electrical.circuit-breakers');}
+public function cablesAdapters() { return view('category.electrical.cables-adapters'); }
+public function chargers() { return view('category.electrical.chargers'); }
+public function extensionBoards() { return view('category.electrical.extension-boards'); }
+public function powerBanks() { return view('category.electrical.power-banks'); }
+public function batteries() { return view('category.electrical.batteries'); }
+public function electricalAccessories() { return view('category.electrical.electrical-accessories'); }
 
 }

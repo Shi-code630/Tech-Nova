@@ -49,4 +49,25 @@ Route::prefix('category')->group(function () {
     Route::get('/electric-kettles', [PageController::class, 'electricKettles'])->name('electric.kettles');
     Route::get('/rice-cookers', [PageController::class, 'riceCookers'])->name('rice.cookers');
     Route::get('/water-heaters', [PageController::class, 'waterHeaters'])->name('water.heaters');
+    Route::get('/washing-machines', [PageController::class, 'washingMachines'])->name('washing.machines');
+    Route::get('/vacuum-cleaners', [PageController::class, 'vacuumCleaners'])->name('vacuum.cleaners');
+
+
+
+    // Smart Home
+    Route::get('/smart-speakers', [PageController::class, 'smartSpeakers'])->name('smart.speakers');
+    Route::get('/smart-lighting', [PageController::class, 'smartLighting'])->name('smart.lighting');
+    Route::get('/smart-security', [PageController::class, 'smartSecurity'])->name('smart.security');
+    Route::get('/smart-locks', [PageController::class, 'smartLocks'])->name('smart.locks');
+    Route::get('/smart-sensors', [PageController::class, 'smartSensors'])->name('smart.sensors');
+
+
+    // Electrical
+    Route::get('/cables-adapters', [PageController::class, 'cablesAdapters'])->name('cables.adapters');
+    Route::get('/chargers', [PageController::class, 'chargers'])->name('chargers');
+    Route::get('/extension-boards', [PageController::class, 'extensionBoards'])->name('extension.boards');
+    Route::get('/power-banks', [PageController::class, 'powerBanks'])->name('power.banks');
+    Route::get('/batteries', [PageController::class, 'batteries'])->name('batteries');
+    Route::get('/electrical-accessories', [PageController::class, 'electricalAccessories'])->name('electrical.accessories');
+
 });
