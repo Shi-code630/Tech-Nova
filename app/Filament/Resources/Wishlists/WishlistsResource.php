@@ -8,7 +8,6 @@ use App\Filament\Resources\Wishlists\Pages\ListWishlists;
 use App\Filament\Resources\Wishlists\Schemas\WishlistsForm;
 use App\Filament\Resources\Wishlists\Tables\WishlistsTable;
 use App\Models\Wishlist;
-use App\Models\Wishlists;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -19,7 +18,7 @@ class WishlistsResource extends Resource
 {
     protected static ?string $model = Wishlist::class;
 
-     public static function getNavigationGroup(): ?string
+    public static function getNavigationGroup(): ?string
     {
         return 'Customer Activity';
     }
@@ -29,9 +28,39 @@ class WishlistsResource extends Resource
         return 16;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHeart;
 
-    protected static ?string $recordTitleAttribute = 'name';
+    
+
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    // public static function getNavigationBadge(): ?string
+    // {
+    //     $count = static::getModel()::count();
+    //     return $count > 0 ? (string) $count : null;
+    // }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'danger';
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['product.name', 'user.name'];
+    }
+
+    public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Product' => $record->product_name,
+            'Customer' => $record->customer_name,
+            'Added' => $record->added_at,
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {

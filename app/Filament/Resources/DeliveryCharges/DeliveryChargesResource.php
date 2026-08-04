@@ -43,6 +43,17 @@ class DeliveryChargesResource extends Resource
         return DeliveryChargesTable::configure($table);
     }
 
+      public static function getGloballySearchableAttributes(): array
+    {
+        return [
+            'district',
+            'city',
+            'province',
+            'name',
+            'charge'
+        ];
+    }
+
     public static function getRelations(): array
     {
         return [];

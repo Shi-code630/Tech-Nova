@@ -117,10 +117,10 @@
                         </a>
                         <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">📱 Smartphones</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🎧 Mobile Accessories</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">⌚ Smart Watches</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🔋 Power & Charging</a></li>
+                                <li><a href="{{ route('smartphones') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📱 Smartphones</a></li>
+                                <li><a href="{{ route('mobile.accessories') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎧 Mobile Accessories</a></li>
+                                <li><a href="{{ route('smart.watches') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⌚ Smart Watches</a></li>
+                                <li><a href="{{ route('power.charging') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Power & Charging</a></li>
                             </ul>
                         </div>
                     </li>
@@ -135,13 +135,13 @@
                         </a>
                         <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">💻 Laptops</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🖥️ Desktop Computers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🖥 Monitors</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">⌨️ Computer Accessories</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">💾 Storage Devices</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🖨️ Printers & Office Equipment</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">📡 Networking Devices</a></li>
+                                <li><a href="{{ route('laptops') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💻 Laptops</a></li>
+                                <li><a href="{{ route('desktop.computers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🖥️ Desktop Computers</a></li>
+                                <li><a href="{{ route('monitors') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🖥 Monitors</a></li>
+                                <li><a href="{{ route('computer.accessories') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⌨️ Computer Accessories</a></li>
+                                <li><a href="{{ route('storage.devices') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💾 Storage Devices</a></li>
+                                <li><a href="{{ route('printers.office.equipment') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🖨️ Printers & Office Equipment</a></li>
+                                <li><a href="{{ route('networking.devices') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📡 Networking Devices</a></li>
                             </ul>
                         </div>
                     </li>
@@ -156,14 +156,14 @@
                         </a>
                         <div class="absolute left-0 top-full hidden group-hover:block w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🎮 Gaming</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🎵 Audio</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🕹️ Gaming Controllers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🎧 Headsets & Audio Devices</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">📷 Cameras</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">📺 Smart TVs</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">📺 LED TVs</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🤖 Android TVs</a></li>
+                                <li><a href="{{ route('gaming') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎮 Gaming</a></li>
+                                <li><a href="{{ route('audio') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎵 Audio</a></li>
+                                <li><a href="{{ route('gaming.controllers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🕹️ Gaming Controllers</a></li>
+                                <li><a href="{{ route('headsets.audio.devices') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎧 Headsets & Audio Devices</a></li>
+                                <li><a href="{{ route('cameras') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📷 Cameras</a></li>
+                                <li><a href="{{ route('smart.tvs') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📺 Smart TVs</a></li>
+                                <li><a href="{{ route('led.tvs') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📺 LED TVs</a></li>
+                                <li><a href="{{ route('android.tvs') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🤖 Android TVs</a></li>
                             </ul>
                         </div>
                     </li>
@@ -178,16 +178,16 @@
                         </a>
                         <div class="absolute left-0 top-full hidden group-hover:block w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">❄️ Air Conditioners (AC)</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🌬️ Air Coolers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🌀 Fans</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🧊 Refrigerators</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">👕 Washing Machines</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🍲 Microwave Ovens</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🍚 Rice Cookers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">☕ Electric Kettles</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🧹 Vacuum Cleaners</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🚿 Water Heaters (Geysers)</a></li>
+                                <li><a href="{{ route('air.conditioners') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">❄️ Air Conditioners (AC)</a></li>
+                                <li><a href="{{ route('air.coolers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🌬️ Air Coolers</a></li>
+                                <li><a href="{{ route('fans') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🌀 Fans</a></li>
+                                <li><a href="{{ route('refrigerators') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🧊 Refrigerators</a></li>
+                                <li><a href="{{ route('washing.machines') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">👕 Washing Machines</a></li>
+                                <li><a href="{{ route('microwave.ovens') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🍲 Microwave Ovens</a></li>
+                                <li><a href="{{ route('rice.cookers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🍚 Rice Cookers</a></li>
+                                <li><a href="{{ route('electric.kettles') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">☕ Electric Kettles</a></li>
+                                <li><a href="{{ route('vacuum.cleaners') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🧹 Vacuum Cleaners</a></li>
+                                <li><a href="{{ route('water.heaters') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🚿 Water Heaters (Geysers)</a></li>
                             </ul>
                         </div>
                     </li>
@@ -202,10 +202,10 @@
                         </a>
                         <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🏠 Smart Home Devices</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">📹 CCTV & Security</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">☀️ Solar Products</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🔋 Inverters & UPS</a></li>
+                                <li><a href="{{ route('smart.speakers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🏠 Smart Home Devices</a></li>
+                                <li><a href="{{ route('smart.security') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📹 CCTV & Security</a></li>
+                                <li><a href="{{ route('smart.sensors') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">☀️ Solar Products</a></li>
+                                <li><a href="{{ route('smart.locks') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Inverters & UPS</a></li>
                             </ul>
                         </div>
                     </li>
@@ -220,12 +220,12 @@
                         </a>
                         <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🔌 Cables & Adapters</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🔋 Chargers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🧰 Extension Boards</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🔋 Power Banks</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🔋 Batteries</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">⚡ Electrical Accessories</a></li>
+                                <li><a href="{{ route('cables.adapters') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔌 Cables & Adapters</a></li>
+                                <li><a href="{{ route('chargers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Chargers</a></li>
+                                <li><a href="{{ route('extension.boards') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🧰 Extension Boards</a></li>
+                                <li><a href="{{ route('power.banks') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Power Banks</a></li>
+                                <li><a href="{{ route('batteries') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Batteries</a></li>
+                                <li><a href="{{ route('electrical.accessories') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⚡ Electrical Accessories</a></li>
                             </ul>
                         </div>
                     </li>
@@ -240,10 +240,10 @@
                         </a>
                         <div class="absolute right-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
                             <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🆕 New Products</a></li>
-                                <li><a href="" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">⏳ Limited Time Offers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">💥 Today's Deals</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-[#2563EB] text-sm text-[#111827]">🎉 Dhamaka Sale</a></li>
+                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🆕 New Products</a></li>
+                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⏳ Limited Time Offers</a></li>
+                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💥 Today's Deals</a></li>
+                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎉 Dhamaka Sale</a></li>
                             </ul>
                         </div>
                     </li>

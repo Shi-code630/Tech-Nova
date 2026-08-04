@@ -2,6 +2,13 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Widgets\LowStockAlert;
+use App\Filament\Widgets\OrdersByStatus;
+use App\Filament\Widgets\OrdersByStatusChart;
+use App\Filament\Widgets\SalesChart;
+use App\Filament\Widgets\SalesOverviewChart;
+use App\Filament\Widgets\StatsOverview as WidgetsStatsOverview;
+use App\Filament\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -53,12 +60,18 @@ class AdminPanelProvider extends PanelProvider
                 for: 'App\\Filament\\Widgets'
             )
 
-            ->pages([
-                Dashboard::class,
 
+            // ->pages([
+            //     Dashboard::class,
+
+            // ])
+
+            ->widgets([
+                StatsOverview::class,
+                SalesOverviewChart::class,
+                OrdersByStatusChart::class,
+                LowStockAlert::class,
             ])
-
-            ->widgets([])
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Customer Management')
