@@ -17,4 +17,20 @@ class PageController extends Controller
     }
 
 
+     public function privacypolicy()
+    {
+        return view('frontend.privacy-policy');
+    }
+     public function refundpolicy()
+    {
+        return view('frontend.refund-policy');
+    }
+     public function termsofservice()
+    {
+        return view('frontend.terms-of-service');
+    }
+     public function contactus()
+    {
+        return view('frontend.contact-us');
+    }
 }
