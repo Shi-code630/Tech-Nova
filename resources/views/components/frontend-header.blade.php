@@ -68,7 +68,22 @@
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-2 h-2 text-white/70 hidden sm:block transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
-                        </button>
+                        </div>
+                        <span class="text-white text-sm font-medium hidden sm:inline">
+                            Account
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-3 h-3 text-white/70 hidden sm:block transition-transform duration-300 group-hover:rotate-180"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </a>
+
                         <!-- Profile Dropdown -->
                         <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
                             <div class="py-2">
@@ -96,6 +111,7 @@
                                 </div>
                             </div>
                         </div>
+                    </a>
                     </div>
 
                 </div>

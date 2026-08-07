@@ -11,6 +11,9 @@ use App\Http\Controllers\BrandController; // agar BrandController hai
 Route::get('/', [PageController::class, 'home'])->name('home');
 
 
+Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+
+
 
 Route::prefix('category')->group(function () {
 
