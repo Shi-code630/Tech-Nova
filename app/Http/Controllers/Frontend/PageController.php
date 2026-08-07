@@ -72,20 +72,10 @@ public function batteries() { return view('category.electrical.batteries'); }
 public function electricalAccessories() { return view('category.electrical.electrical-accessories'); }
 
 
-    public function privacypolicy()
-    {
-        return view('frontend.privacy-policy');
-    }
-     public function refundpolicy()
-    {
-        return view('frontend.refund-policy');
-    }
-     public function termsofservice()
-    {
-        return view('frontend.terms-of-service');
-    }
-     public function contactus()
-    {
-        return view('frontend.contact-us');
-    }
+    public function privacypolicy(){ return view('frontend.privacy-policy');}
+    public function refundpolicy(){ return view('frontend.refund-policy');}
+    public function termsofservice(){ return view('frontend.terms-of-service'); }
+    public function contactus(){return view('frontend.contact-us'); }
+    public function warrantypolicy(){return view('frontend.warranty-policy'); }
+    public function careers(){return view('frontend.careers'); }
 }

@@ -1,7 +1,7 @@
 <x-frontend-layout >
     <Section class="bg-[#f0f9ff]">
-        <div class=" container mx-auto pt-[120px]">
-        <div class="mt-[10px] pt-[120px]">
+        <div class=" container mx-auto">
+        <div class="mt-[10px] ">
     <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl ">
 
         <!-- Slides Wrapper -->
@@ -518,6 +518,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modern & User-Friendly Professional Contact Box -->
         <div class="relative overflow-hidden bg-white via-blue-50/50 to-slate-50 rounded-3xl border border-blue-100 shadow-xl shadow-blue-900/5 p-6 md:p-10 transition-all duration-300">
 

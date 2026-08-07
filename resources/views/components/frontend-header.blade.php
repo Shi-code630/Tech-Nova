@@ -1,4 +1,4 @@
-<header class="fixed top-0 left-0 w-full z-[9999]">
+<header class="">
 <div class="w-full shadow-md ">
 
         <!-- Top Header -->

@@ -76,3 +76,5 @@ Route::get('/privacy-policy', [PageController::class, 'privacypolicy'])->name('p
 Route::get('/refund-policy', [PageController::class, 'refundpolicy'])->name('refund-policy');
 Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name('terms-of-service');
 Route::get('/contact-us', [PageController::class, 'contactus'])->name('contact-us');
+Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
+Route::get('/careers', [PageController::class, 'careers'])->name('careers');
