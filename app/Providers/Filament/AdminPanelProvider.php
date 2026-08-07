@@ -35,10 +35,10 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->authGuard('admin')
-            ->registration()
+            //->registration()
             ->login()
             ->profile()
-            ->registration()
+            //->registration()
             ->brandName('Tech Nova Admin')
             ->colors([
                 'primary' => Color::Amber,

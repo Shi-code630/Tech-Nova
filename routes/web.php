@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Frontend\PageController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\BrandController; // agar BrandController hai
 
 //Route::get('/', function () {
    // return view('welcome');
@@ -78,3 +78,6 @@ Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name
 Route::get('/contact-us', [PageController::class, 'contactus'])->name('contact-us');
 Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
+
+
+Route::get('/brand/{slug}', [PageController::class, 'show'])->name('brand.show');
