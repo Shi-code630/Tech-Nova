@@ -59,18 +59,29 @@
                     </a>
 
                     <!-- Profile -->
-                    <div class="relative group">
-                        <button class="flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 rounded-full pl-2 pr-3 py-1 border border-white/30 shadow-lg group-hover:scale-105">
-                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-inner">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5.121 17.804A9 9 0 1118.88 17.8M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                </svg>
-                            </div>
-                            <span class="text-white text-sm font-medium hidden sm:inline">Account</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-2 h-2 text-white/70 hidden sm:block transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    <a href="{{ route('user.dashboard') }}"
+                        class="flex items-center gap-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300 rounded-full pl-2 pr-3 py-1 border border-white/30 shadow-lg group hover:scale-105">
+                        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold text-sm shadow-inner">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                    d="M5.121 17.804A9 9 0 1118.88 17.8M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
-                        </button>
+                        </div>
+                        <span class="text-white text-sm font-medium hidden sm:inline">
+                            Account
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                                class="w-3 h-3 text-white/70 hidden sm:block transition-transform duration-300 group-hover:rotate-180"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </a>
+
                         <!-- Profile Dropdown -->
                         <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
                             <div class="py-2">
@@ -98,6 +109,7 @@
                                 </div>
                             </div>
                         </div>
+                    </a>
                     </div>
 
                 </div>

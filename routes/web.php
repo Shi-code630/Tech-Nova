@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Frontend\PageController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserDashboardController;
+
 
 
 //Route::get('/', function () {
@@ -9,6 +11,9 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/', [PageController::class, 'home'])->name('home');
+
+
+Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 
 
 
