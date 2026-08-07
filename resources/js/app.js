@@ -5,4 +5,3 @@ import "flowbite";
 import './slider';
 
 import './startTimers';
-

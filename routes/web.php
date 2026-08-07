@@ -2,9 +2,7 @@
 
 use App\Http\Controllers\Frontend\PageController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserDashboardController;
-
-
+use App\Http\Controllers\BrandController; // agar BrandController hai
 
 //Route::get('/', function () {
    // return view('welcome');
@@ -76,3 +74,13 @@ Route::prefix('category')->group(function () {
     Route::get('/electrical-accessories', [PageController::class, 'electricalAccessories'])->name('electrical.accessories');
 
 });
+
+Route::get('/privacy-policy', [PageController::class, 'privacypolicy'])->name('privacy-policy');
+Route::get('/refund-policy', [PageController::class, 'refundpolicy'])->name('refund-policy');
+Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name('terms-of-service');
+Route::get('/contact-us', [PageController::class, 'contactus'])->name('contact-us');
+Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
+Route::get('/careers', [PageController::class, 'careers'])->name('careers');
+
+
+Route::get('/brand/{slug}', [PageController::class, 'show'])->name('brand.show');

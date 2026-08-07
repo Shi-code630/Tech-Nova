@@ -13,7 +13,9 @@ class ListShoppingCarts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()
+                ->label('Add to Cart')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

@@ -30,7 +30,17 @@ class RewardTransactionResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
+
     protected static ?string $recordTitleAttribute = 'id';
+
+      public static function getGlobalSearchResultDetails($record): array
+    {
+        return [
+            'Customer' => $record->customer_name,
+            'Points' => $record->formatted_points,
+            'Type' => $record->type_label,
+        ];
+    }
 
     public static function form(Schema $schema): Schema
     {

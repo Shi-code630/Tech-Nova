@@ -3,16 +3,19 @@
 namespace App\Filament\Pages;
 
 use App\Models\Order;
+use App\Models\Product;
 use BackedEnum;
 use Carbon\Carbon;
 use Filament\Actions\Action;
-
 use Filament\Pages\Page;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Notifications\Notification;
 
 class SalesReport extends Page
 {
-  protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
-    protected  string $view = 'filament.pages.sales-report';
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
+    protected string $view = 'filament.pages.sales-report';
 
     public static function getNavigationGroup(): string
     {
@@ -91,7 +94,14 @@ class SalesReport extends Page
         $totalSales = $orders->sum('grand_total');
         $totalOrders = $orders->count();
         $averageOrder = $totalOrders > 0 ? $totalSales / $totalOrders : 0;
+        $totalItemsSold = $orders->sum(function ($order) {
+            return $order->items->sum('quantity') ?? 0;
+        });
+        $refunds = Order::whereBetween('created_at', [$start, $end])
+            ->where('order_status', 'refunded')
+            ->sum('grand_total');
 
+        // Daily Sales Data
         $dailySales = Order::whereBetween('created_at', [$start, $end])
             ->where('order_status', '!=', 'cancelled')
             ->selectRaw('DATE(created_at) as date, SUM(grand_total) as total, COUNT(*) as count')
@@ -99,19 +109,47 @@ class SalesReport extends Page
             ->orderBy('date')
             ->get();
 
+        // Payment Methods
         $paymentMethods = Order::whereBetween('created_at', [$start, $end])
             ->where('order_status', '!=', 'cancelled')
             ->selectRaw('payment_method, COUNT(*) as count, SUM(grand_total) as total')
             ->groupBy('payment_method')
             ->get();
 
+        // Top Selling Products
+        $topProducts = Product::select('products.id', 'products.name')
+            ->join('order_items', 'products.id', '=', 'order_items.product_id')
+            ->join('orders', 'order_items.order_id', '=', 'orders.id')
+            ->whereBetween('orders.created_at', [$start, $end])
+            ->where('orders.order_status', '!=', 'cancelled')
+            ->selectRaw('SUM(order_items.quantity) as total_sold, SUM(order_items.total) as total_revenue')
+            ->groupBy('products.id', 'products.name')
+            ->orderBy('total_sold', 'desc')
+            ->limit(5)
+            ->get();
+
+        // Previous Period Comparison
+        $previousStart = (clone $start)->subMonth();
+        $previousEnd = (clone $end)->subMonth();
+        $previousOrders = Order::whereBetween('created_at', [$previousStart, $previousEnd])
+            ->where('order_status', '!=', 'cancelled')
+            ->get();
+        $previousTotalSales = $previousOrders->sum('grand_total');
+        $salesGrowth = $previousTotalSales > 0
+            ? (($totalSales - $previousTotalSales) / $previousTotalSales) * 100
+            : 0;
+
         return [
             'totalSales' => $totalSales,
             'totalOrders' => $totalOrders,
             'averageOrder' => $averageOrder,
+            'totalItemsSold' => $totalItemsSold,
+            'refunds' => $refunds,
             'orders' => $orders->take(10),
             'dailySales' => $dailySales,
             'paymentMethods' => $paymentMethods,
+            'topProducts' => $topProducts,
+            'salesGrowth' => $salesGrowth,
             'startDate' => $this->startDate,
             'endDate' => $this->endDate,
             'dateRange' => $this->dateRange,
@@ -126,7 +164,7 @@ class SalesReport extends Page
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('gray')
                 ->action(function () {
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title('Report exported successfully')
                         ->success()
                         ->send();

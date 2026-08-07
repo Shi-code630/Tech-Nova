@@ -44,7 +44,7 @@ class ProductVariant extends Model
      */
     public function getFormattedPriceAttribute(): string
     {
-        return 'Rs. ' . number_format($this->price, 2);
+        return 'Rs. ' . number_format($this->price ?? 0, 2);
     }
 
     /**
@@ -53,14 +53,6 @@ class ProductVariant extends Model
     public function getIsActiveAttribute(): bool
     {
         return $this->stock > 0 && $this->status;
-    }
-
-    /**
-     * Get formatted price
-     */
-    public function getFormattedPriceAttribute()
-    {
-        return 'Rs. ' . number_format($this->price ?? 0, 2);
     }
 
     /**

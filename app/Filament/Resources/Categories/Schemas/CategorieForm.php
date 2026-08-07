@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Categories\Schemas;
 
-use App\Models\Categorie;
-use Filament\Forms\Components\Grid;
-use Filament\Forms\Components\Section;
+use App\Models\Category;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
@@ -21,6 +21,7 @@ class CategorieForm
             ->components([
                 Section::make('Basic Information')
                     ->schema([
+
                         Grid::make(2)
                             ->schema([
 
@@ -47,10 +48,11 @@ class CategorieForm
                                     ->nullable()
                                     ->helperText('Optional')
                                     ->rule(function ($record) {
+
                                         $excludedIds = [];
 
                                         if ($record) {
-                                            $descendants = $record->allChildren()->pluck('id')->toArray();
+                                            $descendants = static::getDescendantIds($record);
                                             $excludedIds = array_merge([$record->id], $descendants);
                                         }
 
@@ -87,13 +89,18 @@ class CategorieForm
             ]);
     }
 
+    /**
+     * Parent category options
+     */
     private static function getParentOptions($record = null): array
     {
         $excludeIds = [];
 
         if ($record) {
-            $descendants = $record->allChildren()->pluck('id')->toArray();
-            $excludeIds = array_merge([$record->id], $descendants);
+            $excludeIds = array_merge(
+                [$record->id],
+                static::getDescendantIds($record)
+            );
         }
 
         $categories = Category::query()
@@ -106,11 +113,15 @@ class CategorieForm
         return static::buildTree($categories);
     }
 
+    /**
+     * Build category tree
+     */
     private static function buildTree($categories, $parentId = null, $level = 0): array
     {
         $options = [];
 
         foreach ($categories as $category) {
+
             if ($category->parent_id == $parentId) {
 
                 $options[$category->id] =
@@ -125,5 +136,25 @@ class CategorieForm
         }
 
         return $options;
+    }
+
+    /**
+     * Get all descendant IDs recursively
+     */
+    private static function getDescendantIds($category): array
+    {
+        $ids = [];
+
+        foreach ($category->children as $child) {
+
+            $ids[] = $child->id;
+
+            $ids = array_merge(
+                $ids,
+                static::getDescendantIds($child)
+            );
+        }
+
+        return $ids;
     }
 }

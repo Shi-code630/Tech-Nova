@@ -1,8 +1,8 @@
 <x-frontend-layout >
     <Section class="bg-[#f0f9ff]">
         <div class=" container mx-auto">
-        <div class="mt-[10px]">
-    <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl">
+        <div class="mt-[10px] ">
+    <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl ">
 
         <!-- Slides Wrapper -->
   <div id="slider" class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
@@ -518,6 +518,144 @@
         </div>
     </div>
 </div>
+<div class="py-3 pb-10">
+
+    <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+            <!-- Left Side -->
+            <div class="flex items-center gap-3">
+                <div class="text-black text-lg font-semibold  py-2 rounded-lg">
+                   Shop By Brands
+                </div>
+                <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+            </div>
+
+            <!-- Right Side -->
+            <a href="#"
+               class="flex items-center gap-2 text-black-600 hover:text-black-700 font-medium transition-colors group">
+                Explore products from trusted global brands.
+                <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+            </a>
+        </div>
+
+   @if($brands->where('status', true)->count() > 0)
+        @php
+            $activeBrands = $brands->where('status', true)->values();
+        @endphp
+
+        <div class="relative overflow-hidden">
+            <!-- Slider Track -->
+            <div class="flex gap-6 animate-scroll hover:pause">
+                @foreach($activeBrands as $brand)
+                    <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[170px] h-[160px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
+                        <div class="w-20 h-20 flex items-center justify-center">
+                            @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+                                <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                            @else
+                                <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
+                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                </div>
+                            @endif
+                        </div>
+                        <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
+                    </a>
+                @endforeach
+
+                <!-- Duplicate for seamless loop -->
+                @foreach($activeBrands as $brand)
+                    <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[170px] h-[160px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
+                        <div class="w-20 h-20 flex items-center justify-center">
+                            @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+                                <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                            @else
+                                <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
+                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                </div>
+                            @endif
+                        </div>
+                        <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
+                    </a>
+                @endforeach
+            </div>
+
+            <!-- Gradient masks to fade edges (optional) -->
+            <div class="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+            <div class="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+        </div>
+    @else
+        <p class="text-center text-gray-500">No brands available at the moment.</p>
+    @endif
 </div>
+
+<style>
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    .animate-scroll {
+        animation: scroll 30s linear infinite;
+        width: max-content;
+    }
+
+    .hover\:pause:hover {
+        animation-play-state: paused;
+    }
+</style>
+
+<!-- Modern & User-Friendly Professional Contact Box -->
+        <div class="relative overflow-hidden bg-white via-blue-50/50 to-slate-50 rounded-3xl border border-blue-100 shadow-xl shadow-blue-900/5 p-6 md:p-10 transition-all duration-300">
+
+            <!-- Background Soft Glow Effect -->
+            <div class="absolute -top-12 -right-12 w-40 h-40 bg-blue-400/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-12 -left-12 w-40 h-40 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-blue-100">
+
+                <!-- Email Item -->
+                <a href="mailto:support@technova.com.np" class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:pr-6 transition-all duration-300 hover:translate-y-[-2px]">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">Email Us</span>
+                    <h3 class="text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors break-all">support@technova.com.np</h3>
+                    <p class="text-xs text-gray-500 mt-1">24/7 Quick Online Support</p>
+                </a>
+
+                <!-- Phone Item -->
+                <a href="tel:+97715551234" class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:px-6 transition-all duration-300 hover:translate-y-[-2px]">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">Call Us</span>
+                    <h3 class="text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">+977 1-555-1234</h3>
+                    <p class="text-xs text-gray-500 mt-1">Sun-Fri 9AM-7PM, Sat Closed</p>
+                </a>
+
+                <!-- Address Item -->
+                <a href="https://maps.google.com/?q=Kathmandu,Nepal" target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:pl-6 transition-all duration-300 hover:translate-y-[-2px]">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">Our Location</span>
+                    <h3 class="text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">Kathmandu, Nepal</h3>
+                    <p class="text-xs text-gray-500 mt-1">Click to view on Google Maps</p>
+                </a>
+
+            </div>
+        </div>
+</div>
+
     </Section>
 </x-frontend-layout>

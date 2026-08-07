@@ -8,7 +8,6 @@ use App\Filament\Resources\Settings\Pages\ListSettings;
 use App\Filament\Resources\Settings\Schemas\SettingsForm;
 use App\Filament\Resources\Settings\Tables\SettingsTable;
 use App\Models\Setting;
-use App\Models\Settings;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -29,9 +28,19 @@ class SettingsResource extends Resource
         return 20;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
 
     protected static ?string $recordTitleAttribute = 'site_name';
+
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['site_name', 'email', 'phone'];
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -45,9 +54,7 @@ class SettingsResource extends Resource
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array

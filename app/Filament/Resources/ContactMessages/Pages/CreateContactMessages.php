@@ -8,4 +8,9 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateContactMessages extends CreateRecord
 {
     protected static string $resource = ContactMessagesResource::class;
+
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
 }

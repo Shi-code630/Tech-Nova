@@ -28,4 +28,10 @@ class Brand extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function index()
+{
+    $brands = Brand::all(); // ya Brand::where('status', true)->get();
+
+    return view('frontend.home', compact('brands'));
+}
 }
