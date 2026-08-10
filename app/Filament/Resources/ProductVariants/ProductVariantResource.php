@@ -1,87 +1,116 @@
 <?php
 
-namespace App\Filament\Resources\ProductVariants;
+namespace App\Models;
 
-use App\Filament\Resources\ProductVariants\Pages\CreateProductVariants;
-use App\Filament\Resources\ProductVariants\Pages\EditProductVariants;
-use App\Filament\Resources\ProductVariants\Pages\ListProductVariants;
-use App\Filament\Resources\ProductVariants\Schemas\ProductVariantsForm;
-use App\Filament\Resources\ProductVariants\Tables\ProductVariantsTable;
-use App\Models\ProductVariant;
-use BackedEnum;
-use Filament\Resources\Resource;
-use Filament\Schemas\Schema;
-use Filament\Tables\Table;
-use Filament\Support\Icons\Heroicon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ProductVariantsResource extends Resource
+class ProductVariant extends Model
 {
-    protected static ?string $model = ProductVariant::class;
+    use HasFactory;
 
-    public static function getNavigationGroup(): ?string
+    protected $table = 'product_variants';
+
+    protected $fillable = [
+        'product_id',
+        'color',
+        'size',
+        'price',
+        'stock',
+        'image',
+        'status',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'stock' => 'integer',
+        'status' => 'boolean',
+    ];
+
+    // ============ RELATIONSHIPS ============
+
+    public function product()
     {
-        return 'Product Management';
+        return $this->belongsTo(Product::class);
     }
 
-    public static function getNavigationSort(): ?int
+    // ============ ACCESSORS ============
+
+    public function getFullNameAttribute()
     {
-        return 5;
+        return trim(($this->color ?? '') . ' / ' . ($this->size ?? ''), ' /');
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    protected static ?string $recordTitleAttribute = 'full_name';
-
-    // public static function getNavigationBadge(): ?string
-    // {
-    //     $count = static::getModel()::count();
-    //     return $count > 0 ? (string) $count : null;
-    // }
-
-    public static function getNavigationBadgeColor(): ?string
+    public function getFormattedPriceAttribute(): string
     {
-        return 'info';
+        return 'Rs. ' . number_format($this->price ?? 0, 2);
     }
 
-    public static function getGloballySearchableAttributes(): array
+    public function getIsActiveAttribute(): bool
     {
-        return ['color', 'size', 'product.name'];
+        return $this->stock > 0 && $this->status;
     }
 
-    public static function getGlobalSearchResultDetails($record): array
+    public function getStockStatusAttribute()
     {
-        return [
-            'Product' => $record->product?->name,
-            'Variant' => $record->full_name,
-            'Price' => $record->formatted_price,
-            'Stock' => $record->stock,
-        ];
+        if ($this->stock > 0 && $this->status) {
+            return 'In Stock';
+        } elseif ($this->stock <= 0 && $this->status) {
+            return 'Out of Stock';
+        } else {
+            return 'Inactive';
+        }
     }
 
-
-    public static function form(Schema $schema): Schema
+    public function getStockStatusColorAttribute()
     {
-        return ProductVariantsForm::configure($schema);
+        if ($this->stock > 0 && $this->status) {
+            return 'success';
+        } elseif ($this->stock <= 0 && $this->status) {
+            return 'danger';
+        } else {
+            return 'secondary';
+        }
     }
 
-    public static function table(Table $table): Table
+    public function scopeSearchFullName($query, $search)
     {
-        return ProductVariantsTable::configure($table);
+        return $query->where('color', 'LIKE', "%{$search}%")
+            ->orWhere('size', 'LIKE', "%{$search}%");
     }
 
-    public static function getRelations(): array
+    public function getFullNameSortableAttribute()
     {
-        return [
-            //
-        ];
+        return $this->color . ' ' . $this->size;
     }
 
-    public static function getPages(): array
+    // ============ SCOPES ============
+
+    public function scopeActive($query)
     {
-        return [
-            'index' => ListProductVariants::route('/'),
-            'create' => CreateProductVariants::route('/create'),
-            'edit' => EditProductVariants::route('/{record}/edit'),
-        ];
+        return $query->where('status', true);
+    }
+
+    public function scopeInStock($query)
+    {
+        return $query->where('stock', '>', 0);
+    }
+
+    // ============ HELPERS ============
+
+    public function decreaseStock(int $quantity): bool
+    {
+        if ($this->stock < $quantity) {
+            return false;
+        }
+        $this->stock -= $quantity;
+        $this->save();
+        return true;
+    }
+
+    public function increaseStock(int $quantity): void
+    {
+        $this->stock += $quantity;
+        $this->save();
     }
 }

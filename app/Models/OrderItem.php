@@ -3,6 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\ProductVariant;
+
 
 class OrderItem extends Model
 {

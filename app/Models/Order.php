@@ -2,8 +2,14 @@
 
 namespace App\Models;
 
-use Faker\Provider\Address;
-use Faker\Provider\Payment;
+use App\Models\Address;
+use App\Models\Payment;
+use App\Models\RewardTransaction;
+use App\Models\User;
+use App\Models\Coupon;
+use App\Models\OrderItem;
+
+
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
@@ -28,10 +34,10 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    // public function address()
-    // {
-    //      return $this->belongsTo(Address::class)->withDefault();
-    // }
+    public function address()
+    {
+         return $this->belongsTo(Address::class)->withDefault();
+    }
 
     public function coupon()
     {
@@ -47,6 +53,11 @@ class Order extends Model
     {
         return $this->hasOne(Payment::class);
     }
+     public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
 
     public function rewardTransaction()
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Widgets\Dashboard;
 
-use App\Models\Customer;
+
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
@@ -16,7 +16,7 @@ class StatsOverview extends BaseWidget
     protected int|string|array $columnSpan = 12;
     public  function getColumns(): int
     {
-        return 5; 
+        return 5;
     }
 
     protected function getStats(): array
