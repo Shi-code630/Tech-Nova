@@ -24,11 +24,12 @@ class SalesByCategory extends Widget
 
     protected string $view = 'filament.widgets.product.sales-by-category';
 
-    public ?array $filters = [];
-
+   
     public function getCategoryData(): Collection
     {
-        [$start, $end] = $this->getDateRange();
+
+        $start = $this->dateRange['start'] ?? now()->startOfMonth();
+        $end = $this->dateRange['end'] ?? now()->endOfMonth();
 
         $data = Category::query()
             ->select('categories.id', 'categories.name')
@@ -63,23 +64,7 @@ class SalesByCategory extends Widget
         });
     }
 
-    protected function getDateRange(): array
-    {
-        $startDate = $this->filters['startDate'] ?? null;
-        $endDate = $this->filters['endDate'] ?? null;
 
-        if ($startDate && $endDate) {
-            return [
-                Carbon::parse($startDate)->startOfDay(),
-                Carbon::parse($endDate)->endOfDay()
-            ];
-        }
-
-        return [
-            now()->startOfMonth(),
-            now()->endOfMonth()
-        ];
-    }
 
     protected function getListeners(): array
     {

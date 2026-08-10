@@ -1,11 +1,15 @@
 <x-filament-widgets::widget>
     <x-filament::section>
         <x-slot name="heading">
-            Customers by Location
+            <div class="flex items-center justify-between w-full">
+                <span>Customers by Location</span>
+                <!-- Optional: Add filter dropdown here if needed -->
+            </div>
         </x-slot>
 
         @php
             $locations = $this->getLocationData();
+            $totalCustomers = $locations->sum('total');
         @endphp
 
         @if($locations->count() > 0)
@@ -14,8 +18,8 @@
                     <thead>
                         <tr class="text-left text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
                             <th class="pb-3 font-medium text-xs uppercase tracking-wider">Location</th>
-                            <th class="pb-3 font-medium text-xs uppercase tracking-wider text-center">Customers</th>
-                            <th class="pb-3 font-medium text-xs uppercase tracking-wider text-right">Percentage</th>
+                            <th class="pb-3 font-medium text-xs uppercase tracking-wider text-center">Value</th>
+                            <th class="pb-3 font-medium text-xs uppercase tracking-wider text-right">Percentage (%)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,15 +36,16 @@
                                     </div>
                                 </td>
                                 <td class="py-3 text-center">
-                                    <span class="inline-flex items-center justify-center px-3 py-0.5 rounded-full text-sm font-medium bg-primary-50 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
-                                        {{ $location->total }}
+                                    <span class="font-semibold text-gray-900 dark:text-white">
+                                        {{ number_format($location->total) }}
                                     </span>
                                 </td>
                                 <td class="py-3 text-right">
                                     <div class="flex items-center justify-end gap-3">
-                                        <div class="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                        <!-- Progress Bar -->
+                                        <div class="w-24 h-2.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                                             <div
-                                                class="h-full rounded-full transition-all duration-500"
+                                                class="h-full rounded-full transition-all duration-700 ease-out"
                                                 style="width: {{ $location->percentage }}%; background: linear-gradient(90deg, #6366f1, #818cf8);"
                                             ></div>
                                         </div>
@@ -53,10 +58,10 @@
                         @endforeach
                     </tbody>
                     <tfoot>
-                        <tr class="border-t border-gray-200 dark:border-gray-700">
+                        <tr class="border-t-2 border-gray-200 dark:border-gray-700">
                             <td class="py-3 font-semibold text-gray-900 dark:text-white">Total</td>
                             <td class="py-3 text-center font-semibold text-gray-900 dark:text-white">
-                                {{ $locations->sum('total') }}
+                                {{ number_format($totalCustomers) }}
                             </td>
                             <td class="py-3 text-right font-semibold text-gray-900 dark:text-white">
                                 100%
@@ -65,11 +70,27 @@
                     </tfoot>
                 </table>
             </div>
+
+            <!-- Optional: Show summary stats below table -->
+            <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 grid grid-cols-3 gap-4 text-center">
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Total Locations</p>
+                    <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $locations->count() }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Total Customers</p>
+                    <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ number_format($totalCustomers) }}</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Top Location</p>
+                    <p class="text-lg font-semibold text-gray-900 dark:text-white">{{ $locations->first()->location ?? 'N/A' }}</p>
+                </div>
+            </div>
         @else
             <div class="flex flex-col items-center justify-center py-8 text-center">
                 <div class="text-5xl mb-3">📍</div>
                 <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400">No Location Data</h4>
-                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">No customer location data available.</p>
+                <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">No customer location data available for the selected period.</p>
             </div>
         @endif
     </x-filament::section>

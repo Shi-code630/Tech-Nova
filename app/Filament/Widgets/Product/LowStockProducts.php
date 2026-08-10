@@ -4,6 +4,7 @@ namespace App\Filament\Widgets\Product;
 
 use App\Filament\Resources\Products\ProductsResource;
 use App\Models\Product;
+use Filament\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -33,8 +34,8 @@ class LowStockProducts extends BaseWidget
                 Tables\Columns\TextColumn::make('name')
                     ->label('Product')
                     ->weight('semibold')
-                    ->url(fn($record) => ProductsResource::getUrl('edit', ['record' => $record->id]))
-                    ->searchable(),
+                    ->url(fn($record) => ProductsResource::getUrl('edit', ['record' => $record->id])),
+
 
                 Tables\Columns\TextColumn::make('stock')
                     ->label('Stock')
@@ -50,6 +51,22 @@ class LowStockProducts extends BaseWidget
                     ->badge()
                     ->alignCenter(),
             ])
+
+            ->headerActions([
+                Action::make('view_all')
+                    ->label('View All')
+                    ->color('gray')
+                    ->outlined()
+                    ->url(fn(): string => ProductsResource::getUrl('index', [
+                        'tableFilters' => [
+                            'stock_filter' => [
+                                'value' => 'low_stock'
+                            ]
+                        ]
+                    ]))
+                    ->openUrlInNewTab(false),
+            ])
+
             ->paginated(false)
             ->emptyStateHeading('No Low Stock Products')
             ->emptyStateDescription('All products have sufficient stock.')

@@ -14,7 +14,7 @@
                 height:100%;
             }
     </style>
-</head> 
+</head>
 <body>
     <x-frontend-header />
 

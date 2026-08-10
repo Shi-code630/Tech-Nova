@@ -7,6 +7,8 @@ use Carbon\Carbon;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\Widget;
 use Illuminate\Support\Collection;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 
 class TopCustomers extends Widget
 {
@@ -23,29 +25,44 @@ class TopCustomers extends Widget
 
     protected string $view = 'filament.widgets.customer.top-customers';
 
-    public ?array $filters = [];
-
-    protected function getRange(): array
+    public function getViewAllUrl(): ?string
     {
-        $startDate = $this->filters['startDate'] ?? null;
-        $endDate = $this->filters['endDate'] ?? null;
+        $params = [];
 
-        if ($startDate && $endDate) {
-            return [
-                Carbon::parse($startDate)->startOfDay(),
-                Carbon::parse($endDate)->endOfDay()
-            ];
+
+        if (isset($this->dateRange['start'])) {
+            $params['tableFilters']['date_range']['start'] = $this->dateRange['start']->toDateString();
+        }
+        if (isset($this->dateRange['end'])) {
+            $params['tableFilters']['date_range']['end'] = $this->dateRange['end']->toDateString();
         }
 
-        return [
-            now()->subDays(90)->startOfDay(),
-            now()->endOfDay()
-        ];
+        try {
+            if (\Illuminate\Support\Facades\Route::has('filament.resources.users.index')) {
+                return route('filament.resources.users.index', $params);
+            }
+
+
+            if (\Illuminate\Support\Facades\Route::has('filament.admin.resources.users.index')) {
+                return route('filament.admin.resources.users.index', $params);
+            }
+
+
+            if (\Illuminate\Support\Facades\Route::has('users.index')) {
+                return route('users.index', $params);
+            }
+        } catch (\Exception $e) {
+           
+            return null;
+        }
+
+        return null;
     }
 
     public function getCustomers(): Collection
     {
-        [$start, $end] = $this->getRange();
+        $start = $this->dateRange['start'] ?? now()->subDays(90)->startOfDay();
+        $end = $this->dateRange['end'] ?? now()->endOfDay();
 
         return User::query()
             ->select('users.*')
@@ -58,11 +75,10 @@ class TopCustomers extends Widget
                       ->where('order_status', '!=', 'cancelled');
             }], 'grand_total')
             ->having('orders_count', '>', 0)
-            ->orderByDesc('total_spent') // ✅ Sort by total spent (matches design)
+            ->orderByDesc('total_spent')
             ->limit(5)
             ->get()
             ->map(function ($user) {
-                // Get initials
                 $name = $user->name ?? 'Guest';
                 $words = explode(' ', $name);
                 $initials = '';
@@ -82,6 +98,29 @@ class TopCustomers extends Widget
                     'total_spent' => $user->total_spent ?? 0,
                 ];
             });
+    }
+
+    protected function getHeaderActions(): array
+    {
+        $viewAllUrl = $this->getViewAllUrl();
+
+        if ($viewAllUrl) {
+            return [
+                ActionGroup::make([
+                    Action::make('viewAll')
+                        ->label('View All')
+                        ->url($viewAllUrl)
+                        ->icon('heroicon-o-arrow-right'),
+                ])
+                ->label('Actions')
+                ->icon('heroicon-o-ellipsis-vertical')
+                ->button()
+                ->color('gray')
+                ->size('sm')
+            ];
+        }
+
+        return [];
     }
 
     protected function getListeners(): array

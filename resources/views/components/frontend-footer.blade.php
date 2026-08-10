@@ -99,7 +99,7 @@
 
                 <ul class="space-y-3.5">
 
-                    <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Home</a></li>
+                    <li><a href="/" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Home</a></li>
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Shop</a></li>
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>About</a></li>
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Blog</a></li>
@@ -157,7 +157,7 @@
                 <ul class="space-y-3.5">
 
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>About TechNova</a></li>
-                    <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Careers</a></li>
+                    <li><a href="{{ route('careers') }}" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Careers</a></li>
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Store Locator</a></li>
 
                 </ul>
@@ -176,7 +176,7 @@
 
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Track Order</a></li>
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Returns &amp; Exchange</a></li>
-                    <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Warranty</a></li>
+                    <li><a href="{{ route ('warranty-policy')}}" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Warranty</a></li>
                     <li><a href="{{ route('contact-us')}}" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Contact Us</a></li>
 
                 </ul>

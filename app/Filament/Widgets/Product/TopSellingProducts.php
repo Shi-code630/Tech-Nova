@@ -5,7 +5,7 @@ namespace App\Filament\Widgets\Product;
 use App\Filament\Resources\Products\ProductsResource;
 use App\Models\OrderItem;
 use App\Models\Product;
-use Carbon\Carbon;
+use Filament\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
@@ -24,11 +24,13 @@ class TopSellingProducts extends BaseWidget
         'xl' => 12,
     ];
 
-    public ?array $filters = [];
+
 
     public function table(Table $table): Table
     {
-        [$start, $end] = $this->getDateRange();
+
+        $start = $this->dateRange['start'] ?? now()->startOfMonth();
+        $end = $this->dateRange['end'] ?? now()->endOfMonth();
 
         return $table
             ->query(
@@ -59,7 +61,7 @@ class TopSellingProducts extends BaseWidget
                             ->selectRaw('COALESCE(AVG(rating), 0)'),
                         'avg_rating'
                     )
-                    ->having('sold', '>', 0)
+                  
                     ->orderByDesc('sold')
                     ->limit(10)
             )
@@ -68,8 +70,8 @@ class TopSellingProducts extends BaseWidget
                     ->label('Product')
                     ->weight('semibold')
                     ->url(fn($record) => ProductsResource::getUrl('edit', ['record' => $record->id]))
-                    ->limit(30)
-                    ->searchable(),
+                    ->limit(10),
+
 
                 Tables\Columns\TextColumn::make('category.name')
                     ->label('Category')
@@ -97,6 +99,26 @@ class TopSellingProducts extends BaseWidget
                     ->alignCenter()
                     ->sortable(),
             ])
+
+            ->headerActions([
+                Action::make('view_all')
+                    ->label('View All')
+                    ->color('gray')
+                    ->outlined()
+                    ->url(function () {
+
+                        $params = [];
+                        if (isset($this->dateRange['start'])) {
+                            $params['tableFilters']['date_range']['start'] = $this->dateRange['start']->toDateString();
+                        }
+                        if (isset($this->dateRange['end'])) {
+                            $params['tableFilters']['date_range']['end'] = $this->dateRange['end']->toDateString();
+                        }
+
+                        return ProductsResource::getUrl('index', $params);
+                    })
+            ])
+
             ->paginated(false)
             ->defaultSort('sold', 'desc')
             ->emptyStateHeading('No Products Sold')
@@ -104,23 +126,6 @@ class TopSellingProducts extends BaseWidget
             ->emptyStateIcon('heroicon-o-shopping-bag');
     }
 
-    protected function getDateRange(): array
-    {
-        $startDate = $this->filters['startDate'] ?? null;
-        $endDate = $this->filters['endDate'] ?? null;
-
-        if ($startDate && $endDate) {
-            return [
-                Carbon::parse($startDate)->startOfDay(),
-                Carbon::parse($endDate)->endOfDay()
-            ];
-        }
-
-        return [
-            now()->startOfMonth(),
-            now()->endOfMonth()
-        ];
-    }
 
     protected function getListeners(): array
     {

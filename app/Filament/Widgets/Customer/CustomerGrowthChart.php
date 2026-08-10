@@ -25,6 +25,8 @@ class CustomerGrowthChart extends ChartWidget
         return [
             'daily' => 'Daily',
             'weekly' => 'Weekly',
+            'monthly' => 'Monthly',  // Fixed typo: monthlay -> monthly
+            'yearly' => 'Yearly'
         ];
     }
 
@@ -38,21 +40,28 @@ class CustomerGrowthChart extends ChartWidget
             ? Carbon::parse($this->filters['endDate'])->endOfDay()
             : now()->endOfDay();
 
-        $interval = $this->filter === 'weekly' ? '1 week' : '1 day';
+        // Adjust interval based on filter
+        $interval = match($this->filter) {
+            'weekly' => '1 week',
+            'monthly' => '1 month',
+            'yearly' => '1 year',
+            default => '1 day',
+        };
+
         $period = CarbonPeriod::create($start, $interval, $end);
 
-        // Cumulative total customers as of each point in time, not just
-        // signups within the bucket — matches the "Customer Growth" curve
-        // shape in the mockup.
         $baseline = User::query()->where('created_at', '<', $start)->count();
 
         $signupsByBucket = User::query()
             ->whereBetween('created_at', [$start, $end])
             ->get()
             ->groupBy(function ($user) {
-                return $this->filter === 'weekly'
-                    ? $user->created_at->startOfWeek()->format('Y-m-d')
-                    : $user->created_at->format('Y-m-d');
+                return match($this->filter) {
+                    'weekly' => $user->created_at->startOfWeek()->format('Y-m-d'),
+                    'monthly' => $user->created_at->format('Y-m'),
+                    'yearly' => $user->created_at->format('Y'),
+                    default => $user->created_at->format('Y-m-d'),
+                };
             });
 
         $labels = [];
@@ -60,13 +69,22 @@ class CustomerGrowthChart extends ChartWidget
         $running = $baseline;
 
         foreach ($period as $date) {
-            $key = $this->filter === 'weekly'
-                ? $date->startOfWeek()->format('Y-m-d')
-                : $date->format('Y-m-d');
+            $key = match($this->filter) {
+                'weekly' => $date->startOfWeek()->format('Y-m-d'),
+                'monthly' => $date->format('Y-m'),
+                'yearly' => $date->format('Y'),
+                default => $date->format('Y-m-d'),
+            };
 
             $running += $signupsByBucket->get($key)?->count() ?? 0;
 
-            $labels[] = $date->format('M d');
+            // Format labels based on filter
+            $labels[] = match($this->filter) {
+                'weekly' => 'Week ' . $date->weekOfYear . ' ' . $date->format('M'),
+                'monthly' => $date->format('M Y'),
+                'yearly' => $date->format('Y'),
+                default => $date->format('M d'),
+            };
             $cumulative[] = $running;
         }
 

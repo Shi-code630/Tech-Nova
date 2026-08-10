@@ -46,7 +46,7 @@ class ProductReport extends Page
                 DatePicker::make('startDate')
                     ->label('From')
                     ->native(false)
-                    ->default(now()->startOfMonth())
+                   ->default(now()->startOfMonth())
                     ->live()
                     ->afterStateUpdated(function () {
                         $this->dispatch('updateProductReport');

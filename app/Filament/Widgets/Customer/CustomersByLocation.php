@@ -26,7 +26,6 @@ class CustomersByLocation extends Widget
 
     public ?array $filters = [];
 
-  
     public function getLocationData(): Collection
     {
         [$start, $end] = $this->getDateRange();
@@ -61,7 +60,6 @@ class CustomersByLocation extends Widget
             'from-orange-500 to-orange-600',
             'from-cyan-500 to-cyan-600',
         ];
-
 
         return $data->values()->map(function ($item, $index) use ($total, $colors) {
             $percentage = $total > 0 ? round(($item->total / $total) * 100, 1) : 0;
