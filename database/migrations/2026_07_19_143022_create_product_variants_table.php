@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+
     public function up(): void
     {
         Schema::create('product_variants', function (Blueprint $table) {
@@ -22,14 +20,12 @@ return new class extends Migration
             $table->boolean('status')->default(true);
             $table->timestamps();
 
-            // Optional: Add unique constraint to prevent duplicate variants
-            $table->unique(['product_id', 'color', 'size'], 'unique_variant_per_product');
+            // Optional: unique constraint to prevent duplicate variants for same product+color+size
+            // $table->unique(['product_id', 'color', 'size']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('product_variants');

@@ -49,21 +49,22 @@ class BannerForm
                                     ->url()
                                     ->maxLength(255)
                                     ->nullable()
-                                    ->placeholder('e.g. /products or https://example.com'),
+                                    ->placeholder('e.g. /products or https://example.com')
+                                    ->helperText('Enter the URL where users will be redirected when clicking the button. Leave empty if no button is needed.'),
 
+                                // Image field with proper banner dimensions
                                 FileUpload::make('image')
                                     ->label('Banner Image')
                                     ->image()
                                     ->directory('banners')
-                                    ->maxSize(5120)
+                                    ->maxSize(5120) // 5MB
                                     ->imageResizeMode('cover')
-                                    ->imageCropAspectRatio('16:9')
-                                    ->imageResizeTargetWidth('1200')
-                                    ->imageResizeTargetHeight('675')
+                                    ->imageCropAspectRatio('16:5') // For full-width banner
+                                    ->imageResizeTargetWidth('1920')
+                                    ->imageResizeTargetHeight('600')
                                     ->imageResizeUpscale(false)
-
                                     ->required()
-                                    ->helperText('Upload a banner image (max 5MB). 16:9 ratio recommended (1200x675px)'),
+                                    ->helperText('Recommended: 1920 x 600px (16:5 aspect ratio). Max 5MB. Supports JPG, PNG, WEBP.'),
                             ]),
                     ]),
 

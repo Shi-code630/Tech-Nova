@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Filament\Widgets;
+namespace App\Filament\Widgets\Dashboard;
 
+use App\Filament\Resources\Products\ProductsResource;
 use App\Models\Product;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -11,8 +13,13 @@ use Illuminate\Database\Eloquent\Builder;
 class LowStockAlert extends TableWidget
 {
     protected static ?string $heading = 'Low Stock Alert';
-    protected static ?int $sort = 3;
-    protected int|string|array $columnSpan = 3;
+    protected static ?int $sort = 5;
+    protected int|string|array $columnSpan = [
+        'default' => 1,
+        'md' => 2,
+        'xl' => 7,
+    ];
+
 
     public function table(Table $table): Table
     {
@@ -25,7 +32,6 @@ class LowStockAlert extends TableWidget
             ->columns([
                 TextColumn::make('name')
                     ->label('Product')
-                    ->searchable()
                     ->weight('semibold'),
                 TextColumn::make('stock')
                     ->label('Stock')
@@ -49,6 +55,13 @@ class LowStockAlert extends TableWidget
                         fn($record): string =>
                         $record->stock <= 2 ? 'danger' : 'warning'
                     ),
+            ])
+            ->headerActions([
+                Action::make('viewAll')
+                    ->label('View All stock')
+                    ->icon('heroicon-o-eye')
+                    ->url(ProductsResource::getUrl('index')),
+
             ])
             ->paginated(false)
             ->defaultSort('stock', 'asc');

@@ -26,3 +26,4 @@ class EditOrders extends EditRecord
         return $this->getResource()::getUrl('index');
     }
 }
+
