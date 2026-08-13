@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Frontend\PageController;
+use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandController; // agar BrandController hai
+use App\Http\Controllers\UserOrderController;
 
 //Route::get('/', function () {
    // return view('welcome');
@@ -13,6 +15,14 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 
 Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])
+        ->name('user.order.view');
+
+
+    Route::get('/my-orders', [UserOrderController::class, 'index'])->name('user.orders');
+});
 
 
 Route::prefix('category')->group(function () {

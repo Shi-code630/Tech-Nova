@@ -41,7 +41,7 @@
 
         </a>
 
-        <a href="#"
+        <a href="{{ route('user.orders') }}"
            class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
 
             📦 My Orders
