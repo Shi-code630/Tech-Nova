@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
 
 class Category extends Model
 {
@@ -44,7 +46,7 @@ class Category extends Model
     // Products relationship
     public function products()
     {
-        return $this->hasMany(Product::class);
+       return $this->belongsTo(Category::class);
     }
 
 
@@ -91,5 +93,16 @@ class Category extends Model
     {
         return $query->whereNull('parent_id');
     }
+public function getAncestors()
+{
+    $ancestors = collect();
+    $category = $this->parent;
 
+    while ($category) {
+        $ancestors->prepend($category);
+        $category = $category->parent;
+    }
+
+    return $ancestors;
+}
 }

@@ -118,156 +118,152 @@
             </div>
         </div>
 
-        <!-- Category Menu -->
-        <div class="bg-gradient-to-r from-[#EAF8FF] to-[#D6EEFF] border-t border-blue-100/60 shadow-inner">
-            <div class="max-w-7xl mx-auto px-2">
-                <ul class="flex items-center gap-5 h-11 text-[14px] font-semibold text-[#111827]">
+ @php
+    $parentCategories = \App\Models\Category::whereNull('parent_id')
+        ->where('status', true)
+        ->with([
+            'children' => function ($query) {
+                $query->where('status', true)
+                    ->orderBy('name');
+            }
+        ])
+        ->orderBy('name')
+        ->get();
+@endphp
 
-                    <!-- Mobile & Tablets -->
-                    <li class="relative group">
-                        <a href="#" class="flex items-center gap-1 hover:text-[#2563EB] py-3 px-3 rounded-lg hover:bg-white/50 transition-all duration-200 whitespace-nowrap">
-                            Mobile & Tablets
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 top-full hidden group-hover:block w-64 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
+
+<div class="bg-gradient-to-r from-[#EAF8FF] to-[#D6EEFF] border-t border-blue-100/60 shadow-inner">
+
+    <div class="max-w-7xl mx-auto px-2">
+
+        <ul class="flex items-center gap-5 h-11 text-[14px] font-semibold text-[#111827]">
+
+            @foreach($parentCategories as $parent)
+
+                <li class="relative group">
+
+                    {{-- Parent Category --}}
+                    <a
+    href="{{ $parent->slug === 'today-deals'
+        ? route('today-deals')
+        : route('category.show', ['slug' => $parent->slug]) }}"
+    class="flex items-center gap-1
+           hover:text-[#2563EB]
+           py-3 px-3
+           rounded-lg
+           hover:bg-white/50
+           transition-all duration-200
+           whitespace-nowrap"
+>
+    {{ $parent->name }}
+
+    @if($parent->children->count())
+
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+        >
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M19 9l-7 7-7-7"
+            />
+        </svg>
+
+    @endif
+</a>
+
+
+                    {{-- Child Categories --}}
+                    @if($parent->children->count())
+
+                        <div
+                            class="absolute left-0 top-full
+                                   hidden group-hover:block
+                                   w-72
+                                   bg-white
+                                   rounded-xl
+                                   shadow-2xl
+                                   border border-gray-100
+                                   z-50
+                                   overflow-hidden"
+                        >
+
+                            {{-- All Parent --}}
+                            <div class="px-5 py-3 bg-gray-50 border-b">
+
+    <a
+        href="{{ $parent->slug === 'today-deals'
+            ? route('today-deals')
+            : route('category.show', ['slug' => $parent->slug]) }}"
+        class="flex items-center justify-between
+               font-semibold
+               text-gray-800
+               hover:text-blue-600"
+    >
+
+        <span>
+            All {{ $parent->name }}
+        </span>
+
+        <span>→</span>
+
+    </a>
+
+</div>
+
+
+                            {{-- Child Categories --}}
                             <ul class="py-2">
-                                <li><a href="{{ route('smartphones') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📱 Smartphones</a></li>
-                                <li><a href="{{ route('mobile.accessories') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎧 Mobile Accessories</a></li>
-                                <li><a href="{{ route('smart.watches') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⌚ Smart Watches</a></li>
-                                <li><a href="{{ route('power.charging') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Power & Charging</a></li>
-                            </ul>
-                        </div>
-                    </li>
 
-                    <!-- Computers Office -->
-                    <li class="relative group">
-                        <a href="#" class="flex items-center gap-1 hover:text-[#2563EB] py-3 px-3 rounded-lg hover:bg-white/50 transition-all duration-200 whitespace-nowrap">
-                            Computers Office
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-                            <ul class="py-2">
-                                <li><a href="{{ route('laptops') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💻 Laptops</a></li>
-                                <li><a href="{{ route('desktop.computers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🖥️ Desktop Computers</a></li>
-                                <li><a href="{{ route('monitors') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🖥 Monitors</a></li>
-                                <li><a href="{{ route('computer.accessories') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⌨️ Computer Accessories</a></li>
-                                <li><a href="{{ route('storage.devices') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💾 Storage Devices</a></li>
-                                <li><a href="{{ route('printers.office.equipment') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🖨️ Printers & Office Equipment</a></li>
-                                <li><a href="{{ route('networking.devices') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📡 Networking Devices</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                                @foreach($parent->children as $child)
 
-                    <!-- Gaming & Entertainment -->
-                    <li class="relative group">
-                        <a href="#" class="flex items-center gap-1 hover:text-[#2563EB] py-3 px-3 rounded-lg hover:bg-white/50 transition-all duration-200 whitespace-nowrap">
-                            Gaming & Entertainment
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 top-full hidden group-hover:block w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-                            <ul class="py-2">
-                                <li><a href="{{ route('gaming') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎮 Gaming</a></li>
-                                <li><a href="{{ route('audio') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎵 Audio</a></li>
-                                <li><a href="{{ route('gaming.controllers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🕹️ Gaming Controllers</a></li>
-                                <li><a href="{{ route('headsets.audio.devices') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎧 Headsets & Audio Devices</a></li>
-                                <li><a href="{{ route('cameras') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📷 Cameras</a></li>
-                                <li><a href="{{ route('smart.tvs') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📺 Smart TVs</a></li>
-                                <li><a href="{{ route('led.tvs') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📺 LED TVs</a></li>
-                                <li><a href="{{ route('android.tvs') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🤖 Android TVs</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                                    <li>
 
-                    <!-- Home Appliances -->
-                    <li class="relative group">
-                        <a href="#" class="flex items-center gap-1 hover:text-[#2563EB] py-3 px-3 rounded-lg hover:bg-white/50 transition-all duration-200 whitespace-nowrap">
-                            Home Appliances
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 top-full hidden group-hover:block w-80 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-                            <ul class="py-2">
-                                <li><a href="{{ route('air.conditioners') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">❄️ Air Conditioners (AC)</a></li>
-                                <li><a href="{{ route('air.coolers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🌬️ Air Coolers</a></li>
-                                <li><a href="{{ route('fans') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🌀 Fans</a></li>
-                                <li><a href="{{ route('refrigerators') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🧊 Refrigerators</a></li>
-                                <li><a href="{{ route('washing.machines') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">👕 Washing Machines</a></li>
-                                <li><a href="{{ route('microwave.ovens') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🍲 Microwave Ovens</a></li>
-                                <li><a href="{{ route('rice.cookers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🍚 Rice Cookers</a></li>
-                                <li><a href="{{ route('electric.kettles') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">☕ Electric Kettles</a></li>
-                                <li><a href="{{ route('vacuum.cleaners') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🧹 Vacuum Cleaners</a></li>
-                                <li><a href="{{ route('water.heaters') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🚿 Water Heaters (Geysers)</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                                        <a
+                                            href="{{ route('category.show', ['slug' => $child->slug]) }}"
+                                            class="flex items-center justify-between
+                                                   px-5 py-3
+                                                   text-sm
+                                                   text-gray-700
+                                                   hover:bg-blue-50
+                                                   hover:text-blue-600
+                                                   transition"
+                                        >
 
-                    <!-- Smart Home -->
-                    <li class="relative group">
-                        <a href="#" class="flex items-center gap-1 hover:text-[#2563EB] py-3 px-3 rounded-lg hover:bg-white/50 transition-all duration-200 whitespace-nowrap">
-                            Smart Home
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-                            <ul class="py-2">
-                                <li><a href="{{ route('smart.speakers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🏠 Smart Home Devices</a></li>
-                                <li><a href="{{ route('smart.security') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">📹 CCTV & Security</a></li>
-                                <li><a href="{{ route('smart.sensors') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">☀️ Solar Products</a></li>
-                                <li><a href="{{ route('smart.locks') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Inverters & UPS</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                                            <span>
+                                                {{ $child->name }}
+                                            </span>
 
-                    <!-- Electrical -->
-                    <li class="relative group">
-                        <a href="#" class="flex items-center gap-1 hover:text-[#2563EB] py-3 px-3 rounded-lg hover:bg-white/50 transition-all duration-200 whitespace-nowrap">
-                            Electrical
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </a>
-                        <div class="absolute left-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-                            <ul class="py-2">
-                                <li><a href="{{ route('cables.adapters') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔌 Cables & Adapters</a></li>
-                                <li><a href="{{ route('chargers') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Chargers</a></li>
-                                <li><a href="{{ route('extension.boards') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🧰 Extension Boards</a></li>
-                                <li><a href="{{ route('power.banks') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Power Banks</a></li>
-                                <li><a href="{{ route('batteries') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🔋 Batteries</a></li>
-                                <li><a href="{{ route('electrical.accessories') }}" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⚡ Electrical Accessories</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                                            <span class="text-gray-400">
+                                                →
+                                            </span>
 
-                    <!-- Today's Deals -->
-                    <li class="relative group">
-                        <a href="#" class="flex items-center gap-1 hover:text-[#2563EB] py-3 px-3 rounded-lg hover:bg-white/50 transition-all duration-200 whitespace-nowrap">
-                            <span class="text-[#F59E0B]">🔥</span> Today's Deals
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </a>
-                        <div class="absolute right-0 top-full hidden group-hover:block w-72 bg-white rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-                            <ul class="py-2">
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🆕 New Products</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">⏳ Limited Time Offers</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">💥 Today's Deals</a></li>
-                                <li><a href="#" class="block px-5 py-2.5 hover:bg-blue-50 hover:text-blue-600 text-sm">🎉 Dhamaka Sale</a></li>
-                            </ul>
-                        </div>
-                    </li>
+                                        </a>
 
-                </ul>
-            </div>
-        </div>
+                                    </li>
+
+                                @endforeach
+
+                            </ul>
+
+                        </div>
+
+                    @endif
+
+                </li>
+
+            @endforeach
+
+
+        </ul>
 
     </div>
+
+</div>
 </header>
 
