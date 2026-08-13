@@ -27,16 +27,14 @@ class SalesReport extends Page
     {
         return 'Reports & Analytics';
     }
-      protected function getWidgetsColumns(): int|array
+      public function getColumns(): int|array
     {
         return [
             'default' => 1,
-            'md' => 2,
-            'lg' => 3,
-            'xl' => 4,
+            'md' => 3,
+            'xl' => 12,
         ];
     }
-
     protected static ?string $title = 'Sales Report';
 
     protected static ?int $navigationSort = 1;

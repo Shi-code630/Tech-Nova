@@ -18,10 +18,8 @@ class QuickActions extends Widget
 
     protected int|string|array $columnSpan = [
         'default' => 1,
-        'sm' => 2,
         'md' => 2,
-        'lg' => 3,
-        'xl' => 4,
+        'xl' => 5,
     ];
      public function getHeading(): string
     {

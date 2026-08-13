@@ -6,6 +6,8 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 
@@ -16,55 +18,76 @@ class BrandsForm
         return $schema
             ->components([
 
-                TextInput::make('name')
-                    ->label('Brand Name')
-                    ->required()
-                    ->maxLength(255)
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(function ($state, callable $set) {
-                        $set('slug', Str::slug($state));
-                    }),
+                Section::make('Basic Information')
+                    ->description('Core details identifying this brand')
+                    ->schema([
+                        Grid::make(2)
+                            ->schema([
+                                TextInput::make('name')
+                                    ->label('Brand Name')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(function ($state, callable $set) {
+                                        $set('slug', Str::slug($state));
+                                    }),
 
-                TextInput::make('slug')
-                    ->label('Slug')
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(ignoreRecord: true)
-                    ->helperText('Unique URL-friendly identifier.'),
+                                TextInput::make('slug')
+                                    ->label('Slug')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->unique(ignoreRecord: true)
+                                    ->helperText('Unique URL-friendly identifier.'),
+                            ]),
+                    ]),
 
-                FileUpload::make('logo')
-                    ->label('Logo')
-                    ->image()
-                    ->disk('public')
-                    ->directory('brands/logos')
-                    ->imagePreviewHeight('100')
-                    ->maxSize(2048),
+                Section::make('Media')
+                    ->description('Logo and banner image for this brand')
+                    ->schema([
+                        FileUpload::make('logo')
+                            ->label('Logo')
+                            ->image()
+                            ->disk('public')
+                            ->directory('brands/logos')
+                            ->imagePreviewHeight('100')
+                            ->maxSize(2048),
 
-                FileUpload::make('image')
-                    ->label('Brand Image')
-                    ->image()
-                    ->disk('public')
-                    ->directory('brands/images')
-                    ->imagePreviewHeight('200')
-                    ->maxSize(5120)
-                    ->helperText('Upload a banner image (Max 5MB). Recommended size: 1200 × 400px'),
+                        FileUpload::make('image')
+                            ->label('Brand Image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('brands/images')
+                            ->imagePreviewHeight('200')
+                            ->maxSize(5120)
+                            ->helperText('Upload a banner image (Max 5MB). Recommended size: 1200 × 400px'),
+                    ]),
 
-                Toggle::make('status')
-                    ->label('Active')
-                    ->default(true)
-                    ->inline(false),
+                Section::make('SEO')
+                    ->description('Metadata for search engines')
+                    ->collapsible()
+                    ->collapsed()
+                    ->schema([
+                        TextInput::make('meta_title')
+                            ->label('Meta Title')
+                            ->maxLength(255),
 
-                TextInput::make('meta_title')
-                    ->label('Meta Title')
-                    ->maxLength(255),
+                        TextInput::make('meta_keywords')
+                            ->label('Meta Keywords')
+                            ->maxLength(255),
+                        Textarea::make('meta_description')
+                            ->label('Meta Description')
+                            ->rows(3),
 
-                Textarea::make('meta_description')
-                    ->label('Meta Description')
-                    ->rows(3),
 
-                TextInput::make('meta_keywords')
-                    ->label('Meta Keywords')
-                    ->maxLength(255),
+                    ]),
+
+                Section::make('Status')
+                    ->schema([
+                        Toggle::make('status')
+                            ->label('Active')
+                            ->default(true)
+                            ->inline(false),
+                    ]),
 
             ]);
     }

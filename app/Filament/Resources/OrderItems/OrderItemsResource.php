@@ -28,7 +28,7 @@ class OrderItemsResource extends Resource
         return 9;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon =Heroicon::OutlinedQueueList;
 
        public static function canViewAny(): bool
     {

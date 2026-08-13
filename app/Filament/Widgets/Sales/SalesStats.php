@@ -18,7 +18,7 @@ class SalesStats extends BaseWidget
 
     protected ?string $heading = 'Sales Statistics';
 
-    // Available date range filters
+
     protected array $dateRanges = [
         'today' => 'Today',
         'yesterday' => 'Yesterday',
@@ -150,7 +150,7 @@ class SalesStats extends BaseWidget
     protected function formatValue(float $value, string $format): string
     {
         return match($format) {
-            'currency' => '$' . number_format($value, 2),
+            'currency' => 'Rs.' . number_format($value, 2),
             'number' => number_format($value),
             'percentage' => number_format($value, 1) . '%',
             default => (string) $value,
@@ -185,8 +185,8 @@ class SalesStats extends BaseWidget
 
     protected function getChartData(string $label): array
     {
-        // Generate sample chart data for visual representation
-        // In production, you might want to fetch actual data
+
+
         $base = match($label) {
             'Total Sales' => 40000,
             'Total Orders' => 1200,

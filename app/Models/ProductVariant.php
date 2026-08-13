@@ -27,37 +27,25 @@ class ProductVariant extends Model
         'status' => 'boolean',
     ];
 
-    // ============ RELATIONSHIPS ============
-
-    /**
-     * Get the product that owns this variant.
-     */
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    // ============ ACCESSORS ============
 
-    /**
-     * Get formatted price.
-     */
+
     public function getFormattedPriceAttribute(): string
     {
         return 'Rs. ' . number_format($this->price ?? 0, 2);
     }
 
-    /**
-     * Check if variant is active.
-     */
+
     public function getIsActiveAttribute(): bool
     {
         return $this->stock > 0 && $this->status;
     }
 
-    /**
-     * Get stock status label
-     */
+
     public function getStockStatusAttribute()
     {
         if ($this->stock > 0 && $this->status) {
@@ -69,9 +57,7 @@ class ProductVariant extends Model
         }
     }
 
-    /**
-     * Get stock status color
-     */
+
     public function getStockStatusColorAttribute()
     {
         if ($this->stock > 0 && $this->status) {
@@ -93,30 +79,20 @@ class ProductVariant extends Model
         return $this->color . ' ' . $this->size;
     }
 
-    //SCOPES
 
-    /**
-     * Scope a query to only include active variants.
-     */
     public function scopeActive($query)
     {
         return $query->where('status', true);
     }
 
-    /**
-     * Scope a query to only include variants in stock.
-     */
+
     public function scopeInStock($query)
     {
         return $query->where('stock', '>', 0);
     }
 
-    // ============ HELPERS ============
 
-    /**
-     * Decrease stock when variant is ordered.
-     */
-    public function decreaseStock(int $quantity): bool
+       public function decreaseStock(int $quantity): bool
     {
         if ($this->stock < $quantity) {
             return false;
@@ -126,9 +102,7 @@ class ProductVariant extends Model
         return true;
     }
 
-    /**
-     * Increase stock when variant is restocked.
-     */
+
     public function increaseStock(int $quantity): void
     {
         $this->stock += $quantity;

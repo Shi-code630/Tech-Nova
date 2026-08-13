@@ -20,7 +20,7 @@ class OrderItem extends Model
          'quantity' => 'integer'
     ];
 
-    // Relationships
+    
     public function order()
     {
         return $this->belongsTo(Order::class);

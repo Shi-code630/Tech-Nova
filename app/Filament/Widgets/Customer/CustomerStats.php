@@ -14,36 +14,36 @@ class CustomerStats extends BaseWidget
     use InteractsWithPageFilters;
 
     protected static ?int $sort = 1;
+    protected string $hoverClasses = 'transition-all duration-300 hover:scale-105';
 
     protected function getStats(): array
     {
         [$start, $end] = $this->getRange();
         [$prevStart, $prevEnd] = $this->getPreviousRange($start, $end);
 
-        // Total customers as of the end of the selected range vs as of the
-        // end of the previous range (running total, not scoped to range).
+
         $totalCustomers = User::query()->where('created_at', '<=', $end)->count();
         $prevTotalCustomers = User::query()->where('created_at', '<=', $prevEnd)->count();
 
-        // New signups within the range.
+
         $newCustomers = User::query()->whereBetween('created_at', [$start, $end])->count();
         $prevNewCustomers = User::query()->whereBetween('created_at', [$prevStart, $prevEnd])->count();
 
-        // Customers who placed at least 1 order within the range.
+
         $activeCustomers = User::query()
-            ->whereHas('orders', fn ($q) => $q->whereBetween('created_at', [$start, $end]))
+            ->whereHas('orders', fn($q) => $q->whereBetween('created_at', [$start, $end]))
             ->count();
         $prevActiveCustomers = User::query()
-            ->whereHas('orders', fn ($q) => $q->whereBetween('created_at', [$prevStart, $prevEnd]))
+            ->whereHas('orders', fn($q) => $q->whereBetween('created_at', [$prevStart, $prevEnd]))
             ->count();
 
-        // Customers with 2+ orders within the range.
+
         $repeatCustomers = User::query()
-            ->withCount(['orders' => fn ($q) => $q->whereBetween('created_at', [$start, $end])])
+            ->withCount(['orders' => fn($q) => $q->whereBetween('created_at', [$start, $end])])
             ->having('orders_count', '>=', 2)
             ->count();
         $prevRepeatCustomers = User::query()
-            ->withCount(['orders' => fn ($q) => $q->whereBetween('created_at', [$prevStart, $prevEnd])])
+            ->withCount(['orders' => fn($q) => $q->whereBetween('created_at', [$prevStart, $prevEnd])])
             ->having('orders_count', '>=', 2)
             ->count();
 
@@ -61,31 +61,36 @@ class CustomerStats extends BaseWidget
                 ->description($this->percentLabel($totalCustomers, $prevTotalCustomers))
                 ->descriptionIcon($this->trendIcon($totalCustomers, $prevTotalCustomers))
                 ->color($this->trendColor($totalCustomers, $prevTotalCustomers))
-                ->icon('heroicon-o-users'),
+                ->icon('heroicon-o-users')
+                ->extraAttributes(['class' => $this->hoverClasses]),
 
             Stat::make('New Customers', number_format($newCustomers))
                 ->description($this->percentLabel($newCustomers, $prevNewCustomers))
                 ->descriptionIcon($this->trendIcon($newCustomers, $prevNewCustomers))
                 ->color($this->trendColor($newCustomers, $prevNewCustomers))
-                ->icon('heroicon-o-user-plus'),
+                ->icon('heroicon-o-user-plus')
+                ->extraAttributes(['class' => $this->hoverClasses]),
 
             Stat::make('Active Customers', number_format($activeCustomers))
                 ->description($this->percentLabel($activeCustomers, $prevActiveCustomers))
                 ->descriptionIcon($this->trendIcon($activeCustomers, $prevActiveCustomers))
                 ->color($this->trendColor($activeCustomers, $prevActiveCustomers))
-                ->icon('heroicon-o-user-circle'),
+                ->icon('heroicon-o-user-circle')
+                ->extraAttributes(['class' => $this->hoverClasses]),
 
             Stat::make('Repeat Customers', number_format($repeatCustomers))
                 ->description($this->percentLabel($repeatCustomers, $prevRepeatCustomers))
                 ->descriptionIcon($this->trendIcon($repeatCustomers, $prevRepeatCustomers))
                 ->color($this->trendColor($repeatCustomers, $prevRepeatCustomers))
-                ->icon('heroicon-o-arrow-path'),
+                ->icon('heroicon-o-arrow-path')
+                ->extraAttributes(['class' => $this->hoverClasses]),
 
             Stat::make('Avg. Order Value', 'Rs' . number_format($avgOrderValue, 2))
                 ->description($this->percentLabel($avgOrderValue, $prevAvgOrderValue))
                 ->descriptionIcon($this->trendIcon($avgOrderValue, $prevAvgOrderValue))
                 ->color($this->trendColor($avgOrderValue, $prevAvgOrderValue))
-                ->icon('heroicon-o-star'),
+                ->icon('heroicon-o-star')
+                ->extraAttributes(['class' => $this->hoverClasses]),
         ];
     }
 

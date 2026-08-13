@@ -5,96 +5,158 @@ namespace App\Filament\Widgets\Sales;
 use App\Models\Order;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
-use Filament\Widgets\ChartWidget;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Filament\Widgets\Widget;
 
-class SalesOverviewChart extends ChartWidget
+class SalesOverviewChart extends Widget
 {
     use InteractsWithPageFilters;
 
-    protected ?string $heading = 'Sales Overview';
+    protected static ?int $sort = 2;
+    protected int|string|array $columnSpan = [
+        'default' => 1,
+        'md' => 2,
+        'xl' => 7,
+    ];
+    protected static ?string $heading = 'Sales Overview';
 
-    protected ?string $maxHeight = '320px';
+    protected string $view = 'filament.widgets.sales.sales-overview-chart';
 
     public ?string $filter = 'daily';
 
-    protected function getFilters(): ?array
+
+    protected function getFilterOptions(): ?array
     {
         return [
             'daily' => 'Daily',
             'weekly' => 'Weekly',
+            'monthly' => 'Monthly',
+            'yearly' => 'Yearly',
         ];
     }
 
-    protected function getData(): array
+     public function getDateRangeLabel(): array
     {
-        $start = isset($this->filters['startDate'])
-            ? Carbon::parse($this->filters['startDate'])->startOfDay()
-            : now()->startOfMonth();
+        [$start, $end] = $this->getDateRange();
 
-        $end = isset($this->filters['endDate'])
-            ? Carbon::parse($this->filters['endDate'])->endOfDay()
-            : now()->endOfMonth();
+        return [
+            'from' => $start->format('M d, Y'),
+            'to' => $end->format('M d, Y'),
+        ];
+    }
 
-        $interval = $this->filter === 'weekly' ? '1 week' : '1 day';
+    public function getChartData(): array
+    {
+        [$start, $end] = $this->getDateRange();
 
-        $period = CarbonPeriod::create($start, $interval, $end);
+
+        switch($this->filter) {
+            case 'weekly':
+                $start = Carbon::parse($start)->startOfWeek();
+                $end = Carbon::parse($end)->endOfWeek();
+                break;
+            case 'monthly':
+                $start = Carbon::parse($start)->startOfMonth();
+                $end = Carbon::parse($end)->endOfMonth();
+                break;
+            case 'yearly':
+                $start = Carbon::parse($start)->startOfYear();
+                $end = Carbon::parse($end)->endOfYear();
+                break;
+        }
 
         $orders = Order::query()
             ->whereBetween('created_at', [$start, $end])
-            ->get()
-            ->groupBy(function ($order) {
-                return $this->filter === 'weekly'
-                    ? $order->created_at->startOfWeek()->format('Y-m-d')
-                    : $order->created_at->format('Y-m-d');
-            });
+            ->get();
+
+        if ($orders->isEmpty()) {
+            return [
+                'labels' => ['No Data'],
+                'data' => [0],
+                'max_value' => 10000,
+                'current_filter' => $this->filter,
+            ];
+        }
+
+        // Group data based on filter
+        $groupedData = $orders->groupBy(function ($order) {
+            return match($this->filter) {
+                'weekly' => $order->created_at->startOfWeek()->format('Y-m-d'),
+                'monthly' => $order->created_at->format('Y-m'),
+                'yearly' => $order->created_at->format('Y'),
+                default => $order->created_at->format('Y-m-d'),
+            };
+        });
+
+        $period = CarbonPeriod::create($start, $end);
 
         $labels = [];
         $totals = [];
 
         foreach ($period as $date) {
-            $key = $this->filter === 'weekly'
-                ? $date->startOfWeek()->format('Y-m-d')
-                : $date->format('Y-m-d');
+            $key = match($this->filter) {
+                'weekly' => $date->startOfWeek()->format('Y-m-d'),
+                'monthly' => $date->format('Y-m'),
+                'yearly' => $date->format('Y'),
+                default => $date->format('Y-m-d'),
+            };
 
-            $labels[] = $date->format('M d');
-            $totals[] = round(optional($orders->get($key))->sum('grand_total') ?? 0, 2);
+            $labels[] = match($this->filter) {
+                'weekly' => 'Week ' . $date->weekOfYear . ' (' . $date->startOfWeek()->format('M d') . ')',
+                'monthly' => $date->format('M Y'),
+                'yearly' => $date->format('Y'),
+                default => $date->format('M d, Y'),
+            };
+
+            $total = $groupedData->get($key);
+            $totals[] = $total ? round($total->sum('grand_total'), 2) : 0;
         }
 
+        $maxValue = max($totals) > 0 ? max($totals) : 10000;
+        $roundedMax = ceil($maxValue / 1000) * 1000;
+
         return [
-            'datasets' => [
-                [
-                    'label' => 'Sales',
-                    'data' => $totals,
-                    'borderColor' => '#6366f1',
-                    'backgroundColor' => 'rgba(99, 102, 241, 0.15)',
-                    'fill' => true,
-                    'tension' => 0.4,
-                    'pointRadius' => 3,
-                ],
-            ],
             'labels' => $labels,
+            'data' => $totals,
+            'max_value' => $roundedMax,
+            'current_filter' => $this->filter,
         ];
     }
 
-    protected function getType(): string
+    protected function getDateRange(): array
     {
-        return 'line';
+
+        $filter = $this->filter ?? 'daily';
+        $now = now();
+
+        return match($filter) {
+            'daily' => [
+                $now->clone()->startOfDay()->subDays(30), // Last 30 days
+                $now->clone()->endOfDay(),
+            ],
+            'weekly' => [
+                $now->clone()->startOfWeek()->subWeeks(12), // Last 12 weeks
+                $now->clone()->endOfWeek(),
+            ],
+            'monthly' => [
+                $now->clone()->startOfMonth()->subMonths(12), // Last 12 months
+                $now->clone()->endOfMonth(),
+            ],
+            'yearly' => [
+                $now->clone()->startOfYear()->subYears(5), // Last 5 years
+                $now->clone()->endOfYear(),
+            ],
+            default => [
+                $now->clone()->startOfMonth()->subMonths(6),
+                $now->clone()->endOfMonth(),
+            ],
+        };
     }
 
-    protected function getOptions(): array
+    protected function getListeners(): array
     {
         return [
-            'plugins' => [
-                'legend' => ['display' => false],
-            ],
-            'scales' => [
-                'y' => [
-                    'ticks' => [
-                        'callback' => "function (value) { return '$' + value; }",
-                    ],
-                ],
-            ],
+            'updateWidget' => '$refresh',
         ];
     }
 }

@@ -1,6 +1,4 @@
 <x-filament-panels::page>
-
-
     <div class="mb-6 flex justify-between gap-3">
         <div class="w-full sm:w-auto">
             {{ $this->filtersForm }}
@@ -17,7 +15,8 @@
             @livewire(\App\Filament\Widgets\Sales\SalesOverviewChart::class)
         </div>
         <div>
-            @livewire(\App\Filament\Widgets\Sales\PaymentMethodChart::class)
+
+            @livewire(\App\Filament\Widgets\Sales\SalesByPaymentMethod::class)
         </div>
     </div>
 
@@ -29,5 +28,4 @@
             @livewire(\App\Filament\Widgets\Sales\SalesByCategory::class)
         </div>
     </div>
-
 </x-filament-panels::page>

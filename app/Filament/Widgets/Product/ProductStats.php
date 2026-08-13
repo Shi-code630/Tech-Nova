@@ -18,6 +18,7 @@ class ProductStats extends BaseWidget
     protected static ?int $sort = 1;
     protected static bool $isLazy = false;
     protected int|string|array $columnSpan = 'full';
+    protected string $hoverClasses = 'transition-all duration-300 hover:scale-105';
 
     public ?array $filters = [];
 
@@ -25,26 +26,23 @@ class ProductStats extends BaseWidget
     {
         [$start, $end] = $this->getDateRange();
 
-        // Total Products
         $totalProducts = Product::count();
         $previousTotalProducts = Product::where('created_at', '<', $start)->count();
         $productGrowth = $this->calculateGrowth($totalProducts, $previousTotalProducts);
 
-        // Best Selling Product
         $bestProduct = Product::query()
             ->withCount(['orderItems as sold' => function ($query) use ($start, $end) {
                 $query->whereHas('order', function ($q) use ($start, $end) {
                     $q->whereBetween('created_at', [$start, $end])
-                      ->where('order_status', '!=', 'cancelled');
+                        ->where('order_status', '!=', 'cancelled');
                 });
             }])
             ->orderByDesc('sold')
             ->first();
 
-        // Total Units Sold
         $totalSold = OrderItem::whereHas('order', function ($q) use ($start, $end) {
             $q->whereBetween('created_at', [$start, $end])
-              ->where('order_status', '!=', 'cancelled');
+                ->where('order_status', '!=', 'cancelled');
         })->sum('quantity');
 
         $days = $start->diffInDays($end);
@@ -53,29 +51,21 @@ class ProductStats extends BaseWidget
 
         $previousSold = OrderItem::whereHas('order', function ($q) use ($prevStart, $prevEnd) {
             $q->whereBetween('created_at', [$prevStart, $prevEnd])
-              ->where('order_status', '!=', 'cancelled');
+                ->where('order_status', '!=', 'cancelled');
         })->sum('quantity');
         $soldGrowth = $this->calculateGrowth($totalSold, $previousSold);
 
-        // Total Revenue
         $totalRevenue = Order::whereBetween('created_at', [$start, $end])
             ->where('order_status', '!=', 'cancelled')
             ->sum('grand_total');
 
-        $prevStartRev = (clone $start)->subDays($days + 1);
-        $prevEndRev = (clone $start)->subDay();
-
-        $previousRevenue = Order::whereBetween('created_at', [$prevStartRev, $prevEndRev])
+        $previousRevenue = Order::whereBetween('created_at', [$prevStart, $prevEnd])
             ->where('order_status', '!=', 'cancelled')
             ->sum('grand_total');
         $revenueGrowth = $this->calculateGrowth($totalRevenue, $previousRevenue);
 
-        // Average Rating
-        $avgRating = Review::whereBetween('created_at', [$start, $end])
-            ->avg('rating') ?? 0;
-
-        $previousAvgRating = Review::whereBetween('created_at', [$prevStartRev, $prevEndRev])
-            ->avg('rating') ?? 0;
+        $avgRating = Review::whereBetween('created_at', [$start, $end])->avg('rating') ?? 0;
+        $previousAvgRating = Review::whereBetween('created_at', [$prevStart, $prevEnd])->avg('rating') ?? 0;
         $ratingGrowth = $this->calculateGrowth($avgRating, $previousAvgRating);
 
         return [
@@ -84,33 +74,38 @@ class ProductStats extends BaseWidget
                 ->descriptionIcon($productGrowth >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($productGrowth >= 0 ? 'success' : 'danger')
                 ->icon('heroicon-o-cube')
-                ->chart([3, 5, 2, 4, 6, 8, 7]),
+                ->extraAttributes(['class' => $this->hoverClasses]),
 
-            Stat::make('Best Selling Product', $bestProduct ? $bestProduct->name : 'No Data')
-                ->description(($bestProduct ? $bestProduct->sold : 0) . ' Sold')
+            Stat::make('Best Selling Product', $bestProduct?->name ?? 'No Data')
+                ->description(($bestProduct->sold ?? 0) . ' Sold')
                 ->icon('heroicon-o-trophy')
-                ->color('warning'),
+                ->color('warning')
+                ->extraAttributes(['class' => $this->hoverClasses]),
+
 
             Stat::make('Total Units Sold', number_format($totalSold))
                 ->description($this->formatGrowth($soldGrowth))
                 ->descriptionIcon($soldGrowth >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($soldGrowth >= 0 ? 'success' : 'danger')
                 ->icon('heroicon-o-shopping-cart')
-                ->chart([4, 6, 3, 7, 5, 9, 8]),
+                ->extraAttributes(['class' => $this->hoverClasses]),
 
-            Stat::make('Total Revenue', '$' . number_format($totalRevenue, 2))
+
+            Stat::make('Total Revenue', 'Rs. ' . number_format($totalRevenue, 2))
                 ->description($this->formatGrowth($revenueGrowth))
                 ->descriptionIcon($revenueGrowth >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($revenueGrowth >= 0 ? 'success' : 'danger')
                 ->icon('heroicon-o-currency-dollar')
-                ->chart([5, 7, 4, 8, 6, 10, 9]),
+                ->extraAttributes(['class' => $this->hoverClasses]),
+
 
             Stat::make('Avg. Rating', number_format($avgRating, 1) . ' / 5')
                 ->description($this->formatGrowth($ratingGrowth))
                 ->descriptionIcon($ratingGrowth >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($ratingGrowth >= 0 ? 'success' : 'danger')
                 ->icon('heroicon-o-star')
-                ->chart([4, 4.5, 4.2, 4.6, 4.4, 4.7, 4.6]),
+                ->extraAttributes(['class' => $this->hoverClasses]),
+
         ];
     }
 
@@ -128,14 +123,11 @@ class ProductStats extends BaseWidget
         if ($startDate && $endDate) {
             return [
                 Carbon::parse($startDate)->startOfDay(),
-                Carbon::parse($endDate)->endOfDay()
+                Carbon::parse($endDate)->endOfDay(),
             ];
         }
 
-        return [
-            now()->startOfMonth(),
-            now()->endOfMonth()
-        ];
+        return [now()->startOfMonth(), now()->endOfMonth()];
     }
 
     protected function calculateGrowth($current, $previous): float

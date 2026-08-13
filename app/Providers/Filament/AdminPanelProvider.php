@@ -43,13 +43,13 @@ class AdminPanelProvider extends PanelProvider
             //->registration()
             ->login()
             ->profile()
-            //->registration()
+
             ->brandName('Tech Nova Admin')
             ->colors([
                 'primary' => Color::Amber,
             ])
 
-            // Auto Discovery
+
             ->discoverResources(
                 in: app_path('Filament/Resources'),
                 for: 'App\\Filament\\Resources'
@@ -65,21 +65,6 @@ class AdminPanelProvider extends PanelProvider
                 for: 'App\\Filament\\Widgets'
             )
 
-
-            // ->pages([
-            //     Dashboard::class,
-            //     CustomerReport::class,
-            //     SalesReport::class,
-            //     ProductReport::class,
-
-
-
-            // ])
-
-           
-
-
-            // ])
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Customer Management')

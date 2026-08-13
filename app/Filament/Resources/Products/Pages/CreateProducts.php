@@ -16,7 +16,7 @@ class CreateProducts extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        // If thumbnails is empty, set to null
+        
         if (empty($data['thumbnails'])) {
             $data['thumbnails'] = null;
         }

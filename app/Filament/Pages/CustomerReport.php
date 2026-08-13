@@ -105,4 +105,10 @@ class CustomerReport extends Page
     {
         return [];
     }
+    protected function getListeners(): array
+    {
+        return [
+            'updateCustomerReport' => '$refresh',
+        ];
+    }
 }

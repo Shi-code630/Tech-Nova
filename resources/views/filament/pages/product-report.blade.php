@@ -18,7 +18,8 @@
         </div>
 
 
-        <x-filament-widgets::widgets :widgets="$this->getHeaderWidgets()" :columns="5" />
+      <x-filament-widgets::widgets :widgets="$this->getStatsWidgets()" :columns="5" />
+
 
 
         <div >

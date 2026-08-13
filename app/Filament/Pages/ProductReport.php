@@ -2,10 +2,12 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\Product\ProductStats;
-use App\Filament\Widgets\Product\TopSellingProducts;
-use App\Filament\Widgets\Product\SalesByCategory;
 use App\Filament\Widgets\Product\LowStockProducts;
+use App\Filament\Widgets\Product\ProductStats;
+use App\Filament\Widgets\Product\SalesByCategory;
+use App\Filament\Widgets\Product\TopSellingProducts;
+use App\Models\Order;
+use App\Models\Product;
 use BackedEnum;
 use Carbon\Carbon;
 use Filament\Actions\Action;
@@ -13,13 +15,13 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use App\Models\Order;
-use App\Models\Product;
 
 class ProductReport extends Page
 {
     use HasFiltersForm;
+    use InteractsWithPageFilters;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
 
@@ -120,13 +122,21 @@ class ProductReport extends Page
 
     protected function getHeaderWidgets(): array
     {
-        return [];
+        return [
+
+        ];
     }
 
     protected function getFooterWidgets(): array
     {
         return [];
     }
+    protected function getStatsWidgets(): array
+{
+    return [
+        ProductStats::class,
+    ];
+}
 
 
     protected function getViewData(): array

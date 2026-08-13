@@ -20,7 +20,7 @@ class ProductImagesResource extends Resource
 
 
 
-   
+
 
     public static function getNavigationGroup(): ?string
     {
@@ -33,7 +33,7 @@ class ProductImagesResource extends Resource
     }
 
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto ;
 
     protected static ?string $recordTitleAttribute = 'image';
 
