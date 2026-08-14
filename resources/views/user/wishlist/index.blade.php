@@ -7,13 +7,12 @@
             <div class="flex gap-6">
 
                 <!-- Sidebar -->
-                @include('user.partials.sidebar')
-
+                <x-user-dashboard.sidebar />
 
                 <!-- Main Content -->
                 <main class="flex-1">
 
-                    <!-- Page Header -->
+                    <!-- Header -->
                     <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
 
                         <div class="flex items-center justify-between">
@@ -36,11 +35,9 @@
 
                     </div>
 
-
-                    <!-- Wishlist -->
+                    <!-- Wishlist Content -->
                     <div class="bg-white rounded-2xl shadow-sm p-6">
 
-                        <!-- Empty Wishlist -->
                         <div class="text-center py-16">
 
                             <div class="w-20 h-20 mx-auto mb-5 rounded-full bg-red-50 flex items-center justify-center">

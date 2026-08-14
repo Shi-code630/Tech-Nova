@@ -51,16 +51,17 @@
 
 
         <!-- Wishlist -->
-        <a href="#"
-           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
+        <a href="{{ route('user.wishlist') }}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl text-white hover:bg-white/10 transition-all duration-200">
 
-            <span class="text-lg">❤️</span>
+            ❤️
             <span>Wishlist</span>
+
         </a>
 
 
         <!-- Cart -->
-        <a href="#"
+        <a href="{{ route('user.cart') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
             <span class="text-lg">🛒</span>
@@ -69,7 +70,7 @@
 
 
         <!-- Address -->
-        <a href="#"
+        <a href="{{ route('user.addresses') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
             <span class="text-lg">📍</span>
@@ -78,7 +79,7 @@
 
 
         <!-- Reviews -->
-        <a href="#"
+        <a href="{{ route('user.reviews') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
             <span class="text-lg">⭐</span>

@@ -22,6 +22,23 @@ Route::middleware(['auth'])->group(function () {
 
 
     Route::get('/my-orders', [UserOrderController::class, 'index'])->name('user.orders');
+     Route::get('/wishlist', function () {
+        return view('user.wishlist.index');
+    })->name('user.wishlist');
+
+    Route::get('/cart', function () {
+    return view('user.cart.index');
+    })->name('user.cart');
+
+    Route::get('/addresses', function () {
+    return view('user.addresses.index');
+    })->name('user.addresses');
+
+    Route::get('/reviews', function () {
+    return view('user.reviews.index');
+    })->name('user.reviews');
+
+
 });
 
 
