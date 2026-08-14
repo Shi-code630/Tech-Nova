@@ -1,106 +1,126 @@
-<div class="bg-gradient-to-b from-[#2563EB] to-[#1E40AF] rounded-3xl shadow-2xl overflow-hidden sticky top-6">
+<!-- Sidebar -->
+<aside class="w-72 sticky top-0 h-screen self-start flex-shrink-0 bg-gradient-to-b from-[#2563EB] to-[#1E40AF] text-white rounded-3xl shadow-xl flex flex-col overflow-hidden">
 
-    <!-- Profile -->
-    <div class="px-8 py-10 text-center border-b border-blue-400/30">
+    <!-- User Profile -->
+    <div class="px-6 py-8 text-center border-b border-white/20">
 
-        <div class="w-24 h-24 rounded-full bg-white mx-auto flex items-center justify-center shadow-xl">
-
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="w-12 h-12 text-blue-600"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor">
-
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5.121 17.804A9 9 0 1118.88 17.8M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-
-            </svg>
-
+        <!-- Avatar -->
+        <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-white flex items-center justify-center shadow-lg">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-white text-2xl font-bold">
+                {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+            </div>
         </div>
 
-        <h2 class="text-white font-bold text-xl mt-5">
-            John Doe
+        <h2 class="text-lg font-bold">
+            {{ auth()->user()->name ?? 'User' }}
         </h2>
 
-        <p class="text-blue-100 text-sm">
-            johndoe@gmail.com
+        <p class="text-sm text-blue-100">
+            {{ auth()->user()->email ?? 'user@example.com' }}
         </p>
-
     </div>
 
-    <!-- Menu -->
 
-    <div class="py-6">
+    <!-- Navigation -->
+    <nav class="flex-1 py-5 px-3">
 
+        <!-- Dashboard -->
         <a href="{{ route('user.dashboard') }}"
-           class="flex items-center gap-4 px-8 py-4 bg-white text-blue-700 font-semibold">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1
+           {{ request()->routeIs('user.dashboard')
+                ? 'bg-white/20 font-semibold shadow-sm'
+                : 'hover:bg-white/10' }}
+           transition-all duration-200">
 
-            🏠 Dashboard
-
+            <span class="text-lg">🏠</span>
+            <span>Dashboard</span>
         </a>
 
+
+        <!-- My Orders -->
         <a href="{{ route('user.orders') }}"
-           class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1
+           {{ request()->routeIs('user.orders', 'user.order.view')
+                ? 'bg-white/20 font-semibold shadow-sm'
+                : 'hover:bg-white/10' }}
+           transition-all duration-200">
 
-            📦 My Orders
-
+            <span class="text-lg">📦</span>
+            <span>My Orders</span>
         </a>
 
+
+        <!-- Wishlist -->
         <a href="#"
-           class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
-            ❤️ Wishlist
-
+            <span class="text-lg">❤️</span>
+            <span>Wishlist</span>
         </a>
 
+
+        <!-- Cart -->
         <a href="#"
-           class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
-            🛒 Cart
-
+            <span class="text-lg">🛒</span>
+            <span>Cart</span>
         </a>
 
+
+        <!-- Address -->
         <a href="#"
-           class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
-            📍 Address
-
+            <span class="text-lg">📍</span>
+            <span>Address</span>
         </a>
 
+
+        <!-- Reviews -->
         <a href="#"
-           class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
-            ⭐ Reviews
-
+            <span class="text-lg">⭐</span>
+            <span>Reviews</span>
         </a>
 
+
+        <!-- Coupons -->
         <a href="#"
-           class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
-            🎁 Coupons
-
+            <span class="text-lg">🎁</span>
+            <span>Coupons</span>
         </a>
 
+
+        <!-- Settings -->
         <a href="#"
-           class="flex items-center gap-4 px-8 py-4 text-white hover:bg-white/10 transition">
+           class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
-            ⚙ Settings
-
+            <span class="text-lg">⚙️</span>
+            <span>Settings</span>
         </a>
+
+    </nav>
+
+
+    <!-- Logout -->
+    <div class="p-5">
+
+        <form method="POST" action="#">
+            @csrf
+
+            <button type="submit"
+                    class="w-full bg-[#EF4444] hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 shadow-lg">
+
+                <span class="mr-2">↪</span>
+                Logout
+
+            </button>
+        </form>
 
     </div>
 
-    <div class="p-6">
-
-        <button
-            class="w-full bg-red-500 hover:bg-red-600 transition rounded-xl py-3 text-white font-semibold">
-
-            Logout
-
-        </button>
-
-    </div>
-
-</div>
+</aside>
