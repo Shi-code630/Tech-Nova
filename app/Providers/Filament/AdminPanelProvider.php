@@ -42,11 +42,6 @@ class AdminPanelProvider extends PanelProvider
             ->authGuard('admin')
             ->login()
             ->profile()
-<<<<<<< HEAD
-            ->registration()
-=======
-
->>>>>>> 556154e31b0356f0316fc592889697b5fa35b453
             ->brandName('Tech Nova Admin')
             ->colors([
                 'primary' => Color::Amber,
