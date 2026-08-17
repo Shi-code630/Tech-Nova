@@ -29,7 +29,7 @@ class DeliveryChargesResource extends Resource
         return 18;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-truck';
 
     protected static ?string $recordTitleAttribute = 'district';
 

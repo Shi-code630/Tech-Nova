@@ -18,7 +18,7 @@ class ProductImagesResource extends Resource
 {
     protected static ?string $model = ProductImage::class;
 
-
+    protected static bool $shouldRegisterNavigation = false;
 
 
 
@@ -33,11 +33,11 @@ class ProductImagesResource extends Resource
     }
 
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto ;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
 
     protected static ?string $recordTitleAttribute = 'image';
 
-     public static function canViewAny(): bool
+    public static function canViewAny(): bool
     {
         return true;
     }

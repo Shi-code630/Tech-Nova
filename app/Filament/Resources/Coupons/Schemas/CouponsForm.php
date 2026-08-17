@@ -17,6 +17,7 @@ class CouponsForm
         return $schema
             ->components([
                 Section::make('Coupon Information')
+                ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([

@@ -9,7 +9,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -31,13 +30,28 @@ class CategoriesTable
                     ->label('Name')
                     ->searchable()
                     ->sortable()
-                    ->limit(30),
+                    ->limit(30)
+                    ->description(
+                        fn (Category $record) =>
+                            $record->parent
+                                ? 'Parent: ' . $record->parent->name
+                                : 'Top Level'
+                    ),
 
-               TextColumn::make('parent.name')
+                TextColumn::make('parent.name')
                     ->label('Parent Category')
                     ->searchable()
                     ->sortable()
-                    ->placeholder('None'),
+                    ->placeholder('None')
+                    ->badge()
+                    ->color('gray'),
+
+                TextColumn::make('children_count')
+                    ->label('Subcategories')
+                    ->counts('children')
+                    ->badge()
+                    ->color('info')
+                    ->sortable(),
 
                 TextColumn::make('slug')
                     ->label('Slug')
@@ -47,76 +61,99 @@ class CategoriesTable
                 IconColumn::make('status')
                     ->label('Active')
                     ->boolean()
-                    ->sortable(),
+                    ->sortable()
+                    ->trueIcon('heroicon-o-check-circle')
+                    ->falseIcon('heroicon-o-x-circle')
+                    ->trueColor('success')
+                    ->falseColor('danger'),
 
                 TextColumn::make('created_at')
                     ->label('Created')
-                    ->dateTime()
+                    ->dateTime('d M, Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
                     ->label('Updated')
-                    ->dateTime()
+                    ->dateTime('d M, Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+
             ->filters([
-                TernaryFilter::make('status')
-                    ->label('Active')
-                    ->boolean()
-                    ->trueLabel('Active only')
-                    ->falseLabel('Inactive only')
-                    ->native(false),
-
-                SelectFilter::make('parent_id')
-                    ->label('Parent Category')
-                    ->options(Category::query()->pluck('name', 'id'))
-                    ->searchable()
-                    ->preload()
-                    ->placeholder('All Categories'),
-
                 TernaryFilter::make('status')
                     ->label('Status')
                     ->placeholder('All Statuses')
-                    ->trueLabel('Active')
-                    ->falseLabel('Inactive')
+                    ->trueLabel('Active Only')
+                    ->falseLabel('Inactive Only')
                     ->queries(
-                        true: fn($query) => $query->where('status', true),
-                        false: fn($query) => $query->where('status', false),
+                        true: fn ($query) => $query->where('status', true),
+                        false: fn ($query) => $query->where('status', false),
                     ),
+
+                SelectFilter::make('parent_id')
+                    ->label('Parent Category')
+                    ->options(
+                        Category::query()
+                            ->orderBy('name')
+                            ->pluck('name', 'id')
+                    )
+                    ->searchable()
+                    ->preload()
+                    ->placeholder('All Categories'),
             ])
-            ->actions([
+
+            ->recordActions([
                 EditAction::make()
-                    ->icon('heroicon-o-pencil')
-                    ->tooltip('Edit Category'),
+                    ->label('Edit')
+                    ->icon('heroicon-o-pencil-square')
+                    ->color('warning'),
 
-
-                DeleteAction::make()
-                    ->icon('heroicon-o-trash')
-                    ->tooltip('Delete User')
-                    ->color('danger')
-                    ->requiresConfirmation()
-                    ->modalHeading('Delete User')
-                    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
-                    ->modalSubmitActionLabel('Delete')
-                    ->successNotificationTitle('categories deleted successfully'),
-                Action::make('view')
-                    ->label('View Subcategories')
+                Action::make('view_subcategories')
+                    ->label('Subcategories')
                     ->icon('heroicon-o-squares-2x2')
                     ->url(
-                        fn(Category $record): string =>
-                        CategoriesResource::getUrl('index', ['tableFilters[parent_id][value]' => $record->id])
+                        fn (Category $record): string =>
+                            CategoriesResource::getUrl(
+                                'index',
+                                [
+                                    'tableFilters[parent_id][value]' => $record->id,
+                                ]
+                            )
                     )
                     ->openUrlInNewTab()
                     ->tooltip('View subcategories'),
 
+                DeleteAction::make()
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete Category')
+                    ->modalDescription(
+                        'Are you sure you want to delete this category? This action cannot be undone.'
+                    )
+                    ->modalSubmitActionLabel('Delete')
+                    ->successNotificationTitle(
+                        'Category deleted successfully'
+                    ),
             ])
+
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label('Delete Selected')
+                        ->icon('heroicon-o-trash')
+                        ->color('danger'),
                 ]),
             ])
-            ->defaultSort('name', 'asc');
+
+            ->defaultSort('name', 'asc')
+
+            ->emptyStateHeading('No categories found')
+            ->emptyStateDescription(
+                'Create your first category by clicking the "New Category" button.'
+            )
+            ->emptyStateIcon('heroicon-o-tag');
     }
 }

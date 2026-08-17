@@ -14,6 +14,7 @@ class WishlistsForm
         return $schema
             ->components([
                 Section::make('Wishlist Item')
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([

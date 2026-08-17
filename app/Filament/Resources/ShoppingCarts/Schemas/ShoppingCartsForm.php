@@ -15,6 +15,7 @@ class ShoppingCartsForm
         return $schema
             ->components([
                 Section::make('Cart Item Details')
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([

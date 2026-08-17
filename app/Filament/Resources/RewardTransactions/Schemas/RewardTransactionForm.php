@@ -16,6 +16,7 @@ class RewardTransactionForm
         return $schema
             ->components([
                 Section::make('Reward Transaction Details')
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([
