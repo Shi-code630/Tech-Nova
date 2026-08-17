@@ -15,6 +15,7 @@ class OrderItemsForm
         return $schema
             ->components([
                 Section::make('Order Item Details')
+                ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([

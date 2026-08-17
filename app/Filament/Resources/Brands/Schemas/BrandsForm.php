@@ -19,6 +19,7 @@ class BrandsForm
             ->components([
 
                 Section::make('Basic Information')
+                    ->columnSpanFull()
                     ->description('Core details identifying this brand')
                     ->schema([
                         Grid::make(2)
@@ -42,10 +43,12 @@ class BrandsForm
                     ]),
 
                 Section::make('Media')
+                    ->collapsed()
                     ->description('Logo and banner image for this brand')
                     ->schema([
                         FileUpload::make('logo')
                             ->label('Logo')
+                            ->required()
                             ->image()
                             ->disk('public')
                             ->directory('brands/logos')
@@ -54,6 +57,7 @@ class BrandsForm
 
                         FileUpload::make('image')
                             ->label('Brand Image')
+                            ->required()
                             ->image()
                             ->disk('public')
                             ->directory('brands/images')
@@ -69,13 +73,16 @@ class BrandsForm
                     ->schema([
                         TextInput::make('meta_title')
                             ->label('Meta Title')
+                            ->required()
                             ->maxLength(255),
 
                         TextInput::make('meta_keywords')
                             ->label('Meta Keywords')
+                            ->required()
                             ->maxLength(255),
                         Textarea::make('meta_description')
                             ->label('Meta Description')
+                            ->required()
                             ->rows(3),
 
 

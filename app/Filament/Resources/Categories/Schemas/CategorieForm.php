@@ -20,6 +20,8 @@ class CategorieForm
         return $schema
             ->components([
                 Section::make('Basic Information')
+                    ->columnSpanFull()
+                    ->description('Enter the basic details of the category.')
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -28,63 +30,102 @@ class CategorieForm
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
-                                    ->afterStateUpdated(function ($state, callable $set) {
-                                        $set('slug', Str::slug($state));
-                                    }),
+                                    ->afterStateUpdated(
+                                        function ($state, callable $set): void {
+                                            $set('slug', Str::slug($state));
+                                        }
+                                    )
+                                    ->placeholder('e.g. Mobile & Tablets'),
 
                                 TextInput::make('slug')
                                     ->label('Slug')
                                     ->required()
                                     ->maxLength(255)
-                                    ->unique(ignoreRecord: true),
+                                    ->unique(ignoreRecord: true)
+                                    ->placeholder('e.g. mobile-tablets')
+                                    ->helperText(
+                                        'URL-friendly identifier. Automatically generated from the category name.'
+                                    ),
 
                                 Select::make('parent_id')
                                     ->label('Parent Category')
-                                    ->options(fn($record) => static::getParentOptions($record))
+                                    ->options(
+                                        fn($record): array =>
+                                        static::getParentOptions($record)
+                                    )
                                     ->searchable()
                                     ->preload()
                                     ->nullable()
-                                    ->helperText('Optional')
-                                    ->rule(function ($record) {
-                                        $excludedIds = [];
+                                    ->placeholder('Select parent category (optional)')
+                                    ->helperText(
+                                        'Leave empty to create a top-level category.'
+                                    )
+                                    ->rule(
+                                        function ($record) {
+                                            $excludedIds = [];
 
-                                        if ($record) {
-                                            $descendants = static::getDescendantIds($record);
-                                            $excludedIds = array_merge([$record->id], $descendants);
+                                            if ($record) {
+                                                $excludedIds = array_merge(
+                                                    [$record->id],
+                                                    static::getDescendantIds($record)
+                                                );
+                                            }
+
+                                            return Rule::notIn($excludedIds);
                                         }
-
-                                        return Rule::notIn($excludedIds);
-                                    })
+                                    )
                                     ->validationMessages([
-                                        'not_in' => 'You cannot select this category or its children as parent.',
+                                        'not_in' =>
+                                        'You cannot select this category or one of its children as the parent.',
                                     ]),
 
                                 Toggle::make('status')
                                     ->label('Active')
-                                    ->default(true),
+                                    ->default(true)
+                                    ->helperText(
+                                        'Enable or disable this category.'
+                                    ),
                             ]),
 
                         Textarea::make('description')
                             ->label('Description')
-                            ->rows(5),
+                            ->rows(5)
+                            ->maxLength(5000)
+                            ->placeholder('Enter category description...')
+                            ->columnSpanFull(),
+                    ]),
 
-                        Section::make('SEO')
-                            ->schema([
-                                TextInput::make('meta_title')
-                                    ->maxLength(255),
+                Section::make('SEO')
+                    ->columnSpanFull()
+                    ->description('Optional search engine optimization information.')
+                    ->collapsed()
+                    ->schema([
+                        TextInput::make('meta_title')
+                            ->label('Meta Title')
+                            ->maxLength(255)
+                            ->placeholder('SEO title for search engines'),
 
-                                Textarea::make('meta_description')
-                                    ->rows(3),
 
-                                TextInput::make('meta_keywords')
-                                    ->maxLength(255),
-                            ]),
+
+                        TextInput::make('meta_keywords')
+                            ->label('Meta Keywords')
+                            ->maxLength(255)
+                            ->placeholder(
+                                'Comma separated keywords'
+                            ),
+                        Textarea::make('meta_description')
+                            ->label('Meta Description')
+                            ->rows(3)
+                            ->maxLength(500)
+                            ->placeholder(
+                                'SEO description for search engines'
+                            ),
                     ]),
             ]);
     }
 
     /**
-     * Parent category options
+     * Get parent category options with hierarchy.
      */
     private static function getParentOptions($record = null): array
     {
@@ -98,9 +139,12 @@ class CategorieForm
         }
 
         $categories = Category::query()
-            ->when(!empty($excludeIds), function ($query) use ($excludeIds) {
-                $query->whereNotIn('id', $excludeIds);
-            })
+            ->when(
+                ! empty($excludeIds),
+                function ($query) use ($excludeIds): void {
+                    $query->whereNotIn('id', $excludeIds);
+                }
+            )
             ->orderBy('name')
             ->get();
 
@@ -108,30 +152,49 @@ class CategorieForm
     }
 
     /**
-     * Build category tree
+     * Build category tree with indentation.
      */
-    private static function buildTree($categories, $parentId = null, $level = 0): array
-    {
+    private static function buildTree(
+        $categories,
+        $parentId = null,
+        int $level = 0
+    ): array {
         $options = [];
 
         foreach ($categories as $category) {
             if ($category->parent_id == $parentId) {
-                $options[$category->id] = str_repeat('— ', $level) . $category->name;
-                $options += static::buildTree($categories, $category->id, $level + 1);
+                $prefix = $level > 0
+                    ? str_repeat('— ', $level)
+                    : '';
+
+                $options[$category->id] =
+                    $prefix . $category->name;
+
+                $options += static::buildTree(
+                    $categories,
+                    $category->id,
+                    $level + 1
+                );
             }
         }
 
         return $options;
     }
 
-    
+    /**
+     * Get all descendant category IDs.
+     */
     private static function getDescendantIds($category): array
     {
         $ids = [];
 
         foreach ($category->children as $child) {
             $ids[] = $child->id;
-            $ids = array_merge($ids, static::getDescendantIds($child));
+
+            $ids = array_merge(
+                $ids,
+                static::getDescendantIds($child)
+            );
         }
 
         return $ids;

@@ -17,6 +17,7 @@ class PagesForm
         return $schema
             ->components([
                 Section::make('Page Information')
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -60,6 +61,7 @@ class PagesForm
                     ]),
 
                 Section::make('SEO Information')
+                    ->collapsed()
                     ->schema([
                         Grid::make(1)
                             ->schema([

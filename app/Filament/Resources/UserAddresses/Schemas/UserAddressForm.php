@@ -18,6 +18,7 @@ class UserAddressForm
         return $schema
             ->components([
                 Section::make('User Information')
+                    ->columnSpanFull()
                     ->schema([
                         Select::make('user_id')
                             ->label('User')
@@ -30,6 +31,7 @@ class UserAddressForm
                     ]),
 
                 Section::make('Address Details')
+                 ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -99,15 +101,17 @@ class UserAddressForm
                     ]),
 
                 Section::make('Address Summary')
+
                     ->schema([
                         Placeholder::make('full_address')
                             ->label('Full Address')
-                            ->content(fn ($record) =>
+                            ->content(
+                                fn($record) =>
                                 $record ? $record->full_address : 'No address entered yet'
                             )
                             ->columnSpanFull(),
                     ])
-                    ->visible(fn ($operation) => $operation === 'edit'),
+                    ->visible(fn($operation) => $operation === 'edit'),
 
                 Section::make('Timestamps')
                     ->schema([
@@ -115,18 +119,20 @@ class UserAddressForm
                             ->schema([
                                 Placeholder::make('created_at')
                                     ->label('Created At')
-                                    ->content(fn ($record) =>
+                                    ->content(
+                                        fn($record) =>
                                         $record ? $record->created_at->format('F j, Y, g:i A') : 'N/A'
                                     ),
 
                                 Placeholder::make('updated_at')
                                     ->label('Last Updated')
-                                    ->content(fn ($record) =>
+                                    ->content(
+                                        fn($record) =>
                                         $record ? $record->updated_at->format('F j, Y, g:i A') : 'N/A'
                                     ),
                             ]),
                     ])
-                    ->visible(fn ($operation) => $operation === 'edit'),
+                    ->visible(fn($operation) => $operation === 'edit'),
             ]);
     }
 }

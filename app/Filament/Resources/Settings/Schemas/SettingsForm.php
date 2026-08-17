@@ -17,8 +17,9 @@ class SettingsForm
     {
         return $schema
             ->components([
-                // ✅ General Settings Section
+
                 Section::make('General Settings')
+                    ->columnSpanFull()
                     ->description('Basic store and system settings')
                     ->icon('heroicon-o-building-storefront')
                     ->schema([
@@ -57,7 +58,7 @@ class SettingsForm
                                     ->label('Store Phone')
                                     ->maxLength(255)
                                     ->nullable()
-                                     ->required()
+                                    ->required()
                                     ->placeholder('+977 9800000000')
                                     ->helperText('Contact phone number'),
 
@@ -65,7 +66,7 @@ class SettingsForm
                                     ->label('Store Address')
                                     ->rows(2)
                                     ->nullable()
-                                     ->required()
+                                    ->required()
                                     ->placeholder('Kathmandu, Bagmati Province, Nepal')
                                     ->columnSpanFull(),
                             ]),

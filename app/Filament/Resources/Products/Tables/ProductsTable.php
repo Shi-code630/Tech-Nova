@@ -8,7 +8,6 @@ use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -22,16 +21,12 @@ class ProductsTable
     {
         return $table
             ->columns([
+
                 ImageColumn::make('thumbnails')
                     ->label('Image')
+                    ->disk('public')
                     ->square()
-                    ->size(50)
-                    ->defaultImageUrl(function ($record) {
-                        if ($record->thumbnails && is_array($record->thumbnails) && count($record->thumbnails) > 0) {
-                            return asset('storage/' . $record->thumbnails[0]);
-                        }
-                        return null;
-                    }),
+                    ->size(50),
 
                 TextColumn::make('name')
                     ->label('Product Name')
@@ -48,7 +43,9 @@ class ProductsTable
                     ->label('Brand')
                     ->searchable()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(
+                        isToggledHiddenByDefault: true
+                    ),
 
                 TextColumn::make('price')
                     ->label('Price')
@@ -59,7 +56,9 @@ class ProductsTable
                     ->label('Discount')
                     ->money('Rs.')
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(
+                        isToggledHiddenByDefault: true
+                    ),
 
                 TextColumn::make('final_price')
                     ->label('Final Price')
@@ -70,17 +69,35 @@ class ProductsTable
                     ->label('Stock')
                     ->numeric()
                     ->sortable()
-                    ->color(fn ($record) => $record->stock > 10 ? 'success' : ($record->stock > 0 ? 'warning' : 'danger')),
+                    ->color(
+                        fn ($record) =>
+                            $record->stock > 10
+                                ? 'success'
+                                : (
+                                    $record->stock > 0
+                                        ? 'warning'
+                                        : 'danger'
+                                )
+                    ),
+
+                TextColumn::make('variants_count')
+                    ->label('Variants')
+                    ->counts('variants')
+                    ->badge()
+                    ->color('info')
+                    ->sortable(),
 
                 TextColumn::make('status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn ($record) => match($record->status) {
-                        'active' => 'success',
-                        'inactive' => 'danger',
-                        'out_of_stock' => 'warning',
-                        default => 'secondary',
-                    }),
+                    ->color(
+                        fn ($record) => match ($record->status) {
+                            'active' => 'success',
+                            'inactive' => 'danger',
+                            'out_of_stock' => 'warning',
+                            default => 'gray',
+                        }
+                    ),
 
                 ToggleColumn::make('featured')
                     ->label('Featured')
@@ -89,9 +106,14 @@ class ProductsTable
                 TextColumn::make('created_at')
                     ->label('Created')
                     ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable()
+                    ->toggleable(
+                        isToggledHiddenByDefault: true
+                    ),
             ])
+
             ->filters([
+
                 SelectFilter::make('category_id')
                     ->label('Category')
                     ->relationship('category', 'name')
@@ -121,39 +143,39 @@ class ProductsTable
                 TernaryFilter::make('stock')
                     ->label('Stock Status')
                     ->placeholder('All Stock Levels')
-                    ->trueLabel('In Stock (> 0)')
-                    ->falseLabel('Out of Stock (0)')
+                    ->trueLabel('In Stock')
+                    ->falseLabel('Out of Stock')
                     ->queries(
-                        true: fn ($query) => $query->where('stock', '>', 0),
-                        false: fn ($query) => $query->where('stock', '=', 0),
+                        true: fn ($query) =>
+                            $query->where('stock', '>', 0),
+
+                        false: fn ($query) =>
+                            $query->where('stock', '=', 0),
                     ),
             ])
+
             ->recordActions([
-                EditAction::make()
-                    ->label('Edit')
-                    ->color('warning')
-                    ->icon('heroicon-o-pencil-square')
-
-                    ->size('sm'),
-
-                DeleteAction::make()
-                    ->label('Delete')
-                    ->color('warning')
-                    ->icon('heroicon-o-trash')
-
-                    ->size('sm'),
 
                 ViewAction::make()
                     ->label('View')
-                   ->color('warning')
-                    ->icon('heroicon-o-eye')
-                    ->size('sm'),
+                    ->icon('heroicon-o-eye'),
+
+                EditAction::make()
+                    ->label('Edit')
+                    ->icon('heroicon-o-pencil-square'),
+
+                DeleteAction::make()
+                    ->label('Delete')
+                    ->icon('heroicon-o-trash')
+                    ->requiresConfirmation(),
             ])
+
             ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),
             ])
+
             ->defaultSort('created_at', 'desc');
     }
 }
