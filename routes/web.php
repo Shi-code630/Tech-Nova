@@ -5,6 +5,7 @@ use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BrandController; // agar BrandController hai
 use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\AuthController;
 
 //Route::get('/', function () {
    // return view('welcome');
@@ -15,7 +16,32 @@ Route::get('/', [PageController::class, 'home'])->name('home');
 
 Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
 
+// ==================== AUTHENTICATION ====================
+
+Route::get('/login', [AuthController::class, 'showLogin'])
+    ->name('login');
+
+Route::post('/login', [AuthController::class, 'login'])
+    ->name('login.submit');
+
+Route::get('/register', [AuthController::class, 'showRegister'])
+    ->name('register');
+
+Route::post('/register', [AuthController::class, 'register'])
+    ->name('register.submit');
+
+Route::post('/logout', [AuthController::class, 'logout'])
+    ->name('logout');
+
 Route::middleware(['auth'])->group(function () {
+
+    // Route::get('/dashboard', [UserDashboardController::class, 'index'])
+    //     ->name('user.dashboard');
+
+    Route::get('/dashboard/profile', function () {
+        return view('user.profile');
+    })->name('user.profile');
+
 
     Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])
         ->name('user.order.view');
@@ -38,8 +64,18 @@ Route::middleware(['auth'])->group(function () {
     return view('user.reviews.index');
     })->name('user.reviews');
 
+    Route::get('/coupons', function () {
+    return view('user.coupons.index');
+    })->name('user.coupons');
+
+    Route::get('/settings', function () {
+    return view('user.settings');
+    })->name('user.settings');
+
 
 });
+
+
 
 
 Route::prefix('category')->group(function () {

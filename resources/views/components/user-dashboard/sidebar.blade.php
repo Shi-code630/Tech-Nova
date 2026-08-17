@@ -1,6 +1,19 @@
 <!-- Sidebar -->
-<aside class="w-72 sticky top-0 h-screen self-start flex-shrink-0 bg-gradient-to-b from-[#2563EB] to-[#1E40AF] text-white rounded-3xl shadow-xl flex flex-col overflow-hidden">
-
+<aside  class="w-72 sticky top-4
+           h-[calc(100vh-2rem)]
+           max-h-[calc(100vh-2rem)]
+           overflow-y-auto
+           self-start
+           flex-shrink-0
+           bg-gradient-to-b from-[#2563EB] to-[#1E40AF]
+           text-white
+           rounded-3xl
+           shadow-xl
+           flex flex-col
+           scrollbar-thin
+           scrollbar-thumb-blue-300
+           scrollbar-track-transparent"
+>
     <!-- User Profile -->
     <div class="px-6 py-8 text-center border-b border-white/20">
 
@@ -34,6 +47,19 @@
 
             <span class="text-lg">🏠</span>
             <span>Dashboard</span>
+        </a>
+
+
+        <!-- Profile -->
+        <a href="{{ route('user.profile') }}"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+            {{ request()->routeIs('user.profile')
+            ? 'bg-white/20 text-white'
+            : 'text-white/80 hover:bg-white/10 hover:text-white' }}">
+
+                {{-- profile icon --}}
+
+            <span>My Profile</span>
         </a>
 
 
@@ -88,7 +114,7 @@
 
 
         <!-- Coupons -->
-        <a href="#"
+        <a href="{{ route('user.coupons') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
             <span class="text-lg">🎁</span>
@@ -97,7 +123,7 @@
 
 
         <!-- Settings -->
-        <a href="#"
+        <a href="{{ route('user.settings') }}"
            class="flex items-center gap-3 px-4 py-3 rounded-lg mb-1 hover:bg-white/10 transition-all duration-200">
 
             <span class="text-lg">⚙️</span>

@@ -127,11 +127,12 @@
                                 <div class="px-4 py-3 border-b border-gray-100">
 
                                     <p class="text-sm font-semibold text-[#111827]">
-                                        John Doe
+                                        {{ auth()->user()->name ?? 'User' }}
+
                                     </p>
 
                                     <p class="text-xs text-gray-500">
-                                        john@example.com
+                                        {{ auth()->user()->email ?? 'user@example.com' }}
                                     </p>
 
                                 </div>
@@ -164,7 +165,7 @@
 
 
                                 <!-- Wishlist -->
-                                <a href="#"
+                                <a href="{{ route('user.wishlist') }}"
                                 class="flex items-center gap-3 px-4 py-2.5
                                         hover:bg-blue-50 hover:text-[#2563EB]
                                         transition-colors text-sm text-[#111827]">
