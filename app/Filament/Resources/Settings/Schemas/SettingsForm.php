@@ -71,7 +71,7 @@ class SettingsForm
                             ]),
                     ]),
 
-                // ✅ Payment Settings Section
+               
                 Section::make('Payment Settings')
                     ->description('Configure payment methods and currency')
                     ->icon('heroicon-o-credit-card')
