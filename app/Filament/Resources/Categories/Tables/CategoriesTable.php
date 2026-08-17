@@ -33,8 +33,8 @@ class CategoriesTable
                     ->sortable()
                     ->limit(30),
 
-                TextColumn::make('parents.name')
-                    ->label('Parent')
+               TextColumn::make('parent.name')
+                    ->label('Parent Category')
                     ->searchable()
                     ->sortable()
                     ->placeholder('None'),

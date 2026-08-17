@@ -28,7 +28,7 @@ class PaymentsResource extends Resource
         return 10;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCreditCard;
 
     // ✅ Use transaction_id as record title
     protected static ?string $recordTitleAttribute = 'transaction_id';

@@ -29,7 +29,7 @@ class OrdersResource extends Resource
     }
 
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentList;
 
     protected static ?string $recordTitleAttribute = 'order_number';
     public static function canViewAny(): bool

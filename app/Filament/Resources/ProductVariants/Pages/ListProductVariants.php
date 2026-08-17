@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ProductVariants\Pages;
+namespace App\Filament\Resources\ProductVariantsResource\Pages;
 
 use App\Filament\Resources\ProductVariants\ProductVariantsResource;
 use Filament\Actions\CreateAction;
@@ -15,7 +15,8 @@ class ListProductVariants extends ListRecords
         return [
             CreateAction::make()
                 ->label('New Variant')
-                ->icon('heroicon-o-plus'),
+                ->icon('heroicon-o-plus')
+                ->modalHeading('Create Product Variant'),
         ];
     }
 }

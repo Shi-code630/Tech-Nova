@@ -3,12 +3,12 @@
 namespace App\Filament\Resources\Categories\Schemas;
 
 use App\Models\Category;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -21,10 +21,8 @@ class CategorieForm
             ->components([
                 Section::make('Basic Information')
                     ->schema([
-
                         Grid::make(2)
                             ->schema([
-
                                 TextInput::make('name')
                                     ->label('Category Name')
                                     ->required()
@@ -42,13 +40,12 @@ class CategorieForm
 
                                 Select::make('parent_id')
                                     ->label('Parent Category')
-                                    ->options(fn ($record) => static::getParentOptions($record))
+                                    ->options(fn($record) => static::getParentOptions($record))
                                     ->searchable()
                                     ->preload()
                                     ->nullable()
                                     ->helperText('Optional')
                                     ->rule(function ($record) {
-
                                         $excludedIds = [];
 
                                         if ($record) {
@@ -65,7 +62,6 @@ class CategorieForm
                                 Toggle::make('status')
                                     ->label('Active')
                                     ->default(true),
-
                             ]),
 
                         Textarea::make('description')
@@ -74,7 +70,6 @@ class CategorieForm
 
                         Section::make('SEO')
                             ->schema([
-
                                 TextInput::make('meta_title')
                                     ->maxLength(255),
 
@@ -83,7 +78,6 @@ class CategorieForm
 
                                 TextInput::make('meta_keywords')
                                     ->maxLength(255),
-
                             ]),
                     ]),
             ]);
@@ -121,38 +115,23 @@ class CategorieForm
         $options = [];
 
         foreach ($categories as $category) {
-
             if ($category->parent_id == $parentId) {
-
-                $options[$category->id] =
-                    str_repeat('— ', $level) . $category->name;
-
-                $options += static::buildTree(
-                    $categories,
-                    $category->id,
-                    $level + 1
-                );
+                $options[$category->id] = str_repeat('— ', $level) . $category->name;
+                $options += static::buildTree($categories, $category->id, $level + 1);
             }
         }
 
         return $options;
     }
 
-    /**
-     * Get all descendant IDs recursively
-     */
+    
     private static function getDescendantIds($category): array
     {
         $ids = [];
 
         foreach ($category->children as $child) {
-
             $ids[] = $child->id;
-
-            $ids = array_merge(
-                $ids,
-                static::getDescendantIds($child)
-            );
+            $ids = array_merge($ids, static::getDescendantIds($child));
         }
 
         return $ids;

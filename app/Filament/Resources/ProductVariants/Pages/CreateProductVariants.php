@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ProductVariants\Pages;
+namespace App\Filament\Resources\ProductVariantsResource\Pages;
 
 use App\Filament\Resources\ProductVariants\ProductVariantsResource;
 use Filament\Resources\Pages\CreateRecord;
@@ -12,5 +12,10 @@ class CreateProductVariants extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');
+    }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Product variant created successfully!';
     }
 }

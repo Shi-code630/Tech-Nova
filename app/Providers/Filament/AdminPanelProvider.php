@@ -2,13 +2,17 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Widgets\LowStockAlert;
+use App\Filament\Pages\CustomerReport;
+use App\Filament\Pages\ProductReport;
+use App\Filament\Pages\SalesReport;
+use App\Filament\Widgets\Dashboard\LowStockAlert;
+use App\Filament\Widgets\Dashboard\OrdersByStatusChart;
+use App\Filament\Widgets\Dashboard\QuickActions;
+use App\Filament\Widgets\Dashboard\SalesOverviewChart;
+use App\Filament\Widgets\Dashboard\StatsOverview;
 use App\Filament\Widgets\OrdersByStatus;
-use App\Filament\Widgets\OrdersByStatusChart;
 use App\Filament\Widgets\SalesChart;
-use App\Filament\Widgets\SalesOverviewChart;
 use App\Filament\Widgets\StatsOverview as WidgetsStatsOverview;
-use App\Filament\Widgets\StatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -34,17 +38,16 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->authGuard('admin')
-            //->registration()
             ->login()
             ->profile()
-            //->registration()
             ->brandName('Tech Nova Admin')
             ->colors([
                 'primary' => Color::Amber,
             ])
 
-            // Auto Discovery
+
             ->discoverResources(
                 in: app_path('Filament/Resources'),
                 for: 'App\\Filament\\Resources'
@@ -60,18 +63,6 @@ class AdminPanelProvider extends PanelProvider
                 for: 'App\\Filament\\Widgets'
             )
 
-
-            // ->pages([
-            //     Dashboard::class,
-
-            // ])
-
-            ->widgets([
-                StatsOverview::class,
-                SalesOverviewChart::class,
-                OrdersByStatusChart::class,
-                LowStockAlert::class,
-            ])
             ->navigationGroups([
                 NavigationGroup::make()
                     ->label('Customer Management')

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Resources\ProductVariants\Schemas;
+namespace App\Filament\Resources\ProductVariantsResource\Schemas;
 
-use App\Models\Product;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;

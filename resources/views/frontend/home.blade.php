@@ -13,6 +13,7 @@
                     <img
                         src="{{ asset('storage/' . $banner->image) }}"
                         alt="{{ $banner->alt_text }}"
+
                         class="w-full h-full object-cover">
 
                     <!-- Overlay -->
@@ -538,74 +539,75 @@
             </a>
         </div>
 
+
    @if($brands->where('status', true)->count() > 0)
-        @php
-            $activeBrands = $brands->where('status', true)->values();
-        @endphp
+            @php
+                $activeBrands = $brands->where('status', true)->values();
+            @endphp
 
-        <div class="relative overflow-hidden">
-            <!-- Slider Track -->
-            <div class="flex gap-6 animate-scroll hover:pause">
-                @foreach($activeBrands as $brand)
-                    <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[170px] h-[160px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
-                        <div class="w-20 h-20 flex items-center justify-center">
-                            @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
-                                <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
-                            @else
-                                <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
-                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
-                                </div>
-                            @endif
-                        </div>
-                        <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
-                    </a>
-                @endforeach
+            <div class="relative overflow-hidden">
+                <!-- Slider Track -->
+                <div class="flex gap-6 animate-scroll hover:pause">
+            @foreach($activeBrands as $brand)
+                        <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[150px] h-[140px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
+                            <div class="w-20 h-20 flex items-center justify-center">
+                                @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+                                    <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                @else
+                                    <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
+                                        {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
+                        </a>
+                    @endforeach
 
-                <!-- Duplicate for seamless loop -->
-                @foreach($activeBrands as $brand)
-                    <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[170px] h-[160px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
-                        <div class="w-20 h-20 flex items-center justify-center">
-                            @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
-                                <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
-                            @else
-                                <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
-                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
-                                </div>
-                            @endif
-                        </div>
-                        <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
-                    </a>
-                @endforeach
+                    <!-- Duplicate for seamless loop -->
+                    @foreach($activeBrands as $brand)
+                        <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[170px] h-[160px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
+                            <div class="w-20 h-20 flex items-center justify-center">
+                                @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+                                    <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
+                                @else
+                                    <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
+                                        {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                    </div>
+                                @endif
+                            </div>
+                            <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
+                        </a>
+                    @endforeach
+                </div>
+
+                <!-- Gradient masks to fade edges (optional) -->
+                <div class="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+                <div class="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
             </div>
+        @else
+            <p class="text-center text-gray-500">No brands available at the moment.</p>
+        @endif
+    </div>
 
-            <!-- Gradient masks to fade edges (optional) -->
-            <div class="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-            <div class="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
-        </div>
-    @else
-        <p class="text-center text-gray-500">No brands available at the moment.</p>
-    @endif
-</div>
+        <style>
+            @keyframes scroll {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-50%);
+                }
+            }
 
-<style>
-    @keyframes scroll {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
-    }
+            .animate-scroll {
+                animation: scroll 30s linear infinite;
+                width: max-content;
+            }
 
-    .animate-scroll {
-        animation: scroll 30s linear infinite;
-        width: max-content;
-    }
-
-    .hover\:pause:hover {
-        animation-play-state: paused;
-    }
-</style>
+            .hover\:pause:hover {
+                animation-play-state: paused;
+            }
+        </style>
 
 <!-- Modern & User-Friendly Professional Contact Box -->
         <div class="relative overflow-hidden bg-white via-blue-50/50 to-slate-50 rounded-3xl border border-blue-100 shadow-xl shadow-blue-900/5 p-6 md:p-10 transition-all duration-300">

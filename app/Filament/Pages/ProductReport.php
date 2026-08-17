@@ -2,18 +2,32 @@
 
 namespace App\Filament\Pages;
 
+use App\Filament\Widgets\Product\LowStockProducts;
+use App\Filament\Widgets\Product\ProductStats;
+use App\Filament\Widgets\Product\SalesByCategory;
+use App\Filament\Widgets\Product\TopSellingProducts;
+use App\Models\Order;
 use App\Models\Product;
-use App\Models\OrderItem;
 use BackedEnum;
 use Carbon\Carbon;
-use Filament\Pages\Page;
 use Filament\Actions\Action;
+use Filament\Forms\Components\DatePicker;
+use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
+use Filament\Pages\Page;
+use Filament\Schemas\Schema;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProductReport extends Page
 {
+    use HasFiltersForm;
+    use InteractsWithPageFilters;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar';
 
-    protected  string $view = 'filament.pages.product-report';
+    protected static ?string $title = 'Product Report';
+    protected static ?string $navigationLabel = 'Product Report';
+    protected static ?string $slug = 'product-report';
 
     public static function getNavigationGroup(): string
     {
@@ -22,83 +36,34 @@ class ProductReport extends Page
 
     public static function getNavigationSort(): int
     {
-        return 22;
+        return 3;
     }
 
-    protected static ?string $navigationLabel = 'Product Report';
-    protected static ?string $title = 'Product Report';
-    protected static ?string $slug = 'product-report';
+    protected string $view = 'filament.pages.product-report';
 
-    public string $startDate;
-    public string $endDate;
-    public string $dateRange = 'this_month';
-
-    public function mount(): void
+    public function filtersForm(Schema $schema): Schema
     {
-        $this->setDateRange('this_month');
-    }
+        return $schema
+            ->components([
+                DatePicker::make('startDate')
+                    ->label('From')
+                    ->native(false)
+                   ->default(now()->startOfMonth())
+                    ->live()
+                    ->afterStateUpdated(function () {
+                        $this->dispatch('updateProductReport');
+                    }),
 
-    public function setDateRange(string $range): void
-    {
-        $this->dateRange = $range;
-
-        switch ($range) {
-            case 'today':
-                $this->startDate = Carbon::today()->format('Y-m-d');
-                $this->endDate = Carbon::today()->format('Y-m-d');
-                break;
-            case 'this_week':
-                $this->startDate = Carbon::now()->startOfWeek()->format('Y-m-d');
-                $this->endDate = Carbon::now()->endOfWeek()->format('Y-m-d');
-                break;
-            case 'this_month':
-                $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
-                $this->endDate = Carbon::now()->format('Y-m-d');
-                break;
-            case 'last_month':
-                $this->startDate = Carbon::now()->subMonth()->startOfMonth()->format('Y-m-d');
-                $this->endDate = Carbon::now()->subMonth()->endOfMonth()->format('Y-m-d');
-                break;
-            case 'this_year':
-                $this->startDate = Carbon::now()->startOfYear()->format('Y-m-d');
-                $this->endDate = Carbon::now()->format('Y-m-d');
-                break;
-            default:
-                $this->startDate = Carbon::now()->startOfMonth()->format('Y-m-d');
-                $this->endDate = Carbon::now()->format('Y-m-d');
-        }
-    }
-
-    public function getViewData(): array
-    {
-        $start = Carbon::parse($this->startDate)->startOfDay();
-        $end = Carbon::parse($this->endDate)->endOfDay();
-
-        $topProducts = OrderItem::whereBetween('created_at', [$start, $end])
-            ->selectRaw('product_id, SUM(quantity) as total_quantity, SUM(price * quantity) as total_revenue')
-            ->with('product')
-            ->groupBy('product_id')
-            ->orderBy('total_revenue', 'desc')
-            ->limit(10)
-            ->get();
-
-        $totalProducts = Product::count();
-        $activeProducts = Product::where('status', 'active')->count();
-        $inactiveProducts = Product::where('status', 'inactive')->count();
-        $outOfStockProducts = Product::where('stock', '<=', 0)->count();
-        $lowStockProducts = Product::where('stock', '>', 0)->where('stock', '<=', 5)->count();
-
-        return [
-            'topProducts' => $topProducts,
-            'totalProducts' => $totalProducts,
-            'activeProducts' => $activeProducts,
-            'inactiveProducts' => $inactiveProducts,
-            'outOfStockProducts' => $outOfStockProducts,
-            'lowStockProducts' => $lowStockProducts,
-            'startDate' => $this->startDate,
-            'endDate' => $this->endDate,
-            'dateRange' => $this->dateRange,
-        ];
+                DatePicker::make('endDate')
+                    ->label('To')
+                    ->native(false)
+                    ->default(now()->endOfMonth())
+                    ->live()
+                    ->afterStateUpdated(function () {
+                        $this->dispatch('updateProductReport');
+                    }),
+            ])
+            ->columns(2);
     }
 
     protected function getHeaderActions(): array
@@ -107,13 +72,84 @@ class ProductReport extends Page
             Action::make('export')
                 ->label('Export Report')
                 ->icon('heroicon-o-arrow-down-tray')
-                ->color('gray')
-                ->action(function () {
-                    \Filament\Notifications\Notification::make()
-                        ->title('Report exported successfully')
-                        ->success()
-                        ->send();
-                }),
+                ->color('primary')
+                ->action(fn() => $this->exportReport()),
+        ];
+    }
+
+    public function exportReport(): StreamedResponse
+    {
+        $start = Carbon::parse($this->filters['startDate'] ?? now()->startOfMonth());
+        $end = Carbon::parse($this->filters['endDate'] ?? now()->endOfMonth());
+
+        $products = Product::query()
+            ->with('category')
+            ->withCount(['orderItems as sold' => function ($query) use ($start, $end) {
+                $query->whereHas('order', function ($q) use ($start, $end) {
+                    $q->whereBetween('created_at', [$start, $end])
+                      ->where('order_status', '!=', 'cancelled');
+                });
+            }])
+            ->get();
+
+        $filename = 'product-report-' . $start->format('Y-m-d') . '-to-' . $end->format('Y-m-d') . '.csv';
+
+        return response()->streamDownload(function () use ($products) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Product Name', 'Category', 'Price', 'Stock', 'Units Sold', 'Revenue', 'Avg Rating']);
+
+            foreach ($products as $product) {
+                $revenue = $product->orderItems()
+                    ->whereHas('order', function ($q) {
+                        $q->where('order_status', '!=', 'cancelled');
+                    })
+                    ->sum('total');
+
+                fputcsv($handle, [
+                    $product->name,
+                    $product->category->name ?? 'N/A',
+                    $product->price,
+                    $product->stock,
+                    $product->sold ?? 0,
+                    $revenue ?? 0,
+                    $product->average_rating ?? 0,
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename);
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+
+        ];
+    }
+
+    protected function getFooterWidgets(): array
+    {
+        return [];
+    }
+    protected function getStatsWidgets(): array
+{
+    return [
+        ProductStats::class,
+    ];
+}
+
+
+    protected function getViewData(): array
+    {
+        return [
+            'filters' => $this->filters ?? [],
+        ];
+    }
+
+    protected function getListeners(): array
+    {
+        return [
+            'updateProductReport' => '$refresh',
         ];
     }
 }
