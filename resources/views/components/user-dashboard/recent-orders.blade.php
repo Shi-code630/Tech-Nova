@@ -32,6 +32,11 @@
                 <p class="text-sm text-gray-500">
                     Order #TN-20481 • 05 Jul 2026
                 </p>
+
+                <a href="{{ route('user.order.view', 1) }}"
+                    class="text-[#2563EB] font-semibold hover:underline text-sm">
+                    View Order →
+                </a>
             </div>
 
         </div>
@@ -68,6 +73,10 @@
                 <p class="text-sm text-gray-500">
                     Order #TN-20482 • 02 Jul 2026
                 </p>
+                <a href="{{ route('user.order.view', 2) }}"
+                    class="text-[#2563EB] font-semibold hover:underline text-sm">
+                        View Order →
+                    </a>
             </div>
 
         </div>
@@ -102,6 +111,11 @@
                 <p class="text-sm text-gray-500">
                     Order #TN-20483 • 28 Jun 2026
                 </p>
+
+                <a href="{{ route('user.order.view', 3) }}"
+                    class="text-[#2563EB] font-semibold hover:underline text-sm">
+                    View Order →
+                </a>
             </div>
 
         </div>
