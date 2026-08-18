@@ -75,5 +75,23 @@ class CheckoutController extends Controller
             ->with('success', 'Address added successfully.');
     }
 
+        public function continueCheckout(Request $request)
+    {
+        $validated = $request->validate([
+            'address_id' => 'required|exists:addresses,id',
+            'payment_method' => 'required|in:cod,online',
+        ]);
+
+        $address = $request->user()
+            ->addresses()
+            ->where('id', $validated['address_id'])
+            ->firstOrFail();
+
+        return view('checkout.confirm', [
+            'address' => $address,
+            'paymentMethod' => $validated['payment_method'],
+        ]);
+    }
+
 
 }

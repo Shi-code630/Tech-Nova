@@ -3,6 +3,8 @@
     <div class="bg-gray-100 min-h-screen py-10">
 
         <div class="w-[95%] max-w-7xl mx-auto">
+            <form action="{{ route('checkout.continue') }}" method="POST">
+    @csrf
 
             {{-- Header --}}
             <div class="mb-8">
@@ -135,6 +137,84 @@
 
                     </div>
 
+                    {{-- Payment Method --}}
+                    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+
+                        <div class="mb-6">
+
+                            <h2 class="text-xl font-semibold text-[#111827]">
+                                Payment Method
+                            </h2>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                Choose how you want to pay for your order.
+                            </p>
+
+                        </div>
+
+
+                        <div class="space-y-4">
+
+                            {{-- Cash on Delivery --}}
+                            <label class="flex items-start gap-4
+                                        border border-gray-200 rounded-xl p-4
+                                        cursor-pointer hover:border-[#2563EB]
+                                        transition">
+
+                                <input
+                                    type="radio"
+                                    name="payment_method"
+                                    value="cod"
+                                    checked
+                                    class="mt-1 w-4 h-4 text-[#2563EB]"
+                                >
+
+                                <div class="flex-1">
+
+                                    <h3 class="font-semibold text-[#111827]">
+                                        Cash on Delivery
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Pay when your order is delivered.
+                                    </p>
+
+                                </div>
+
+                            </label>
+
+
+                            {{-- Online Payment --}}
+                            <label class="flex items-start gap-4
+                                        border border-gray-200 rounded-xl p-4
+                                        cursor-pointer hover:border-[#2563EB]
+                                        transition">
+
+                                <input
+                                    type="radio"
+                                    name="payment_method"
+                                    value="online"
+                                    class="mt-1 w-4 h-4 text-[#2563EB]"
+                                >
+
+                                <div class="flex-1">
+
+                                    <h3 class="font-semibold text-[#111827]">
+                                        Online Payment
+                                    </h3>
+
+                                    <p class="text-sm text-gray-500 mt-1">
+                                        Pay securely using an online payment method.
+                                    </p>
+
+                                </div>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
                         <h2 class="text-xl font-semibold text-[#111827] mb-6">
                             Your Items
                         </h2>
@@ -264,10 +344,10 @@
                         <div class="mt-6">
 
                             <button
-                                type="button"
+                                type="submit"
                                 class="w-full py-3 rounded-xl
-                                       bg-gray-300 text-gray-500
-                                       font-semibold cursor-not-allowed">
+                                    bg-[#2563EB] hover:bg-blue-700
+                                    text-white font-semibold transition">
 
                                 Continue
 
@@ -282,6 +362,7 @@
             </div>
 
         </div>
+        </form>
 
     </div>
 

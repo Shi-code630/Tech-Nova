@@ -83,6 +83,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])
         ->name('checkout.address.store');
 
+    Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])
+        ->name('checkout.continue');
+
 
 
 
@@ -108,7 +111,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/settings', function () {
         return view('user.settings');
         })->name('user.settings');
-
 
 });
 
