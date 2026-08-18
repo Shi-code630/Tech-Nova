@@ -139,56 +139,92 @@
 
                     {{-- Quantity + Actions --}}
                     @if($product->stock > 0)
-                        <div class="mt-6 flex flex-wrap items-center gap-4">
-                            {{-- Quantity --}}
-                            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
-                                <button type="button"
+
+                        <form method="POST" action="{{ route('cart.add', $product->id) }}">
+                            @csrf
+
+                            <div class="mt-6 flex flex-wrap items-center gap-4">
+
+                                {{-- Quantity --}}
+                                <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+
+                                    <button
+                                        type="button"
                                         onclick="changeQty(-1)"
                                         class="px-3 py-2 text-gray-600 hover:bg-gray-100 transition focus:outline-none">
-                                    −
-                                </button>
-                                <input type="number"
-                                       id="quantity"
-                                       value="1"
-                                       min="1"
-                                       max="{{ $product->stock }}"
-                                       class="w-14 text-center border-0 focus:ring-0 focus:outline-none text-gray-700 font-medium">
-                                <button type="button"
+                                        −
+                                    </button>
+
+                                    <input
+                                        type="number"
+                                        id="quantity"
+                                        name="quantity"
+                                        value="1"
+                                        min="1"
+                                        max="{{ $product->stock }}"
+                                        class="w-14 text-center border-0 focus:ring-0 focus:outline-none text-gray-700 font-medium">
+
+                                    <button
+                                        type="button"
                                         onclick="changeQty(1)"
                                         class="px-3 py-2 text-gray-600 hover:bg-gray-100 transition focus:outline-none">
-                                    +
-                                </button>
-                            </div>
+                                        +
+                                    </button>
 
-                            {{-- Add to Cart & Buy Now --}}
-                            <div class="flex flex-wrap gap-3">
-                                <button type="button"
-                                        onclick="addToCart({{ $product->id }})"
-                                        class="px-6 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition shadow-sm">
+                                </div>
+
+                                {{-- Add to Cart --}}
+                                <button
+                                    type="submit"
+                                    class="flex-1 min-w-[180px] py-3 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-semibold transition">
+
                                     Add to Cart
+
                                 </button>
-                                <button type="button"
-                                        onclick="buyNow({{ $product->id }})"
-                                        class="px-6 py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition shadow-sm">
-                                    Buy Now
-                                </button>
+
                             </div>
+
+                        </form>
+
+                        {{-- Buy Now --}}
+                        <button
+                            type="button"
+                            onclick="buyNow({{ $product->id }})"
+                            class="mt-3 w-full px-6 py-2.5 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition shadow-sm">
+
+                            Buy Now
+
+                        </button>
+
+                        {{-- Wishlist --}}
+                        <div class="mt-4">
+
+                            <button
+                                type="button"
+                                onclick="addToWishlist({{ $product->id }})"
+                                class="text-sm text-gray-500 hover:text-red-500 transition flex items-center gap-1">
+
+                                <svg
+                                    class="w-5 h-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24">
+
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+
+                                </svg>
+
+                                Add to Wishlist
+
+                            </button>
+
                         </div>
 
-                        {{-- Wishlist link (optional) --}}
-                        <div class="mt-4">
-                            <button type="button"
-                                    onclick="addToWishlist({{ $product->id }})"
-                                    class="text-sm text-gray-500 hover:text-red-500 transition flex items-center gap-1">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                </svg>
-                                Add to Wishlist
-                            </button>
-                        </div>
                     @endif
-                </div>
-            </div>
 
             {{-- ========================================= --}}
             {{-- Description / Tabs --}}
@@ -347,12 +383,6 @@
             input.value = val;
         }
 
-        // Add to Cart (main product)
-        function addToCart(productId) {
-            const qty = document.getElementById('quantity').value;
-            alert('Add product ID ' + productId + ' (quantity: ' + qty + ') to cart');
-            // You can implement AJAX or redirect to cart route.
-        }
 
         // Buy Now
         function buyNow(productId) {

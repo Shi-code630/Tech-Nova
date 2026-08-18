@@ -1,0 +1,288 @@
+<x-frontend-layout>
+
+    <div class="bg-gray-100 min-h-screen py-10">
+
+        <div class="w-[95%] max-w-7xl mx-auto">
+
+            {{-- Header --}}
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-[#111827]">
+                    Checkout
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Review your order before continuing.
+                </p>
+            </div>
+
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {{-- Cart Items --}}
+                <div class="lg:col-span-2">
+
+                    {{-- Delivery Address --}}
+                    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+
+                        <div class="flex items-center justify-between mb-6">
+
+                            <div>
+                                <h2 class="text-xl font-semibold text-[#111827]">
+                                    Delivery Address
+                                </h2>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Choose where you want your order delivered.
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        @if($addresses->count())
+
+                            <div class="space-y-4">
+
+                                @foreach($addresses as $address)
+
+                                    <div class="border border-gray-200 rounded-xl p-4
+                                                hover:border-[#2563EB] transition">
+
+                                        <div class="flex items-start gap-4">
+
+                                            <input
+                                                type="radio"
+                                                name="address_id"
+                                                value="{{ $address->id }}"
+                                                class="mt-1 w-4 h-4 text-[#2563EB]"
+                                                {{ $address->is_default ? 'checked' : '' }}
+                                            >
+
+                                            <div class="flex-1">
+
+                                                <div class="flex items-center gap-2">
+
+                                                    <h3 class="font-semibold text-[#111827]">
+                                                        {{ $address->full_name }}
+                                                    </h3>
+
+                                                    @if($address->is_default)
+
+                                                        <span class="px-2 py-1 rounded-full
+                                                                    text-xs font-medium
+                                                                    bg-blue-50 text-[#2563EB]">
+
+                                                            Default
+
+                                                        </span>
+
+                                                    @endif
+
+                                                </div>
+
+
+                                                <p class="text-sm text-gray-600 mt-1">
+                                                    {{ $address->phone }}
+                                                </p>
+
+                                                <p class="text-sm text-gray-500 mt-2">
+                                                    {{ $address->address }},
+                                                    {{ $address->city }},
+                                                    {{ $address->district }},
+                                                    {{ $address->province }}
+
+                                                    @if($address->postal_code)
+                                                        - {{ $address->postal_code }}
+                                                    @endif
+                                                </p>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                @endforeach
+
+                            </div>
+
+                        @else
+
+                            {{-- No Address --}}
+                            <div class="border border-dashed border-gray-300
+                                        rounded-xl p-8 text-center">
+
+                                <h3 class="font-semibold text-[#111827]">
+                                    No delivery address found
+                                </h3>
+
+                                <p class="text-sm text-gray-500 mt-2">
+                                    You need to add a delivery address before placing your order.
+                                </p>
+
+                                <a
+                                    href="{{ route('checkout.address.create') }}"
+                                    class="inline-block mt-4 px-5 py-2.5 rounded-xl
+                                        bg-[#2563EB] hover:bg-blue-700
+                                        text-white text-sm font-semibold transition">
+
+                                    Add New Address
+
+                                </a>
+                            </div>
+
+                        @endif
+
+                    </div>
+
+                        <h2 class="text-xl font-semibold text-[#111827] mb-6">
+                            Your Items
+                        </h2>
+
+
+                        <div class="space-y-5">
+
+                            @foreach($cartItems as $item)
+
+                                <div class="flex items-center gap-4
+                                            border-b border-gray-100
+                                            pb-5">
+
+                                    {{-- Product Image --}}
+                                    <div class="w-20 h-20 rounded-xl
+                                                bg-gray-50 flex-shrink-0
+                                                flex items-center justify-center">
+
+                                        @if($item->product?->image)
+
+                                            <img
+                                                src="{{ asset('storage/' . $item->product->image) }}"
+                                                alt="{{ $item->product->name }}"
+                                                class="w-full h-full object-contain rounded-xl"
+                                            >
+
+                                        @else
+
+                                            <span class="text-gray-400 text-xs">
+                                                No Image
+                                            </span>
+
+                                        @endif
+
+                                    </div>
+
+
+                                    {{-- Product Details --}}
+                                    <div class="flex-1 min-w-0">
+
+                                        <h3 class="font-semibold text-[#111827]">
+                                            {{ $item->product->name ?? 'Product' }}
+                                        </h3>
+
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Quantity: {{ $item->quantity }}
+                                        </p>
+
+                                        <p class="text-[#2563EB] font-semibold mt-1">
+                                            Rs {{ number_format($item->price, 2) }}
+                                        </p>
+
+                                    </div>
+
+
+                                    {{-- Item Total --}}
+                                    <div class="text-right">
+
+                                        <p class="font-bold text-[#111827]">
+                                            Rs {{ number_format($item->price * $item->quantity, 2) }}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Order Summary --}}
+                <div>
+
+                    <div class="bg-white rounded-2xl shadow-sm p-6
+                                sticky top-6">
+
+                        <h2 class="text-xl font-semibold text-[#111827] mb-6">
+                            Order Summary
+                        </h2>
+
+
+                        <div class="flex justify-between text-sm mb-4">
+
+                            <span class="text-gray-500">
+                                Subtotal
+                            </span>
+
+                            <span class="font-medium">
+                                Rs {{ number_format($subtotal, 2) }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="flex justify-between text-sm mb-4">
+
+                            <span class="text-gray-500">
+                                Delivery
+                            </span>
+
+                            <span class="font-medium">
+                                Calculated next
+                            </span>
+
+                        </div>
+
+
+                        <div class="border-t border-gray-200
+                                    pt-4 flex justify-between">
+
+                            <span class="font-bold text-[#111827]">
+                                Total
+                            </span>
+
+                            <span class="font-bold text-xl text-[#2563EB]">
+                                Rs {{ number_format($subtotal, 2) }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="mt-6">
+
+                            <button
+                                type="button"
+                                class="w-full py-3 rounded-xl
+                                       bg-gray-300 text-gray-500
+                                       font-semibold cursor-not-allowed">
+
+                                Continue
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</x-frontend-layout>

@@ -191,7 +191,7 @@
                                 <!-- Logout -->
                                 <div class="border-t border-gray-100 mt-1 pt-1">
 
-                                    <a href="#"
+                                    <a href="{{ route('logout') }}"
                                     class="flex items-center gap-3 px-4 py-2.5
                                             hover:bg-red-50 hover:text-red-600
                                             transition-colors text-sm text-[#111827]">
