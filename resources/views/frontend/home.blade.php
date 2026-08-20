@@ -522,94 +522,284 @@
 <div class="py-3 pb-10">
 
     <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-            <!-- Left Side -->
-            <div class="flex items-center gap-3">
-                <div class="text-black text-lg font-semibold  py-2 rounded-lg">
-                   Shop By Brands
-                </div>
-                <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+    <div class="flex items-center justify-between mb-6">
+
+        <!-- Left Side -->
+        <div class="flex items-center gap-3">
+
+            <div class="text-black text-lg font-semibold py-2 rounded-lg">
+                Shop By Brands
             </div>
 
-            <!-- Right Side -->
-            <a href="#"
-               class="flex items-center gap-2 text-black-600 hover:text-black-700 font-medium transition-colors group">
-                Explore products from trusted global brands.
-                <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
-            </a>
+            <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+
         </div>
 
 
-   @if($brands->where('status', true)->count() > 0)
-            @php
-                $activeBrands = $brands->where('status', true)->values();
-            @endphp
+        <!-- Right Side -->
+        <a href="#"
+           class="flex items-center gap-2 text-black-600 hover:text-black-700 font-medium transition-colors group">
 
-            <div class="relative overflow-hidden">
-                <!-- Slider Track -->
-                <div class="flex gap-6 animate-scroll hover:pause">
-            @foreach($activeBrands as $brand)
-                        <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[150px] h-[140px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
-                            <div class="w-20 h-20 flex items-center justify-center">
-                                @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
-                                    <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
-                                @else
-                                    <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
-                                        {{ strtoupper(substr($brand->name, 0, 1)) }}
-                                    </div>
-                                @endif
-                            </div>
-                            <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
-                        </a>
-                    @endforeach
+            Explore products from trusted global brands.
 
-                    <!-- Duplicate for seamless loop -->
-                    @foreach($activeBrands as $brand)
-                        <a href="{{ route('brand.show', $brand->slug) }}" class="flex-shrink-0 w-[170px] h-[160px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group">
-                            <div class="w-20 h-20 flex items-center justify-center">
-                                @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
-                                    <img src="{{ asset('storage/' . $brand->logo) }}" alt="{{ $brand->name }}" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300" loading="lazy">
-                                @else
-                                    <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
-                                        {{ strtoupper(substr($brand->name, 0, 1)) }}
-                                    </div>
-                                @endif
-                            </div>
-                            <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">{{ $brand->name }}</span>
-                        </a>
-                    @endforeach
-                </div>
+            <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
 
-                <!-- Gradient masks to fade edges (optional) -->
-                <div class="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-                <div class="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
-            </div>
-        @else
-            <p class="text-center text-gray-500">No brands available at the moment.</p>
-        @endif
+        </a>
+
     </div>
 
-        <style>
-            @keyframes scroll {
-                0% {
-                    transform: translateX(0);
-                }
-                100% {
-                    transform: translateX(-50%);
-                }
-            }
 
-            .animate-scroll {
-                animation: scroll 30s linear infinite;
-                width: max-content;
-            }
+    @if($brands->where('status', true)->count() > 0)
 
-            .hover\:pause:hover {
-                animation-play-state: paused;
-            }
-        </style>
+        @php
+            $activeBrands = $brands->where('status', true)->values();
+        @endphp
 
-<!-- Modern & User-Friendly Professional Contact Box -->
+
+        <div class="relative overflow-hidden">
+
+            <!-- Slider Track -->
+            <div class="flex gap-6 animate-scroll hover:pause">
+
+
+                {{-- ========================= --}}
+                {{-- FIRST SET OF BRANDS --}}
+                {{-- ========================= --}}
+
+                @foreach($activeBrands as $brand)
+
+                    <a
+                        href="{{ route('brand.show', $brand->slug) }}"
+                        class="flex-shrink-0 w-[150px] h-[140px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group"
+                    >
+
+                        <div class="w-20 h-20 flex items-center justify-center">
+
+                            @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+
+                                <img
+                                    src="{{ asset('storage/' . $brand->logo) }}"
+                                    alt="{{ $brand->name }}"
+                                    class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                    loading="lazy"
+                                >
+
+                            @else
+
+                                <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
+
+                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
+
+                                </div>
+
+                            @endif
+
+                        </div>
+
+
+                        <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">
+
+                            {{ $brand->name }}
+
+                        </span>
+
+                    </a>
+
+                @endforeach
+
+
+
+                {{-- ========================= --}}
+                {{-- DUPLICATE FOR SEAMLESS LOOP --}}
+                {{-- ========================= --}}
+
+                @foreach($activeBrands as $brand)
+
+                    <a
+                        href="{{ route('brand.show', $brand->slug) }}"
+                        class="flex-shrink-0 w-[150px] h-[140px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-4 cursor-pointer group"
+                    >
+
+                        <div class="w-20 h-20 flex items-center justify-center">
+
+                            @if($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+
+                                <img
+                                    src="{{ asset('storage/' . $brand->logo) }}"
+                                    alt="{{ $brand->name }}"
+                                    class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                    loading="lazy"
+                                >
+
+                            @else
+
+                                <div class="w-20 h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-2xl font-bold">
+
+                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
+
+                                </div>
+
+                            @endif
+
+                        </div>
+
+
+                        <span class="mt-3 text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center">
+
+                            {{ $brand->name }}
+
+                        </span>
+
+                    </a>
+
+                @endforeach
+
+            </div>
+
+
+            <!-- Gradient masks to fade edges -->
+
+            <div class="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+
+            <div class="absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+
+        </div>
+
+
+    @else
+
+        <p class="text-center text-gray-500">
+            No brands available at the moment.
+        </p>
+
+    @endif
+
+</div>
+
+
+<style>
+
+    @keyframes scroll {
+
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(-50%);
+        }
+
+    }
+
+
+    .animate-scroll {
+
+        animation: scroll 30s linear infinite;
+
+        width: max-content;
+
+    }
+
+
+    .hover\:pause:hover {
+
+        animation-play-state: paused;
+
+    }
+
+</style>
+
+    <div class="pb-5">
+        <!-- Header -->
+            <div class="flex items-center justify-between mb-6">
+                <!-- Left Side -->
+                <div class="flex items-center gap-3">
+                    <div class="text-black text-lg font-semibold  py-2 rounded-lg">
+                    Blogs & Articles
+                    </div>
+                    <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+                </div>
+
+                <!-- Right Side -->
+                <a href="{{ route('blogs.index') }}"
+                class="flex items-center gap-2 text-[#155dfc] hover:text-blue-700 font-medium transition-colors group">
+                    Read more articles.
+                    <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                </a>
+            </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 pt-3 gap-6 pb-5">
+
+        @foreach($blogs as $blog)
+
+            <article class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition duration-300">
+
+                {{-- Blog Image --}}
+                <div class="h-52 overflow-hidden">
+
+                    <img
+                        src="{{ $blog->featured_image
+                            ? asset('storage/' . $blog->featured_image)
+                            : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80'
+                        }}"
+                        alt="{{ $blog->title }}"
+                        class="w-full h-full object-cover hover:scale-105 transition duration-500"
+                    >
+
+                </div>
+
+
+                <div class="p-5">
+
+                    {{-- Category + Date --}}
+                    <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+
+                        <span class="text-blue-600 font-medium">
+                            {{ $blog->category->name ?? 'Blog' }}
+                        </span>
+
+                        <span>•</span>
+
+                        <span>
+                            {{ $blog->published_at
+                                ? $blog->published_at->format('d M Y')
+                                : $blog->created_at->format('d M Y')
+                            }}
+                        </span>
+
+                    </div>
+
+
+                    {{-- Title --}}
+                    <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-4">
+                        {{ $blog->title }}
+                    </h3>
+
+
+                    {{-- Excerpt --}}
+                    <p class="text-gray-600 text-sm leading-relaxed mb-4">
+                        {{ Str::limit($blog->excerpt, 120) }}
+                    </p>
+
+
+                    {{-- Read More --}}
+                    <a
+                        href="{{ route('blogs.view', $blog->slug) }}"
+                        class="inline-flex items-center font-semibold text-blue-600 hover:text-blue-800"
+                    >
+                        Read More
+                        <span class="ml-2">→</span>
+                    </a>
+
+                </div>
+
+            </article>
+
+        @endforeach
+
+    </div>
+    </div>
+    <!-- Modern & User-Friendly Professional Contact Box -->
         <div class="relative overflow-hidden bg-white via-blue-50/50 to-slate-50 rounded-3xl border border-blue-100 shadow-xl shadow-blue-900/5 p-6 md:p-10 transition-all duration-300">
 
             <!-- Background Soft Glow Effect -->

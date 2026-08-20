@@ -1,14 +1,14 @@
 <?php
 
-use App\Http\Controllers\BrandController; // agar BrandController hai
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Frontend\PageController;
-use App\Http\Controllers\UserDashboardController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\BrandController; // agar BrandController hai
-use App\Http\Controllers\UserOrderController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\UserOrderController;
+use Illuminate\Support\Facades\Route;
 
 //Route::get('/', function () {
    // return view('welcome');
@@ -101,4 +101,8 @@ Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name(
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 
 
+Route::get('/blogs', [BlogController::class, 'index'])
+    ->name('blogs.index');
 
+Route::get('/blogs/{slug}', [BlogController::class, 'show'])
+    ->name('blogs.view');

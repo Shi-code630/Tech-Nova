@@ -159,7 +159,7 @@
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>About TechNova</a></li>
                     <li><a href="{{ route('careers') }}" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Careers</a></li>
                     <li><a href="#" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2">→</span>Store Locator</a></li>
-
+                    <li><a href="{{ route('blogs.index') }}" class="hover:text-white transition-all duration-300 hover:pl-2 inline-block group"><span Blogs class="text-[#F59E0B] opacity-0 group-hover:opacity-100 transition-opacity mr-2"> →</span> Blogs  </a> </li>
                 </ul>
 
             </div>
