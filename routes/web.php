@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
@@ -29,6 +30,11 @@ Route::controller(ContactMessageController::class)->group(function () {
     Route::get('/contact', 'create')->name('contact.create');
     Route::post('/contact', 'store')->name('contact.store');
 });
+
+
+// ==================== BLOG ROUTES ====================
+Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
+Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
 
 // ==================== PRODUCTS & CATEGORIES ====================
 Route::get('/brand/{slug}', [PageController::class, 'show'])->name('brand.show');
