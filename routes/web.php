@@ -23,9 +23,12 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.su
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ==================== CONTACT PAGE ====================
-
 Route::get('/contact-us', [PageController::class, 'contactus'])->name('contact-us');
 Route::post('/contact-us', [ContactMessageController::class, 'store'])->name('contact-us.store');
+Route::controller(ContactMessageController::class)->group(function () {
+    Route::get('/contact', 'create')->name('contact.create');
+    Route::post('/contact', 'store')->name('contact.store');
+});
 
 // ==================== PRODUCTS & CATEGORIES ====================
 Route::get('/brand/{slug}', [PageController::class, 'show'])->name('brand.show');
