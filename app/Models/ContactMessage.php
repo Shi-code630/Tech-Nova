@@ -24,7 +24,7 @@ class ContactMessage extends Model
         'updated_at' => 'datetime'
     ];
 
-    //  ACCESSORS 
+    //  ACCESSORS
 
     public function getStatusBadgeAttribute()
     {
@@ -53,7 +53,9 @@ class ContactMessage extends Model
         return $this->created_at?->diffForHumans() ?? 'N/A';
     }
 
-    //  SCOPES 
+    //  SCOPES
+
+
 
     public function scopeUnread($query)
     {
@@ -84,7 +86,7 @@ class ContactMessage extends Model
                      ->orWhere('phone', 'LIKE', "%{$search}%");
     }
 
-    //  HELPER METHODS 
+    //  HELPER METHODS
 
     public function markAsRead()
     {
