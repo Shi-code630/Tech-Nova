@@ -184,32 +184,32 @@
                             </label>
 
 
-                            {{-- Online Payment --}}
-                            <label class="flex items-start gap-4
-                                        border border-gray-200 rounded-xl p-4
-                                        cursor-pointer hover:border-[#2563EB]
-                                        transition">
+                                {{-- Online Payment --}}
+                                <label class="flex items-start gap-4
+                                            border border-gray-200 rounded-xl p-4
+                                            cursor-pointer hover:border-[#2563EB]
+                                            transition">
 
-                                <input
-                                    type="radio"
-                                    name="payment_method"
-                                    value="online"
-                                    class="mt-1 w-4 h-4 text-[#2563EB]"
-                                >
+                                    <input
+                                        type="radio"
+                                        name="payment_method"
+                                        value="online"
+                                        class="mt-1 w-4 h-4 text-[#2563EB]"
+                                    >
 
-                                <div class="flex-1">
+                                    <div class="flex-1">
 
-                                    <h3 class="font-semibold text-[#111827]">
-                                        Online Payment
-                                    </h3>
+                                        <h3 class="font-semibold text-[#111827]">
+                                            Online Payment
+                                        </h3>
 
-                                    <p class="text-sm text-gray-500 mt-1">
-                                        Pay securely using an online payment method.
-                                    </p>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Pay securely using eSewa.
+                                        </p>
 
-                                </div>
+                                    </div>
 
-                            </label>
+                                </label>
 
                         </div>
 
@@ -320,12 +320,23 @@
                                 Delivery
                             </span>
 
-                            <span class="font-medium">
-                                Calculated next
+                            <span class="font-medium" id="delivery-charge">
+                                Rs {{ number_format($deliveryCharge, 2) }}
                             </span>
 
                         </div>
 
+                        <div
+                            id="online-discount-row"
+                            class="hidden flex justify-between text-sm mb-4">
+                            <span class="text-gray-500">
+                                Online Payment Discount (5%)
+                            </span>
+
+                            <span class="font-medium text-green-600" id="online-discount">
+                                - Rs 0.00
+                            </span>
+                        </div>
 
                         <div class="border-t border-gray-200
                                     pt-4 flex justify-between">
@@ -334,8 +345,11 @@
                                 Total
                             </span>
 
-                            <span class="font-bold text-xl text-[#2563EB]">
-                                Rs {{ number_format($subtotal, 2) }}
+                            <span
+                                class="font-bold text-xl text-[#2563EB]"
+                                id="grand-total"
+                            >
+                                Rs {{ number_format($subtotal + $deliveryCharge, 2) }}
                             </span>
 
                         </div>
@@ -364,6 +378,66 @@
         </div>
         </form>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+                const subtotal = {{ $subtotal }};
+                const deliveryCharge = {{ $deliveryCharge }};
+
+                const paymentMethods = document.querySelectorAll(
+                    'input[name="payment_method"]'
+                );
+
+                const discountRow = document.getElementById('online-discount-row');
+                const discountElement = document.getElementById('online-discount');
+                const grandTotalElement = document.getElementById('grand-total');
+
+
+                function updateOrderSummary() {
+
+                    const selectedPayment = document.querySelector(
+                        'input[name="payment_method"]:checked'
+                    );
+
+                    let discount = 0;
+
+                    if (selectedPayment && selectedPayment.value === 'online') {
+
+                        discount = subtotal * 0.05;
+
+                        discountRow.classList.remove('hidden');
+
+                        discountElement.textContent =
+                            '- Rs ' + discount.toFixed(2);
+
+                    } else {
+
+                        discountRow.classList.add('hidden');
+
+                        onlinePaymentDetails.classList.add('hidden');
+
+                    }
+
+                    const grandTotal =
+                        subtotal - discount + deliveryCharge;
+
+
+                    grandTotalElement.textContent =
+                        'Rs ' + grandTotal.toFixed(2);
+                }
+
+                paymentMethods.forEach(function (paymentMethod) {
+                    paymentMethod.addEventListener(
+                        'change',
+                        updateOrderSummary
+                    );
+                });
+
+                updateOrderSummary();
+            });
+        </script>
+
     </div>
 
 </x-frontend-layout>
+

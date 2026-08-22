@@ -86,6 +86,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])
         ->name('checkout.continue');
 
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])
+        ->name('checkout.place-order');
+
 
 
 
