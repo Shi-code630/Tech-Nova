@@ -6,6 +6,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Frontend\CartController;
+   use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserDashboardController;
@@ -80,3 +81,13 @@ Route::middleware(['auth'])->group(function () {
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
 });
+
+
+
+Route::get('/blogs', [BlogController::class, 'index'])
+    ->name('blogs.index');
+
+
+
+Route::get('/blog/{slug}', [BlogController::class, 'show'])
+    ->name('blogs.view');
