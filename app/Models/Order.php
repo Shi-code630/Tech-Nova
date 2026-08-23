@@ -96,7 +96,7 @@ class Order extends Model
         ][$this->order_status] ?? 'Unknown';
     }
 
-    // ✅ Status Color Helper (थप्ने)
+
     public function getStatusColorAttribute()
     {
         return [
@@ -108,7 +108,7 @@ class Order extends Model
         ][$this->order_status] ?? 'secondary';
     }
 
-    // ✅ Check if order is in specific status
+    
     public function isPending()
     {
         return $this->order_status === self::STATUS_PENDING;
