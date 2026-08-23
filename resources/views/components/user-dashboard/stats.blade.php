@@ -1,6 +1,6 @@
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
 
-    <!-- Total Orders -->
+    {{-- Total Orders --}}
     <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6">
 
         <div class="flex items-center justify-between">
@@ -10,7 +10,7 @@
             </div>
 
             <h2 class="text-4xl font-bold text-blue-600">
-                12
+                {{ $totalOrders }}
             </h2>
 
         </div>
@@ -19,13 +19,18 @@
             Total Orders
         </h3>
 
-        <a href="#" class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+        <a
+            href="{{ route('user.orders') }}"
+            class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+
             View Orders →
+
         </a>
 
     </div>
 
-    <!-- In Progress -->
+
+    {{-- In Progress --}}
     <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6">
 
         <div class="flex items-center justify-between">
@@ -35,7 +40,7 @@
             </div>
 
             <h2 class="text-4xl font-bold text-green-600">
-                2
+                {{ $inProgress }}
             </h2>
 
         </div>
@@ -44,13 +49,18 @@
             In Progress
         </h3>
 
-        <a href="#" class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+        <a
+            href="{{ route('user.orders') }}"
+            class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+
             Track Orders →
+
         </a>
 
     </div>
 
-    <!-- Wishlist -->
+
+    {{-- Wishlist --}}
     <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6">
 
         <div class="flex items-center justify-between">
@@ -60,7 +70,7 @@
             </div>
 
             <h2 class="text-4xl font-bold text-pink-600">
-                8
+                {{ $wishlistCount }}
             </h2>
 
         </div>
@@ -69,13 +79,18 @@
             Wishlist
         </h3>
 
-        <a href="#" class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+        <a
+            href="{{ route('user.wishlist') }}"
+            class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+
             View Wishlist →
+
         </a>
 
     </div>
 
-    <!-- Total Spent -->
+
+    {{-- Total Spent --}}
     <div class="bg-white rounded-2xl shadow hover:shadow-lg transition p-6">
 
         <div class="flex items-center justify-between">
@@ -85,7 +100,7 @@
             </div>
 
             <h2 class="text-3xl font-bold text-orange-600">
-                Rs 128K
+                Rs {{ number_format($totalSpent, 2) }}
             </h2>
 
         </div>
@@ -94,8 +109,12 @@
             Total Spent
         </h3>
 
-        <a href="#" class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+        <a
+            href="{{ route('user.orders') }}"
+            class="mt-4 inline-flex items-center text-blue-600 font-semibold hover:underline">
+
             Order History →
+
         </a>
 
     </div>

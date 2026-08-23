@@ -54,4 +54,26 @@ class UserOrderController extends Controller
             'address' => $address,
         ]);
     }
+
+    /**
+     * Display order tracking for the logged-in customer.
+     */
+    public function track(Request $request, $order)
+    {
+        $user = $request->user();
+
+        $order = Order::query()
+            ->where('id', $order)
+            ->where('user_id', $user->id)
+            ->with([
+                'items.product',
+                'items.variant',
+                'address',
+            ])
+            ->firstOrFail();
+
+        return view('user.orders.track', [
+            'order' => $order,
+        ]);
+    }
 }

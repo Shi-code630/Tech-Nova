@@ -14,18 +14,23 @@
             <!-- Main Content -->
             <main class="col-span-9 space-y-6">
 
-                <x-user-dashboard.welcome-card />
+                <x-user-dashboard.welcome-card :user="$user" />
 
-                <x-user-dashboard.stats />
+                <x-user-dashboard.stats
+                    :total-orders="$totalOrders"
+                    :in-progress="$inProgress"
+                    :wishlist-count="$wishlistCount"
+                    :total-spent="$totalSpent"
+                />
 
                 <div class="grid grid-cols-3 gap-6">
 
                     <div class="col-span-2">
-                        <x-user-dashboard.recent-orders />
+                        <x-user-dashboard.recent-orders :recent-orders="$recentOrders" />
                     </div>
 
                     <div>
-                        <x-user-dashboard.saved-addresses />
+                        <x-user-dashboard.saved-addresses :addresses="$addresses" />
                     </div>
 
                 </div>

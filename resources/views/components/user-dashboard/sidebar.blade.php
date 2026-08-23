@@ -136,7 +136,7 @@
     <!-- Logout -->
     <div class="p-5">
 
-        <form method="POST" action="#">
+        <form method="POST" action="{{ route('logout') }}">
             @csrf
 
             <button type="submit"
