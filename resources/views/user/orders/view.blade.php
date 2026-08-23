@@ -19,7 +19,7 @@
                 <div>
                     <p class="text-sm text-gray-500">Status</p>
                     <p class="font-semibold">
-                        {{ $order->status }}
+                        {{ ucfirst($order->order_status) }}
                     </p>
                 </div>
             </div>

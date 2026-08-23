@@ -7,12 +7,19 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Frontend\CartController;
-
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserDashboardController;
-use App\Http\Controllers\UserOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CheckoutController;
+
+//Route::get('/', function () {
+   // return view('welcome');
+//});
 
 // ==================== HOME ====================
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -50,40 +57,83 @@ Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name
 Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 
-// ==================== USER DASHBOARD (AUTHENTICATED) ====================
+        //MIDDLEWARE ROUTE GROUP FOR AUTHENTICATED USERS \\
+
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])
+        ->name('user.dashboard');
 
     Route::get('/dashboard/profile', function () {
         return view('user.profile');
     })->name('user.profile');
 
-    Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])->name('user.order.view');
-    Route::get('/my-orders', [UserOrderController::class, 'index'])->name('user.orders');
 
-    Route::get('/wishlist', function () {
-        return view('user.wishlist.index');
-    })->name('user.wishlist');
+    Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])
+        ->name('user.order.view');
 
-    Route::get('/cart', function () {
-        return view('user.cart.index');
-    })->name('user.cart');
+    Route::get('/my-orders', [UserOrderController::class, 'index'])
+        ->name('user.orders');
 
-    Route::get('/addresses', function () {
+    Route::get('/my-orders/{order}/track', [UserOrderController::class, 'track'])
+        ->name('user.order.track');
+
+
+    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])
+        ->name('cart.add');
+
+    Route::get('/cart', [CartController::class, 'index'])
+        ->name('user.cart');
+
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])
+        ->name('cart.remove');
+
+    Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])
+        ->name('cart.update');
+
+
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+        ->name('checkout');
+
+    Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])
+        ->name('checkout.address.create');
+
+    Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])
+        ->name('checkout.address.store');
+
+    Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])
+        ->name('checkout.continue');
+
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])
+        ->name('checkout.place-order');
+
+
+
+
+        Route::get('/wishlist', function () {
+            return view('user.wishlist.index');
+        })->name('user.wishlist');
+
+
+
+        Route::get('/addresses', function () {
         return view('user.addresses.index');
-    })->name('user.addresses');
+        })->name('user.addresses');
 
-    Route::get('/reviews', function () {
+
+        Route::get('/reviews', function () {
         return view('user.reviews.index');
-    })->name('user.reviews');
+        })->name('user.reviews');
 
-    Route::get('/coupons', function () {
+        Route::get('/coupons', function () {
         return view('user.coupons.index');
-    })->name('user.coupons');
+        })->name('user.coupons');
 
-    Route::get('/settings', function () {
+        Route::get('/settings', function () {
         return view('user.settings');
-    })->name('user.settings');
+        })->name('user.settings');
+
 });
 
 // ==================== ADMIN ROUTES ====================

@@ -8,6 +8,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Forms\Components\Placeholder;
+use Illuminate\Support\HtmlString;
 
 class PaymentsForm
 {
@@ -57,6 +59,25 @@ class PaymentsForm
                                     ->maxLength(255)
                                     ->nullable()
                                     ->helperText('Transaction ID from payment gateway'),
+
+                                Placeholder::make('payment_screenshot')
+                                    ->label('Payment Screenshot')
+                                    ->content(function ($record) {
+                                        if (!$record?->order?->payment_screenshot) {
+                                            return 'No payment screenshot uploaded.';
+                                        }
+
+                                        return new \Illuminate\Support\HtmlString(
+                                            '<a href="' . asset('storage/' . $record->order->payment_screenshot) . '" target="_blank">
+                                                <img
+                                                    src="' . asset('storage/' . $record->order->payment_screenshot) . '"
+                                                    alt="Payment Screenshot"
+                                                    style="max-width: 400px; max-height: 500px; border-radius: 12px; border: 1px solid #ddd;"
+                                                >
+                                            </a>'
+                                        );
+                                    })
+                                    ->columnSpanFull(),
 
                                 Select::make('status')
                                     ->label('Payment Status')

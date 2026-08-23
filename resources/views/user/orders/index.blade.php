@@ -66,16 +66,32 @@
 
                                     <div class="mt-4 flex justify-end">
 
-                                        <a
-                                            href="{{ route('user.order.view', $order->id) }}"
-                                            class="px-5 py-2 rounded-xl bg-[#2563EB]
-                                                   hover:bg-blue-700 text-white text-sm
-                                                   font-medium transition">
+                                        <div class="flex items-center gap-3">
 
-                                            View Order
+                                            <a
+                                                href="{{ route('user.order.view', $order->id) }}"
+                                                class="px-5 py-2 rounded-xl border border-gray-200
+                                                    text-gray-700 hover:bg-gray-50 text-sm
+                                                    font-medium transition">
 
-                                        </a>
+                                                View Order
 
+                                            </a>
+
+                                            @if($order->order_status !== 'cancelled')
+
+                                                <a
+                                                    href="{{ route('user.order.track', $order->id) }}"
+                                                    class="px-5 py-2 rounded-xl bg-[#2563EB]
+                                                        hover:bg-blue-700 text-white text-sm
+                                                        font-medium transition">
+
+                                                    Track Order
+
+                                                </a>
+                                            @endif
+
+                                        </div>
                                     </div>
 
                                 </div>
