@@ -7,7 +7,7 @@
         <div
             class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
 
-            {{ strtoupper(substr(Auth::user()->name ?? 'U',0,1)) }}
+           {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
 
         </div>
 
@@ -16,7 +16,7 @@
 
             <h2 class="text-3xl font-bold text-gray-800">
                 👋 Welcome back,
-                {{ Auth::user()->name ?? 'Guest' }}!
+                {{ $user->name ?? 'Guest' }}
             </h2>
 
             <p class="text-gray-500 mt-1">
@@ -41,7 +41,7 @@
         <div>
 
             <h3 class="text-2xl font-bold text-orange-600">
-                1,240
+                0
             </h3>
 
             <p class="text-sm text-gray-500">
