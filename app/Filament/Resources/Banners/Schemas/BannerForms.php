@@ -17,6 +17,7 @@ class BannerForm
         return $schema
             ->components([
                 Section::make('Banner Information')
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([

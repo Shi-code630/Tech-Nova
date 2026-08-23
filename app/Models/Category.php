@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
 
 class Category extends Model
 {
@@ -21,56 +19,49 @@ class Category extends Model
         'status',
         'meta_title',
         'meta_description',
-        'meta_keywords'
+        'meta_keywords',
     ];
 
     protected $casts = [
         'status' => 'boolean',
     ];
 
-
-    // Parent category relationship
+   
 
     public function parent()
     {
         return $this->belongsTo(Category::class, 'parent_id');
     }
-  // Children categories relationship - FIXED: renamed to children()
 
     public function children()
     {
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-
-    // Products relationship
     public function products()
     {
-       return $this->belongsTo(Category::class);
+        return $this->hasMany(Product::class);
     }
 
 
-    /**
-     * Recursive Child Categories
-     */
+
+
     public function allChildren()
     {
         return $this->children()->with('allChildren');
     }
 
-
-    /**
-     * Recursive Parent Categories
-     */
     public function allParents()
     {
         return $this->parent()->with('allParents');
     }
 
-    // Helper method to get the full category path
+
+
     public function getPathAttribute()
     {
         $path = [$this->name];
+
         $parent = $this->parent;
 
         while ($parent) {
@@ -81,28 +72,30 @@ class Category extends Model
         return implode(' > ', $path);
     }
 
-    // Scope for active categories
+
+
     public function scopeActive($query)
     {
         return $query->where('status', true);
     }
 
-
-    // Scope for root categories (no parent)
     public function scopeRoot($query)
     {
         return $query->whereNull('parent_id');
     }
-public function getAncestors()
-{
-    $ancestors = collect();
-    $category = $this->parent;
 
-    while ($category) {
-        $ancestors->prepend($category);
-        $category = $category->parent;
+
+    public function getAncestors()
+    {
+        $ancestors = collect();
+
+        $category = $this->parent;
+
+        while ($category) {
+            $ancestors->prepend($category);
+            $category = $category->parent;
+        }
+
+        return $ancestors;
     }
-
-    return $ancestors;
-}
 }

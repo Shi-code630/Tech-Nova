@@ -13,11 +13,31 @@ use App\Models\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
+
 {
-     protected $fillable = [
-        'user_id', 'address_id', 'coupon_id', 'order_number', 'subtotal',
-        'discount', 'delivery_charge', 'tax', 'grand_total', 'payment_method',
-        'payment_status', 'order_status', 'payment_screenshot', 'transaction_id', 'notes'
+    const STATUS_PENDING = 'pending';
+    const STATUS_PROCESSING = 'processing';
+    const STATUS_SHIPPED = 'shipped';
+    const STATUS_DELIVERED = 'delivered';
+    const STATUS_CANCELLED = 'cancelled';
+    protected $fillable = [
+        'user_id',
+        'address_id',
+        'coupon_id',
+        'order_number',
+        'subtotal',
+        'discount',
+        'delivery_charge',
+        'tax',
+        'grand_total',
+        'payment_method',
+        'payment_status',
+        'order_status',
+        'payment_screenshot',
+        'transaction_id',
+        'notes',
+        'shipped_at',
+        'delivered_at'
     ];
 
     protected $casts = [
@@ -25,7 +45,9 @@ class Order extends Model
         'discount' => 'decimal:2',
         'delivery_charge' => 'decimal:2',
         'tax' => 'decimal:2',
-        'grand_total' => 'decimal:2'
+        'grand_total' => 'decimal:2',
+        'shipped_at' => 'datetime',
+        'delivered_at' => 'datetime',
     ];
 
     // Relationships
@@ -36,7 +58,7 @@ class Order extends Model
 
     public function address()
     {
-         return $this->belongsTo(Address::class)->withDefault();
+        return $this->belongsTo(Address::class)->withDefault();
     }
 
     public function coupon()
@@ -53,7 +75,7 @@ class Order extends Model
     {
         return $this->hasOne(Payment::class);
     }
-     public function orderItems()
+    public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
@@ -62,6 +84,55 @@ class Order extends Model
     public function rewardTransaction()
     {
         return $this->hasOne(RewardTransaction::class);
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return [
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_PROCESSING => 'Processing',
+            self::STATUS_SHIPPED => 'Shipped',
+            self::STATUS_DELIVERED => 'Delivered',
+            self::STATUS_CANCELLED => 'Cancelled',
+        ][$this->order_status] ?? 'Unknown';
+    }
+
+    // ✅ Status Color Helper (थप्ने)
+    public function getStatusColorAttribute()
+    {
+        return [
+            self::STATUS_PENDING => 'warning',
+            self::STATUS_PROCESSING => 'info',
+            self::STATUS_SHIPPED => 'primary',
+            self::STATUS_DELIVERED => 'success',
+            self::STATUS_CANCELLED => 'danger',
+        ][$this->order_status] ?? 'secondary';
+    }
+
+    // ✅ Check if order is in specific status
+    public function isPending()
+    {
+        return $this->order_status === self::STATUS_PENDING;
+    }
+
+    public function isProcessing()
+    {
+        return $this->order_status === self::STATUS_PROCESSING;
+    }
+
+    public function isShipped()
+    {
+        return $this->order_status === self::STATUS_SHIPPED;
+    }
+
+    public function isDelivered()
+    {
+        return $this->order_status === self::STATUS_DELIVERED;
+    }
+
+    public function isCancelled()
+    {
+        return $this->order_status === self::STATUS_CANCELLED;
     }
 
     // Accessors

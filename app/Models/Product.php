@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Category;
 use App\Models\Brand;
+use App\Models\ProductImage;
+use App\Models\ProductVariant;
+use App\Models\Cart;
+use App\Models\Wishlist;
+use App\Models\OrderItem;
+use App\Models\Review;
 
 class Product extends Model
 {
@@ -25,7 +31,7 @@ class Product extends Model
         'featured',
         'meta_title',
         'meta_description',
-        'meta_keywords'
+        'meta_keywords',
     ];
 
     protected $casts = [
@@ -33,213 +39,165 @@ class Product extends Model
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
         'featured' => 'boolean',
-        'stock' => 'integer'
+        'stock' => 'integer',
     ];
 
-    // ============ RELATIONSHIPS ============
+    // =========================
+    // RELATIONSHIPS
+    // =========================
 
-    /**
-     * Get the category that owns the product
-     */
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * Get the brand that owns the product
-     */
     public function brand()
     {
         return $this->belongsTo(Brand::class);
     }
 
-    /**
-     * Get all images for the product
-     */
     public function images()
     {
         return $this->hasMany(ProductImage::class);
     }
 
-    /**
-     * Get all variants for the product
-     */
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);
     }
 
-    /**
-     * Get all cart items for the product
-     */
     public function carts()
     {
         return $this->hasMany(Cart::class);
     }
 
-    /**
-     * Get all wishlist items for the product
-     */
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class);
     }
 
-    /**
-     * Get all order items for the product
-     */
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    /**
-     * Get all reviews for the product
-     */
     public function reviews()
     {
         return $this->hasMany(Review::class);
     }
 
-    // ============ ACCESSORS ============
+    // =========================
+    // ACCESSORS
+    // =========================
 
-    /**
-     * Get the final price (after discount)
-     */
     public function getFinalPriceAttribute()
     {
         return $this->discount_price ?? $this->price;
     }
 
-    /**
-     * Get the average rating of the product
-     */
     public function getAverageRatingAttribute()
     {
-        return $this->reviews()->where('status', true)->avg('rating') ?? 0;
+        return $this->reviews()
+            ->where('status', true)
+            ->avg('rating') ?? 0;
     }
 
-    /**
-     * Get the total number of reviews
-     */
     public function getReviewCountAttribute()
     {
-        return $this->reviews()->where('status', true)->count();
+        return $this->reviews()
+            ->where('status', true)
+            ->count();
     }
 
-    /**
-     * Check if product is in stock
-     */
     public function getIsInStockAttribute()
     {
         return $this->stock > 0;
     }
 
-    /**
-     * Get discount percentage
-     */
     public function getDiscountPercentageAttribute()
     {
-        if (isset($this->discount_price) && $this->discount_price > 0 && $this->price > 0) {
-            return round((($this->price - $this->discount_price) / $this->price) * 100);
+        if (
+            $this->discount_price !== null &&
+            $this->discount_price > 0 &&
+            $this->price > 0
+        ) {
+            return round(
+                (($this->price - $this->discount_price) / $this->price) * 100
+            );
         }
+
         return 0;
     }
 
-    /**
-     * Get formatted price
-     */
     public function getFormattedPriceAttribute()
     {
         return 'Rs. ' . number_format($this->price ?? 0, 2);
     }
 
-    /**
-     * Get formatted discount price
-     */
     public function getFormattedDiscountPriceAttribute()
     {
-        if (isset($this->discount_price) && $this->discount_price > 0) {
+        if ($this->discount_price !== null && $this->discount_price > 0) {
             return 'Rs. ' . number_format($this->discount_price, 2);
         }
+
         return null;
     }
 
-    /**
-     * Get the status badge color
-     */
     public function getStatusBadgeAttribute()
     {
-        $badges = [
+        return match ($this->status) {
             'active' => 'success',
             'inactive' => 'danger',
-            'out_of_stock' => 'warning'
-        ];
-        return $badges[$this->status] ?? 'secondary';
+            'out_of_stock' => 'warning',
+            default => 'secondary',
+        };
     }
 
-    /**
-     * Get the status label
-     */
     public function getStatusLabelAttribute()
     {
-        $labels = [
+        return match ($this->status) {
             'active' => 'Active',
             'inactive' => 'Inactive',
-            'out_of_stock' => 'Out of Stock'
-        ];
-        return $labels[$this->status] ?? ucfirst($this->status);
+            'out_of_stock' => 'Out of Stock',
+            default => ucfirst($this->status),
+        };
     }
 
-    // ============ SCOPES ============
+    // =========================
+    // SCOPES
+    // =========================
 
-    /**
-     * Scope a query to only include active products
-     */
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
     }
 
-    /**
-     * Scope a query to only include featured products
-     */
     public function scopeFeatured($query)
     {
         return $query->where('featured', true);
     }
 
-    /**
-     * Scope a query to only include products in stock
-     */
     public function scopeInStock($query)
     {
         return $query->where('stock', '>', 0);
     }
 
-    /**
-     * Scope a query to only include products on sale
-     */
     public function scopeOnSale($query)
     {
-        return $query->whereNotNull('discount_price')
+        return $query
+            ->whereNotNull('discount_price')
             ->whereColumn('discount_price', '<', 'price');
     }
 
-    /**
-     * Scope a query to search products
-     */
     public function scopeSearch($query, $search)
     {
-        return $query->where('name', 'LIKE', "%{$search}%")
-            ->orWhere('description', 'LIKE', "%{$search}%")
-            ->orWhere('slug', 'LIKE', "%{$search}%");
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('description', 'LIKE', "%{$search}%")
+                ->orWhere('slug', 'LIKE', "%{$search}%");
+        });
     }
 
-    /**
-     * Scope a query to filter by price range
-     */
     public function scopePriceRange($query, $min, $max)
     {
         return $query->where(function ($q) use ($min, $max) {
@@ -248,60 +206,53 @@ class Product extends Model
         });
     }
 
-    /**
-     * Scope a query to filter by category
-     */
     public function scopeByCategory($query, $categoryId)
     {
         return $query->where('category_id', $categoryId);
     }
 
-    /**
-     * Scope a query to filter by brand
-     */
     public function scopeByBrand($query, $brandId)
     {
         return $query->where('brand_id', $brandId);
     }
 
-    // ============ HELPER METHODS ============
+    // =========================
+    // VARIANT HELPERS
+    // =========================
 
-    /**
-     * Check if product has variants
-     */
-    public function hasVariants()
+    public function hasVariants(): bool
     {
-        return $this->variants()->count() > 0;
+        return $this->variants()->exists();
     }
 
-    /**
-     * Get the minimum variant price
-     */
     public function getMinVariantPriceAttribute()
     {
         return $this->variants()->min('price');
     }
 
-    /**
-     * Get the maximum variant price
-     */
     public function getMaxVariantPriceAttribute()
     {
         return $this->variants()->max('price');
     }
 
-    /**
-     * Get total stock including variants
-     */
-    public function getTotalStockAttribute()
+    public function getTotalVariantStockAttribute()
     {
-        $variantStock = $this->variants()->sum('stock');
-        return $this->stock + $variantStock;
+        return $this->variants()->sum('stock');
     }
 
-    /**
-     * Get related products (same category)
-     */
+    public function getTotalStockAttribute()
+    {
+        if ($this->hasVariants()) {
+            return $this->variants()->sum('stock');
+        }
+
+        return $this->stock;
+    }
+
+    // =========================
+    // RELATED PRODUCTS
+    // =========================
+
     public function relatedProducts($limit = 4)
     {
         return Product::where('category_id', $this->category_id)
@@ -312,40 +263,41 @@ class Product extends Model
             ->get();
     }
 
-    /**
-     * Decrease stock when product is ordered
-     */
+    // =========================
+    // STOCK
+    // =========================
+
     public function decreaseStock($quantity)
     {
         if ($this->stock < $quantity) {
-            throw new \Exception('Insufficient stock. Available: ' . $this->stock);
+            throw new \Exception(
+                'Insufficient stock. Available: ' . $this->stock
+            );
         }
 
         $this->stock -= $quantity;
-        $this->save();
 
-        // Update status if out of stock
         if ($this->stock <= 0) {
             $this->status = 'out_of_stock';
-            $this->save();
         }
+
+        $this->save();
 
         return $this;
     }
 
-    /**
-     * Increase stock when product is returned or restocked
-     */
     public function increaseStock($quantity)
     {
         $this->stock += $quantity;
-        $this->save();
 
-        // Update status if stock is available
-        if ($this->stock > 0 && $this->status === 'out_of_stock') {
+        if (
+            $this->stock > 0 &&
+            $this->status === 'out_of_stock'
+        ) {
             $this->status = 'active';
-            $this->save();
         }
+
+        $this->save();
 
         return $this;
     }

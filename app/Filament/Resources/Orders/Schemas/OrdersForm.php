@@ -16,6 +16,7 @@ class OrdersForm
         return $schema
             ->components([
                 Section::make('Order Information')
+                
                     ->schema([
                         Grid::make(2)
                             ->schema([

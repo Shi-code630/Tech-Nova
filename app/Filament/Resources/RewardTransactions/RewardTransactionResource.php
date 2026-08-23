@@ -28,7 +28,7 @@ class RewardTransactionResource extends Resource
         return 17;
     }
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon ='heroicon-o-gift';
 
 
     protected static ?string $recordTitleAttribute = 'id';

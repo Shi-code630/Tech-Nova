@@ -18,6 +18,7 @@ class PaymentsForm
         return $schema
             ->components([
                 Section::make('Payment Information')
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([

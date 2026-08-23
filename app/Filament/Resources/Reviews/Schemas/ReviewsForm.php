@@ -17,6 +17,7 @@ class ReviewsForm
         return $schema
             ->components([
                 Section::make('Review Information')
+                ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([
@@ -49,6 +50,7 @@ class ReviewsForm
 
                                 Textarea::make('review')
                                     ->label('Review Comment')
+                                    ->columnSpanFull()
                                     ->rows(4)
                                     ->nullable()
                                     ->placeholder('Write the review here...'),
