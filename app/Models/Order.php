@@ -29,6 +29,7 @@ class Order extends Model
         'discount',
         'delivery_charge',
         'tax',
+        'tax_percentage',
         'grand_total',
         'payment_method',
         'payment_status',
@@ -45,6 +46,7 @@ class Order extends Model
         'discount' => 'decimal:2',
         'delivery_charge' => 'decimal:2',
         'tax' => 'decimal:2',
+        'tax_percentage' => 'decimal:2',
         'grand_total' => 'decimal:2',
         'shipped_at' => 'datetime',
         'delivered_at' => 'datetime',
@@ -109,7 +111,7 @@ class Order extends Model
         ][$this->order_status] ?? 'secondary';
     }
 
-    
+
     public function isPending()
     {
         return $this->order_status === self::STATUS_PENDING;

@@ -155,7 +155,7 @@ class ProductForm
                                         TextInput::make('price')
                                             ->label('Price (Rs.)')
                                             ->numeric()
-                                            ->required()
+                                            ->default(0)
                                             ->prefix('Rs.')
                                             ->step(0.01)
                                             ->minValue(0),
@@ -163,7 +163,7 @@ class ProductForm
                                         TextInput::make('stock')
                                             ->label('Stock')
                                             ->numeric()
-                                            ->required()
+
                                             ->default(0)
                                             ->integer()
                                             ->minValue(0),

@@ -1,14 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
-use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\PageController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserOrderController;
@@ -18,11 +15,13 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 
 //Route::get('/', function () {
-   // return view('welcome');
+// return view('welcome');
 //});
 
 // ==================== HOME ====================
 Route::get('/', [PageController::class, 'home'])->name('home');
+
+Route::get('/search', [PageController::class, 'search'])->name('search');
 
 // ==================== AUTHENTICATION ====================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -57,7 +56,7 @@ Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name
 Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 
-        //MIDDLEWARE ROUTE GROUP FOR AUTHENTICATED USERS \\
+//MIDDLEWARE ROUTE GROUP FOR AUTHENTICATED USERS \\
 
 Route::middleware(['auth'])->group(function () {
 
@@ -90,6 +89,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])
         ->name('cart.update');
+    // Route::delete('/cart/clear', [CartController::class, 'clearCart'])
+    //     ->name('cart.clear');
+
 
 
 
@@ -111,29 +113,28 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-        Route::get('/wishlist', function () {
-            return view('user.wishlist.index');
-        })->name('user.wishlist');
+    Route::get('/wishlist', function () {
+        return view('user.wishlist.index');
+    })->name('user.wishlist');
 
 
 
-        Route::get('/addresses', function () {
+    Route::get('/addresses', function () {
         return view('user.addresses.index');
-        })->name('user.addresses');
+    })->name('user.addresses');
 
 
-        Route::get('/reviews', function () {
+    Route::get('/reviews', function () {
         return view('user.reviews.index');
-        })->name('user.reviews');
+    })->name('user.reviews');
 
-        Route::get('/coupons', function () {
+    Route::get('/coupons', function () {
         return view('user.coupons.index');
-        })->name('user.coupons');
+    })->name('user.coupons');
 
-        Route::get('/settings', function () {
+    Route::get('/settings', function () {
         return view('user.settings');
-        })->name('user.settings');
-
+    })->name('user.settings');
 });
 
 // ==================== ADMIN ROUTES ====================
@@ -150,3 +151,8 @@ Route::get('/blogs', [BlogController::class, 'index'])
 
 Route::get('/blog/{slug}', [BlogController::class, 'show'])
     ->name('blogs.view');
+
+
+Route::get('/orders/track/{order}', [OrderController::class, 'track'])->name('orders.track');
+Route::get('/orders/review/{order}', [OrderController::class, 'review'])->name('orders.review');
+Route::post('/orders/review/{order}', [OrderController::class, 'submitReview'])->name('orders.review.submit');

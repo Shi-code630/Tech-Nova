@@ -1,5 +1,5 @@
 <x-frontend-layout>
-    <div class="container py-50 ">
+    <div class=" ">
 
         @php
             $ancestors = $category->getAncestors();

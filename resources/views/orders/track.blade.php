@@ -4,89 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Order - Tech Nova</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; margin: 0; }
-        .container { max-width: 800px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .header { text-align: center; border-bottom: 2px solid #4CAF50; padding-bottom: 20px; }
-        .header h1 { color: #4CAF50; margin: 0; }
-        .timeline { display: flex; justify-content: space-between; margin: 40px 0; position: relative; }
-        .timeline::before { content: ''; position: absolute; top: 40px; left: 10%; right: 10%; height: 3px; background: #ddd; z-index: 1; }
-        .step { flex: 1; text-align: center; position: relative; z-index: 2; }
-        .step .icon { font-size: 35px; background: #fff; padding: 5px 15px; border-radius: 50%; display: inline-block; }
-        .step.active .icon { background: #4CAF50; color: #fff; border-radius: 50%; padding: 8px; }
-        .step.completed .icon { background: #4CAF50; color: #fff; border-radius: 50%; padding: 8px; }
-        .step .label { margin-top: 10px; font-weight: bold; font-size: 14px; }
-        .step .date { font-size: 11px; color: #888; }
-        .step.active .label { color: #4CAF50; }
-        .step.completed .label { color: #4CAF50; }
-        .order-info { background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; }
-        .status-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-size: 14px; }
-        .status-pending { background: #ffc107; color: #000; }
-        .status-processing { background: #17a2b8; color: #fff; }
-        .status-shipped { background: #007bff; color: #fff; }
-        .status-delivered { background: #28a745; color: #fff; }
-        .status-cancelled { background: #dc3545; color: #fff; }
-        .btn { display: inline-block; padding: 10px 25px; background: #4CAF50; color: #fff; text-decoration: none; border-radius: 5px; }
-        .btn:hover { background: #45a049; }
-        .footer { text-align: center; margin-top: 30px; color: #888; font-size: 14px; border-top: 1px solid #eee; padding-top: 20px; }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🛒 Tech Nova</h1>
-            <p style="font-size: 18px;">Order Tracking</p>
+<body class="bg-gray-100 p-5">
+    <div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
+
+        <div class="text-center border-b-2 border-green-500 pb-5">
+            <h1 class="text-2xl font-bold text-green-500">🛒 Tech Nova</h1>
+            <p class="text-lg text-gray-600">Order Tracking</p>
         </div>
 
-        <div class="order-info">
-            <p><strong>Order ID:</strong> #{{ $order->order_number ?? $order->id }}</p>
-            <p><strong>Order Date:</strong> {{ $order->created_at->format('d M Y, h:i A') }}</p>
-            <p><strong>Status:</strong>
-                <span class="status-badge status-{{ $order->order_status }}">
+        <div class="bg-gray-50 p-5 rounded-lg my-5 space-y-1">
+            <p><span class="font-semibold">Order ID:</span> #{{ $order->order_number ?? $order->id }}</p>
+            <p><span class="font-semibold">Order Date:</span> {{ $order->created_at->format('d M Y, h:i A') }}</p>
+            <p><span class="font-semibold">Current Location:</span> <span class="text-blue-600 font-medium">📍 {{ $order->current_location }}</span></p>
+            <p>
+                <span class="font-semibold">Status:</span>
+                @php
+                    $badgeColors = [
+                        'pending' => 'bg-yellow-100 text-yellow-800',
+                        'processing' => 'bg-blue-100 text-blue-800',
+                        'shipped' => 'bg-indigo-100 text-indigo-800',
+                        'delivered' => 'bg-green-100 text-green-800',
+                        'cancelled' => 'bg-red-100 text-red-800',
+                    ];
+                @endphp
+                <span class="px-3 py-1 rounded-full text-sm {{ $badgeColors[$order->order_status] ?? 'bg-gray-100' }}">
                     {{ $order->status_label }}
                 </span>
             </p>
-            <p><strong>Grand Total:</strong> Rs. {{ number_format($order->grand_total, 2) }}</p>
+            <p><span class="font-semibold">Grand Total:</span> Rs. {{ number_format($order->grand_total, 2) }}</p>
         </div>
 
-        <!-- Order Status Timeline -->
-        <div class="timeline">
-            <div class="step {{ $order->order_status == 'pending' ? 'active' : ($order->order_status != 'pending' ? 'completed' : '') }}">
-                <div class="icon">📦</div>
-                <div class="label">Order Placed</div>
-                <div class="date">{{ $order->created_at->format('d M Y') }}</div>
-            </div>
-            <div class="step {{ $order->order_status == 'processing' ? 'active' : (in_array($order->order_status, ['shipped', 'delivered']) ? 'completed' : '') }}">
-                <div class="icon">⚙️</div>
-                <div class="label">Processing</div>
-                <div class="date">{{ $order->updated_at->format('d M Y') }}</div>
-            </div>
-            <div class="step {{ $order->order_status == 'shipped' ? 'active' : ($order->order_status == 'delivered' ? 'completed' : '') }}">
-                <div class="icon">🚚</div>
-                <div class="label">Shipped</div>
-                <div class="date">{{ $order->shipped_at ? $order->shipped_at->format('d M Y') : 'Pending' }}</div>
-            </div>
-            <div class="step {{ $order->order_status == 'delivered' ? 'active completed' : '' }}">
-                <div class="icon">✅</div>
-                <div class="label">Delivered</div>
-                <div class="date">{{ $order->delivered_at ? $order->delivered_at->format('d M Y') : 'Pending' }}</div>
-            </div>
-        </div>
+        <!-- Timeline -->
+        <div class="flex justify-between my-10 relative">
+            <div class="absolute top-9 left-[10%] right-[10%] h-0.5 bg-gray-200 -z-0"></div>
 
-        <!-- Order Items -->
-        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h3>📦 Order Items</h3>
-            @foreach($order->items as $item)
-                <p>{{ $item->product->name ?? 'Product' }} × {{ $item->quantity }} = Rs. {{ number_format($item->price * $item->quantity, 2) }}</p>
+            @php
+                $steps = ['pending' => ['📦','Order Placed'], 'processing' => ['⚙️','Processing'], 'shipped' => ['🚚','Shipped'], 'delivered' => ['✅','Delivered']];
+                $order_index = array_search($order->order_status, array_keys($steps));
+            @endphp
+
+            @foreach($steps as $key => [$icon, $label])
+                @php
+                    $stepIndex = array_search($key, array_keys($steps));
+                    $isActive = $key === $order->order_status;
+                    $isCompleted = $order->order_status !== 'cancelled' && $stepIndex < $order_index;
+                @endphp
+                <div class="flex-1 text-center relative z-10">
+                    <div class="text-3xl inline-block rounded-full p-2 {{ ($isActive || $isCompleted) ? 'bg-green-500 text-white' : 'bg-white' }}">{{ $icon }}</div>
+                    <div class="mt-2 text-sm font-bold {{ ($isActive || $isCompleted) ? 'text-green-600' : 'text-gray-500' }}">{{ $label }}</div>
+                </div>
             @endforeach
         </div>
 
-        <div style="text-align: center;">
-            <a href="{{ url('/') }}" class="btn">Continue Shopping</a>
+        <!-- Location History -->
+        <div class="bg-gray-50 p-5 rounded-lg my-5">
+            <h3 class="font-semibold mb-3">📍 Tracking History</h3>
+            @foreach($order->trackings as $track)
+                <div class="border-l-2 {{ $loop->first ? 'border-green-500' : 'border-gray-200' }} pl-4 pb-4">
+                    <p class="font-semibold text-sm">{{ $track->status_label }}</p>
+                    <p class="text-sm text-gray-600">{{ $track->location }}</p>
+                    @if($track->note)<p class="text-xs text-gray-400">{{ $track->note }}</p>@endif
+                    <p class="text-xs text-gray-400">{{ $track->tracked_at->format('d M Y, h:i A') }}</p>
+                </div>
+            @endforeach
         </div>
 
-        <div class="footer">
-            <p>© {{ date('Y') }} Tech Nova. All rights reserved.</p>
+        <!-- Order Items -->
+        <div class="bg-gray-50 p-5 rounded-lg my-5">
+            <h3 class="font-semibold mb-3">📦 Order Items</h3>
+            @foreach($order->items as $item)
+                <p class="text-sm py-1 border-b border-gray-100">{{ $item->product->name ?? 'Product' }} × {{ $item->quantity }} = Rs. {{ number_format($item->price * $item->quantity, 2) }}</p>
+            @endforeach
+        </div>
+
+        <div class="text-center">
+            <a href="{{ url('/') }}" class="inline-block px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Continue Shopping</a>
+        </div>
+
+        <div class="text-center mt-8 pt-5 border-t text-gray-400 text-sm">
+            © {{ date('Y') }} Tech Nova. All rights reserved.
         </div>
     </div>
 </body>

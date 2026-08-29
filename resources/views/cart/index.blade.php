@@ -14,7 +14,7 @@
 
     <div class="mx-auto max-w-6xl rounded-2xl bg-white p-6 shadow-lg sm:p-8">
 
-       
+
         <div class="mb-8 flex items-center justify-between">
             <h1 class="text-2xl font-bold text-gray-800 sm:text-3xl">
                 🛒 Shopping Cart

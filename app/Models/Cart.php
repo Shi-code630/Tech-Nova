@@ -22,7 +22,7 @@ class Cart extends Model
         'quantity' => 'integer'
     ];
 
-    //  RELATIONSHIPS 
+    //  RELATIONSHIPS
 
     public function user()
     {
@@ -39,7 +39,7 @@ class Cart extends Model
         return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
 
-    //  ACCESSORS 
+    //  ACCESSORS
 
     public function getSubtotalAttribute()
     {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
@@ -29,5 +30,13 @@ class OrderController extends Controller
         }
 
         return view('orders.review', compact('order'));
+    }
+
+     public function submitReview(Request $request, Order $order)
+    {
+
+
+        return redirect()->route('orders.track', $order)
+            ->with('success', 'Thank you for your review!');
     }
 }
