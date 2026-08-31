@@ -2,12 +2,13 @@
 
 namespace App\Filament\Resources\Orders\Pages;
 
-use App\Filament\Resources\Orders\OrdersResource;
+use App\Filament\Resources\Orders\OrderResource;
+
 use Filament\Resources\Pages\CreateRecord;
 
 class CreateOrders extends CreateRecord
 {
-    protected static string $resource = OrdersResource::class;
+    protected static string $resource = OrderResource::class;
 
     protected function getRedirectUrl(): string
     {
@@ -16,7 +17,7 @@ class CreateOrders extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {
-        
+
         if (empty($data['order_number'])) {
             $data['order_number'] = 'ORD-' . date('Ymd') . '-' . rand(1000, 9999);
         }

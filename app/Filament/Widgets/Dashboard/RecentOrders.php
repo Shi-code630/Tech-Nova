@@ -2,7 +2,7 @@
 
 namespace App\Filament\Widgets\Dashboard;
 
-use App\Filament\Resources\Orders\OrdersResource;
+use App\Filament\Resources\Orders\OrderResource;
 use App\Models\Order;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -39,7 +39,7 @@ class RecentOrders extends BaseWidget
                     ->weight('bold')
                     ->color('primary')
                     ->formatStateUsing(fn ($state) => '#' . $state)
-                    ->url(fn (Order $record) => OrdersResource::getUrl('edit', ['record' => $record])),
+                    ->url(fn (Order $record) => OrderResource::getUrl('edit', ['record' => $record])),
 
                 TextColumn::make('user.name')
                     ->label('Customer')
@@ -82,7 +82,7 @@ class RecentOrders extends BaseWidget
                     Action::make('viewAllOrders')
                         ->label('View All Orders')
                         ->icon('heroicon-o-list-bullet')
-                        ->url(OrdersResource::getUrl('index')),
+                        ->url(OrderResource::getUrl('index')),
 
                     Action::make('exportOrders')
                         ->label('Export Orders')

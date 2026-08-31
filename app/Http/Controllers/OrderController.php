@@ -13,9 +13,13 @@ class OrderController extends Controller
      */
     public function track(Order $order)
     {
+
         if (!Auth::check() || $order->user_id != Auth::id()) {
             abort(403, 'Unauthorized');
         }
+
+
+        $order->load(['items.product', 'trackings', 'address', 'user']);
 
         return view('orders.track', compact('order'));
     }
@@ -25,15 +29,32 @@ class OrderController extends Controller
      */
     public function review(Order $order)
     {
+
         if (!Auth::check() || $order->user_id != Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
+
+        $order->load(['items.product']);
+
         return view('orders.review', compact('order'));
     }
 
-     public function submitReview(Request $request, Order $order)
+    /**
+     * Submit order review
+     */
+    public function submitReview(Request $request, Order $order)
     {
+
+        if (!Auth::check() || $order->user_id != Auth::id()) {
+            abort(403, 'Unauthorized');
+        }
+
+
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+            'review' => 'nullable|string|max:1000',
+        ]);
 
 
         return redirect()->route('orders.track', $order)
