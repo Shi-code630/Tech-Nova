@@ -9,9 +9,9 @@
 
     <!-- Features Section -->
     <div class="relative z-10 border-b border-[#2563EB]/10 backdrop-blur-sm">
-        <div class="container mx-auto px-5">
+        <div class="Container mx-auto px-4">
 
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 py-10">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 py-5">
 
                 <div class="group flex items-center gap-4 p-4 rounded-2xl bg-[#1f2937] hover:bg-[#2563EB]/10 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#2563EB]/10 border border-[#374151] hover:border-[#2563EB]/40">
                     <div class="text-4xl group-hover:scale-110 transition-transform duration-300">🚚</div>
@@ -51,9 +51,9 @@
     </div>
 
     <!-- Main Footer -->
-    <div class="relative z-10 container mx-auto px-5 py-16">
+    <div class="relative z-10 Container mx-auto px-5 py-8">
 
-        <div class="grid lg:grid-cols-7 md:grid-cols-3 gap-12">
+        <div class="grid lg:grid-cols-7 md:grid-cols-3 gap-5">
 
             <!-- Brand Column -->
             <div class="lg:col-span-2 md:col-span-3">
@@ -61,7 +61,7 @@
                 <div class="flex items-center gap-3 mb-6">
                     <!-- Logo -->
                 <a href="{{ route('home')}}" class="flex-shrink-0">
-                    <img src="{{ asset('image/logo.png') }}" alt="logo" class="w-auto h-15 drop-shadow-sm">
+                    <img src="{{ asset('image/logo.png') }}" alt="logo" class="w-auto h-12 drop-shadow-sm">
                 </a>
                 </div>
 

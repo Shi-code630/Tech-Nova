@@ -1,11 +1,7 @@
-<x-frontend-layout>
-
-    {{-- ========================================================= --}}
-    {{-- Flash Messages --}}
-    {{-- ========================================================= --}}
-
+<x-frontend-layout class="bg-[#eef7fd]">
+ <div>
     @if (session('success'))
-        <div class="container mx-auto px-4 pt-5" x-data="{ show: true }" x-show="show" x-transition>
+        <div class="Container mx-auto px-4 pt-5" x-data="{ show: true }" x-show="show" x-transition>
             <div
                 class="flex items-center justify-between gap-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-green-800 shadow-sm">
                 <div class="flex items-center gap-3">
@@ -29,7 +25,7 @@
 
 
     @if (session('error'))
-        <div class="container mx-auto px-4 pt-5" x-data="{ show: true }" x-show="show" x-transition>
+        <div class="Container mx-auto px-4 pt-5" x-data="{ show: true }" x-show="show" x-transition>
             <div
                 class="flex items-center justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-800 shadow-sm">
                 <div class="flex items-center gap-3">
@@ -59,7 +55,7 @@
 
     @if ($errors->any())
 
-        <div class="container mx-auto px-4 pt-5" x-data="{ show: true }" x-show="show" x-transition>
+        <div class="Container mx-auto px-4 pt-5" x-data="{ show: true }" x-show="show" x-transition>
 
             <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-800 shadow-sm">
 
@@ -99,7 +95,7 @@
     {{-- Main Container --}}
     {{-- ========================================================= --}}
 
-    <div class="container mx-auto px-4">
+    <div class="Container mx-auto px-4">
 
         @php
 
@@ -1051,5 +1047,7 @@
         );
     </script>
 
+
+ </div>
 
 </x-frontend-layout>

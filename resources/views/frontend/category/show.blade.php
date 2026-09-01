@@ -1,11 +1,11 @@
 <x-frontend-layout>
-    <div class="container py-50 ">
+    <div class="bg-[#ebf4fa] full py-2">
 
         @php
             $ancestors = $category->getAncestors();
         @endphp
 
-        <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6 mt-6">
+        <nav class="Container mx-auto px-4 flex items-center  gap-2 text-sm text-gray-500 mb-6 mt-6">
 
             <a href="{{ route('home') }}"
             class="hover:text-blue-600 transition">
@@ -58,7 +58,7 @@
         {{-- ========================================= --}}
         {{-- Main Content Container (with background & shadow) --}}
         {{-- ========================================= --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-8">
+        <div class="Container mx-auto px-4 bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-8 mb-10">
 
             <div class="flex flex-col lg:flex-row gap-8">
 

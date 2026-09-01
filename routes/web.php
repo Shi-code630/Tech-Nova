@@ -12,9 +12,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserOrderController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\ProductController;
+
+
+
 use App\Http\Controllers\CheckoutController;
 
 //Route::get('/', function () {
@@ -79,17 +79,13 @@ Route::middleware(['auth'])->group(function () {
         ->name('user.order.track');
 
 
-    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])
-        ->name('cart.add');
+    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
 
-    Route::get('/cart', [CartController::class, 'index'])
-        ->name('user.cart');
+    Route::get('/cart', [CartController::class, 'index'])->name('user.cart');
 
-    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])
-        ->name('cart.remove');
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])->name('cart.remove');
 
-    Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])
-        ->name('cart.update');
+   Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])->name('cart.update');
 
 
 

@@ -6,11 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Technova Nepal</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
     <link rel="stylesheet" href="{{ asset('frontend/style.css') }}">
     <style>
-        .container{
-                width: 97%;
+        .Container{
+                width:97%;
                 height:100%;
             }
     </style>
