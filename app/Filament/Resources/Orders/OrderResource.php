@@ -39,10 +39,10 @@ class OrderResource extends Resource
         return true;
     }
 
-    // public static function getNavigationBadge(): ?string
-    // {
-    //     return (string) static::getModel()::where('order_status', 'pending');
-    // }
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) static::getModel()::where('order_status', 'pending')->count();
+    }
 
     public static function getNavigationBadgeColor(): ?string
     {

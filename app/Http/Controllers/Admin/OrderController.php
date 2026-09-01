@@ -4,8 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\OrderStatusUpdated;
 use App\Models\Order;
-use App\Http\Controllers\Controller;
+use App\Models\OrderTracking;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 
 class OrderController extends Controller
 {
@@ -21,10 +22,10 @@ class OrderController extends Controller
         $oldStatus = $order->order_status;
         $newStatus = $request->status;
 
-        // Update order status
+
         $order->order_status = $newStatus;
 
-        // Update timestamps for specific statuses
+
         if ($newStatus === 'shipped') {
             $order->shipped_at = now();
         } elseif ($newStatus === 'delivered') {
@@ -33,7 +34,16 @@ class OrderController extends Controller
 
         $order->save();
 
-        
+
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status' => $newStatus,
+            'location' => $order->current_location ?? 'Status updated',
+            'note' => 'Status updated by admin to ' . ucfirst($newStatus),
+            'tracked_at' => now(),
+        ]);
+
+       
         event(new OrderStatusUpdated($order, $oldStatus, $newStatus));
 
         return back()->with('success', 'Order status updated successfully!');
@@ -44,6 +54,8 @@ class OrderController extends Controller
      */
     public function track(Order $order)
     {
+        $order->load(['items.product', 'trackings', 'address', 'user']);
+
         return view('orders.track', compact('order'));
     }
 }

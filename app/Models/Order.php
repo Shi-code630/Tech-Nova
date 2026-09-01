@@ -2,12 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Address;
-use App\Models\Coupon;
-use App\Models\OrderItem;
-use App\Models\Payment;
-use App\Models\RewardTransaction;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -15,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Order extends Model
 {
-    // ==================== CONSTANTS ====================
+    // CONSTANTS
     const STATUS_PENDING = 'pending';
     const STATUS_PROCESSING = 'processing';
     const STATUS_SHIPPED = 'shipped';
@@ -27,7 +21,7 @@ class Order extends Model
     const PAYMENT_FAILED = 'failed';
     const PAYMENT_REFUNDED = 'refunded';
 
-    // ==================== FILLABLE ====================
+    // FILLABLE
     protected $fillable = [
         'user_id',
         'address_id',
@@ -52,9 +46,11 @@ class Order extends Model
         'delivery_status',
         'delivery_notes',
         'estimated_delivery',
+        'reward_points_given',
+        'reward_points_earned',
     ];
 
-    // ==================== CASTS ====================
+    // CASTS
     protected $casts = [
         'subtotal' => 'decimal:2',
         'discount' => 'decimal:2',
@@ -66,12 +62,11 @@ class Order extends Model
         'delivered_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'reward_points_given' => 'boolean',
+        'reward_points_earned' => 'integer',
     ];
 
-    // ==================== CUSTOM PROPERTIES ====================
-    public ?string $trackingNote = null;
-
-    // ==================== RELATIONSHIPS ====================
+    // RELATIONSHIPS
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -107,44 +102,43 @@ class Order extends Model
         return $this->hasOne(RewardTransaction::class);
     }
 
-    // ✅ Tracking Relationship
     public function trackings(): HasMany
     {
         return $this->hasMany(OrderTracking::class)->orderByDesc('status_date');
     }
 
-    public function latestTracking()
+    public function latestTracking(): HasOne
     {
         return $this->hasOne(OrderTracking::class)->latest('status_date');
     }
 
-    // ==================== STATUS HELPERS ====================
-    public function isPending(): bool
+    // BOOTED
+    protected static function booted()
     {
-        return $this->order_status === self::STATUS_PENDING;
+        static::updated(function (Order $order) {
+            if ($order->isDirty('order_status') &&
+                $order->order_status === 'delivered' &&
+                !$order->reward_points_given) {
+
+                $user = $order->user;
+
+                if ($user) {
+                    $points = floor($order->grand_total / 10);
+
+                    if ($points > 0) {
+                        $user->increment('reward_points', $points);
+
+                        $order->updateQuietly([
+                            'reward_points_given' => true,
+                            'reward_points_earned' => $points,
+                        ]);
+                    }
+                }
+            }
+        });
     }
 
-    public function isProcessing(): bool
-    {
-        return $this->order_status === self::STATUS_PROCESSING;
-    }
-
-    public function isShipped(): bool
-    {
-        return $this->order_status === self::STATUS_SHIPPED;
-    }
-
-    public function isDelivered(): bool
-    {
-        return $this->order_status === self::STATUS_DELIVERED;
-    }
-
-    public function isCancelled(): bool
-    {
-        return $this->order_status === self::STATUS_CANCELLED;
-    }
-
-    // ==================== ACCESSORS ====================
+    // ACCESSORS
     public function getStatusLabelAttribute(): string
     {
         return match ($this->order_status) {
@@ -184,13 +178,12 @@ class Order extends Model
         };
     }
 
-    // ✅ Current delivery status (from latest tracking)
     public function getCurrentStatusAttribute(): string
     {
         return $this->latestTracking?->status ?? $this->order_status ?? 'pending';
     }
 
-    // ==================== SCOPES ====================
+    // SCOPES
     public function scopePending($query)
     {
         return $query->where('order_status', 'pending');
@@ -221,7 +214,7 @@ class Order extends Model
         return $query->where('user_id', $userId);
     }
 
-    // ==================== HELPERS ====================
+    // HELPERS
     public function getOrderTotal(): float
     {
         return (float) $this->grand_total;

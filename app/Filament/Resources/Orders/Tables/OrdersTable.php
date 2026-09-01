@@ -80,7 +80,7 @@ class OrdersTable
 
                 TextColumn::make('created_at')
                     ->label('Order Date')
-                    ->dateTime('d M Y, h:i A')
+                    ->formatStateUsing(fn($state) => $state ? $state->timezone('Asia/Kathmandu')->format('d M Y, h:i A') : '-')
                     ->sortable()
                     ->toggleable(),
             ])
@@ -122,7 +122,7 @@ class OrdersTable
                 ViewAction::make()
                     ->label('View')
                     ->icon('heroicon-o-eye')
-                     ->color('warning'),
+                    ->color('warning'),
 
                 EditAction::make()
                     ->label('Edit')
@@ -133,7 +133,7 @@ class OrdersTable
                 Action::make('updateTracking')
                     ->label('Update Tracking')
                     ->icon('heroicon-o-map-pin')
-                     ->color('warning')
+                    ->color('warning')
                     ->slideOver()
                     ->form([
                         Select::make('order_status')

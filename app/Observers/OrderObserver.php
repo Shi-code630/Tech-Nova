@@ -9,11 +9,13 @@ use App\Mail\OrderProcessingMail;
 use App\Mail\OrderShippedMail;
 use App\Models\Order;
 use App\Models\OrderTracking;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-
 
 class OrderObserver
 {
+    protected string $companyEmail = 'technova2083@gmail.com';
+
     public function created(Order $order): void
     {
         OrderTracking::create([
@@ -24,9 +26,11 @@ class OrderObserver
             'tracked_at' => now(),
         ]);
 
-        if ($order->user?->email) {
-            Mail::to($order->user->email)->send(new OrderConfirmationMail($order));
-        }
+        $this->sendOrderEmail(
+            $order,
+            new OrderConfirmationMail($order),
+            ccCompany: true
+        );
     }
 
     public function updating(Order $order): void
@@ -46,28 +50,56 @@ class OrderObserver
 
     public function updated(Order $order): void
     {
+        if (! $order->wasChanged('order_status')) {
+            return;
+        }
 
-        if ($order->wasChanged('order_status')) {
-            $newStatus = $order->order_status;
+        $newStatus = $order->order_status;
 
-            OrderTracking::create([
-                'order_id' => $order->id,
-                'status' => $newStatus,
-                'location' => $order->current_location ?? 'In transit',
-                'note' => 'Status updated to ' . ucfirst($newStatus),
-                'tracked_at' => now(),
-            ]);
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status' => $newStatus,
+            'location' => $order->current_location ?? 'In transit',
+            'note' => 'Status updated to ' . ucfirst($newStatus),
+            'tracked_at' => now(),
+        ]);
 
+        $mailable = match ($newStatus) {
+            'processing' => new OrderProcessingMail($order),
+            'shipped' => new OrderShippedMail($order),
+            'delivered' => new OrderDeliveredMail($order),
+            'cancelled' => new OrderCancelledMail($order),
+            default => null,
+        };
 
-            if ($order->user?->email) {
-                match ($newStatus) {
-                    'processing' => Mail::to($order->user->email)->send(new OrderProcessingMail($order)),
-                    'shipped' => Mail::to($order->user->email)->send(new OrderShippedMail($order)),
-                    'delivered' => Mail::to($order->user->email)->send(new OrderDeliveredMail($order)),
-                    'cancelled' => Mail::to($order->user->email)->send(new OrderCancelledMail($order)),
-                    default => null,
-                };
+        if ($mailable) {
+            $this->sendOrderEmail($order, $mailable);
+        }
+    }
+
+    /**
+     * Send an order-related email safely, without letting a mail
+     * failure break the calling flow (order creation/update).
+     */
+    protected function sendOrderEmail(Order $order, $mailable, bool $ccCompany = false): void
+    {
+        if (! $order->user?->email) {
+            return;
+        }
+
+        try {
+            $mail = Mail::to($order->user->email);
+
+            if ($ccCompany) {
+                $mail->cc($this->companyEmail);
             }
+
+            $mail->send($mailable);
+        } catch (\Exception $e) {
+            Log::error('Order email failed: ' . $e->getMessage(), [
+                'order_id' => $order->id,
+                'mailable' => get_class($mailable),
+            ]);
         }
     }
 }

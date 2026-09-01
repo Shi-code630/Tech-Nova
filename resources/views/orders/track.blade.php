@@ -16,8 +16,15 @@
 
         <div class="bg-gray-50 p-5 rounded-lg my-5 space-y-1">
             <p><span class="font-semibold">Order ID:</span> #{{ $order->order_number ?? $order->id }}</p>
-            <p><span class="font-semibold">Order Date:</span> {{ $order->created_at->format('d M Y, h:i A') }}</p>
-            <p><span class="font-semibold">Current Location:</span> <span class="text-blue-600 font-medium">📍 {{ $order->current_location }}</span></p>
+            <p>
+                <span class="font-semibold">Order Date:</span>
+                @if($order->created_at)
+                    {{ $order->created_at->format('d M Y, h:i A') }}
+                @else
+                    N/A
+                @endif
+            </p>
+            <p><span class="font-semibold">Current Location:</span> <span class="text-blue-600 font-medium">📍 {{ $order->current_location ?? 'N/A' }}</span></p>
             <p>
                 <span class="font-semibold">Status:</span>
                 @php
@@ -63,10 +70,16 @@
             <h3 class="font-semibold mb-3">📍 Tracking History</h3>
             @foreach($order->trackings as $track)
                 <div class="border-l-2 {{ $loop->first ? 'border-green-500' : 'border-gray-200' }} pl-4 pb-4">
-                    <p class="font-semibold text-sm">{{ $track->status_label }}</p>
-                    <p class="text-sm text-gray-600">{{ $track->location }}</p>
+                    <p class="font-semibold text-sm">{{ $track->status_label ?? $track->status }}</p>
+                    <p class="text-sm text-gray-600">{{ $track->location ?? 'N/A' }}</p>
                     @if($track->note)<p class="text-xs text-gray-400">{{ $track->note }}</p>@endif
-                    <p class="text-xs text-gray-400">{{ $track->tracked_at->format('d M Y, h:i A') }}</p>
+                    <p class="text-xs text-gray-400">
+                        @if($track->tracked_at)
+                            {{ $track->tracked_at->format('d M Y, h:i A') }}
+                        @else
+                            N/A
+                        @endif
+                    </p>
                 </div>
             @endforeach
         </div>
@@ -79,8 +92,26 @@
             @endforeach
         </div>
 
-        <div class="text-center">
-            <a href="{{ url('/') }}" class="inline-block px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Continue Shopping</a>
+        <!-- ✅ Cancel Order Button -->
+        @if(in_array($order->order_status, ['pending', 'processing']))
+            <div class="text-center mt-4">
+                <form action="{{ route('orders.cancel', $order->id) }}" method="POST"
+                      onsubmit="return confirm('Are you sure you want to cancel this order?')">
+                    @csrf
+                    @method('PUT')
+                    <button type="submit"
+                            class="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition">
+                        ❌ Cancel Order
+                    </button>
+                </form>
+            </div>
+        @endif
+
+        <!-- Buttons -->
+        <div class="text-center mt-4 flex justify-center gap-4">
+            <a href="{{ url('/') }}" class="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition">
+                Continue Shopping
+            </a>
         </div>
 
         <div class="text-center mt-8 pt-5 border-t text-gray-400 text-sm">
