@@ -5,7 +5,7 @@ namespace App\Filament\Widgets\Dashboard;
 use App\Filament\Pages\SalesReport;
 use App\Filament\Resources\Coupons\CouponsResource;
 use App\Filament\Resources\DeliveryCharges\DeliveryChargesResource;
-use App\Filament\Resources\Orders\OrdersResource;
+use App\Filament\Resources\Orders\OrderResource;
 use App\Filament\Resources\Products\ProductsResource;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Widgets\Widget;
@@ -48,7 +48,7 @@ class QuickActions extends Widget
                     'text_color' => 'text-green-700 dark:text-green-400',
                     'icon_color' => 'text-green-600 dark:text-green-400',
                     'border_color' => 'hover:border-green-200 dark:hover:border-green-500/30',
-                    'url' => OrdersResource::getUrl('create'),
+                    'url' => OrderResource::getUrl('create'),
                 ],
                 [
                     'label' => 'Add User',

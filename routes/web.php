@@ -1,14 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\OrderController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactMessageController;
-use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\PageController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserOrderController;
@@ -16,13 +13,11 @@ use App\Http\Controllers\UserOrderController;
 
 
 use App\Http\Controllers\CheckoutController;
-
-//Route::get('/', function () {
-   // return view('welcome');
-//});
+use App\Http\Controllers\OrderController;
 
 // ==================== HOME ====================
 Route::get('/', [PageController::class, 'home'])->name('home');
+Route::get('/search', [PageController::class, 'search'])->name('search');
 
 // ==================== AUTHENTICATION ====================
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -39,10 +34,9 @@ Route::controller(ContactMessageController::class)->group(function () {
     Route::post('/contact', 'store')->name('contact.store');
 });
 
-
 // ==================== BLOG ROUTES ====================
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
-Route::get('/blogs/{slug}', [BlogController::class, 'show'])->name('blogs.show');
+Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.view');
 
 // ==================== PRODUCTS & CATEGORIES ====================
 Route::get('/brand/{slug}', [PageController::class, 'show'])->name('brand.show');
@@ -57,28 +51,47 @@ Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name
 Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 
-        //MIDDLEWARE ROUTE GROUP FOR AUTHENTICATED USERS \\
-
+// ==================== AUTHENTICATED ROUTES ====================
 Route::middleware(['auth'])->group(function () {
 
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])
-        ->name('user.dashboard');
-
+    // Dashboard
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/dashboard/profile', function () {
         return view('user.profile');
     })->name('user.profile');
 
+    // User Orders (My Orders)
+    Route::get('/my-orders', [UserOrderController::class, 'index'])->name('user.orders');
+    Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])->name('user.order.view');
+    Route::get('/my-orders/{order}/track', [UserOrderController::class, 'track'])->name('user.order.track');
 
-    Route::get('/my-orders/{order}', [UserOrderController::class, 'show'])
-        ->name('user.order.view');
+    // Cart Routes
+    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/cart', [CartController::class, 'index'])->name('user.cart');
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])->name('cart.update');
+    Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
 
-    Route::get('/my-orders', [UserOrderController::class, 'index'])
-        ->name('user.orders');
+    // Checkout Routes
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])->name('checkout.address.create');
+    Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])->name('checkout.address.store');
+    Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])->name('checkout.continue');
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
 
-    Route::get('/my-orders/{order}/track', [UserOrderController::class, 'track'])
-        ->name('user.order.track');
+    // ✅ Order Routes (User)
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
+    Route::get('/orders/{order}/review', [OrderController::class, 'review'])->name('orders.review');
+    Route::post('/orders/{order}/review', [OrderController::class, 'submitReview'])->name('orders.review.submit');
 
+    // Wishlist
+    Route::get('/wishlist', function () {
+        return view('user.wishlist.index');
+    })->name('user.wishlist');
 
+<<<<<<< HEAD
     Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
 
     Route::get('/cart', [CartController::class, 'index'])->name('user.cart');
@@ -114,35 +127,28 @@ Route::middleware(['auth'])->group(function () {
 
 
         Route::get('/addresses', function () {
+=======
+    // Addresses
+    Route::get('/addresses', function () {
+>>>>>>> dd79b8318b514c5a7f6698fe2558f3f2792f407f
         return view('user.addresses.index');
-        })->name('user.addresses');
+    })->name('user.addresses');
 
-
-        Route::get('/reviews', function () {
+    // Reviews
+    Route::get('/reviews', function () {
         return view('user.reviews.index');
-        })->name('user.reviews');
+    })->name('user.reviews');
 
-        Route::get('/coupons', function () {
+    // Coupons
+    Route::get('/coupons', function () {
         return view('user.coupons.index');
-        })->name('user.coupons');
+    })->name('user.coupons');
 
-        Route::get('/settings', function () {
+    // Settings
+    Route::get('/settings', function () {
         return view('user.settings');
-        })->name('user.settings');
-
-});
-
-// ==================== ADMIN ROUTES ====================
-Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-    Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.update-status');
+    })->name('user.settings');
 });
 
 
 
-Route::get('/blogs', [BlogController::class, 'index'])
-    ->name('blogs.index');
-
-
-
-Route::get('/blog/{slug}', [BlogController::class, 'show'])
-    ->name('blogs.view');

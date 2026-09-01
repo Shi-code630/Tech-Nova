@@ -16,7 +16,10 @@ class SendOrderStatusEmail implements ShouldQueue
         $order = $event->order;
         $newStatus = $event->newStatus;
 
-        // Status अनुसार different email send गर्ने
+        if (!$order->user || !$order->user->email) {
+            return;
+        }
+
         $mailClass = match ($newStatus) {
             'processing' => new OrderProcessingMail($order),
             'shipped' => new OrderShippedMail($order),

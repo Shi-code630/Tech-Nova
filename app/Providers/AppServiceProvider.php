@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\ServiceProvider;
 use App\Models\Category;
+use App\Models\Order;
+use App\Observers\OrderObserver;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,23 +25,24 @@ class AppServiceProvider extends ServiceProvider
      */
 
     public function boot(): void
-{
-    View::composer('components.frontend-header', function ($view) {
+    {
+        View::composer('components.frontend-header', function ($view) {
 
-        $parentCategories = Category::query()
-            ->whereNull('parent_id')
-            ->where('status', true)
-            ->with([
-                'children' => function ($query) {
-                    $query
-                        ->where('status', true)
-                        ->orderBy('name');
-                }
-            ])
-            ->orderBy('name')
-            ->get();
+            $parentCategories = Category::query()
+                ->whereNull('parent_id')
+                ->where('status', true)
+                ->with([
+                    'children' => function ($query) {
+                        $query
+                            ->where('status', true)
+                            ->orderBy('name');
+                    }
+                ])
+                ->orderBy('name')
+                ->get();
 
-        $view->with('parentCategories', $parentCategories);
-    });
-}
+            $view->with('parentCategories', $parentCategories);
+        });
+        Order::observe(OrderObserver::class);
+    }
 }

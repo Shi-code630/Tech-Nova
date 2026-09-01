@@ -2,23 +2,11 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\CustomerReport;
-use App\Filament\Pages\ProductReport;
-use App\Filament\Pages\SalesReport;
-use App\Filament\Widgets\Dashboard\LowStockAlert;
-use App\Filament\Widgets\Dashboard\OrdersByStatusChart;
-use App\Filament\Widgets\Dashboard\QuickActions;
-use App\Filament\Widgets\Dashboard\SalesOverviewChart;
-use App\Filament\Widgets\Dashboard\StatsOverview;
-use App\Filament\Widgets\OrdersByStatus;
-use App\Filament\Widgets\SalesChart;
-use App\Filament\Widgets\StatsOverview as WidgetsStatsOverview;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
 use Filament\Navigation\NavigationGroup;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
@@ -28,7 +16,6 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -46,59 +33,28 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
-
-
             ->discoverResources(
                 in: app_path('Filament/Resources'),
                 for: 'App\\Filament\\Resources'
             )
-
             ->discoverPages(
                 in: app_path('Filament/Pages'),
                 for: 'App\\Filament\\Pages'
             )
-
             ->discoverWidgets(
                 in: app_path('Filament/Widgets'),
                 for: 'App\\Filament\\Widgets'
             )
-
             ->navigationGroups([
-                NavigationGroup::make()
-                    ->label('Customer Management')
-
-                    ->collapsible(),
-                NavigationGroup::make()
-                    ->label('Product Management')
-
-                    ->collapsible(),
-                NavigationGroup::make()
-                    ->label('Sales Management')
-
-                    ->collapsible(),
-                NavigationGroup::make()
-                    ->label('Marketing')
-
-                    ->collapsible(),
-                NavigationGroup::make()
-                    ->label('Customer Activity')
-
-                    ->collapsible(),
-                NavigationGroup::make()
-                    ->label('Shipping & Delivery')
-
-                    ->collapsible(),
-                NavigationGroup::make()
-                    ->label('Administration')
-
-                    ->collapsible(),
-
-                NavigationGroup::make()
-                    ->label('Reports & Analytics')
-
-                    ->collapsible(),
+                NavigationGroup::make()->label('Customer Management')->collapsible(),
+                NavigationGroup::make()->label('Product Management')->collapsible(),
+                NavigationGroup::make()->label('Sales Management')->collapsible(),
+                NavigationGroup::make()->label('Marketing')->collapsible(),
+                NavigationGroup::make()->label('Customer Activity')->collapsible(),
+                NavigationGroup::make()->label('Shipping & Delivery')->collapsible(),
+                NavigationGroup::make()->label('Administration')->collapsible(),
+                NavigationGroup::make()->label('Reports & Analytics')->collapsible(),
             ])
-
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -110,7 +66,6 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-
             ->authMiddleware([
                 Authenticate::class,
             ]);

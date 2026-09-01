@@ -162,6 +162,36 @@ class Product extends Model
             default => ucfirst($this->status),
         };
     }
+     public function getFirstThumbnailAttribute()
+    {
+        $thumbnails = $this->thumbnails;
+        return !empty($thumbnails) && is_array($thumbnails) ? $thumbnails[0] : null;
+    }
+
+    /**
+     * Get the thumbnail URL
+     */
+    public function getThumbnailUrlAttribute()
+    {
+        $thumbnail = $this->first_thumbnail;
+        return $thumbnail ? asset('storage/' . $thumbnail) : asset('images/default-product.png');
+    }
+
+    /**
+     * Get all thumbnail URLs
+     */
+    public function getThumbnailUrlsAttribute()
+    {
+        $thumbnails = $this->thumbnails;
+        if (empty($thumbnails) || !is_array($thumbnails)) {
+            return [];
+        }
+
+        return array_map(function ($thumbnail) {
+            return asset('storage/' . $thumbnail);
+        }, $thumbnails);
+    }
+
 
     // =========================
     // SCOPES
