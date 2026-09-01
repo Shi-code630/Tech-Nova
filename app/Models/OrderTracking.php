@@ -15,10 +15,12 @@ class OrderTracking extends Model
         'tracked_at',
     ];
 
-    protected $casts = [
+     protected $casts = [
         'tracked_at' => 'datetime',
+        'status_date' => 'datetime', 
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
-
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);

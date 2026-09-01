@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\OrderConfirmationMail;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -14,7 +17,6 @@ class CheckoutController extends Controller
 {
     public function index(Request $request)
     {
-
         $user = $request->user();
 
         $cartItems = $user->carts()
@@ -51,7 +53,6 @@ class CheckoutController extends Controller
         return view('checkout.address');
     }
 
-
     public function storeAddress(Request $request)
     {
         $validated = $request->validate([
@@ -83,7 +84,7 @@ class CheckoutController extends Controller
             ->with('success', 'Address added successfully.');
     }
 
-         public function continueCheckout(Request $request)
+    public function continueCheckout(Request $request)
     {
         $validated = $request->validate([
             'address_id' => 'required|exists:addresses,id',
@@ -154,11 +155,9 @@ class CheckoutController extends Controller
         ]);
     }
 
-
-
     public function placeOrder(Request $request)
     {
-                $validated = $request->validate([
+        $validated = $request->validate([
             'address_id' => 'required|exists:addresses,id',
 
             'payment_method' => 'required|in:cod,online',
@@ -344,15 +343,15 @@ class CheckoutController extends Controller
             ]);
 
             Payment::create([
-            'order_id' => $order->id,
-            'payment_method' => $validated['payment_method'] === 'online'
-                ? 'esewa'
-                : 'Cash on Delivery',
-            'transaction_id' => $validated['transaction_id'] ?? null,
-            'amount' => $grandTotal,
-            'status' => 'pending',
-            'gateway_response' => null,
-        ]);
+                'order_id' => $order->id,
+                'payment_method' => $validated['payment_method'] === 'online'
+                    ? 'esewa'
+                    : 'Cash on Delivery',
+                'transaction_id' => $validated['transaction_id'] ?? null,
+                'amount' => $grandTotal,
+                'status' => 'pending',
+                'gateway_response' => null,
+            ]);
 
             /*
             |--------------------------------------------------------------------------
@@ -405,6 +404,20 @@ class CheckoutController extends Controller
 
             DB::commit();
 
+            /*
+            |--------------------------------------------------------------------------
+            | Send order confirmation email (Customer + Company CC)
+            |--------------------------------------------------------------------------
+            |
+            */
+            try {
+                Mail::to($order->user->email)
+                    ->cc('technova2083@gmail.com')
+                    ->send(new OrderConfirmationMail($order));
+            } catch (\Exception $e) {
+                Log::error('Order confirmation email failed: ' . $e->getMessage());
+            }
+
             return redirect()
                 ->route('user.order.view', $order->id)
                 ->with(
@@ -424,5 +437,4 @@ class CheckoutController extends Controller
                 );
         }
     }
-
 }

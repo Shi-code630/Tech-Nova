@@ -85,6 +85,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
     Route::get('/orders/{order}/review', [OrderController::class, 'review'])->name('orders.review');
     Route::post('/orders/{order}/review', [OrderController::class, 'submitReview'])->name('orders.review.submit');
+    Route::put('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
     // Wishlist
     Route::get('/wishlist', function () {
@@ -111,6 +112,3 @@ Route::middleware(['auth'])->group(function () {
         return view('user.settings');
     })->name('user.settings');
 });
-
-
-

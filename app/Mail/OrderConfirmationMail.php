@@ -23,7 +23,9 @@ class OrderConfirmationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '✅ Order Confirmation - Tech Nova',
+            subject: '✅ Order Confirmation - Tech Nova' . $this->order->order_number,
+            to: [$this->order->user->email],
+            cc: ['technova2083@gmail.com'],
         );
     }
 

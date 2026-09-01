@@ -77,22 +77,35 @@ class UserForm
                                     ->onColor('success')
                                     ->offColor('danger'),
 
+                              
                                 TextInput::make('reward_points')
                                     ->label('Reward Points')
                                     ->numeric()
                                     ->default(0)
                                     ->minValue(0)
                                     ->step(1)
-                                    ->helperText('Current reward points balance')
+                                    ->helperText('Current reward points balance. Earn: Rs.100 = 10 points')
                                     ->prefixIcon('heroicon-o-star'),
+
 
                                 Placeholder::make('points_value')
                                     ->label('Points Value')
-                                    ->content(
-                                        fn($record) =>
-                                        $record ? new HtmlString("<strong>Rs. " . number_format($record->reward_points) . "</strong>") : 'N/A'
-                                    )
-                                    ->helperText('1 point = Rs. 1'),
+                                    ->content(function ($record) {
+                                        if (!$record) return 'N/A';
+
+                                        $points = $record->reward_points ?? 0;
+                                        $redeemValue = $points * 1;
+
+                                        return new HtmlString("
+                                            <div>
+                                                <strong>Redeem Value:</strong> Rs. " . number_format($redeemValue) . "<br>
+                                                <small class='text-gray-500'>
+                                                    Earn: Rs.100 = 10 Points | Redeem: 1 Point = Rs.1
+                                                </small>
+                                            </div>
+                                        ");
+                                    })
+                                    ->helperText('Earn 10 points for every Rs.100 spent. Redeem 1 point = Rs.1'),
                             ]),
                     ]),
 

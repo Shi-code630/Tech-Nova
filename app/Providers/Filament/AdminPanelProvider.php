@@ -53,6 +53,12 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()->label('Customer Activity')->collapsible(),
                 NavigationGroup::make()->label('Shipping & Delivery')->collapsible(),
                 NavigationGroup::make()->label('Administration')->collapsible(),
+                NavigationGroup::make()->label('Settings')->collapsible(),
+                NavigationGroup::make()->label('Support & Helpdesk')->collapsible(),
+                NavigationGroup::make()->label('Integrations')->collapsible(),
+                NavigationGroup::make()->label('System Logs')->collapsible(),
+                NavigationGroup::make()->label('User Management')->collapsible(),
+                NavigationGroup::make()->label('Content Management')->collapsible(),
                 NavigationGroup::make()->label('Reports & Analytics')->collapsible(),
             ])
             ->middleware([
