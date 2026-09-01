@@ -9,9 +9,9 @@ use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserOrderController;
-
-
-
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 
@@ -79,7 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])->name('checkout.continue');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
 
-    // ✅ Order Routes (User)
+    // Order Routes (User)
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
     Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('orders.track');
@@ -87,65 +87,27 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/orders/{order}/review', [OrderController::class, 'submitReview'])->name('orders.review.submit');
     Route::put('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
 
-    // Wishlist
+
     Route::get('/wishlist', function () {
         return view('user.wishlist.index');
     })->name('user.wishlist');
 
-<<<<<<< HEAD
-    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
 
-    Route::get('/cart', [CartController::class, 'index'])->name('user.cart');
-
-    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-
-   Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])->name('cart.update');
-
-
-
-    Route::get('/checkout', [CheckoutController::class, 'index'])
-        ->name('checkout');
-
-    Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])
-        ->name('checkout.address.create');
-
-    Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])
-        ->name('checkout.address.store');
-
-    Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])
-        ->name('checkout.continue');
-
-    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])
-        ->name('checkout.place-order');
-
-
-
-
-        Route::get('/wishlist', function () {
-            return view('user.wishlist.index');
-        })->name('user.wishlist');
-
-
-
-        Route::get('/addresses', function () {
-=======
-    // Addresses
     Route::get('/addresses', function () {
->>>>>>> dd79b8318b514c5a7f6698fe2558f3f2792f407f
         return view('user.addresses.index');
     })->name('user.addresses');
 
-    // Reviews
+
     Route::get('/reviews', function () {
         return view('user.reviews.index');
     })->name('user.reviews');
 
-    // Coupons
+
     Route::get('/coupons', function () {
         return view('user.coupons.index');
     })->name('user.coupons');
 
-    // Settings
+  
     Route::get('/settings', function () {
         return view('user.settings');
     })->name('user.settings');
