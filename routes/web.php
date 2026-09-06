@@ -9,16 +9,6 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Frontend\PageController;
-<<<<<<< HEAD
-use App\Http\Controllers\UserDashboardController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserOrderController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CheckoutController;
-=======
->>>>>>> 5221288 (Frontend design chanage)
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserDashboardController;
@@ -102,9 +92,6 @@ Route::middleware(['auth'])->group(function () {
         return view('user.wishlist.index');
     })->name('user.wishlist');
 
-<<<<<<< HEAD
-
-=======
     Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
 
     Route::get('/cart', [CartController::class, 'index'])->name('user.cart');
@@ -139,7 +126,6 @@ Route::middleware(['auth'])->group(function () {
 
 
 
->>>>>>> 5221288 (Frontend design chanage)
     Route::get('/addresses', function () {
         return view('user.addresses.index');
     })->name('user.addresses');
@@ -154,7 +140,7 @@ Route::middleware(['auth'])->group(function () {
         return view('user.coupons.index');
     })->name('user.coupons');
 
-  
+
     Route::get('/settings', function () {
         return view('user.settings');
     })->name('user.settings');
