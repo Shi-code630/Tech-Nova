@@ -25,6 +25,7 @@ class BrandsTable
 
                 ImageColumn::make('logo')
                     ->label('Logo')
+                    ->disk('public')
                     ->square()
                     ->size(40)
                     ->toggleable(),
@@ -43,6 +44,7 @@ class BrandsTable
 
                 ImageColumn::make('image')
                     ->label('Image')
+                    ->disk('public')
                     ->square()
                     ->size(40)
                     ->toggleable(isToggledHiddenByDefault: true),

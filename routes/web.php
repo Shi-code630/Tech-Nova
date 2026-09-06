@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Frontend\PageController;
+<<<<<<< HEAD
 use App\Http\Controllers\UserDashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserOrderController;
@@ -13,7 +17,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
+=======
+>>>>>>> 5221288 (Frontend design chanage)
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserDashboardController;
+use App\Http\Controllers\UserOrderController;
+use Illuminate\Support\Facades\Route;
 
 // ==================== HOME ====================
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -92,7 +102,44 @@ Route::middleware(['auth'])->group(function () {
         return view('user.wishlist.index');
     })->name('user.wishlist');
 
+<<<<<<< HEAD
 
+=======
+    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+
+    Route::get('/cart', [CartController::class, 'index'])->name('user.cart');
+
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
+    Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])->name('cart.update');
+
+
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+        ->name('checkout');
+
+    Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])
+        ->name('checkout.address.create');
+
+    Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])
+        ->name('checkout.address.store');
+
+    Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])
+        ->name('checkout.continue');
+
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])
+        ->name('checkout.place-order');
+
+
+
+
+    Route::get('/wishlist', function () {
+        return view('user.wishlist.index');
+    })->name('user.wishlist');
+
+
+
+>>>>>>> 5221288 (Frontend design chanage)
     Route::get('/addresses', function () {
         return view('user.addresses.index');
     })->name('user.addresses');

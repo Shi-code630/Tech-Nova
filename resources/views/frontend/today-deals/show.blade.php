@@ -1,8 +1,8 @@
 <x-frontend-layout>
-  <div class="container">
+  <div class="bg-[#ebf4fa] full py-2">
 
         {{-- Breadcrumb --}}
-        <nav class="flex items-center gap-2 text-sm text-gray-500 mb-6 mt-6">
+        <nav class=" Container mx-auto px-4 flex items-center gap-2 text-sm text-gray-500 mb-6 mt-6">
             <a href="{{ route('home') }}" class="hover:text-blue-600 transition">Home</a>
             @php
                 $ancestors = $category->getAncestors();
@@ -18,7 +18,7 @@
         </nav>
 
         {{-- Category Title --}}
-        <div class="mb-8 text-center">
+        <div class="mb-5 text-center">
             <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight">
                 {{ $category->name }}
             </h1>
@@ -37,7 +37,7 @@
         @endif
 
         {{-- Main Content with Sidebar --}}
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-8">
+        <div class=" Container mx-auto px-4 bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-8 mb-10">
             <div class="flex flex-col lg:flex-row gap-8">
 
                 {{-- Sidebar Filters --}}
