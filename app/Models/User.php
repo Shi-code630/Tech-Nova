@@ -401,4 +401,9 @@ class User extends Authenticatable
     {
         return $this->addresses()->count();
     }
+
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class);
+    }
 }

@@ -1,19 +1,21 @@
 <?php
 
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\Frontend\PageController;
-use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserDashboardController;
-use App\Http\Controllers\UserOrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReturnRequestController;
+
 
 // ==================== HOME ====================
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -77,6 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])->name('checkout.address.create');
     Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])->name('checkout.address.store');
     Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])->name('checkout.continue');
+    Route::get('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
 
     // Order Routes (User)
@@ -86,6 +89,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/orders/{order}/review', [OrderController::class, 'review'])->name('orders.review');
     Route::post('/orders/{order}/review', [OrderController::class, 'submitReview'])->name('orders.review.submit');
     Route::put('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('orders.cancel');
+
+    Route::get('/my-orders/{order}/return-exchange', [ReturnRequestController::class, 'create'])->name('return-requests.create');
+    Route::post('/my-orders/{order}/return-exchange', [ReturnRequestController::class, 'store'])->middleware('throttle:5,1')->name('return-requests.store');
 
 
     Route::get('/wishlist', function () {

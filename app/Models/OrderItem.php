@@ -20,7 +20,7 @@ class OrderItem extends Model
          'quantity' => 'integer'
     ];
 
-    
+
     public function order()
     {
         return $this->belongsTo(Order::class);
@@ -52,5 +52,10 @@ class OrderItem extends Model
     public function getFormattedTotalAttribute()
     {
         return 'Rs. ' . number_format($this->total, 2);
+    }
+
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class);
     }
 }

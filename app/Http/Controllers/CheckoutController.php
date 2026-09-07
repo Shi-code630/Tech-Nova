@@ -145,13 +145,47 @@ class CheckoutController extends Controller
             2
         );
 
-        return view('checkout.confirm', [
-            'address' => $address,
-            'paymentMethod' => $validated['payment_method'],
+        $request->session()->put('checkout_confirmation', [
+            'address_id' => $address->id,
+            'payment_method' => $validated['payment_method'],
             'subtotal' => $subtotal,
             'discount' => $discount,
-            'deliveryCharge' => $deliveryCharge,
-            'grandTotal' => $grandTotal,
+            'delivery_charge' => $deliveryCharge,
+            'grand_total' => $grandTotal,
+        ]);
+
+        return redirect()->route('checkout.confirm');
+    }
+
+    public function confirm(Request $request)
+    {
+        $checkout = $request->session()->get('checkout_confirmation');
+
+        if (! $checkout) {
+            return redirect()
+                ->route('checkout')
+                ->with('error', 'Please select your address and payment method first.');
+        }
+
+        $address = $request->user()
+            ->addresses()
+            ->find($checkout['address_id']);
+
+        if (! $address) {
+            $request->session()->forget('checkout_confirmation');
+
+            return redirect()
+                ->route('checkout')
+                ->with('error', 'Your selected delivery address is no longer available.');
+        }
+
+        return view('checkout.confirm', [
+            'address' => $address,
+            'paymentMethod' => $checkout['payment_method'],
+            'subtotal' => $checkout['subtotal'],
+            'discount' => $checkout['discount'],
+            'deliveryCharge' => $checkout['delivery_charge'],
+            'grandTotal' => $checkout['grand_total'],
         ]);
     }
 
@@ -417,7 +451,7 @@ class CheckoutController extends Controller
             } catch (\Exception $e) {
                 Log::error('Order confirmation email failed: ' . $e->getMessage());
             }
-
+            $request->session()->forget('checkout_confirmation');
             return redirect()
                 ->route('user.order.view', $order->id)
                 ->with(

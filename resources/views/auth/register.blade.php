@@ -4,7 +4,6 @@
 
         <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
 
-            {{-- Heading --}}
             <div class="text-center mb-8">
 
                 <h1 class="text-3xl font-bold text-[#111827]">
@@ -17,7 +16,6 @@
 
             </div>
 
-            {{-- Validation Errors --}}
             @if ($errors->any())
 
                 <div class="mb-5 rounded-xl bg-red-50 border border-red-200 p-4">
@@ -34,7 +32,6 @@
 
             @endif
 
-            {{-- Register Form --}}
             <form
                 method="POST"
                 action="{{ route('register.submit') }}"
@@ -42,7 +39,6 @@
 
                 @csrf
 
-                {{-- Name --}}
                 <div>
 
                     <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -63,7 +59,6 @@
 
                 </div>
 
-                {{-- Email --}}
                 <div>
 
                     <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -83,7 +78,6 @@
 
                 </div>
 
-                {{-- Phone --}}
                 <div>
 
                     <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -102,45 +96,76 @@
 
                 </div>
 
-                {{-- Password --}}
                 <div>
 
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Password
                     </label>
 
-                    <input
-                        type="password"
-                        name="password"
-                        required
-                        placeholder="Minimum 8 characters"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200
-                               focus:border-[#2563EB]
-                               focus:ring-2 focus:ring-blue-100
-                               outline-none transition">
+                    <div class="relative">
+                        <input
+                            id="register-password"
+                            type="password"
+                            name="password"
+                            required
+                            placeholder="Minimum 8 characters"
+                            class="w-full px-4 py-3 pr-16 rounded-xl border border-gray-200
+                                   focus:border-[#2563EB]
+                                   focus:ring-2 focus:ring-blue-100
+                                   outline-none transition">
+
+                        <button
+                            type="button"
+                            onclick="
+                                const input = document.getElementById('register-password');
+                                const isHidden = input.type === 'password';
+                                input.type = isHidden ? 'text' : 'password';
+                                this.textContent = isHidden ? 'Hide' : 'Show';
+                                this.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+                            "
+                            class="absolute inset-y-0 right-0 px-4 text-sm font-semibold text-[#2563EB] hover:text-blue-800"
+                            aria-label="Show password">
+                            Show
+                        </button>
+                    </div>
 
                 </div>
 
-                {{-- Confirm Password --}}
                 <div>
 
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Confirm Password
                     </label>
 
-                    <input
-                        type="password"
-                        name="password_confirmation"
-                        required
-                        placeholder="Confirm your password"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200
-                               focus:border-[#2563EB]
-                               focus:ring-2 focus:ring-blue-100
-                               outline-none transition">
+                    <div class="relative">
+                        <input
+                            id="register-password-confirmation"
+                            type="password"
+                            name="password_confirmation"
+                            required
+                            placeholder="Confirm your password"
+                            class="w-full px-4 py-3 pr-16 rounded-xl border border-gray-200
+                                   focus:border-[#2563EB]
+                                   focus:ring-2 focus:ring-blue-100
+                                   outline-none transition">
+
+                        <button
+                            type="button"
+                            onclick="
+                                const input = document.getElementById('register-password-confirmation');
+                                const isHidden = input.type === 'password';
+                                input.type = isHidden ? 'text' : 'password';
+                                this.textContent = isHidden ? 'Hide' : 'Show';
+                                this.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+                            "
+                            class="absolute inset-y-0 right-0 px-4 text-sm font-semibold text-[#2563EB] hover:text-blue-800"
+                            aria-label="Show password">
+                            Show
+                        </button>
+                    </div>
 
                 </div>
 
-                {{-- Submit --}}
                 <button
                     type="submit"
                     class="w-full py-3 rounded-xl bg-[#2563EB]
@@ -154,7 +179,6 @@
 
             </form>
 
-            {{-- Login Link --}}
             <div class="mt-6 pt-6 border-t border-gray-100 text-center">
 
                 <p class="text-sm text-gray-500">
