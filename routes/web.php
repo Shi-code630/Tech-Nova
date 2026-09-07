@@ -16,6 +16,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReturnRequestController;
 
+
 // ==================== HOME ====================
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/search', [PageController::class, 'search'])->name('search');
@@ -96,6 +97,39 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/wishlist', function () {
         return view('user.wishlist.index');
     })->name('user.wishlist');
+
+    Route::post('/cart/add/{product}', [CartController::class, 'addToCart'])->name('cart.add');
+
+    Route::get('/cart', [CartController::class, 'index'])->name('user.cart');
+
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
+    Route::patch('/cart/update/{cart}', [CartController::class, 'updateQuantity'])->name('cart.update');
+
+
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])
+        ->name('checkout');
+
+    Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])
+        ->name('checkout.address.create');
+
+    Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])
+        ->name('checkout.address.store');
+
+    Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])
+        ->name('checkout.continue');
+
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])
+        ->name('checkout.place-order');
+
+
+
+
+    Route::get('/wishlist', function () {
+        return view('user.wishlist.index');
+    })->name('user.wishlist');
+
 
 
     Route::get('/addresses', function () {
