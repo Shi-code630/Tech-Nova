@@ -40,8 +40,7 @@
                         placeholder="Enter your email"
                         class="w-full px-4 py-3 rounded-xl border border-gray-200
                                focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100
-                               outline-none transition"
-                    >
+                               outline-none transition">
                 </div>
 
                 <div>
@@ -49,15 +48,31 @@
                         Password
                     </label>
 
-                    <input
-                        type="password"
-                        name="password"
-                        required
-                        placeholder="Enter your password"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200
-                               focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100
-                               outline-none transition"
-                    >
+                    <div class="relative">
+                        <input
+                            id="login-password"
+                            type="password"
+                            name="password"
+                            required
+                            placeholder="Enter your password"
+                            class="w-full px-4 py-3 pr-16 rounded-xl border border-gray-200
+                                   focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100
+                                   outline-none transition">
+
+                        <button
+                            type="button"
+                            onclick="
+                                const input = document.getElementById('login-password');
+                                const isHidden = input.type === 'password';
+                                input.type = isHidden ? 'text' : 'password';
+                                this.textContent = isHidden ? 'Hide' : 'Show';
+                                this.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+                            "
+                            class="absolute inset-y-0 right-0 px-4 text-sm font-semibold text-[#2563EB] hover:text-blue-800"
+                            aria-label="Show password">
+                            Show
+                        </button>
+                    </div>
                 </div>
 
                 <div class="flex items-center gap-2">
@@ -66,8 +81,7 @@
                         type="checkbox"
                         name="remember"
                         value="1"
-                        class="rounded border-gray-300 text-[#2563EB] focus:ring-[#2563EB]"
-                    >
+                        class="rounded border-gray-300 text-[#2563EB] focus:ring-[#2563EB]">
 
                     <label class="text-sm text-gray-600">
                         Remember me
