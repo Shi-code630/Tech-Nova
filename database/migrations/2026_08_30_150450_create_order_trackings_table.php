@@ -34,7 +34,7 @@ return new class extends Migration
             $table->timestamps();
             $table->index(['order_id', 'status']);
             if (!Schema::hasColumn('order_trackings', 'tracked_at')) {
-                $table->timestamp('tracked_at')->nullable()->after('note');
+                $table->timestamp('tracked_at')->nullable();
             }
         });
     }

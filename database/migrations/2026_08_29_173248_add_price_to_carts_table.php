@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('carts', function (Blueprint $table) {
-            $table->decimal('price', 10, 2)->nullable()->after('quantity');
+            // price column already exists in the carts table.
         });
     }
 

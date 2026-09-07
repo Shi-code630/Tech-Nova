@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('carts', function (Blueprint $table) {
-          
-            $table->unsignedBigInteger('variant_id')->nullable()->after('product_id');
+
+            // variant_id already exists in the carts table.
         });
     }
 

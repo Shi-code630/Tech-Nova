@@ -44,9 +44,11 @@
                                     <li>Unused, undamaged, and in resalable condition.</li>
                                     <li>Accompanied by the original receipt or proof of purchase.</li>
                                 </ul>
-                                <p class="text-gray-600 mt-3">To initiate a return, please contact our support team
-                                    within
-                                    the eligibility period.</p>
+                                <p class="text-gray-600 mt-3">
+                                    To start a return or exchange, sign in to your TechNova account, open
+                                    <strong>My Orders</strong>, select the delivered order, and choose
+                                    <strong>Request Return / Exchange</strong>.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -115,10 +117,11 @@
                                             class="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold z-10">
                                             1</div>
                                         <div class="ml-4">
-                                            <h4 class="font-semibold text-gray-800">Contact Support</h4>
-                                            <p class="text-gray-600 text-sm">Reach out via email or phone within the
-                                                return
-                                                window. Provide your order number and reason for return.</p>
+                                            <h4 class="font-semibold text-gray-800">Submit a Request</h4>
+                                            <p class="text-gray-600 text-sm">
+                                                Open My Orders, select your delivered order, choose the item and quantity,
+                                                then submit a return or exchange request within 7 days of delivery.
+                                            </p>
                                         </div>
                                     </div>
 
@@ -128,9 +131,11 @@
                                             class="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold z-10">
                                             2</div>
                                         <div class="ml-4">
-                                            <h4 class="font-semibold text-gray-800">Get Approval & Shipping Label</h4>
-                                            <p class="text-gray-600 text-sm">Once approved, we will email you a return
-                                                shipping label and instructions.</p>
+                                            <h4 class="font-semibold text-gray-800">Wait for TechNova Approval</h4>
+                                            <p class="text-gray-600 text-sm">
+                                                TechNova will review your request and provide return instructions in your
+                                                order details.
+                                            </p>
                                         </div>
                                     </div>
 

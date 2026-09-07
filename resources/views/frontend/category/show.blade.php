@@ -1,9 +1,5 @@
 <x-frontend-layout>
-<<<<<<< HEAD
     <div class="bg-[#ebf4fa] full py-2">
-=======
-    <div class=" ">
->>>>>>> dd79b8318b514c5a7f6698fe2558f3f2792f407f
 
         @php
             $ancestors = $category->getAncestors();

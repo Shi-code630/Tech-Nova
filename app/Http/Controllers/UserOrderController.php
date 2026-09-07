@@ -37,8 +37,20 @@ class UserOrderController extends Controller
             ->firstOrFail();
 
         $items = $order->items()
-            ->with(['product', 'variant'])
-            ->get();
+        ->with([
+            'product',
+            'variant',
+            'returnRequests.exchangeVariant',
+        ])
+        ->get();
+
+        $hasReturnableItems = $items->contains(function ($item): bool {
+            $requestedQuantity = $item->returnRequests
+                ->where('status', '!=', 'rejected')
+                ->sum('quantity');
+
+            return $item->quantity > $requestedQuantity;
+        });
 
         $address = null;
 
@@ -52,6 +64,7 @@ class UserOrderController extends Controller
             'order' => $order,
             'items' => $items,
             'address' => $address,
+            'hasReturnableItems' => $hasReturnableItems,
         ]);
     }
 

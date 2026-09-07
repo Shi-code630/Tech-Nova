@@ -113,13 +113,34 @@ class Order extends Model
     }
 
     // BOOTED
-    protected static function booted()
+   protected static function booted(): void
     {
-        static::updated(function (Order $order) {
-            if ($order->isDirty('order_status') &&
-                $order->order_status === 'delivered' &&
-                !$order->reward_points_given) {
+        static::updating(function (Order $order): void {
+            if (! $order->isDirty('order_status')) {
+                return;
+            }
 
+            if (
+                $order->order_status === self::STATUS_SHIPPED
+                && $order->shipped_at === null
+            ) {
+                $order->shipped_at = now();
+            }
+
+            if (
+                $order->order_status === self::STATUS_DELIVERED
+                && $order->delivered_at === null
+            ) {
+                $order->delivered_at = now();
+            }
+        });
+
+        static::updated(function (Order $order): void {
+            if (
+                $order->isDirty('order_status')
+                && $order->order_status === self::STATUS_DELIVERED
+                && ! $order->reward_points_given
+            ) {
                 $user = $order->user;
 
                 if ($user) {
@@ -239,4 +260,20 @@ class Order extends Model
     {
         return $this->order_status === 'shipped';
     }
+
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class);
+    }
+
+    public function canRequestReturnExchange(): bool
+    {
+        return $this->order_status === self::STATUS_DELIVERED
+            && $this->delivered_at !== null
+            && now()->lte($this->delivered_at->copy()->addDays(7));
+    }
+
+
 }
+
+
