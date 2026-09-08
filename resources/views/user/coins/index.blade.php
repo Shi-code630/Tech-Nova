@@ -46,13 +46,13 @@
                             <p class="text-xs text-green-100 mt-1">Lifetime earnings</p>
                         </div>
 
-
-
+                       
+                     
                         <div class="bg-gradient-to-r from-red-400 to-red-500 rounded-xl shadow-sm p-4 text-white">
                             <p class="text-sm font-medium text-red-100">Total Redeemed</p>
                             <p class="text-3xl font-bold" id="coin-total-redeemed">
                                 {{ number_format($coinSummary['total_redeemed']) }}</p>
-                            <p class="text-xs text-red-100 mt-1">Coins used for discounts</p>
+                            <p class="text-xs text-red-100 mt-1">Coins used for discounts</p> 
                         </div>
 
                         <div class="bg-gradient-to-r from-blue-400 to-blue-500 rounded-xl shadow-sm p-4 text-white">
