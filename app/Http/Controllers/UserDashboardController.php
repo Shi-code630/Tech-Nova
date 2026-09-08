@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Helpers\RewardHelper;
 use Illuminate\Http\Request;
+use App\Models\Review;
+use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
 {
@@ -11,7 +13,7 @@ class UserDashboardController extends Controller
     {
         $user = $request->user();
 
-
+        // ==================== ORDERS ====================
         $totalOrders = $user->orders()->count();
 
         $inProgress = $user->orders()
@@ -21,7 +23,6 @@ class UserDashboardController extends Controller
                 'shipped',
             ])
             ->count();
-
 
         $orderCounts = [
             'total' => $totalOrders,
@@ -54,6 +55,8 @@ class UserDashboardController extends Controller
 
         // ==================== CART ====================
         $cartCount = $user->carts()->sum('quantity');
+
+        // ==================== COINS ====================
         $coinSummary = RewardHelper::getUserCoinsSummary($user);
         $recentTransactions = RewardHelper::getRecentTransactions($user, 5);
 
@@ -72,7 +75,6 @@ class UserDashboardController extends Controller
         ));
     }
 
-
     public function liveCoins(Request $request)
     {
         $user = $request->user();
@@ -81,5 +83,15 @@ class UserDashboardController extends Controller
             'coinSummary' => RewardHelper::getUserCoinsSummary($user),
             'recentTransactions' => RewardHelper::getRecentTransactions($user, 5),
         ]);
+    }
+
+    public function reviews()
+    {
+        $reviews = Review::with(['product', 'user'])
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->get();
+
+        return view('user.reviews.index', compact('reviews'));
     }
 }
