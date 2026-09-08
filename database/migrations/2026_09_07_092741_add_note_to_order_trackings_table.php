@@ -6,24 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('order_trackings', function (Blueprint $table) {
-            $table->text('note')->nullable()->after('location');
+
+            if (!Schema::hasColumn('order_trackings', 'note')) {
+                $table->text('note')->nullable()->after('location');
+            }
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('order_trackings', function (Blueprint $table) {
-            $table->dropColumn('note');
-
+            if (Schema::hasColumn('order_trackings', 'note')) {
+                $table->dropColumn('note');
+            }
         });
     }
 };

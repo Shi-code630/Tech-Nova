@@ -10,6 +10,7 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\TextInput as FormTextInput;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -18,6 +19,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use App\Helpers\RewardHelper;
 
 class UsersTable
 {
@@ -62,14 +64,28 @@ class UsersTable
                     ->sortable()
                     ->width(100),
 
+                // ✅ Coins Column (Updated label)
                 TextColumn::make('reward_points')
-                    ->label('Points')
+                    ->label('Coins')
                     ->sortable()
                     ->numeric()
                     ->toggleable()
                     ->icon('heroicon-o-star')
                     ->color('warning')
-                    ->width(100),
+                    ->width(100)
+                    ->formatStateUsing(fn ($state) => number_format($state)),
+
+                // ✅ Coin Value Column (NEW)
+                TextColumn::make('coins_value')
+                    ->label('Coin Value')
+                    ->getStateUsing(function ($record) {
+                        $redeemRate = RewardHelper::getRedeemRate();
+                        return 'Rs. ' . number_format($record->reward_points / $redeemRate, 2);
+                    })
+                    ->sortable()
+                    ->toggleable()
+                    ->color('success')
+                    ->width(120),
 
                 TextColumn::make('order_count')
                     ->label('Orders')
@@ -120,15 +136,16 @@ class UsersTable
                         false: fn ($query) => $query->doesntHave('orders'),
                     ),
 
+                // ✅ Coins Range Filter (Updated)
                 Filter::make('reward_points_range')
-                    ->label('Reward Points Range')
+                    ->label('Coins Range')
                     ->form([
                         FormTextInput::make('points_from')
-                            ->label('Points From')
+                            ->label('Coins From')
                             ->numeric()
                             ->minValue(0),
                         FormTextInput::make('points_to')
-                            ->label('Points To')
+                            ->label('Coins To')
                             ->numeric()
                             ->minValue(0),
                     ])
@@ -174,74 +191,76 @@ class UsersTable
                     ->modalWidth('md'),
 
                 DeleteAction::make()
-                ->icon('heroicon-o-trash')
-                ->tooltip('Delete User')
-                ->color('danger')
-                ->requiresConfirmation()
-                ->modalHeading('Delete User')
-                ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
-                ->modalSubmitActionLabel('Delete')
-                ->successNotificationTitle('User address deleted successfully'),
+                    ->icon('heroicon-o-trash')
+                    ->tooltip('Delete User')
+                    ->color('danger')
+                    ->requiresConfirmation()
+                    ->modalHeading('Delete User')
+                    ->modalDescription('Are you sure you want to delete this user? This action cannot be undone.')
+                    ->modalSubmitActionLabel('Delete'),
+
                 Action::make('view_orders')
                     ->label('View Orders')
                     ->icon('heroicon-o-shopping-cart')
                     ->tooltip('View user orders')
                     ->url(fn ($record) =>
-                        // Update this path to match your actual OrderResource
                         url('/admin/orders?tableFilters[user_id][value]=' . $record->id)
                     )
                     ->openUrlInNewTab(),
 
+                // ✅ Manage Coins Action (Updated)
                 Action::make('manage_points')
-                    ->label('Manage Points')
+                    ->label('Manage Coins')
                     ->icon('heroicon-o-star')
-                    ->tooltip('Manage reward points')
+                    ->tooltip('Manage user coins')
                     ->form([
                         FormTextInput::make('points')
-                            ->label('Points Amount')
+                            ->label('Coins Amount')
                             ->numeric()
                             ->required()
                             ->minValue(1),
 
-                        \Filament\Forms\Components\Select::make('action')
+                        Select::make('action')
                             ->label('Action')
                             ->options([
-                                'add' => 'Add Points',
-                                'deduct' => 'Deduct Points',
+                                'add' => 'Add Coins',
+                                'deduct' => 'Deduct Coins',
                             ])
                             ->required(),
 
                         FormTextInput::make('remarks')
                             ->label('Remarks')
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->placeholder('Reason for this change'),
                     ])
                     ->action(function ($record, array $data) {
-                        if ($data['action'] === 'add') {
-                            $record->addRewardPoints(
-                                $data['points'],
-                                $data['remarks'] ?? 'Admin adjustment'
-                            );
-                        } else {
-                            try {
-                                $record->redeemRewardPoints(
+                        try {
+                            if ($data['action'] === 'add') {
+                                $record->addCoins(
                                     $data['points'],
+                                    null,
                                     $data['remarks'] ?? 'Admin adjustment'
                                 );
-                            } catch (\Exception $e) {
-                                Notification::make()
-                                    ->title('Error')
-                                    ->body($e->getMessage())
-                                    ->danger()
-                                    ->send();
-                                return;
+                            } else {
+                                $record->redeemCoins(
+                                    $data['points'],
+                                    null,
+                                    $data['remarks'] ?? 'Admin adjustment'
+                                );
                             }
-                        }
 
-                        Notification::make()
-                            ->title('Points Updated')
-                            ->body('Reward points have been updated successfully.')
-                            ->success()
-                            ->send();
+                            Notification::make()
+                                ->title('Coins Updated')
+                                ->body('User coins have been updated successfully.')
+                                ->success()
+                                ->send();
+                        } catch (\Exception $e) {
+                            Notification::make()
+                                ->title('Error')
+                                ->body($e->getMessage())
+                                ->danger()
+                                ->send();
+                        }
                     }),
             ])
             ->bulkActions([
@@ -251,8 +270,7 @@ class UsersTable
                         ->tooltip('Delete Selected')
                         ->requiresConfirmation()
                         ->modalHeading('Delete Users')
-                        ->modalDescription('Are you sure you want to delete these users? This action cannot be undone.')
-                        ->modalSubmitActionLabel('Yes, Delete'),
+                        ->modalDescription('Are you sure you want to delete these users? This action cannot be undone.'),
 
                     BulkAction::make('activate')
                         ->label('Activate Selected')
@@ -261,10 +279,8 @@ class UsersTable
                             foreach ($records as $record) {
                                 $record->update(['status' => true]);
                             }
-
                             Notification::make()
                                 ->title('Users Activated')
-                                ->body('Selected users have been activated successfully.')
                                 ->success()
                                 ->send();
                         }),
@@ -277,10 +293,8 @@ class UsersTable
                             foreach ($records as $record) {
                                 $record->update(['status' => false]);
                             }
-
                             Notification::make()
                                 ->title('Users Deactivated')
-                                ->body('Selected users have been deactivated successfully.')
                                 ->success()
                                 ->send();
                         }),

@@ -150,4 +150,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/settings', function () {
         return view('user.settings');
     })->name('user.settings');
+
+    Route::get('/coins', function () {
+        $user = request()->user();
+
+        return view('user.coins.index', [
+            'coinSummary' => \App\Helpers\RewardHelper::getUserCoinsSummary($user),
+            'transactions' => $user->rewardTransactions()->latest()->paginate(20),
+        ]);
+    })->name('user.coins');
+
+
+    Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])
+        ->name('user.coins.live');
 });

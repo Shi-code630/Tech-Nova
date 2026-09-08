@@ -6,6 +6,7 @@ use App\Models\Address;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -16,8 +17,8 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
-        'reward_points',
         'status'
+        
     ];
 
     protected $hidden = [
@@ -33,117 +34,75 @@ class User extends Authenticatable
 
     // ============ RELATIONSHIPS ============
 
-    /**
-     * Get all addresses for the user
-     */
     public function addresses()
     {
         return $this->hasMany(Address::class);
     }
 
-    /**
-     * Get the user's default address
-     */
     public function defaultAddress()
     {
         return $this->hasOne(Address::class)->where('is_default', true);
     }
 
-    /**
-     * Get all cart items for the user
-     */
     public function carts()
     {
         return $this->hasMany(Cart::class);
     }
 
-    /**
-     * Get all wishlist items for the user
-     */
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class);
     }
 
-    /**
-     * Get all orders for the user
-     */
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    /**
-     * Get all reviews by the user
-     */
     public function reviews()
     {
         return $this->hasMany(Review::class);
     }
 
-    /**
-     * Get all reward transactions for the user
-     */
     public function rewardTransactions()
     {
         return $this->hasMany(RewardTransaction::class);
     }
 
+    public function returnRequests()
+    {
+        return $this->hasMany(ReturnRequest::class);
+    }
+
     // ============ ACCESSORS ============
 
-    /**
-     * Get the user's full name (already name field)
-     */
     public function getFullNameAttribute()
     {
         return $this->name;
     }
 
-    /**
-     * Get the user's first name
-     */
     public function getFirstNameAttribute()
     {
         $nameParts = explode(' ', $this->name);
         return $nameParts[0] ?? $this->name;
     }
 
-    /**
-     * Get the user's last name
-     */
     public function getLastNameAttribute()
     {
         $nameParts = explode(' ', $this->name);
         return end($nameParts) ?? $this->name;
     }
 
-    /**
-     * Check if user has sufficient reward points
-     */
-    public function hasSufficientPoints($points)
-    {
-        return $this->reward_points >= $points;
-    }
-
-    /**
-     * Get the user's reward points formatted
-     */
     public function getFormattedRewardPointsAttribute()
     {
         return number_format($this->reward_points);
     }
 
-    /**
-     * Get user's total order count
-     */
     public function getOrderCountAttribute()
     {
         return $this->orders()->count();
     }
 
-    /**
-     * Get user's total spent
-     */
     public function getTotalSpentAttribute()
     {
         return $this->orders()
@@ -151,9 +110,6 @@ class User extends Authenticatable
             ->sum('grand_total');
     }
 
-    /**
-     * Get user's pending orders count
-     */
     public function getPendingOrdersCountAttribute()
     {
         return $this->orders()
@@ -161,43 +117,76 @@ class User extends Authenticatable
             ->count();
     }
 
-    /**
-     * Check if user is active
-     */
     public function getIsActiveAttribute()
     {
         return $this->status === true;
     }
 
-    /**
-     * Get user's cart total
-     */
     public function getCartTotalAttribute()
     {
-        return $this->carts()->sum('price'); // Fixed: carts() instead of carts()
+        return $this->carts()->sum('price');
+    }
+
+    public function getCartCountAttribute()
+    {
+        return $this->carts()->count();
     }
 
     /**
-     * Get user's cart items count
+     * Available coins (defensive default if null)
      */
-    public function getCartCountAttribute()
+    public function getAvailableCoinsAttribute()
     {
-        return $this->carts()->count(); // Fixed: carts() instead of carts()
+        return $this->reward_points ?? 0;
+    }
+
+    /**
+     * Points value in currency, using the configured redeem rate.
+     */
+    public function getCoinsValueAttribute()
+    {
+        $redeemRate = \App\Helpers\RewardHelper::getRedeemRate();
+        return $redeemRate > 0 ? $this->reward_points / $redeemRate : 0;
+    }
+
+    public function getTotalCoinsEarnedAttribute()
+    {
+        return $this->rewardTransactions()->where('type', 'earned')->sum('points');
+    }
+
+    public function getTotalCoinsRedeemedAttribute()
+    {
+        return $this->rewardTransactions()->where('type', 'redeemed')->sum('points');
+    }
+
+    // Kept for backward compatibility with older callers
+    public function getTotalPointsEarnedAttribute()
+    {
+        return $this->getTotalCoinsEarnedAttribute();
+    }
+
+    public function getTotalPointsRedeemedAttribute()
+    {
+        return $this->getTotalCoinsRedeemedAttribute();
+    }
+
+    public function getPointsValueAttribute()
+    {
+        return $this->reward_points;
+    }
+
+    public function getAddressCountAttribute()
+    {
+        return $this->addresses()->count();
     }
 
     // ============ MUTATORS ============
 
-    /**
-     * Hash the password when setting
-     */
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
     }
 
-    /**
-     * Format phone number before saving
-     */
     public function setPhoneAttribute($value)
     {
         $this->attributes['phone'] = preg_replace('/[^0-9+]/', '', $value);
@@ -206,92 +195,97 @@ class User extends Authenticatable
     // ============ REWARD POINT METHODS ============
 
     /**
-     * Add reward points to user
+     * ⚠️ FIX #2: Race-condition-safe coin methods.
+     * Previously this did `$this->reward_points += $points; $this->save();`,
+     * which could lose an update under concurrent requests (e.g. two orders
+     * marked delivered at the same time). Now uses a DB transaction with a
+     * row lock and an atomic increment/decrement so concurrent requests
+     * always see a correct balance.
      */
     public function addRewardPoints($points, $remarks = null, $orderId = null)
     {
-        $this->reward_points += $points;
-        $this->save();
+        return DB::transaction(function () use ($points, $orderId, $remarks) {
+            $user = static::query()->lockForUpdate()->findOrFail($this->id);
 
-        // Create reward transaction record
-        $this->rewardTransactions()->create([
-            'points' => $points,
-            'type' => 'earned',
-            'order_id' => $orderId,
-            'remarks' => $remarks
-        ]);
+            $user->increment('reward_points', $points);
 
-        return $this;
+            // Keep the current instance in sync for the caller
+            $this->reward_points = $user->fresh()->reward_points;
+
+            return $this->rewardTransactions()->create([
+                'order_id' => $orderId,
+                'points' => $points,
+                'type' => 'earned',
+                'remarks' => $remarks ?? 'Coins earned from order',
+            ]);
+        });
     }
 
-    /**
-     * Redeem reward points from user
-     */
     public function redeemRewardPoints($points, $remarks = null, $orderId = null)
     {
-        if (!$this->hasSufficientPoints($points)) {
-            throw new \Exception('Insufficient reward points. You have ' . $this->reward_points . ' points.');
-        }
+        return DB::transaction(function () use ($points, $orderId, $remarks) {
+            $user = static::query()->lockForUpdate()->findOrFail($this->id);
 
-        $this->reward_points -= $points;
-        $this->save();
+            if ($user->reward_points < $points) {
+                throw new \Exception('Insufficient reward points. You have ' . $user->reward_points . ' points.');
+            }
 
-        // Create reward transaction record
-        $this->rewardTransactions()->create([
-            'points' => $points,
-            'type' => 'redeemed',
-            'order_id' => $orderId,
-            'remarks' => $remarks
-        ]);
+            $user->decrement('reward_points', $points);
 
-        return $this;
+            $this->reward_points = $user->fresh()->reward_points;
+
+            return $this->rewardTransactions()->create([
+                'order_id' => $orderId,
+                'points' => $points,
+                'type' => 'redeemed',
+                'remarks' => $remarks ?? 'Coins redeemed',
+            ]);
+        });
     }
 
-    /**
-     * Get points value in currency (if 1 point = Rs. 1)
-     */
-    public function getPointsValueAttribute()
+    // Aliases matching the shorter naming used elsewhere in the codebase
+    public function addCoins($points, $orderId = null, $remarks = null)
     {
-        return $this->reward_points;
+        return $this->addRewardPoints($points, $remarks, $orderId);
+    }
+
+    public function redeemCoins($points, $orderId = null, $remarks = null)
+    {
+        return $this->redeemRewardPoints($points, $remarks, $orderId);
+    }
+
+    public function hasSufficientPoints($points): bool
+    {
+        return $this->reward_points >= $points;
+    }
+
+    public function hasEnoughCoins($points): bool
+    {
+        return $this->hasSufficientPoints($points);
     }
 
     // ============ SCOPES ============
 
-    /**
-     * Scope query to only include active users
-     */
     public function scopeActive($query)
     {
         return $query->where('status', true);
     }
 
-    /**
-     * Scope query to only include inactive users
-     */
     public function scopeInactive($query)
     {
         return $query->where('status', false);
     }
 
-    /**
-     * Scope query to only include users with minimum reward points
-     */
     public function scopeWithMinRewardPoints($query, $points)
     {
         return $query->where('reward_points', '>=', $points);
     }
 
-    /**
-     * Scope query to only include users with maximum reward points
-     */
     public function scopeWithMaxRewardPoints($query, $points)
     {
         return $query->where('reward_points', '<=', $points);
     }
 
-    /**
-     * Search users by name or email
-     */
     public function scopeSearch($query, $search)
     {
         return $query->where('name', 'LIKE', "%{$search}%")
@@ -299,25 +293,16 @@ class User extends Authenticatable
             ->orWhere('phone', 'LIKE', "%{$search}%");
     }
 
-    /**
-     * Scope users who have placed orders
-     */
     public function scopeHasOrders($query)
     {
         return $query->has('orders');
     }
 
-    /**
-     * Scope users who haven't placed orders
-     */
     public function scopeNoOrders($query)
     {
         return $query->doesntHave('orders');
     }
 
-    /**
-     * Scope users by date range
-     */
     public function scopeDateRange($query, $startDate, $endDate)
     {
         return $query->whereBetween('created_at', [$startDate, $endDate]);
@@ -325,33 +310,21 @@ class User extends Authenticatable
 
     // ============ HELPER METHODS ============
 
-    /**
-     * Check if user is a new customer (no orders)
-     */
     public function isNewCustomer()
     {
         return $this->orders()->count() === 0;
     }
 
-    /**
-     * Get user's wishlist product IDs
-     */
     public function getWishlistProductIds()
     {
         return $this->wishlists()->pluck('product_id')->toArray();
     }
 
-    /**
-     * Check if product is in user's wishlist
-     */
     public function hasInWishlist($productId)
     {
         return $this->wishlists()->where('product_id', $productId)->exists();
     }
 
-    /**
-     * Toggle product in wishlist
-     */
     public function toggleWishlist($productId)
     {
         if ($this->hasInWishlist($productId)) {
@@ -363,47 +336,11 @@ class User extends Authenticatable
         }
     }
 
-    /**
-     * Get user's total reward points earned
-     */
-    public function getTotalPointsEarnedAttribute()
-    {
-        return $this->rewardTransactions()
-            ->where('type', 'earned')
-            ->sum('points');
-    }
-
-    /**
-     * Get user's total points redeemed
-     */
-    public function getTotalPointsRedeemedAttribute()
-    {
-        return $this->rewardTransactions()
-            ->where('type', 'redeemed')
-            ->sum('points');
-    }
-
-    /**
-     * Get user's recent orders
-     */
     public function recentOrders($limit = 5)
     {
         return $this->orders()
             ->latest()
             ->limit($limit)
             ->get();
-    }
-
-    /**
-     * Get user's address count
-     */
-    public function getAddressCountAttribute()
-    {
-        return $this->addresses()->count();
-    }
-
-    public function returnRequests()
-    {
-        return $this->hasMany(ReturnRequest::class);
     }
 }
