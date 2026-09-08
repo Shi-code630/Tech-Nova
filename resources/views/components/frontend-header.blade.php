@@ -113,7 +113,7 @@
                     COINS
                 ================================================== --}}
                 {{-- ✅ Coin link — click garda coins page ma jane --}}
-                <a href="{{ route('user.coins') }}" class="relative group cursor-pointer hidden sm:block">
+                <a href="{{ route('user.dashboard') }}" class="relative group cursor-pointer hidden sm:block">
 
                     <div
                         class="bg-[#0959e8] hover:bg-[#074dcc] transition-all duration-300 rounded-full px-3 py-1 flex items-center gap-2 shadow-md">
