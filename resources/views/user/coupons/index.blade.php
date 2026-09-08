@@ -1,8 +1,9 @@
 <x-frontend-layout>
 
-    <div class="min-h-screen bg-gray-100 p-6">
+    <div class="bg-gray-100 py-8">
 
-        <div class="flex gap-6 max-w-7xl mx-auto">
+        <div class="Container mx-auto">
+            <div class="flex gap-6 ">
 
             {{-- Sidebar --}}
             <x-user-dashboard.sidebar />
@@ -95,6 +96,7 @@
 
             </main>
 
+        </div>
         </div>
 
     </div>

@@ -1,98 +1,265 @@
 <x-frontend-layout>
 
-    <div class="min-h-screen bg-gray-100 p-6">
+    <div class="bg-gray-100 py-8">
 
-        <div class="flex gap-6 max-w-7xl mx-auto">
+        <div class="Container mx-auto">
+            <div class="flex gap-6 ">
 
-            {{-- Sidebar --}}
-            <x-user-dashboard.sidebar />
+                {{-- Sidebar --}}
+                <x-user-dashboard.sidebar />
 
-            {{-- Main Content --}}
-            <main class="flex-1">
+                {{-- Main Content --}}
+                <main class="flex-1">
 
-                {{-- Page Header --}}
-                <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+                    {{-- Page Header --}}
+                    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
 
-                    <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between">
 
-                        <div>
-                            <h1 class="text-2xl font-bold text-[#111827]">
-                                My Reviews
-                            </h1>
+                            <div>
+                                <h1 class="text-2xl font-bold text-[#111827]">
+                                    My Reviews
+                                </h1>
 
-                            <p class="text-sm text-gray-500 mt-1">
-                                Manage your product reviews and ratings.
-                            </p>
-                        </div>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Manage your product reviews and ratings.
+                                </p>
+                            </div>
 
-                        <div class="w-12 h-12 rounded-xl bg-yellow-50 flex items-center justify-center">
+                            {{-- Header Icon --}}
+                            <div class="w-12 h-12 rounded-xl bg-yellow-50 flex items-center justify-center">
 
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke-width="1.8"
-                                 stroke="currentColor"
-                                 class="w-6 h-6 text-yellow-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-6 h-6 text-yellow-500">
 
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.205 3.602a.563.563 0 0 0-.182.557l1.285 5.381c.116.485-.409.867-.84.608l-4.725-2.85a.563.563 0 0 0-.581 0l-4.725 2.85c-.431.259-.956-.123-.84-.608l1.285-5.381a.563.563 0 0 0-.182-.557L2.64 10.385c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.205 3.602a.563.563 0 0 0-.182.557l1.285 5.381c.116.485-.409.867-.84.608l-4.725-2.85a.563.563 0 0 0-.581 0l-4.725 2.85c-.431.259-.956-.123-.84-.608l1.285-5.381a.563.563 0 0 0-.182-.557L2.64 10.385c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
 
-                            </svg>
+                                </svg>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                </div>
+
+                    {{-- Reviews Content --}}
+                    <div class="space-y-5">
+
+                        @forelse($reviews as $review)
+
+                            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+
+                                {{-- =========================
+                             USER PROFILE
+                        ========================== --}}
+                                <div class="flex items-center justify-between mb-6">
+
+                                    <div class="flex items-center gap-3">
+
+                                        {{-- Profile Image --}}
+                                        <div class="w-12 h-12 rounded-full overflow-hidden bg-gray-100 flex-shrink-0">
+
+                                            @if ($review->user && $review->user->profile_image)
+                                                <img src="{{ asset('storage/' . $review->user->profile_image) }}"
+                                                    alt="{{ $review->user->name }}" class="w-full h-full object-cover">
+                                            @else
+                                                {{-- Default Profile Icon --}}
+                                                <div
+                                                    class="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+
+                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                        viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor"
+                                                        class="w-7 h-7">
+
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+
+                                                    </svg>
+
+                                                </div>
+                                            @endif
+
+                                        </div>
 
 
-                {{-- Reviews Content --}}
-                <div class="bg-white rounded-2xl shadow-sm p-6">
+                                        {{-- User Name --}}
+                                        <div>
 
-                    {{-- Empty State --}}
-                    <div class="text-center py-16">
+                                            <p class="text-sm font-semibold text-gray-900">
+                                                {{ $review->user->name ?? 'Anonymous' }}
+                                            </p>
 
-                        <div class="w-20 h-20 mx-auto rounded-full bg-yellow-50 flex items-center justify-center mb-5">
+                                            <p class="text-xs text-gray-400">
+                                                Customer
+                                            </p>
 
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 fill="none"
-                                 viewBox="0 0 24 24"
-                                 stroke-width="1.5"
-                                 stroke="currentColor"
-                                 class="w-10 h-10 text-yellow-500">
+                                        </div>
 
-                                <path stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.205 3.602a.563.563 0 0 0-.182.557l1.285 5.381c.116.485-.409.867-.84.608l-4.725-2.85a.563.563 0 0 0-.581 0l-4.725 2.85c-.431.259-.956-.123-.84-.608l1.285-5.381a.563.563 0 0 0-.182-.557L2.64 10.385c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"/>
+                                    </div>
 
-                            </svg>
 
-                        </div>
+                                    {{-- Review Status --}}
+                                    @if ($review->status)
+                                        <span
+                                            class="px-3 py-1 rounded-full text-xs font-semibold bg-green-50 text-green-600">
+                                            Published
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-50 text-yellow-600">
+                                            Pending
+                                        </span>
+                                    @endif
 
-                        <h2 class="text-xl font-semibold text-[#111827]">
-                            No Reviews Yet
-                        </h2>
+                                </div>
 
-                        <p class="text-gray-500 mt-2">
-                            Your product reviews will appear here.
-                        </p>
 
-                        <a href="{{ route('home') }}"
-                           class="inline-flex mt-6 px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-semibold transition">
+                                {{-- =========================
+                             PRODUCT + REVIEW
+                        ========================== --}}
+                                <div class="flex gap-5">
 
-                            Continue Shopping
+                                    {{-- Product Image --}}
+                                    <div class="w-24 h-24 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0">
 
-                        </a>
+                                        @if ($review->product && $review->product->image)
+                                            <img src="{{ asset('storage/' . $review->product->image) }}"
+                                                alt="{{ $review->product->name }}" class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full flex items-center justify-center text-gray-400">
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                    class="w-8 h-8">
+
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.409 2.409M3.75 19.5h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Z" />
+
+                                                </svg>
+
+                                            </div>
+                                        @endif
+
+                                    </div>
+
+
+                                    {{-- Product + Review Details --}}
+                                    <div class="flex-1 min-w-0">
+
+                                        {{-- Product Name --}}
+                                        <h2 class="text-lg font-bold text-gray-900">
+                                            {{ $review->product->name ?? 'Product' }}
+                                        </h2>
+
+
+                                        {{-- Rating --}}
+                                        <div class="flex items-center gap-1 mt-2">
+
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $review->rating)
+                                                    <span class="text-yellow-500 text-lg">
+                                                        ★
+                                                    </span>
+                                                @else
+                                                    <span class="text-gray-300 text-lg">
+                                                        ★
+                                                    </span>
+                                                @endif
+                                            @endfor
+
+                                            <span class="text-sm text-gray-500 ml-2">
+                                                {{ $review->rating }}/5
+                                            </span>
+
+                                        </div>
+
+
+                                        {{-- Review Text --}}
+                                        @if ($review->review)
+                                            <div class="mt-4 bg-gray-50 rounded-xl p-4">
+
+                                                <p class="text-gray-700 text-sm leading-6">
+                                                    "{{ $review->review }}"
+                                                </p>
+
+                                            </div>
+                                        @else
+                                            <p class="text-sm text-gray-400 mt-4 italic">
+                                                No written review.
+                                            </p>
+                                        @endif
+
+
+                                        {{-- Review Date --}}
+                                        <p class="text-xs text-gray-400 mt-4">
+
+                                            Reviewed on
+                                            {{ $review->created_at->format('d M Y, h:i A') }}
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        @empty
+
+                            {{-- =========================
+                         EMPTY STATE
+                    ========================== --}}
+                            <div class="bg-white rounded-2xl shadow-sm p-10">
+
+                                <div class="text-center py-10">
+
+                                    <div
+                                        class="w-20 h-20 mx-auto rounded-full bg-yellow-50 flex items-center justify-center mb-5">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-10 h-10 text-yellow-500">
+
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.205 3.602a.563.563 0 0 0-.182.557l1.285 5.381c.116.485-.409.867-.84.608l-4.725-2.85a.563.563 0 0 0-.581 0l-4.725 2.85c-.431.259-.956-.123-.84-.608l1.285-5.381a.563.563 0 0 0-.182-.557L2.64 10.385c-.38-.325-.178-.948.321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+
+                                        </svg>
+
+                                    </div>
+
+
+                                    <h2 class="text-xl font-semibold text-[#111827]">
+                                        No Reviews Yet
+                                    </h2>
+
+                                    <p class="text-gray-500 mt-2">
+                                        Your product reviews will appear here.
+                                    </p>
+
+
+                                    <a href="{{ route('home') }}"
+                                        class="inline-flex mt-6 px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-semibold transition">
+
+                                        Continue Shopping
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        @endforelse
 
                     </div>
 
-                </div>
+                </main>
 
-            </main>
-
+            </div>
         </div>
 
     </div>
+
 
 </x-frontend-layout>

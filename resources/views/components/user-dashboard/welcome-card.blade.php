@@ -3,11 +3,24 @@
     {{-- Left Side --}}
     <div class="flex items-center gap-5">
 
-        {{-- Avatar --}}
-        <div
-            class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+       <!-- Avatar -->
+        <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-white
+            flex items-center justify-center shadow-lg">
 
-           {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
+            @if (auth()->user()->image)
+                <img src="{{ asset('storage/' . auth()->user()->image) }}" alt="{{ auth()->user()->name }}"
+                    class="w-16 h-16 rounded-full object-cover border-2 border-white shadow">
+            @else
+                <div
+                    class="w-16 h-16 rounded-full
+                   bg-gradient-to-br from-[#F59E0B] to-[#D97706]
+                   flex items-center justify-center
+                   text-white text-2xl font-bold">
+
+                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+
+                </div>
+            @endif
 
         </div>
 

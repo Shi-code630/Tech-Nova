@@ -2,68 +2,70 @@
     <Section class="bg-[#f0f9ff]">
         <div class="Container mx-auto px-4">
             <div class="mt-[10px]">
-                <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl ">
+    <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl">
 
-                    <!-- Slides Wrapper -->
-                    <div id="slider"
-                        class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
+        <!-- Slides Wrapper -->
+        <div id="slider"
+            class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
 
-                        @foreach ($banners as $banner)
-                            <div class="relative w-full h-full flex-shrink-0">
+            @foreach ($banners as $banner)
 
-                                <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->alt_text }}"
-                                    class="w-full h-full object-cover">
+                <!-- Full Banner Clickable -->
+                <div class="relative w-full h-full flex-shrink-0">
 
-                                <!-- Overlay -->
-                                <div class="absolute inset-0 bg-black/40 ">
-                                    <div class="max-w-4xl px-12 py-60 text-white">
+                    <a href="{{ $banner->button_link ?? '#' }}"
+                        class="block w-full h-100">
 
-                                        <h1 class="text-3xl font-bold ">
-                                            {{ $banner->title }}
-                                        </h1>
+                        <img src="{{ asset('storage/' . $banner->image) }}"
+                            alt="{{ $banner->alt_text }}"
+                            class="w-full h-full object-cover">
 
-                                        <p class="text-lg mb-6">
-                                            {{ $banner->subtitle }}
-                                        </p>
-
-                                        @if ($banner->button_text)
-                                            <a href="{{ $banner->button_link }}"
-                                                class="inline-block bg-blue-600 hover:bg-blue-900 px-6 py-3 rounded-lg font-semibold transition">
-                                                {{ $banner->button_text }}
-                                            </a>
-                                        @endif
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        @endforeach
-
-                    </div>
-
-                    <!-- Left Arrow -->
-                    <button onclick="moveSlide(-1)"
-                        class="absolute top-1/2 left-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full z-10">
-                        ❮
-                    </button>
-
-                    <!-- Right Arrow -->
-                    <button onclick="moveSlide(1)"
-                        class="absolute top-1/2 right-4 -translate-y-1/2 bg-black/50 text-white p-3 rounded-full z-10">
-                        ❯
-                    </button>
-
-                    <!-- Dots -->
-                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-                        @foreach ($banners as $index => $banner)
-                            <span class="dot w-3 h-3 rounded-full bg-white/50 cursor-pointer"
-                                data-index="{{ $index }}">
-                            </span>
-                        @endforeach
-                    </div>
+                    </a>
 
                 </div>
-            </div>
+
+            @endforeach
+
+        </div>
+
+
+        <!-- Left Arrow -->
+        <button onclick="moveSlide(-1)"
+            class="absolute top-1/2 left-4 -translate-y-1/2
+                   bg-black/50 hover:bg-black/70
+                   text-white p-3 rounded-full z-10
+                   transition">
+            ❮
+        </button>
+
+
+        <!-- Right Arrow -->
+        <button onclick="moveSlide(1)"
+            class="absolute top-1/2 right-4 -translate-y-1/2
+                   bg-black/50 hover:bg-black/70
+                   text-white p-3 rounded-full z-10
+                   transition">
+            ❯
+        </button>
+
+
+        <!-- Dots -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2
+                    flex gap-2 z-10">
+
+            @foreach ($banners as $index => $banner)
+
+                <span class="dot w-3 h-3 rounded-full
+                             bg-white/50 cursor-pointer"
+                    data-index="{{ $index }}">
+                </span>
+
+            @endforeach
+
+        </div>
+
+    </div>
+</div>
 
             <div class="py-3 bg-[#f0f9ff]">
                 <div class=" mb-6 ">
@@ -721,7 +723,7 @@
 
                     <div class="pb-5">
                         <!-- Header -->
-                        <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center justify-between ">
                             <!-- Left Side -->
                             <div class="flex items-center gap-3">
                                 <div class="text-black text-lg font-semibold  py-2 rounded-lg">
@@ -738,7 +740,7 @@
                             </a>
                         </div>
 
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 pt-10 gap-6 pb-10">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 pt-5 gap-6 pb-10">
 
                 @foreach ($blogs as $blog)
                     <article

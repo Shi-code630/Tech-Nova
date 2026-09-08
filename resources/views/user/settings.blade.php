@@ -1,8 +1,8 @@
 <x-frontend-layout>
 
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen bg-gray-50 py-8">
 
-        <div class="flex">
+        <div class="flex Container mx-auto">
 
             {{-- Sidebar --}}
             <x-user-dashboard.sidebar />

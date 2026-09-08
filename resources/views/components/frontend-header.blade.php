@@ -20,7 +20,7 @@
                 {{-- RIGHT --}}
                 <div class="flex items-center gap-4 sm:gap-5">
 
-                    <a href="#" class="text-[#dbeafe] text-xs sm:text-sm hover:text-white transition">
+                    <a href="{{ route('user.orders') }}" class="text-[#dbeafe] text-xs sm:text-sm hover:text-white transition">
                         Track Order
                     </a>
 

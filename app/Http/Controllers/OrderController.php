@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderTracking;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -35,27 +36,45 @@ class OrderController extends Controller
 
         $order->load(['items.product']);
 
-        return view('orders.review', compact('order'));
+       return view('User.orders.review', compact('order'));
     }
 
     /**
      * Submit order review
      */
     public function submitReview(Request $request, Order $order)
-    {
-        if (!Auth::check() || $order->user_id != Auth::id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string|max:1000',
-        ]);
-
-        return redirect()->route('orders.track', $order)
-            ->with('success', 'Thank you for your review!');
+{
+    if (!Auth::check() || $order->user_id != Auth::id()) {
+        abort(403, 'Unauthorized');
     }
 
+    $validated = $request->validate([
+        'product_id' => 'required|exists:products,id',
+        'rating' => 'required|integer|min:1|max:5',
+        'review' => 'nullable|string|max:1000',
+    ]);
+
+    // Check that this product actually belongs to this order
+    $productExists = $order->items()
+        ->where('product_id', $validated['product_id'])
+        ->exists();
+
+    if (!$productExists) {
+        abort(403, 'This product does not belong to this order.');
+    }
+
+    Review::create([
+        'product_id' => $validated['product_id'],
+        'user_id' => Auth::id(),
+        'rating' => $validated['rating'],
+        'review' => $validated['review'] ?? null,
+        'status' => true,
+    ]);
+
+    return redirect()
+        ->route('orders.track', $order)
+        ->with('success', 'Thank you for your review!');
+}
     /**
      * ✅ Cancel Order (Customer)
      */
