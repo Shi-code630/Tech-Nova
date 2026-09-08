@@ -11,7 +11,7 @@ class UserDashboardController extends Controller
     {
         $user = $request->user();
 
-    
+
         $totalOrders = $user->orders()->count();
 
         $inProgress = $user->orders()
@@ -22,7 +22,7 @@ class UserDashboardController extends Controller
             ])
             ->count();
 
-       
+
         $orderCounts = [
             'total' => $totalOrders,
             'pending' => $user->orders()->where('order_status', 'pending')->count(),
@@ -72,7 +72,7 @@ class UserDashboardController extends Controller
         ));
     }
 
-   
+
     public function liveCoins(Request $request)
     {
         $user = $request->user();

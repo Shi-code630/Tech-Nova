@@ -1,0 +1,116 @@
+[33mbb8f6d3[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mtech[m[33m)[m Merge branch 'main' into tech - Sync tech with latest main :wqMerge branch 'main' into tech
+[33me276959[m[33m ([m[1;31morigin/tech[m[33m)[m first open user dashboard
+[33mbca87a7[m Update checkout controller and header
+[33m0c8cd8c[m Resolved merge conflicts
+[33m0ff69e6[m[33m ([m[1;32mmain[m[33m)[m Resolved merge conflict: kept tech branch coins page
+[33m0a1e41a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Your commit message
+[33m59e4ee3[m Add coins index view
+[33m8680983[m Complete checkout with coin system, address management, and email notifications
+[33m2f743f7[m Complete reward points system with dynamic settings
+[33m9074945[m Merge pull request #12 from sudam-shrestha/md-arman
+[33mc70ff50[m[33m ([m[1;31morigin/md-arman[m[33m)[m Merge branch 'main' into md-arman
+[33m6a52da9[m password show done
+[33m46710bb[m return/exchange and refund is done
+[33md36bffc[m Your changes
+[33m8ee285f[m Your changes
+[33m28998d0[m Resolved merge conflict in web.php
+[33m0902742[m Merge branch 'tech' iMerge branch 'tech' into main# Please enter a commit message to explain why this merge is necessary,
+[33m7b8fccc[m Complete order tracking feature with email notifications and reward points
+[33m6aa5412[m Your changes
+[33m8bb0c4a[m Design Change
+[33mdd79b83[m[33m ([m[1;31morigin/order-tracking[m[33m, [m[1;32morder-tracking[m[33m)[m Complete order tracking feature with email notifications
+[33mdaec85c[m add cart and serch
+[33m8a90b50[m Merge branch 'main' of https://github.com/sudam-shrestha/baishak10_team2 into tech to understand
+[33mf45a95c[m clean code
+[33m1cfc089[m Merge pull request #11 from sudam-shrestha/md-arman
+[33maefd641[m Merge branch 'main' into md-arman
+[33mc629991[m work on going
+[33mcb81eec[m conflict resolve
+[33m99ad905[m Update routes/web.php with contact-us route
+[33m833ce60[m Merge branch 'main' of https://github.com/sudam-shrestha/baishak10_team2  "Merge main into tech branch" Merge main into tech branch # Lines starting with '#' will be ignored, and an empty message aborts
+[33mc644975[m Add contact-us, ContactMessages resource and blog routes + notification message
+[33mb9ff343[m route
+[33me8f90f5[m order section is on the way
+[33m6e6ef05[m blog route add
+[33m9dadaa5[m Update routes/web.php with contact-us and admin routes
+[33m01b08b4[m conflict resolve
+[33m3713f29[m Resolve merge conflicts in routes/web.php and complete merge
+[33mb09d5bc[m show user meaage on gemail
+[33m0cb0211[m create blog page
+[33mf14f4b6[m message
+[33mfdeda1f[m message
+[33m9136089[m Resolved merge conflict in AdminPanelProvider
+[33m54cbfa2[m Update SettingsForm configuration
+[33mbf2d46c[m[33m ([m[1;32mfeaturs/adding-blogs[m[33m)[m changes necessary and from design
+[33m44bd5e7[m Merge pull request #10 from sudam-shrestha/md-arman
+[33m808bcbe[m Merge branch 'main' into md-arman
+[33m134e9f6[m message
+[33m8d007fd[m[33m ([m[1;31morigin/featurs/adding-blogs[m[33m)[m added blogs featurs
+[33mc747bb0[m message
+[33m8f80daa[m Your changes
+[33m531dab4[m message
+[33ma73ace9[m category & page
+[33mf471e4c[m Your commit message
+[33mb890118[m message
+[33m556154e[m complet backend deign
+[33m304fabb[m Complete customer report and product report
+[33m7b83a43[m feat: add product report with dynamic widgets and date filters
+[33md6cc9aa[m Merge pull request #9 from sudam-shrestha/md-arman
+[33mc945da7[m Merge branch 'main' into md-arman
+[33m75cfed4[m user dashboard half done
+[33m1e3b5d0[m Brand logo and title ad home page dynamic
+[33mfeb13fc[m create Warranty page
+[33maa6e03d[m change code
+[33m3937165[m create privacy policy, refund, trems, home page edit footer & header edit
+[33m81e1067[m Merge pull request #8 from sudam-shrestha/md-arman
+[33me220694[m Merge branch 'md'
+[33m8d01c7a[m Merge pull request #7 from sudam-shrestha/md-arman
+[33m37833a6[m category pages making all done ,route and controller done
+[33mc576625[m Merge pull request #6 from sudam-shrestha/md-arman
+[33ma51b4e3[m first commit of the branch
+[33m33d66de[m Merge branch 'main' of https://github.com/sudam-shrestha/baishak10_team2 into tech i Merged remote changes
+[33m07bedd9[m working in progress dashboard
+[33m05625b3[m message
+[33m8e95984[m up date my code
+[33mced9ee0[m Resolve remaining merge conflicts
+[33m23d651b[m Accept incoming changes
+[33m8b6e992[m Add Sales Report page with charts and statistics
+[33m81e6788[m Merge pull request #4 from sudam-shrestha/tech
+[33m1f2f285[m - Added complete CRUD for Products, Brands, Categories
+[33md8a43d5[m Resolve merge conflicts
+[33mc3cb9ae[m  complet product management group under  categories/brand/product/product variant/product iamge
+[33m949d161[m ProductVariants to main menu
+[33md5f0557[m adminpannel  up product images
+[33ma377b34[m Up admin pannel
+[33m018ebc9[m fix product varient table error
+[33mec52b63[m My latest changes
+[33ma522a7a[m admin panel up
+[33m20cda3c[m  shipping and delivery
+[33m5fcaa2b[m catagories add
+[33m85b433b[m Describe your changes
+[33mb015d35[m error fix
+[33m133c520[m Merge branch 'main' of https://github.com/sudam-shrestha/baishak10_team2 into tech
+[33m4d890b6[m make address form add edit delete
+[33m8f0f4ea[m catrgory list page
+[33ma4e566b[m Home page update & new product page create
+[33m1768d0c[m add delete action
+[33mfc9f13d[m make user table form
+[33mc629b6b[m Update main branch
+[33m905431a[m Merge tech branch into main
+[33m125fb63[m Update reports and frontend pages
+[33mb63d2b7[m error fix
+[33m88b2f1b[m Limited Time Offer page create
+[33mb61aca8[m admin dashbord design
+[33m85628aa[m Merge completed
+[33m684e337[m header & footer
+[33m9387476[m admin pannel setup
+[33mda7abf4[m[33m ([m[1;31morigin/mukesh[m[33m)[m Merge pull request #2 from sudam-shrestha/tech
+[33mc9a9e8d[m Merge branch 'main' into tech
+[33m63b16e1[m Add ProductVariant model and order_items migration
+[33ma2e5de5[m Add order items migration
+[33m2a6d984[m make model and migration and relationship aslo
+[33m121c846[m Header Design
+[33m6cbe337[m Merge pull request #1 from sudam-shrestha/master
+[33m89325bf[m frontend setup
+[33m36c1e6f[m start
+[33m88c240e[m init
