@@ -23,6 +23,12 @@
                     :total-spent="$totalSpent"
                 />
 
+                {{-- ✅ Coin / Reward summary (ADD THIS) --}}
+                <x-user-dashboard.coin-summary
+                    :coin-summary="$coinSummary"
+                    :recent-transactions="$recentTransactions"
+                />
+
                 <div class="grid grid-cols-3 gap-6">
 
                     <div class="col-span-2">
@@ -50,5 +56,40 @@
     </div>
 
 </section>
+
+
+<script>
+    (function () {
+        const POLL_INTERVAL_MS = 15000;
+
+        async function refreshCoinSummary() {
+            try {
+                const res = await fetch("{{ route('user.coins.live') }}", {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                if (!res.ok) return;
+
+                const data = await res.json();
+                const s = data.coinSummary;
+
+                const els = {
+                    available: document.getElementById('coin-available'),
+                    value: document.getElementById('coin-value'),
+                    totalEarned: document.getElementById('coin-total-earned'),
+                    totalRedeemed: document.getElementById('coin-total-redeemed'),
+                };
+
+                if (els.available) els.available.textContent = Number(s.available).toLocaleString();
+                if (els.value) els.value.textContent = Number(s.value).toFixed(2);
+                if (els.totalEarned) els.totalEarned.textContent = Number(s.total_earned).toLocaleString();
+                if (els.totalRedeemed) els.totalRedeemed.textContent = Number(s.total_redeemed).toLocaleString();
+            } catch (e) {
+                console.warn('Coin summary refresh failed', e);
+            }
+        }
+
+        setInterval(refreshCoinSummary, POLL_INTERVAL_MS);
+    })();
+</script>
 
 </x-frontend-layout>
