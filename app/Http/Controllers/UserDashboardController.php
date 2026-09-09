@@ -4,14 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Helpers\RewardHelper;
 use Illuminate\Http\Request;
-
+use App\Models\Review;
+use Illuminate\Support\Facades\Auth;
 class UserDashboardController extends Controller
 {
     public function index(Request $request)
     {
         $user = $request->user();
 
-    
+
         $totalOrders = $user->orders()->count();
 
         $inProgress = $user->orders()
@@ -22,7 +23,7 @@ class UserDashboardController extends Controller
             ])
             ->count();
 
-       
+
         $orderCounts = [
             'total' => $totalOrders,
             'pending' => $user->orders()->where('order_status', 'pending')->count(),
@@ -72,7 +73,7 @@ class UserDashboardController extends Controller
         ));
     }
 
-   
+
     public function liveCoins(Request $request)
     {
         $user = $request->user();
@@ -82,4 +83,14 @@ class UserDashboardController extends Controller
             'recentTransactions' => RewardHelper::getRecentTransactions($user, 5),
         ]);
     }
+
+public function reviews()
+{
+    $reviews = Review::with(['product', 'user'])
+    ->where('user_id', Auth::id())
+    ->latest()
+    ->get();
+    
+    return view('user.reviews.index', compact('reviews'));
+}
 }

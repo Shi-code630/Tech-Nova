@@ -21,43 +21,37 @@ class CheckoutController extends Controller
     {
         $user = $request->user();
 
-        $cartItems = $user->carts()
-            ->with(['product', 'variant'])
-            ->latest()
-            ->get();
+        $cartItems = $user->carts()->with(['product', 'variant'])->latest()->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()
-                ->route('user.cart')
-                ->with('error', 'Your cart is empty.');
+            return redirect()->route('user.cart')->with('error', 'Your cart is empty.');
         }
 
-        $subtotal = $cartItems->sum(function ($item) {
-            return $item->price * $item->quantity;
-        });
-
+        $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
         $deliveryCharge = 100;
-        $tax = $subtotal * 0.13; // 13% VAT
+        $tax = $subtotal * 0.13;
+        $addresses = $user->addresses()->latest()->get();
 
-        $addresses = $user->addresses()
-            ->latest()
-            ->get();
-
-        // 🪙 Coin / reward data for the checkout page
         $coinSummary = RewardHelper::getUserCoinsSummary($user);
         $maxRedeemPoints = RewardHelper::getMaxRedeemCoins($user, $subtotal);
         $maxPointsDiscount = RewardHelper::calculateDiscount($maxRedeemPoints);
 
-        return view('checkout.index', [
-            'cartItems' => $cartItems,
-            'subtotal' => $subtotal,
-            'deliveryCharge' => $deliveryCharge,
-            'tax' => $tax,
-            'addresses' => $addresses,
-            'coinSummary' => $coinSummary,
-            'maxRedeemPoints' => $maxRedeemPoints,
-            'maxPointsDiscount' => $maxPointsDiscount,
-        ]);
+        return view('checkout.index', compact(
+            'cartItems',
+            'subtotal',
+            'deliveryCharge',
+            'tax',
+            'addresses',
+            'coinSummary',
+            'maxRedeemPoints',
+            'maxPointsDiscount'
+        ));
+    }
+
+    public function addresses(Request $request)
+    {
+        $addresses = $request->user()->addresses()->latest()->get();
+        return view('user.addresses.index', compact('addresses'));
     }
 
     public function createAddress()
@@ -65,9 +59,6 @@ class CheckoutController extends Controller
         return view('checkout.address');
     }
 
-    /**
-     * Store a new address (Supports AJAX)
-     */
     public function storeAddress(Request $request)
     {
         $validated = $request->validate([
@@ -82,27 +73,62 @@ class CheckoutController extends Controller
 
         $user = $request->user();
         $validated['user_id'] = $user->id;
-
-        if (!$user->addresses()->exists()) {
-            $validated['is_default'] = true;
-        } else {
-            $validated['is_default'] = false;
-        }
+        $validated['is_default'] = !$user->addresses()->exists();
 
         $address = Address::create($validated);
 
-        // ✅ Return JSON for AJAX request
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,
                 'message' => 'Address saved successfully.',
-                'address' => $address
+                'address' => $address,
             ]);
         }
 
-        return redirect()
-            ->route('checkout')
-            ->with('success', 'Address added successfully.');
+        $route = $request->input('from') === 'addresses' ? 'checkout.addresses' : 'checkout';
+        return redirect()->route($route)->with('success', 'Address added successfully.');
+    }
+
+    public function editAddress(Request $request, $id)
+    {
+        $address = $request->user()->addresses()->where('id', $id)->firstOrFail();
+        return view('checkout.address-edit', compact('address'));
+    }
+
+    public function updateAddress(Request $request, $id)
+    {
+        $address = $request->user()->addresses()->where('id', $id)->firstOrFail();
+
+        $validated = $request->validate([
+            'full_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'province' => 'required|string|max:100',
+            'district' => 'required|string|max:100',
+            'city' => 'required|string|max:100',
+            'address' => 'required|string|max:500',
+            'postal_code' => 'nullable|string|max:20',
+        ]);
+
+        $address->update($validated);
+
+        return redirect()->route('checkout.addresses')->with('success', 'Address updated successfully.');
+    }
+
+    public function deleteAddress(Request $request, $id)
+    {
+        $address = $request->user()->addresses()->where('id', $id)->firstOrFail();
+        $wasDefault = $address->is_default;
+
+        $address->delete();
+
+        if ($wasDefault) {
+            $newDefault = $request->user()->addresses()->latest()->first();
+            if ($newDefault) {
+                $newDefault->update(['is_default' => true]);
+            }
+        }
+
+        return redirect()->route('checkout.addresses')->with('success', 'Address deleted successfully.');
     }
 
     public function continueCheckout(Request $request)
@@ -114,29 +140,18 @@ class CheckoutController extends Controller
         ]);
 
         $user = $request->user();
-
-        $address = $user->addresses()
-            ->where('id', $validated['address_id'])
-            ->firstOrFail();
-
-        $cartItems = $user->carts()
-            ->get();
+        $address = $user->addresses()->where('id', $validated['address_id'])->firstOrFail();
+        $cartItems = $user->carts()->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()
-                ->route('user.cart')
-                ->with('error', 'Your cart is empty.');
+            return redirect()->route('user.cart')->with('error', 'Your cart is empty.');
         }
 
-        // Calculate subtotal
-        $subtotal = 0;
-        foreach ($cartItems as $cartItem) {
-            $subtotal += $cartItem->price * $cartItem->quantity;
-        }
+        $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
+        $deliveryCharge = 100;
+        $tax = $subtotal * 0.13;
 
-        // ❌ Online payment discount REMOVED (5% discount hataiyo)
-
-        // 🪙 Coin redemption discount
+        // Coin redemption
         $redeemPoints = (int) ($validated['redeem_points'] ?? 0);
         $pointsDiscount = 0;
 
@@ -154,17 +169,10 @@ class CheckoutController extends Controller
             $pointsDiscount = RewardHelper::calculateDiscount($redeemPoints);
         }
 
-        // Flat delivery charge
-        $deliveryCharge = 100;
-
-        // Tax (13% VAT)
-        $tax = $subtotal * 0.13;
-
-        // Final amount
         $discount = round($pointsDiscount, 2);
         $grandTotal = round($subtotal - $discount + $deliveryCharge + $tax, 2);
 
-        $request->session()->put('checkout_confirmation', [
+        session()->put('checkout_confirmation', [
             'address_id' => $address->id,
             'payment_method' => $validated['payment_method'],
             'subtotal' => $subtotal,
@@ -181,23 +189,17 @@ class CheckoutController extends Controller
 
     public function confirm(Request $request)
     {
-        $checkout = $request->session()->get('checkout_confirmation');
+        $checkout = session('checkout_confirmation');
 
         if (!$checkout) {
-            return redirect()
-                ->route('checkout')
-                ->with('error', 'Please select your address and payment method first.');
+            return redirect()->route('checkout')->with('error', 'Please select your address and payment method first.');
         }
 
-        $address = $request->user()
-            ->addresses()
-            ->find($checkout['address_id']);
+        $address = $request->user()->addresses()->find($checkout['address_id']);
 
         if (!$address) {
-            $request->session()->forget('checkout_confirmation');
-            return redirect()
-                ->route('checkout')
-                ->with('error', 'Your selected delivery address is no longer available.');
+            session()->forget('checkout_confirmation');
+            return redirect()->route('checkout')->with('error', 'Your selected delivery address is no longer available.');
         }
 
         return view('checkout.confirm', [
@@ -218,53 +220,24 @@ class CheckoutController extends Controller
         $validated = $request->validate([
             'address_id' => 'required|exists:addresses,id',
             'payment_method' => 'required|in:cod,online',
-            'transaction_id' => [
-                'nullable',
-                'string',
-                'max:100',
-                \Illuminate\Validation\Rule::requiredIf(
-                    $request->input('payment_method') === 'online'
-                ),
-            ],
-            'payment_screenshot' => [
-                'nullable',
-                'image',
-                'mimes:jpeg,jpg,png,webp',
-                'max:5120',
-                \Illuminate\Validation\Rule::requiredIf(
-                    $request->input('payment_method') === 'online'
-                ),
-            ],
+            'transaction_id' => ['nullable', 'string', 'max:100', 'required_if:payment_method,online'],
+            'payment_screenshot' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120', 'required_if:payment_method,online'],
         ]);
 
         $user = $request->user();
-
-        $checkoutSession = $request->session()->get('checkout_confirmation', []);
-        $redeemPoints = (int) ($checkoutSession['redeem_points'] ?? 0);
+        $checkout = session('checkout_confirmation', []);
+        $redeemPoints = (int) ($checkout['redeem_points'] ?? 0);
 
         $paymentScreenshotPath = null;
-
         if ($validated['payment_method'] === 'online' && $request->hasFile('payment_screenshot')) {
-            $paymentScreenshotPath = $request
-                ->file('payment_screenshot')
-                ->store('payment-screenshots', 'public');
+            $paymentScreenshotPath = $request->file('payment_screenshot')->store('payment-screenshots', 'public');
         }
 
-        // Make sure the selected address belongs to this user.
-        $address = $user->addresses()
-            ->where('id', $validated['address_id'])
-            ->firstOrFail();
-
-        // Get only this user's cart.
-        $cartItems = $user->carts()
-            ->with(['product', 'variant'])
-            ->lockForUpdate()
-            ->get();
+        $address = $user->addresses()->where('id', $validated['address_id'])->firstOrFail();
+        $cartItems = $user->carts()->with(['product', 'variant'])->lockForUpdate()->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()
-                ->route('user.cart')
-                ->with('error', 'Your cart is empty.');
+            return redirect()->route('user.cart')->with('error', 'Your cart is empty.');
         }
 
         DB::beginTransaction();
@@ -272,35 +245,29 @@ class CheckoutController extends Controller
         try {
             $subtotal = 0;
 
-            // Validate products, variants and stock
-            foreach ($cartItems as $cartItem) {
-                if (!$cartItem->product) {
+            // Validate stock and calculate subtotal
+            foreach ($cartItems as $item) {
+                if (!$item->product) {
                     throw new \Exception('One of the products in your cart is no longer available.');
                 }
 
-                // Variant product
-                if ($cartItem->variant_id) {
-                    if (!$cartItem->variant) {
+                if ($item->variant_id) {
+                    if (!$item->variant) {
                         throw new \Exception('One of the selected product variants is no longer available.');
                     }
-                    if ($cartItem->variant->stock < $cartItem->quantity) {
-                        throw new \Exception($cartItem->product->name . ' does not have enough stock.');
+                    if ($item->variant->stock < $item->quantity) {
+                        throw new \Exception($item->product->name . ' does not have enough stock.');
                     }
                 } else {
-                    // Normal product
-                    if ($cartItem->product->stock < $cartItem->quantity) {
-                        throw new \Exception($cartItem->product->name . ' does not have enough stock.');
+                    if ($item->product->stock < $item->quantity) {
+                        throw new \Exception($item->product->name . ' does not have enough stock.');
                     }
                 }
 
-                // Recalculate subtotal from the server-side cart
-                $itemTotal = $cartItem->price * $cartItem->quantity;
-                $subtotal += $itemTotal;
+                $subtotal += $item->price * $item->quantity;
             }
 
-            // ❌ Online payment discount REMOVED
-
-            // 🪙 Coin redemption discount
+            // Coin redemption (re-validated)
             $pointsDiscount = 0;
 
             if ($redeemPoints > 0) {
@@ -317,22 +284,17 @@ class CheckoutController extends Controller
                 $pointsDiscount = RewardHelper::calculateDiscount($redeemPoints);
             }
 
-            // Flat delivery charge
             $deliveryCharge = 100;
-
-            // Tax (13% VAT)
             $tax = $subtotal * 0.13;
-
-            // Total discount and final total
             $discount = round($pointsDiscount, 2);
             $grandTotal = round($subtotal - $discount + $deliveryCharge + $tax, 2);
 
-            // Generate unique order number
+            // Generate order number
             do {
                 $orderNumber = 'TN-' . strtoupper(Str::random(10));
             } while (Order::where('order_number', $orderNumber)->exists());
 
-            // Create Order
+            // Create order
             $order = Order::create([
                 'user_id' => $user->id,
                 'address_id' => $address->id,
@@ -355,6 +317,7 @@ class CheckoutController extends Controller
                 'points_earned' => 0,
             ]);
 
+            // Create payment record
             Payment::create([
                 'order_id' => $order->id,
                 'payment_method' => $validated['payment_method'] === 'online' ? 'esewa' : 'Cash on Delivery',
@@ -364,33 +327,30 @@ class CheckoutController extends Controller
                 'gateway_response' => null,
             ]);
 
-            // Create Order Items and reduce stock
-            foreach ($cartItems as $cartItem) {
-                $itemTotal = round($cartItem->price * $cartItem->quantity, 2);
-
+            // Create order items and reduce stock
+            foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
-                    'product_id' => $cartItem->product_id,
-                    'variant_id' => $cartItem->variant_id,
-                    'price' => $cartItem->price,
-                    'quantity' => $cartItem->quantity,
-                    'total' => $itemTotal,
+                    'product_id' => $item->product_id,
+                    'variant_id' => $item->variant_id,
+                    'price' => $item->price,
+                    'quantity' => $item->quantity,
+                    'total' => round($item->price * $item->quantity, 2),
                 ]);
 
-                // Reduce stock
-                if ($cartItem->variant_id) {
-                    $cartItem->variant->decrement('stock', $cartItem->quantity);
+                if ($item->variant_id) {
+                    $item->variant->decrement('stock', $item->quantity);
                 } else {
-                    $cartItem->product->decrement('stock', $cartItem->quantity);
+                    $item->product->decrement('stock', $item->quantity);
                 }
             }
 
-            // 🪙 Redeem coins
+            // Redeem coins
             if ($redeemPoints > 0) {
                 $user->redeemCoins(
                     $redeemPoints,
                     $order->id,
-                    "Redeemed " . $redeemPoints . " coins for order #{$order->order_number} (Discount: Rs. " . number_format($pointsDiscount, 2) . ")"
+                    "Redeemed {$redeemPoints} coins for order #{$order->order_number} (Discount: Rs. " . number_format($pointsDiscount, 2) . ")"
                 );
             }
 
@@ -399,7 +359,7 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Send order confirmation email
+            // Send email
             try {
                 Mail::to($order->user->email)
                     ->cc('technova2083@gmail.com')
@@ -408,17 +368,14 @@ class CheckoutController extends Controller
                 Log::error('Order confirmation email failed: ' . $e->getMessage());
             }
 
-            $request->session()->forget('checkout_confirmation');
+            session()->forget('checkout_confirmation');
 
-            return redirect()
-                ->route('user.order.view', $order->id)
+            return redirect()->route('user.order.view', $order->id)
                 ->with('success', 'Your order has been placed successfully.');
 
         } catch (\Throwable $e) {
             DB::rollBack();
-            return back()
-                ->withInput()
-                ->with('error', $e->getMessage());
+            return back()->withInput()->with('error', $e->getMessage());
         }
     }
 }

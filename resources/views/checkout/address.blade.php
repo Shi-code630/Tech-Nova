@@ -27,6 +27,12 @@
 
                     @csrf
 
+                    {{-- Remember where user came from --}}
+                    <input
+                        type="hidden"
+                        name="from"
+                        value="{{ request('from') }}">
+
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
@@ -129,7 +135,8 @@
                         {{-- City --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                City</label>
+                                City
+                            </label>
 
                             <input
                                 type="text"
@@ -203,7 +210,9 @@
                     <div class="flex justify-end gap-3 mt-8">
 
                         <a
-                            href="{{ route('checkout') }}"
+                            href="{{ request('from') === 'addresses'
+                                ? route('checkout.addresses')
+                                : route('checkout') }}"
                             class="px-6 py-3 rounded-xl bg-gray-100
                                    hover:bg-gray-200 text-gray-700
                                    font-semibold transition">

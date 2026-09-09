@@ -13,6 +13,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
+
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReturnRequestController;
 
@@ -81,6 +82,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])->name('checkout.continue');
     Route::get('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
+
+    Route::middleware('auth')->group(function () {
+    Route::get('/addresses/{id}/edit',[CheckoutController::class, 'editAddress'])->name('checkout.address.edit');
+
+    Route::put('/addresses/{id}',[CheckoutController::class, 'updateAddress'])->name('checkout.address.update');
+
+});
 
     // Order Routes (User)
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
@@ -164,3 +172,49 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])
         ->name('user.coins.live');
 });
+
+
+
+
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::put(
+        '/dashboard/profile',
+        [AuthController::class, 'updateProfile']
+    )->name('user.profile.update');
+
+});
+
+Route::middleware('auth')->group(function () {
+
+    // My Addresses
+    Route::get('/my-addresses', [CheckoutController::class, 'addresses'])
+        ->name('checkout.addresses');
+
+    // Add Address
+    Route::get('/checkout/address', [CheckoutController::class, 'createAddress'])
+        ->name('checkout.address.create');
+
+    // Save Address
+    Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])
+        ->name('checkout.address.store');
+
+    // Edit Address
+    Route::get('/checkout/address/{id}/edit', [CheckoutController::class, 'editAddress'])
+        ->name('checkout.address.edit');
+
+    // Update Address
+    Route::put('/checkout/address/{id}', [CheckoutController::class, 'updateAddress'])
+        ->name('checkout.address.update');
+
+    // Delete Address
+    Route::delete('/my-addresses/{id}', [CheckoutController::class, 'deleteAddress'])
+        ->name('checkout.address.delete');
+
+});
+
+Route::get('/reviews', [UserDashboardController::class, 'reviews'])
+    ->middleware('auth')
+    ->name('user.reviews');

@@ -20,7 +20,8 @@
             {{-- RIGHT --}}
             <div class="flex items-center gap-4 sm:gap-5">
 
-                <a href="#" class="text-[#dbeafe] text-xs sm:text-sm hover:text-white transition">
+                {{-- ✅ resolved: kept the dynamic link, not href="#" --}}
+                <a href="{{ route('user.orders') }}" class="text-[#dbeafe] text-xs sm:text-sm hover:text-white transition">
                     Track Order
                 </a>
 
@@ -112,54 +113,53 @@
                 {{-- =================================================
                     COINS
                 ================================================== --}}
-                {{-- ✅ Coin link — click garda coins page ma jane --}}
-                <a href="{{ route('user.dashboard') }}" class="relative group cursor-pointer hidden sm:block">
+              
+                @auth
+                    <a href="{{ route('user.dashboard') }}" class="relative group cursor-pointer hidden sm:block">
 
-                    <div
-                        class="bg-[#0959e8] hover:bg-[#074dcc] transition-all duration-300 rounded-full px-3 py-1 flex items-center gap-2 shadow-md">
+                        <div
+                            class="bg-[#0959e8] hover:bg-[#074dcc] transition-all duration-300 rounded-full px-3 py-1 flex items-center gap-2 shadow-md">
 
-                        <span class="text-white font-bold text-sm">
-                            {{ auth()->user()->reward_points ?? 0 }}
-                        </span>
+                            <span class="text-white font-bold text-sm">
+                                {{ number_format(auth()->user()->reward_points ?? 0) }}
+                            </span>
 
-                        <span
-                            class="w-6 h-6 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-xs shadow-md">
-                            💰
-                        </span>
+                            <span
+                                class="w-6 h-6 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-xs shadow-md">
+                                💰
+                            </span>
 
-                        <span class="text-white text-xs font-medium hidden lg:inline">
-                            Coins
-                        </span>
+                            <span class="text-white text-xs font-medium hidden lg:inline">
+                                Coins
+                            </span>
 
-                    </div>
+                        </div>
 
-                </a>
+                        {{-- Tooltip --}}
+                        <div
+                            class="absolute -bottom-10 left-1/2
+                                    -translate-x-1/2
+                                    opacity-0
+                                    group-hover:opacity-100
+                                    transition-opacity
+                                    pointer-events-none">
 
+                            <span
+                                class="text-[10px]
+                                         bg-[#111827]
+                                         text-white
+                                         px-2 py-1
+                                         rounded
+                                         whitespace-nowrap">
 
-                {{-- Tooltip --}}
-                <div
-                    class="absolute -bottom-10 left-1/2
-                                -translate-x-1/2
-                                opacity-0
-                                group-hover:opacity-100
-                                transition-opacity
-                                pointer-events-none">
+                                Your balance
 
-                    <span
-                        class="text-[10px]
-                                     bg-[#111827]
-                                     text-white
-                                     px-2 py-1
-                                     rounded
-                                     whitespace-nowrap">
+                            </span>
 
-                        Your balance
+                        </div>
 
-                    </span>
-
-                </div>
-
-                </a>
+                    </a>
+                @endauth
 
 
 
