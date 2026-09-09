@@ -16,10 +16,9 @@ class User extends Authenticatable
         'name',
         'email',
         'phone',
-          'image',
+        'image',
         'password',
         'status'
-
     ];
 
     protected $hidden = [
@@ -32,6 +31,135 @@ class User extends Authenticatable
         'status' => 'boolean',
         'reward_points' => 'integer'
     ];
+
+    // ============ ACCESSORS ============
+
+    public function getFullNameAttribute()
+    {
+        return $this->name;
+    }
+
+    public function getFirstNameAttribute()
+    {
+        $nameParts = explode(' ', $this->name);
+        return $nameParts[0] ?? $this->name;
+    }
+
+    public function getLastNameAttribute()
+    {
+        $nameParts = explode(' ', $this->name);
+        return end($nameParts) ?? $this->name;
+    }
+
+    // ✅ ADD THIS - Image accessor
+    public function getImageAttribute($value)
+    {
+        if ($value && file_exists(public_path('storage/' . $value))) {
+            return asset('storage/' . $value);
+        }
+        return null;
+    }
+
+    // ✅ ADD THIS - Profile image URL helper
+    public function getProfileImageUrlAttribute()
+    {
+        if ($this->image && file_exists(public_path('storage/' . $this->image))) {
+            return asset('storage/' . $this->image);
+        }
+        return null;
+    }
+
+    public function getFormattedRewardPointsAttribute()
+    {
+        return number_format($this->reward_points);
+    }
+
+    public function getOrderCountAttribute()
+    {
+        return $this->orders()->count();
+    }
+
+    public function getTotalSpentAttribute()
+    {
+        return $this->orders()
+            ->where('order_status', 'delivered')
+            ->sum('grand_total');
+    }
+
+    public function getPendingOrdersCountAttribute()
+    {
+        return $this->orders()
+            ->whereIn('order_status', ['pending', 'processing'])
+            ->count();
+    }
+
+    public function getIsActiveAttribute()
+    {
+        return $this->status === true;
+    }
+
+    public function getCartTotalAttribute()
+    {
+        return $this->carts()->sum('price');
+    }
+
+    public function getCartCountAttribute()
+    {
+        return $this->carts()->count();
+    }
+
+    public function getAvailableCoinsAttribute()
+    {
+        return $this->reward_points ?? 0;
+    }
+
+    public function getCoinsValueAttribute()
+    {
+        $redeemRate = \App\Helpers\RewardHelper::getRedeemRate();
+        return $redeemRate > 0 ? $this->reward_points / $redeemRate : 0;
+    }
+
+    public function getTotalCoinsEarnedAttribute()
+    {
+        return $this->rewardTransactions()->where('type', 'earned')->sum('points');
+    }
+
+    public function getTotalCoinsRedeemedAttribute()
+    {
+        return $this->rewardTransactions()->where('type', 'redeemed')->sum('points');
+    }
+
+    public function getTotalPointsEarnedAttribute()
+    {
+        return $this->getTotalCoinsEarnedAttribute();
+    }
+
+    public function getTotalPointsRedeemedAttribute()
+    {
+        return $this->getTotalCoinsRedeemedAttribute();
+    }
+
+    public function getPointsValueAttribute()
+    {
+        return $this->reward_points;
+    }
+
+    public function getAddressCountAttribute()
+    {
+        return $this->addresses()->count();
+    }
+
+    // ============ MUTATORS ============
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = preg_replace('/[^0-9+]/', '', $value);
+    }
 
     // ============ RELATIONSHIPS ============
 
@@ -75,142 +203,13 @@ class User extends Authenticatable
         return $this->hasMany(ReturnRequest::class);
     }
 
-    // ============ ACCESSORS ============
-
-    public function getFullNameAttribute()
-    {
-        return $this->name;
-    }
-
-    public function getFirstNameAttribute()
-    {
-        $nameParts = explode(' ', $this->name);
-        return $nameParts[0] ?? $this->name;
-    }
-
-    public function getLastNameAttribute()
-    {
-        $nameParts = explode(' ', $this->name);
-        return end($nameParts) ?? $this->name;
-    }
-
-    public function getFormattedRewardPointsAttribute()
-    {
-        return number_format($this->reward_points);
-    }
-
-    public function getOrderCountAttribute()
-    {
-        return $this->orders()->count();
-    }
-
-    public function getTotalSpentAttribute()
-    {
-        return $this->orders()
-            ->where('order_status', 'delivered')
-            ->sum('grand_total');
-    }
-
-    public function getPendingOrdersCountAttribute()
-    {
-        return $this->orders()
-            ->whereIn('order_status', ['pending', 'processing'])
-            ->count();
-    }
-
-    public function getIsActiveAttribute()
-    {
-        return $this->status === true;
-    }
-
-    public function getCartTotalAttribute()
-    {
-        return $this->carts()->sum('price');
-    }
-
-    public function getCartCountAttribute()
-    {
-        return $this->carts()->count();
-    }
-
-    /**
-     * Available coins (defensive default if null)
-     */
-    public function getAvailableCoinsAttribute()
-    {
-        return $this->reward_points ?? 0;
-    }
-
-    /**
-     * Points value in currency, using the configured redeem rate.
-     */
-    public function getCoinsValueAttribute()
-    {
-        $redeemRate = \App\Helpers\RewardHelper::getRedeemRate();
-        return $redeemRate > 0 ? $this->reward_points / $redeemRate : 0;
-    }
-
-    public function getTotalCoinsEarnedAttribute()
-    {
-        return $this->rewardTransactions()->where('type', 'earned')->sum('points');
-    }
-
-    public function getTotalCoinsRedeemedAttribute()
-    {
-        return $this->rewardTransactions()->where('type', 'redeemed')->sum('points');
-    }
-
-    // Kept for backward compatibility with older callers
-    public function getTotalPointsEarnedAttribute()
-    {
-        return $this->getTotalCoinsEarnedAttribute();
-    }
-
-    public function getTotalPointsRedeemedAttribute()
-    {
-        return $this->getTotalCoinsRedeemedAttribute();
-    }
-
-    public function getPointsValueAttribute()
-    {
-        return $this->reward_points;
-    }
-
-    public function getAddressCountAttribute()
-    {
-        return $this->addresses()->count();
-    }
-
-    // ============ MUTATORS ============
-
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
-    public function setPhoneAttribute($value)
-    {
-        $this->attributes['phone'] = preg_replace('/[^0-9+]/', '', $value);
-    }
-
     // ============ REWARD POINT METHODS ============
 
-    /**
-     * ⚠️ FIX #2: Race-condition-safe coin methods.
-     * Previously this did `$this->reward_points += $points; $this->save();`,
-     * which could lose an update under concurrent requests (e.g. two orders
-     * marked delivered at the same time). Now uses a DB transaction with a
-     * row lock and an atomic increment/decrement so concurrent requests
-     * always see a correct balance.
-     */
     public function addRewardPoints($points, $remarks = null, $orderId = null)
     {
         return DB::transaction(function () use ($points, $orderId, $remarks) {
             $user = static::query()->lockForUpdate()->findOrFail($this->id);
-
             $user->increment('reward_points', $points);
-
-            // Keep the current instance in sync for the caller
             $this->reward_points = $user->fresh()->reward_points;
 
             return $this->rewardTransactions()->create([
@@ -232,7 +231,6 @@ class User extends Authenticatable
             }
 
             $user->decrement('reward_points', $points);
-
             $this->reward_points = $user->fresh()->reward_points;
 
             return $this->rewardTransactions()->create([
@@ -244,7 +242,6 @@ class User extends Authenticatable
         });
     }
 
-    // Aliases matching the shorter naming used elsewhere in the codebase
     public function addCoins($points, $orderId = null, $remarks = null)
     {
         return $this->addRewardPoints($points, $remarks, $orderId);

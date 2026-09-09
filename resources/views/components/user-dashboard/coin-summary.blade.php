@@ -26,7 +26,7 @@
             <p class="text-2xl font-bold text-blue-700" id="coin-total-earned">{{ number_format($coinSummary['total_earned']) }}</p>
         </div>
 
-        
+
         <div class="bg-red-50 rounded-xl p-3 text-center">
             <p class="text-xs text-red-600">Total Redeemed</p>
             <p class="text-2xl font-bold text-red-700" id="coin-total-redeemed">{{ number_format($coinSummary['total_redeemed']) }}</p>

@@ -2,11 +2,7 @@
     <section class="bg-slate-100 min-h-screen py-8">
         <div class="Container mx-auto">
 
-            {{-- ✅ FIX: was `flex flex-col lg:flex-row`, but the aside/main
-                 below use `col-span-3` / `col-span-9` — those utilities only
-                 work inside a `grid` container, not a `flex` one. Switched
-                 back to `grid grid-cols-12` so the sidebar/main split
-                 actually applies (matches the rest of the dashboard). --}}
+          
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                 <!-- Sidebar -->
@@ -26,7 +22,7 @@
                         :total-spent="$totalSpent"
                     />
 
-                   
+
                     <x-user-dashboard.coin-summary
                         :coin-summary="$coinSummary"
                         :recent-transactions="$recentTransactions"

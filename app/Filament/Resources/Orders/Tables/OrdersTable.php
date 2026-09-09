@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Filament\Resources\Orders\Tables;
 
 use App\Models\OrderTracking;
@@ -22,7 +21,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-
 
 class OrdersTable
 {
@@ -59,10 +57,29 @@ class OrdersTable
                     ->limit(25)
                     ->toggleable(),
 
+                // ✅ FIX: Latest tracking number from order_trackings
                 TextColumn::make('tracking_number')
                     ->label('Tracking')
+                    ->limit(20)
+                    ->toggleable()
+                    ->getStateUsing(function ($record) {
+                        // Get latest tracking record
+                        $latest = $record->trackings()->latest('status_date')->first();
+                        return $latest?->tracking_number ?? $record->tracking_number ?? '-';
+                    })
+                    ->badge()
+                    ->color(fn($state) => $state !== '-' ? 'success' : 'gray')
+                    ->formatStateUsing(fn($state) => $state === '-' ? '-' : $state),
+
+                // ✅ FIX: Latest courier name from order_trackings
+                TextColumn::make('courier_name')
+                    ->label('Courier')
                     ->limit(15)
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->getStateUsing(function ($record) {
+                        $latest = $record->trackings()->latest('status_date')->first();
+                        return $latest?->courier_name ?? $record->courier_name ?? '-';
+                    }),
 
                 TextColumn::make('grand_total')
                     ->label('Total')
@@ -128,7 +145,6 @@ class OrdersTable
                     ->label('Edit')
                     ->icon('heroicon-o-pencil-square')
                     ->color('warning'),
-
 
                 Action::make('updateTracking')
                     ->label('Update Tracking')
@@ -231,11 +247,20 @@ class OrdersTable
                             ->label('')
                             ->content(function () use ($record) {
                                 $history = '';
-                                foreach ($record->trackings()->latest('status_date')->get() as $track) {
-                                    $history .= "• " . $track->status_date->format('d M Y, h:i A') . " - ";
-                                    $history .= ucfirst($track->status) . " at " . ($track->location ?? 'N/A') . "\n";
+                                $trackings = $record->trackings()->latest('status_date')->get();
+
+                                if ($trackings->isEmpty()) {
+                                    return 'No tracking history available.';
                                 }
-                                return $history ?: 'No tracking history available.';
+
+                                foreach ($trackings as $track) {
+                                    $trackingNum = $track->tracking_number ?? 'N/A';
+                                    $courier = $track->courier_name ?? 'N/A';
+                                    $history .= "• " . $track->status_date->format('d M Y, h:i A') . " - ";
+                                    $history .= ucfirst($track->status) . " at " . ($track->location ?? 'N/A');
+                                    $history .= " (Tracking: {$trackingNum}, Courier: {$courier})\n";
+                                }
+                                return $history;
                             }),
                     ])
                     ->modalSubmitAction(false),

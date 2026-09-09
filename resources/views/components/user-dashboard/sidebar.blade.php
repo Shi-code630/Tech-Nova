@@ -20,18 +20,23 @@
         <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-white
             flex items-center justify-center shadow-lg">
 
-            @if (auth()->user()->image)
-                <img src="{{ asset('storage/' . auth()->user()->image) }}" alt="{{ auth()->user()->name }}"
-                    class="w-16 h-16 rounded-full object-cover border-2 border-white shadow">
+            @php
+                $user = auth()->user();
+                $imagePath = $user->image ?? null;
+                $hasImage = $imagePath && file_exists(public_path('storage/' . $imagePath));
+            @endphp
+
+            @if($hasImage)
+                <img src="{{ asset('storage/' . $imagePath) }}"
+                     alt="{{ $user->name }}"
+                     class="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
+                     onerror="this.style.display='none'; this.parentElement.innerHTML = `<div class='w-16 h-16 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-white text-2xl font-bold'>{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>`;">
             @else
-                <div
-                    class="w-16 h-16 rounded-full
-                   bg-gradient-to-br from-[#F59E0B] to-[#D97706]
-                   flex items-center justify-center
-                   text-white text-2xl font-bold">
-
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-
+                <div class="w-16 h-16 rounded-full
+                       bg-gradient-to-br from-[#F59E0B] to-[#D97706]
+                       flex items-center justify-center
+                       text-white text-2xl font-bold">
+                    {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
                 </div>
             @endif
 
@@ -49,11 +54,10 @@
 
     </div>
 
-
     <!-- =========================
          NAVIGATION
     ========================== -->
-    <nav class="flex-1 py-5 px-3 ">
+    <nav class="flex-1 py-5 px-3 overflow-y-auto">
 
         <!-- Dashboard -->
         <a href="{{ route('user.dashboard') }}"
@@ -73,7 +77,6 @@
 
         </a>
 
-
         <!-- Profile -->
         <a href="{{ route('user.profile') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
@@ -91,7 +94,6 @@
             </span>
 
         </a>
-
 
         <!-- My Orders -->
         <a href="{{ route('user.orders') }}"
@@ -111,7 +113,6 @@
 
         </a>
 
-
         <!-- Wishlist -->
         <a href="{{ route('user.wishlist') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
@@ -129,7 +130,6 @@
             </span>
 
         </a>
-
 
         <!-- Cart -->
         <a href="{{ route('user.cart') }}"
@@ -149,12 +149,11 @@
 
         </a>
 
-
         <!-- Address -->
-        <a href="{{ route('checkout.addresses') }}"
+        <a href="{{ route('user.addresses') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
                    transition-all duration-200
-                   {{ request()->routeIs('checkout.addresses')
+                   {{ request()->routeIs('user.addresses')
                        ? 'bg-white/20 font-semibold shadow-sm'
                        : 'text-white/90 hover:bg-white/10 hover:text-white' }}">
 
@@ -167,7 +166,6 @@
             </span>
 
         </a>
-
 
         <!-- Reviews -->
         <a href="{{ route('user.reviews') }}"
@@ -187,7 +185,6 @@
 
         </a>
 
-
         <!-- Coupons -->
         <a href="{{ route('user.coupons') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
@@ -206,7 +203,6 @@
 
         </a>
 
-
         <!-- Settings -->
         <a href="{{ route('user.settings') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
@@ -224,10 +220,11 @@
             </span>
 
         </a>
+
         <!-- =========================
-         LOGOUT
-    ========================== -->
-        <div>
+             LOGOUT
+        ========================== -->
+        <div class="mt-4 pt-4 border-t border-white/20">
 
             <form method="POST" action="{{ route('logout') }}">
 
@@ -239,7 +236,7 @@
                        hover:bg-[#DC2626]
                        text-white
                        font-semibold
-                       py-2
+                       py-2.5
                        rounded-xl
                        transition-all
                        duration-200
@@ -262,9 +259,7 @@
             </form>
 
         </div>
+
     </nav>
-
-
-
 
 </aside>
