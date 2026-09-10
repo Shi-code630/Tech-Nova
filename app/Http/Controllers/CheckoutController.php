@@ -595,7 +595,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Coupon helpers (from remote branch).
+     * Coupon helpers (from remote branch)
      */
     private function rememberCoupon($user, string $code, float $subtotal): void
     {
