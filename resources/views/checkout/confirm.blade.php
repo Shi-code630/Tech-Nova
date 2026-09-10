@@ -161,6 +161,14 @@
                         </div>
                     @endif
 
+                @if (!empty($couponCode))
+                    <div class="mt-4 border rounded-xl p-4">
+                        <h2 class="font-semibold text-lg">Coupon</h2>
+                        <p class="text-gray-600 mt-2">{{ $couponCode }}</p>
+                        <p class="text-green-600 text-sm">- Rs {{ number_format($couponDiscount ?? 0, 2) }}</p>
+                    </div>
+                @endif
+
                     <button
                         type="submit"
                         class="mt-6 w-full bg-[#2563EB] hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition">

@@ -77,10 +77,6 @@ Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name
 Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 
-
-// ==================== CAREERS ✅ ====================
-Route::get('/careers', [PageController::class, 'careers'])->name('careers');
-
 /*
 |--------------------------------------------------------------------------
 | Authenticated Routes
@@ -152,8 +148,7 @@ Route::middleware(['auth'])->group(function () {
     | Addresses
     |----------------------------------------------------------------------
     */
-    // ✅ Single route with both names
-    Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('user.addresses');
+    // Single route with a single name (avoids duplicate URL registration)
     Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('checkout.addresses');
 
     // Address CRUD
