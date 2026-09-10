@@ -77,6 +77,10 @@ Route::get('/terms-of-service', [PageController::class, 'termsofservice'])->name
 Route::get('/warranty-policy', [PageController::class, 'warrantypolicy'])->name('warranty-policy');
 Route::get('/careers', [PageController::class, 'careers'])->name('careers');
 
+
+// ==================== CAREERS ✅ ====================
+Route::get('/careers', [PageController::class, 'careers'])->name('careers');
+
 /*
 |--------------------------------------------------------------------------
 | Authenticated Routes
@@ -151,7 +155,7 @@ Route::middleware(['auth'])->group(function () {
     // ✅ Single route with both names
     Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('user.addresses');
     Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('checkout.addresses');
-    
+
     // Address CRUD
     Route::delete('/my-addresses/{id}', [CheckoutController::class, 'deleteAddress'])->name('checkout.address.delete');
     Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])->name('checkout.address.create');
