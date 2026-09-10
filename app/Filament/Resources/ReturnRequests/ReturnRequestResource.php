@@ -2,7 +2,10 @@
 
 namespace App\Filament\Resources\ReturnRequests;
 
+use App\Filament\Resources\ReturnRequests\Pages\CreateReturnRequest;
+use App\Filament\Resources\ReturnRequests\Pages\EditReturnRequest;
 use App\Filament\Resources\ReturnRequests\Pages\ListReturnRequests;
+use App\Filament\Resources\ReturnRequests\Schemas\ReturnRequestForm;
 use App\Filament\Resources\ReturnRequests\Tables\ReturnRequestsTable;
 use App\Models\ReturnRequest;
 use BackedEnum;
@@ -48,7 +51,7 @@ class ReturnRequestResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return $schema->components([]);
+        return ReturnRequestForm::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -65,6 +68,8 @@ class ReturnRequestResource extends Resource
     {
         return [
             'index' => ListReturnRequests::route('/'),
+            'create' => CreateReturnRequest::route('/create'),
+            'edit' => EditReturnRequest::route('/{record}/edit'),
         ];
     }
 }

@@ -65,14 +65,14 @@
                                             <span class="font-semibold text-green-600">🎉 Free Delivery!</span>
                                         @else
                                             Delivery charges apply based on your order value.
-                                            <a href="{{ route('user.addresses') }}" class="font-medium text-blue-600 hover:underline">
+                                            <a href="{{ route('checkout.addresses') }}" class="font-medium text-blue-600 hover:underline">
                                                 Update your address
                                             </a>
                                         @endif
                                     @else
                                         <strong>Outside Kathmandu Valley</strong> —
                                         <span class="text-yellow-600">Delivery charges may be higher.</span>
-                                        <a href="{{ route('user.addresses') }}" class="font-medium text-blue-600 hover:underline">
+                                        <a href="{{ route('checkout.addresses') }}" class="font-medium text-blue-600 hover:underline">
                                             Update your address
                                         </a>
                                     @endif

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class CartController extends Controller
 {
@@ -19,9 +21,14 @@ class CartController extends Controller
      */
     private const VALLEY_DISTRICTS = ['kathmandu', 'lalitpur', 'bhaktapur'];
     private const VALLEY_CITIES = [
-        'kathmandu', 'lalitpur', 'bhaktapur',
-        'patan', 'kirtipur', 'madhyapur thimi',
-        'thimi', 'madhyapur'
+        'kathmandu',
+        'lalitpur',
+        'bhaktapur',
+        'patan',
+        'kirtipur',
+        'madhyapur thimi',
+        'thimi',
+        'madhyapur'
     ];
 
     /**
@@ -63,7 +70,7 @@ class CartController extends Controller
             'deliveryCharge',
             'total',
             'isInsideValley',
-            'taxRate' // Added this missing variable
+            'taxRate'
         ));
     }
 
@@ -74,62 +81,96 @@ class CartController extends Controller
     {
         $request->validate([
             'quantity' => 'required|integer|min:1|max:10',
-            'variant_id' => 'nullable|exists:variants,id'
+            // Table is "product_variants" (not "variants"), and the variant
+            // must actually belong to the product being added.
+            'variant_id' => [
+                'nullable',
+                Rule::exists('product_variants', 'id')->where(
+                    fn($query) => $query->where('product_id', $productId)
+                ),
+            ],
         ]);
 
-        $user = $request->user();
-        $product = Product::findOrFail($productId);
-        $quantity = (int) $request->quantity;
+        try {
+            $user = $request->user();
+            $product = Product::findOrFail($productId);
+            $quantity = (int) $request->quantity;
 
-        // Check if product is active
-        if (!$product->is_active) {
-            return $this->redirectBackWithError(
-                'This product is currently not available.'
-            );
-        }
-
-        // Check stock
-        if ($product->stock < $quantity) {
-            return $this->redirectBackWithError(
-                'Not enough stock available. Only ' . $product->stock . ' items left.'
-            );
-        }
-
-        $variantId = $request->variant_id;
-        $cart = $this->getCartItem(
-            $user->id,
-            $product->id,
-            $variantId
-        );
-
-        if ($cart) {
-            $newQuantity = $cart->quantity + $quantity;
-
-            // Check stock again
-            if ($newQuantity > $product->stock) {
+            // Product active check
+            if ($product->status !== 'active') {
                 return $this->redirectBackWithError(
-                    'You cannot add more than the available stock.'
+                    'This product is currently not available.'
                 );
             }
 
-            $cart->update([
-                'quantity' => $newQuantity,
-                'price' => $this->getProductPrice($product),
-            ]);
+            $variantId = $request->variant_id;
+            $variant = $variantId
+                ? ProductVariant::where('id', $variantId)
+                    ->where('product_id', $product->id)
+                    ->first()
+                : null;
 
-        } else {
-            $this->createCartItem(
+            if ($variantId && !$variant) {
+                return $this->redirectBackWithError(
+                    'Selected variant is no longer available.'
+                );
+            }
+
+            if ($variant && !$variant->status) {
+                return $this->redirectBackWithError(
+                    'This variant is currently not available.'
+                );
+            }
+
+            // Stock check — variant stock when a variant is selected,
+            // product stock otherwise.
+            $availableStock = $this->getEffectiveStock($product, $variant);
+
+            if ($availableStock < $quantity) {
+                return $this->redirectBackWithError(
+                    'Not enough stock available. Only ' . $availableStock . ' items left.'
+                );
+            }
+
+            $cart = $this->getCartItem(
                 $user->id,
                 $product->id,
-                $variantId,
-                $quantity,
-                $product
+                $variantId
             );
-        }
 
-        return redirect()
-            ->route('user.cart')
-            ->with('success', 'Product added to cart successfully.');
+            if ($cart) {
+                $newQuantity = $cart->quantity + $quantity;
+
+                if ($newQuantity > $availableStock) {
+                    return $this->redirectBackWithError(
+                        'You cannot add more than the available stock.'
+                    );
+                }
+
+                $cart->update([
+                    'quantity' => $newQuantity,
+                    'price' => $this->getEffectivePrice($product, $variant),
+                ]);
+            } else {
+                $this->createCartItem(
+                    $user->id,
+                    $product->id,
+                    $variantId,
+                    $quantity,
+                    $product,
+                    $variant
+                );
+            }
+
+            return redirect()
+                ->route('user.cart')
+                ->with('success', 'Product added to cart successfully.');
+
+        } catch (\Exception $e) {
+            Log::error('Add to cart error: ' . $e->getMessage());
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            return back()->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -165,10 +206,13 @@ class CartController extends Controller
 
         $quantity = (int) $request->quantity;
 
-        if ($quantity > $cartItem->product->stock) {
+        // Variant stock when the cart line has a variant, product stock otherwise.
+        $availableStock = $this->getEffectiveStock($cartItem->product, $cartItem->variant);
+
+        if ($quantity > $availableStock) {
             return $this->redirectBackWithError(
                 'You cannot add more than the available stock. Only ' .
-                $cartItem->product->stock . ' items available.'
+                    $availableStock . ' items available.'
             );
         }
 
@@ -217,7 +261,7 @@ class CartController extends Controller
     private function calculateSubtotal($cartItems): float
     {
         return (float) $cartItems->sum(
-            fn ($item) => $item->price * $item->quantity
+            fn($item) => $item->price * $item->quantity
         );
     }
 
@@ -238,7 +282,6 @@ class CartController extends Controller
         $district = strtolower(trim($address->district ?? ''));
         $city = strtolower(trim($address->city ?? ''));
 
-        // Check exact matches first (more reliable)
         if (in_array($district, self::VALLEY_DISTRICTS)) {
             return true;
         }
@@ -247,7 +290,6 @@ class CartController extends Controller
             return true;
         }
 
-        // Fallback to partial match for cases like "Kathmandu-01"
         foreach (self::VALLEY_DISTRICTS as $valleyDistrict) {
             if (str_contains($district, $valleyDistrict)) {
                 return true;
@@ -302,10 +344,26 @@ class CartController extends Controller
     }
 
     /**
-     * Get product price (discount price when available).
+     * Get the stock that actually applies to this cart line —
+     * the variant's stock when a variant is selected, the product's
+     * own stock otherwise. Matches how CheckoutController decrements stock.
      */
-    private function getProductPrice($product): float
+    private function getEffectiveStock($product, ?ProductVariant $variant): int
     {
+        return $variant ? (int) $variant->stock : (int) $product->stock;
+    }
+
+    /**
+     * Get the price that actually applies to this cart line —
+     * the variant's own price when a variant is selected and priced,
+     * otherwise the product's discount price (or regular price).
+     */
+    private function getEffectivePrice($product, ?ProductVariant $variant): float
+    {
+        if ($variant && $variant->price > 0) {
+            return (float) $variant->price;
+        }
+
         return (float) ($product->discount_price ?? $product->price);
     }
 
@@ -331,14 +389,15 @@ class CartController extends Controller
         int $productId,
         ?int $variantId,
         int $quantity,
-        $product
+        $product,
+        ?ProductVariant $variant = null
     ): void {
         Cart::create([
             'user_id' => $userId,
             'product_id' => $productId,
             'variant_id' => $variantId,
             'quantity' => $quantity,
-            'price' => $this->getProductPrice($product),
+            'price' => $this->getEffectivePrice($product, $variant),
         ]);
     }
 
@@ -355,7 +414,7 @@ class CartController extends Controller
     }
 
     /**
-     * Get user's cart item with product relation.
+     * Get user's cart item with product and variant relations.
      */
     private function getUserCartItemWithProduct(
         int $userId,
@@ -363,7 +422,7 @@ class CartController extends Controller
     ) {
         return Cart::where('id', $cartId)
             ->where('user_id', $userId)
-            ->with('product')
+            ->with(['product', 'variant'])
             ->firstOrFail();
     }
 
@@ -374,6 +433,4 @@ class CartController extends Controller
     {
         return back()->with('error', $message);
     }
-
-
 }

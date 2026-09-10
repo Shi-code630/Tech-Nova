@@ -150,10 +150,10 @@
         </a>
 
         <!-- Address -->
-        <a href="{{ route('user.addresses') }}"
+        <a href="{{ route('checkout.addresses') }}"
             class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
                    transition-all duration-200
-                   {{ request()->routeIs('user.addresses')
+                   {{ request()->routeIs('checkout.addresses')
                        ? 'bg-white/20 font-semibold shadow-sm'
                        : 'text-white/90 hover:bg-white/10 hover:text-white' }}">
 

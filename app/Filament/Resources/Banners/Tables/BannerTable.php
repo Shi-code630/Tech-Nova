@@ -10,6 +10,7 @@ use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
@@ -24,6 +25,13 @@ class BannerTable
                     ->square()
                     ->size(60)
                     ->defaultImageUrl(fn($record) => $record->image ? asset('storage/' . $record->image) : null),
+
+                TextColumn::make('type')
+                    ->label('Type')
+                    ->badge()
+                    ->color(fn(string $state) => $state === 'main' ? 'primary' : 'gray')
+                    ->formatStateUsing(fn(string $state) => $state === 'main' ? 'Main' : 'Small')
+                    ->sortable(),
 
                 TextColumn::make('title')
                     ->label('Title')
@@ -69,6 +77,13 @@ class BannerTable
             ])
             ->defaultSort('sort_order', 'asc')
             ->filters([
+                SelectFilter::make('type')
+                    ->label('Banner Type')
+                    ->options([
+                        'main' => 'Main',
+                        'small' => 'Small',
+                    ]),
+
                 TernaryFilter::make('status')
                     ->label('Active Status')
                     ->placeholder('All Banners')
@@ -109,7 +124,6 @@ class BannerTable
                         ->modalDescription('Are you sure you want to delete the selected banners? This action cannot be undone.'),
                 ]),
             ])
-            ->defaultSort('sort_order', 'asc')
             ->striped()
             ->paginated([10, 25, 50, 100])
             ->searchable();

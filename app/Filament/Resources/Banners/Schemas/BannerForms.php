@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Banners\Schemas;
 
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -21,6 +22,17 @@ class BannerForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
+                                Radio::make('type')
+                                    ->label('Banner Type')
+                                    ->options([
+                                        'main' => 'Main Banner (homepage hero, 1920x600)',
+                                        'small' => 'Small Banner (body/promo, 800x400)',
+                                    ])
+                                    ->default('main')
+                                    ->required()
+                                    ->columnSpanFull()
+                                    ->inline(),
+
                                 TextInput::make('title')
                                     ->label('Title')
                                     ->required()
@@ -65,7 +77,7 @@ class BannerForm
                                     ->imageResizeTargetHeight('600')
                                     ->imageResizeUpscale(false)
                                     ->required()
-                                    ->helperText('Recommended: 1920 x 600px (16:5 aspect ratio). Max 5MB. Supports JPG, PNG, WEBP.'),
+                                    ->helperText('Main banner: 1920 x 600px (16:5). Small banner: upload at roughly 800 x 400px (2:1) instead — this field does not auto-crop differently per type, so just size the source image accordingly. Max 5MB. Supports JPG, PNG, WEBP.'),
                             ]),
                     ]),
 
@@ -78,7 +90,7 @@ class BannerForm
                                     ->numeric()
                                     ->default(0)
                                     ->minValue(0)
-                                    ->helperText('Lower numbers appear first'),
+                                    ->helperText('Lower numbers appear first, within the same banner type'),
 
                                 Toggle::make('status')
                                     ->label('Active')

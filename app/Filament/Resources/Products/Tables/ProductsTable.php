@@ -17,9 +17,28 @@ use Filament\Tables\Table;
 
 class ProductsTable
 {
+   
+    protected static function effectiveStockSql(): string
+    {
+        return '
+            CASE
+                WHEN (SELECT COUNT(*) FROM product_variants WHERE product_variants.product_id = products.id) > 0
+                THEN (SELECT COALESCE(SUM(stock), 0) FROM product_variants WHERE product_variants.product_id = products.id)
+                ELSE products.stock
+            END
+        ';
+    }
+
     public static function configure(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(
+                fn ($query) => $query
+                    ->withCount('variants')
+                    ->selectRaw(self::effectiveStockSql() . ' as effective_stock')
+            )
+       
+            ->poll('15s')
             ->columns([
 
                 ImageColumn::make('thumbnails')
@@ -65,16 +84,22 @@ class ProductsTable
                     ->money('Rs.')
                     ->sortable(),
 
-                TextColumn::make('stock')
+                
+                TextColumn::make('effective_stock')
                     ->label('Stock')
                     ->numeric()
                     ->sortable()
+                    ->tooltip(
+                        fn ($record) => $record->variants_count > 0
+                            ? 'Sum of stock across ' . $record->variants_count . ' variant(s)'
+                            : 'Product stock (no variants)'
+                    )
                     ->color(
                         fn ($record) =>
-                            $record->stock > 10
+                            $record->effective_stock > 10
                                 ? 'success'
                                 : (
-                                    $record->stock > 0
+                                    $record->effective_stock > 0
                                         ? 'warning'
                                         : 'danger'
                                 )
@@ -82,10 +107,8 @@ class ProductsTable
 
                 TextColumn::make('variants_count')
                     ->label('Variants')
-                    ->counts('variants')
                     ->badge()
-                    ->color('info')
-                    ->sortable(),
+                    ->color('info'),
 
                 TextColumn::make('status')
                     ->label('Status')
@@ -140,17 +163,19 @@ class ProductsTable
                     ->trueLabel('Featured Only')
                     ->falseLabel('Non-Featured Only'),
 
-                TernaryFilter::make('stock')
+                // Now checks the SAME variant-aware stock as the column
+                // above, instead of the raw products.stock column.
+                TernaryFilter::make('stock_status')
                     ->label('Stock Status')
                     ->placeholder('All Stock Levels')
                     ->trueLabel('In Stock')
                     ->falseLabel('Out of Stock')
                     ->queries(
                         true: fn ($query) =>
-                            $query->where('stock', '>', 0),
+                            $query->whereRaw(self::effectiveStockSql() . ' > 0'),
 
                         false: fn ($query) =>
-                            $query->where('stock', '=', 0),
+                            $query->whereRaw(self::effectiveStockSql() . ' <= 0'),
                     ),
             ])
 

@@ -17,12 +17,22 @@ class Banner extends Model
         'image',
         'status',
         'sort_order',
+        'type',
         'alt_text'
     ];
 
     protected $casts = [
         'status' => 'boolean'
     ];
+    public function scopeMain($query)
+    {
+        return $query->where('type', 'main');
+    }
+
+    public function scopeSmall($query)
+    {
+        return $query->where('type', 'small');
+    }
 
     // Scopes
     public function scopeActive($query)
