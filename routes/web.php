@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -143,15 +144,18 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
 
+    // Coupon apply/remove during checkout
+    Route::post('/checkout/coupon', [CouponController::class, 'apply'])->name('checkout.coupon.apply');
+    Route::delete('/checkout/coupon', [CouponController::class, 'remove'])->name('checkout.coupon.remove');
+
     /*
     |----------------------------------------------------------------------
     | Addresses
     |----------------------------------------------------------------------
     */
-    // ✅ Single route with both names
-    Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('user.addresses');
+    // Single route (duplicate URL avoided)
     Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('checkout.addresses');
-    
+
     // Address CRUD
     Route::delete('/my-addresses/{id}', [CheckoutController::class, 'deleteAddress'])->name('checkout.address.delete');
     Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])->name('checkout.address.create');
@@ -164,28 +168,15 @@ Route::middleware(['auth'])->group(function () {
     | Wishlist / Reviews / Coupons / Settings / Coins
     |----------------------------------------------------------------------
     */
-    Route::get('/wishlist', function () {
-        return view('user.wishlist.index');
-    })->name('user.wishlist');
+    Route::get('/wishlist', [UserDashboardController::class, 'wishlist'])->name('user.wishlist');
 
     Route::get('/reviews', [UserDashboardController::class, 'reviews'])->name('user.reviews');
 
-    Route::get('/coupons', function () {
-        return view('user.coupons.index');
-    })->name('user.coupons');
+    Route::get('/coupons', [CouponController::class, 'index'])->name('user.coupons');
 
-    Route::get('/settings', function () {
-        return view('user.settings');
-    })->name('user.settings');
+    Route::get('/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
 
-    Route::get('/coins', function () {
-        $user = request()->user();
-
-        return view('user.coins.index', [
-            'coinSummary' => \App\Helpers\RewardHelper::getUserCoinsSummary($user),
-            'transactions' => $user->rewardTransactions()->latest()->paginate(20),
-        ]);
-    })->name('user.coins');
+    Route::get('/coins', [UserDashboardController::class, 'coins'])->name('user.coins');
 
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])->name('user.coins.live');
 });
