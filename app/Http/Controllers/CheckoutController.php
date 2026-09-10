@@ -14,6 +14,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
 use App\Models\Cart;
+use App\Models\Coupon;
 
 class CheckoutController extends Controller
 {
@@ -27,7 +28,7 @@ class CheckoutController extends Controller
             return redirect()->route('user.cart')->with('error', 'Your cart is empty.');
         }
 
-        $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
+        $subtotal = $cartItems->sum(fn ($item) => $item->price * $item->quantity);
         $deliveryCharge = 100;
         $tax = $subtotal * 0.13;
         $addresses = $user->addresses()->latest()->get();
@@ -35,6 +36,12 @@ class CheckoutController extends Controller
         $coinSummary = RewardHelper::getUserCoinsSummary($user);
         $maxRedeemPoints = RewardHelper::getMaxRedeemCoins($user, $subtotal);
         $maxPointsDiscount = RewardHelper::calculateDiscount($maxRedeemPoints);
+
+        if ($request->filled('coupon')) {
+            $this->rememberCoupon($user, $request->coupon, $subtotal);
+        }
+
+        [$appliedCoupon, $couponDiscount] = $this->currentCoupon($user, $subtotal);
 
         return view('checkout.index', compact(
             'cartItems',
@@ -44,7 +51,9 @@ class CheckoutController extends Controller
             'addresses',
             'coinSummary',
             'maxRedeemPoints',
-            'maxPointsDiscount'
+            'maxPointsDiscount',
+            'appliedCoupon',
+            'couponDiscount'
         ));
     }
 
@@ -137,6 +146,7 @@ class CheckoutController extends Controller
             'address_id' => 'required|exists:addresses,id',
             'payment_method' => 'required|in:cod,online',
             'redeem_points' => 'nullable|integer|min:0',
+            'coupon_code' => 'nullable|string|max:50',
         ]);
 
         $user = $request->user();
@@ -147,11 +157,13 @@ class CheckoutController extends Controller
             return redirect()->route('user.cart')->with('error', 'Your cart is empty.');
         }
 
-        $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
+        $subtotal = $cartItems->sum(fn ($item) => $item->price * $item->quantity);
         $deliveryCharge = 100;
         $tax = $subtotal * 0.13;
 
-        // Coin redemption
+        $couponCode = $validated['coupon_code'] ?? session('applied_coupon.code');
+        [$coupon, $couponDiscount] = $this->resolveCouponOrFail($user, $couponCode, $subtotal);
+
         $redeemPoints = (int) ($validated['redeem_points'] ?? 0);
         $pointsDiscount = 0;
 
@@ -159,7 +171,7 @@ class CheckoutController extends Controller
             $maxPoints = RewardHelper::getMaxRedeemCoins($user, $subtotal);
 
             if ($redeemPoints > $maxPoints) {
-                return back()->with('error', "You can redeem a maximum of " . number_format($maxPoints) . " coins.");
+                return back()->with('error', 'You can redeem a maximum of ' . number_format($maxPoints) . ' coins.');
             }
 
             if (!$user->hasEnoughCoins($redeemPoints)) {
@@ -169,13 +181,20 @@ class CheckoutController extends Controller
             $pointsDiscount = RewardHelper::calculateDiscount($redeemPoints);
         }
 
-        $discount = round($pointsDiscount, 2);
+        $discount = round($couponDiscount + $pointsDiscount, 2);
+        if ($discount > $subtotal) {
+            $discount = $subtotal;
+        }
+
         $grandTotal = round($subtotal - $discount + $deliveryCharge + $tax, 2);
 
         session()->put('checkout_confirmation', [
             'address_id' => $address->id,
             'payment_method' => $validated['payment_method'],
             'subtotal' => $subtotal,
+            'coupon_id' => $coupon?->id,
+            'coupon_code' => $coupon?->code,
+            'coupon_discount' => $couponDiscount,
             'redeem_points' => $redeemPoints,
             'points_discount' => $pointsDiscount,
             'discount' => $discount,
@@ -206,6 +225,8 @@ class CheckoutController extends Controller
             'address' => $address,
             'paymentMethod' => $checkout['payment_method'],
             'subtotal' => $checkout['subtotal'],
+            'couponCode' => $checkout['coupon_code'] ?? null,
+            'couponDiscount' => $checkout['coupon_discount'] ?? 0,
             'redeemPoints' => $checkout['redeem_points'] ?? 0,
             'pointsDiscount' => $checkout['points_discount'] ?? 0,
             'discount' => $checkout['discount'],
@@ -215,18 +236,21 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function placeOrder(Request $request)
+   public function placeOrder(Request $request)
     {
         $validated = $request->validate([
             'address_id' => 'required|exists:addresses,id',
             'payment_method' => 'required|in:cod,online',
             'transaction_id' => ['nullable', 'string', 'max:100', 'required_if:payment_method,online'],
             'payment_screenshot' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120', 'required_if:payment_method,online'],
+            'coupon_code' => 'nullable|string|max:50',
+            'redeem_points' => 'nullable|integer|min:0',
         ]);
 
         $user = $request->user();
         $checkout = session('checkout_confirmation', []);
-        $redeemPoints = (int) ($checkout['redeem_points'] ?? 0);
+        $redeemPoints = (int) ($validated['redeem_points'] ?? $checkout['redeem_points'] ?? 0);
+        $couponCode = $validated['coupon_code'] ?? $checkout['coupon_code'] ?? session('applied_coupon.code');
 
         $paymentScreenshotPath = null;
         if ($validated['payment_method'] === 'online' && $request->hasFile('payment_screenshot')) {
@@ -245,7 +269,6 @@ class CheckoutController extends Controller
         try {
             $subtotal = 0;
 
-            // Validate stock and calculate subtotal
             foreach ($cartItems as $item) {
                 if (!$item->product) {
                     throw new \Exception('One of the products in your cart is no longer available.');
@@ -267,14 +290,15 @@ class CheckoutController extends Controller
                 $subtotal += $item->price * $item->quantity;
             }
 
-            // Coin redemption (re-validated)
+            [$coupon, $couponDiscount] = $this->resolveCouponOrFail($user, $couponCode, $subtotal);
+
             $pointsDiscount = 0;
 
             if ($redeemPoints > 0) {
                 $maxPoints = RewardHelper::getMaxRedeemCoins($user, $subtotal);
 
                 if ($redeemPoints > $maxPoints) {
-                    throw new \Exception("You can redeem a maximum of " . number_format($maxPoints) . " coins.");
+                    throw new \Exception('You can redeem a maximum of ' . number_format($maxPoints) . ' coins.');
                 }
 
                 if (!$user->hasEnoughCoins($redeemPoints)) {
@@ -286,19 +310,20 @@ class CheckoutController extends Controller
 
             $deliveryCharge = 100;
             $tax = $subtotal * 0.13;
-            $discount = round($pointsDiscount, 2);
+            $discount = round($couponDiscount + $pointsDiscount, 2);
+            if ($discount > $subtotal) {
+                $discount = $subtotal;
+            }
             $grandTotal = round($subtotal - $discount + $deliveryCharge + $tax, 2);
 
-            // Generate order number
             do {
                 $orderNumber = 'TN-' . strtoupper(Str::random(10));
             } while (Order::where('order_number', $orderNumber)->exists());
 
-            // Create order
             $order = Order::create([
                 'user_id' => $user->id,
                 'address_id' => $address->id,
-                'coupon_id' => null,
+                'coupon_id' => $coupon?->id,
                 'order_number' => $orderNumber,
                 'subtotal' => $subtotal,
                 'discount' => $discount,
@@ -317,7 +342,6 @@ class CheckoutController extends Controller
                 'points_earned' => 0,
             ]);
 
-            // Create payment record
             Payment::create([
                 'order_id' => $order->id,
                 'payment_method' => $validated['payment_method'] === 'online' ? 'esewa' : 'Cash on Delivery',
@@ -327,7 +351,6 @@ class CheckoutController extends Controller
                 'gateway_response' => null,
             ]);
 
-            // Create order items and reduce stock
             foreach ($cartItems as $item) {
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -345,7 +368,10 @@ class CheckoutController extends Controller
                 }
             }
 
-            // Redeem coins
+            if ($coupon) {
+                $coupon->incrementUsage();
+            }
+
             if ($redeemPoints > 0) {
                 $user->redeemCoins(
                     $redeemPoints,
@@ -354,12 +380,10 @@ class CheckoutController extends Controller
                 );
             }
 
-            // Clear cart
             $user->carts()->delete();
 
             DB::commit();
 
-            // Send email
             try {
                 Mail::to($order->user->email)
                     ->cc('technova2083@gmail.com')
@@ -369,6 +393,7 @@ class CheckoutController extends Controller
             }
 
             session()->forget('checkout_confirmation');
+            session()->forget('applied_coupon');
 
             return redirect()->route('user.order.view', $order->id)
                 ->with('success', 'Your order has been placed successfully.');
@@ -377,5 +402,76 @@ class CheckoutController extends Controller
             DB::rollBack();
             return back()->withInput()->with('error', $e->getMessage());
         }
+    }
+
+    private function rememberCoupon($user, string $code, float $subtotal): void
+    {
+        try {
+            [$coupon, $discount] = $this->resolveCouponOrFail($user, $code, $subtotal);
+
+            if ($coupon) {
+                session()->put('applied_coupon', [
+                    'id' => $coupon->id,
+                    'code' => $coupon->code,
+                    'type' => $coupon->type,
+                    'discount' => $discount,
+                ]);
+            }
+        } catch (\Throwable $e) {
+            session()->forget('applied_coupon');
+            session()->flash('error', $e->getMessage());
+        }
+    }
+
+    private function currentCoupon($user, float $subtotal): array
+    {
+        $applied = session('applied_coupon');
+
+        if (!$applied) {
+            return [null, 0];
+        }
+
+        try {
+            [$coupon, $discount] = $this->resolveCouponOrFail($user, $applied['code'] ?? null, $subtotal);
+
+            if ($coupon) {
+                session()->put('applied_coupon.discount', $discount);
+                return [$applied, $discount];
+            }
+        } catch (\Throwable $e) {
+            session()->forget('applied_coupon');
+        }
+
+        return [null, 0];
+    }
+
+    private function resolveCouponOrFail($user, ?string $code, float $subtotal): array
+    {
+        if (!$code) {
+            return [null, 0];
+        }
+
+        $coupon = Coupon::findByCode($code);
+
+        if (!$coupon) {
+            throw new \Exception('Invalid coupon code.');
+        }
+
+        $alreadyUsed = $user->orders()
+            ->where('coupon_id', $coupon->id)
+            ->where('order_status', '!=', 'cancelled')
+            ->exists();
+
+        if ($alreadyUsed) {
+            throw new \Exception('You have already used this coupon.');
+        }
+
+        $result = $coupon->apply($subtotal);
+
+        if (!$result['valid']) {
+            throw new \Exception($result['message']);
+        }
+
+        return [$coupon, round($result['discount'], 2)];
     }
 }
