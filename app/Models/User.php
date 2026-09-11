@@ -1,13 +1,9 @@
+
 <?php
 
 namespace App\Models;
 
 use App\Models\Address;
-use App\Models\Cart;
-use App\Models\Order;
-use App\Models\Review;
-use App\Models\RewardTransaction;
-use App\Models\ReturnRequest;
 use App\Models\Wishlist;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -18,12 +14,6 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Fillable
-    |--------------------------------------------------------------------------
-    */
-
     protected $fillable = [
         'name',
         'email',
@@ -33,22 +23,10 @@ class User extends Authenticatable
         'status',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Hidden
-    |--------------------------------------------------------------------------
-    */
-
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
-    /*
-    |--------------------------------------------------------------------------
-    | Casts
-    |--------------------------------------------------------------------------
-    */
 
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -56,198 +34,10 @@ class User extends Authenticatable
         'reward_points'    => 'integer',
     ];
 
-<<<<<<< HEAD
-    /*
-    |--------------------------------------------------------------------------
-    | ACCESSORS
-    |--------------------------------------------------------------------------
-    */
-
-    public function getFullNameAttribute()
-    {
-        return $this->name;
-    }
-
-    public function getFirstNameAttribute()
-    {
-        $nameParts = explode(' ', $this->name);
-
-        return $nameParts[0] ?? $this->name;
-    }
-
-    public function getLastNameAttribute()
-    {
-        $nameParts = explode(' ', $this->name);
-
-        return end($nameParts) ?? $this->name;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Image Accessor
-    |--------------------------------------------------------------------------
-    */
-
-    public function getImageAttribute($value)
-    {
-        if ($value && file_exists(public_path('storage/' . $value))) {
-            return asset('storage/' . $value);
-        }
-
-        return null;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Profile Image URL
-    |--------------------------------------------------------------------------
-    */
-
-    public function getProfileImageUrlAttribute()
-    {
-        if ($this->image && file_exists(public_path('storage/' . $this->image))) {
-            return asset('storage/' . $this->image);
-        }
-
-        return null;
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Reward / Order / Cart Accessors
-    |--------------------------------------------------------------------------
-    */
-
-    public function getFormattedRewardPointsAttribute()
-    {
-        return number_format($this->reward_points);
-    }
-
-    public function getOrderCountAttribute()
-    {
-        return $this->orders()->count();
-    }
-
-    public function getTotalSpentAttribute()
-    {
-        return $this->orders()
-            ->where('order_status', 'delivered')
-            ->sum('grand_total');
-    }
-
-    public function getPendingOrdersCountAttribute()
-    {
-        return $this->orders()
-            ->whereIn('order_status', ['pending', 'processing'])
-            ->count();
-    }
-
-    public function getIsActiveAttribute()
-    {
-        return $this->status === true;
-    }
-
-    public function getCartTotalAttribute()
-    {
-        return $this->carts()->sum('price');
-    }
-
-    public function getCartCountAttribute()
-    {
-        return $this->carts()->count();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Coins Accessors
-    |--------------------------------------------------------------------------
-    */
-
-    public function getAvailableCoinsAttribute()
-    {
-        return $this->reward_points ?? 0;
-    }
-
-    public function getCoinsValueAttribute()
-    {
-        $redeemRate = \App\Helpers\RewardHelper::getRedeemRate();
-
-        return $redeemRate > 0
-            ? $this->reward_points / $redeemRate
-            : 0;
-    }
-
-    public function getTotalCoinsEarnedAttribute()
-    {
-        return $this->rewardTransactions()
-            ->where('type', 'earned')
-            ->sum('points');
-    }
-
-    public function getTotalCoinsRedeemedAttribute()
-    {
-        return $this->rewardTransactions()
-            ->where('type', 'redeemed')
-            ->sum('points');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Backward Compatibility
-    |--------------------------------------------------------------------------
-    */
-
-    public function getTotalPointsEarnedAttribute()
-    {
-        return $this->getTotalCoinsEarnedAttribute();
-    }
-
-    public function getTotalPointsRedeemedAttribute()
-    {
-        return $this->getTotalCoinsRedeemedAttribute();
-    }
-
-    public function getPointsValueAttribute()
-    {
-        return $this->reward_points;
-    }
-
-    public function getAddressCountAttribute()
-    {
-        return $this->addresses()->count();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | MUTATORS
-    |--------------------------------------------------------------------------
-    */
-
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
-    public function setPhoneAttribute($value)
-    {
-        $this->attributes['phone'] = preg_replace(
-            '/[^0-9+]/',
-            '',
-            $value
-        );
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    | RELATIONSHIPS
-    |--------------------------------------------------------------------------
-    */
-=======
     // =========================================================
     // RELATIONSHIPS
     // =========================================================\
 
->>>>>>> tech
 
     public function addresses()
     {
@@ -289,13 +79,6 @@ class User extends Authenticatable
         return $this->hasMany(ReturnRequest::class);
     }
 
-<<<<<<< HEAD
-    /*
-    |--------------------------------------------------------------------------
-    | REWARD POINT METHODS
-    |--------------------------------------------------------------------------
-    */
-=======
     // =========================================================
     // ACCESSORS
     // =========================================================
@@ -444,7 +227,6 @@ class User extends Authenticatable
     // =========================================================
     // REWARD METHODS
     // =========================================================
->>>>>>> tech
 
     public function addRewardPoints($points, $remarks = null, $orderId = null)
     {
@@ -452,11 +234,6 @@ class User extends Authenticatable
             $user = static::query()->lockForUpdate()->findOrFail($this->id);
 
             $user->increment('reward_points', $points);
-<<<<<<< HEAD
-
-            // Keep current instance in sync
-=======
->>>>>>> tech
             $this->reward_points = $user->fresh()->reward_points;
 
             return $this->rewardTransactions()->create([
@@ -478,7 +255,6 @@ class User extends Authenticatable
             }
 
             $user->decrement('reward_points', $points);
-
             $this->reward_points = $user->fresh()->reward_points;
 
             return $this->rewardTransactions()->create([
@@ -490,28 +266,9 @@ class User extends Authenticatable
         });
     }
 
-<<<<<<< HEAD
-    /*
-    |--------------------------------------------------------------------------
-    | COINS ALIASES
-    |--------------------------------------------------------------------------
-    */
-
-    public function addCoins(
-        $points,
-        $orderId = null,
-        $remarks = null
-    ) {
-        return $this->addRewardPoints(
-            $points,
-            $remarks,
-            $orderId
-        );
-=======
     public function addCoins($points, $orderId = null, $remarks = null)
     {
         return $this->addRewardPoints($points, $remarks, $orderId);
->>>>>>> tech
     }
 
     public function redeemCoins($points, $orderId = null, $remarks = null)
@@ -529,11 +286,9 @@ class User extends Authenticatable
         return $this->hasSufficientPoints($points);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | SCOPES
-    |--------------------------------------------------------------------------
-    */
+    // =========================================================
+    // SCOPES
+    // =========================================================
 
     public function scopeActive($query)
     {
@@ -579,11 +334,9 @@ class User extends Authenticatable
         return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | HELPER METHODS
-    |--------------------------------------------------------------------------
-    */
+    // =========================================================
+    // HELPER METHODS
+    // =========================================================
 
     public function isNewCustomer()
     {

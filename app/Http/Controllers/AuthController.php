@@ -92,15 +92,6 @@ class AuthController extends Controller
     }
 
 
-    /**
-     * Update Profile
-     *
-     * ✅ FIXED:
-     * - Uses getRawOriginal('image') to fetch the DB value
-     *   (avoids the accessor returning a full URL).
-     * - Checks Storage::exists() before deleting old image.
-     * - Properly saves new image path.
-     */
     public function updateProfile(Request $request)
     {
         // Currently logged-in user
