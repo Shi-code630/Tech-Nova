@@ -3,31 +3,10 @@
     {{-- Left Side --}}
     <div class="flex items-center gap-5">
 
-       <!-- Avatar -->
-        <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-white
-            flex items-center justify-center shadow-lg">
-
-            @if (auth()->user()->image)
-                <img src="{{ asset('storage/' . auth()->user()->image) }}" alt="{{ auth()->user()->name }}"
-                    class="w-16 h-16 rounded-full object-cover border-2 border-white shadow">
-            @else
-                <div
-                    class="w-16 h-16 rounded-full
-                   bg-gradient-to-br from-[#F59E0B] to-[#D97706]
-                   flex items-center justify-center
-                   text-white text-2xl font-bold">
-
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
-
-                </div>
-            @endif
-
-        </div>
-
         {{-- Welcome Text --}}
         <div>
 
-            <h2 class="text-3xl font-bold text-gray-800">
+            <h2 class="text-2xl font-bold text-gray-800">
                 👋 Welcome back,
                 {{ $user->name ?? 'Guest' }}
             </h2>
@@ -45,7 +24,7 @@
         class="bg-orange-50 border border-orange-200 rounded-2xl px-6 py-4 flex items-center gap-4 shadow-sm">
 
         <div
-            class="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center text-3xl">
+            class="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-3xl">
 
             🪙
 

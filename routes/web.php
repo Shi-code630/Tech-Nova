@@ -13,7 +13,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
-
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReturnRequestController;
 
@@ -218,3 +218,23 @@ Route::middleware('auth')->group(function () {
 Route::get('/reviews', [UserDashboardController::class, 'reviews'])
     ->middleware('auth')
     ->name('user.reviews');
+
+
+
+
+Route::middleware('auth')->group(function () {
+
+    // Wishlist page
+    Route::get('/wishlist', [WishlistController::class, 'index'])
+        ->name('user.wishlist');
+
+    // Add / remove wishlist
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])
+        ->name('user.wishlist.toggle');
+
+    // Remove from wishlist page
+    Route::delete('/wishlist/{productId}', [WishlistController::class, 'destroy'])
+        ->name('user.wishlist.remove');
+
+});
+

@@ -1,8 +1,7 @@
-<!-- Sidebar -->
 <aside
-    class="w-72
+    class="w-64
        sticky top-4
-       h-[calc(100vh-2rem)]
+       h-[calc(110vh-2rem)]
        flex-shrink-0
        bg-gradient-to-b from-[#2563EB] to-[#1E40AF]
        text-white
@@ -14,7 +13,7 @@
     <!-- =========================
          USER PROFILE
     ========================== -->
-    <div class="px-6 py-8 text-center border-b border-white/20">
+    <div class="px-6 py-5 text-center border-b border-white/20">
 
         <!-- Avatar -->
         <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-white
@@ -43,7 +42,7 @@
         </h2>
 
         <!-- Email -->
-        <p class="text-sm text-blue-100 truncate mt-1">
+        <p class="text-[14px] text-blue-100 truncate">
             {{ auth()->user()->email ?? 'user@example.com' }}
         </p>
 
@@ -57,7 +56,8 @@
 
         <!-- Dashboard -->
         <a href="{{ route('user.dashboard') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.dashboard')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -76,7 +76,8 @@
 
         <!-- Profile -->
         <a href="{{ route('user.profile') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.profile')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -95,7 +96,8 @@
 
         <!-- My Orders -->
         <a href="{{ route('user.orders') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.orders', 'user.order.view')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -114,7 +116,8 @@
 
         <!-- Wishlist -->
         <a href="{{ route('user.wishlist') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.wishlist')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -133,7 +136,8 @@
 
         <!-- Cart -->
         <a href="{{ route('user.cart') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.cart')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -152,7 +156,8 @@
 
         <!-- Address -->
         <a href="{{ route('checkout.addresses') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('checkout.addresses')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -171,7 +176,8 @@
 
         <!-- Reviews -->
         <a href="{{ route('user.reviews') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.reviews')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -190,7 +196,8 @@
 
         <!-- Coupons -->
         <a href="{{ route('user.coupons') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.coupons')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -209,7 +216,8 @@
 
         <!-- Settings -->
         <a href="{{ route('user.settings') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl mb-1
+            class="flex items-center gap-3 px-4 py-2
+             rounded-xl mb-1
                    transition-all duration-200
                    {{ request()->routeIs('user.settings')
                        ? 'bg-white/20 font-semibold shadow-sm'
@@ -227,7 +235,7 @@
         <!-- =========================
          LOGOUT
     ========================== -->
-        <div>
+        <div class="py-2">
 
             <form method="POST" action="{{ route('logout') }}">
 

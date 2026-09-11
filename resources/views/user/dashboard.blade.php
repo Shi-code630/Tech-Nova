@@ -26,21 +26,19 @@
                         :total-spent="$totalSpent"
                     />
 
-                   
+
                     <x-user-dashboard.coin-summary
                         :coin-summary="$coinSummary"
                         :recent-transactions="$recentTransactions"
                     />
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols- gap-6">
 
                         <div class="md:col-span-2">
                             <x-user-dashboard.recent-orders :recent-orders="$recentOrders" />
                         </div>
 
-                        <div>
-                            <x-user-dashboard.saved-addresses :addresses="$addresses" />
-                        </div>
+
 
                     </div>
 

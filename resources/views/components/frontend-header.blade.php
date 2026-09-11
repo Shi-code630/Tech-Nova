@@ -6,11 +6,11 @@
             {{-- LEFT --}}
             <div class="flex items-center">
 
-                <span class="text-[#dbeafe] text-xs sm:text-sm">
+                <span class="text-[#dbeafe] text-[12px] sm:text-[12px]">
                     📍 Kathmandu, Nepal
                 </span>
 
-                <span class="hidden sm:inline text-[#dbeafe] text-xs sm:text-sm ml-8">
+                <span class="hidden sm:inline text-[#dbeafe] text-[12px] sm:text-[12px] ml-8">
                     🚛 Free Delivery On All Orders Above Rs. 500
                 </span>
 
@@ -21,19 +21,19 @@
             <div class="flex items-center gap-4 sm:gap-5">
 
                 {{-- ✅ resolved: kept the dynamic link, not href="#" --}}
-                <a href="{{ route('user.orders') }}" class="text-[#dbeafe] text-xs sm:text-sm hover:text-white transition">
+                <a href="{{ route('user.orders') }}" class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
                     Track Order
                 </a>
 
                 <span class="h-4 w-px bg-white/40"></span>
 
-                <a href="#" class="text-[#dbeafe] text-xs sm:text-sm hover:text-white transition">
+                <a href="#" class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
                     Help
                 </a>
 
                 <span class="h-4 w-px bg-white/40"></span>
 
-                <a href="#" class="text-[#dbeafe] text-xs sm:text-sm hover:text-white transition">
+                <a href="#" class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
                     English
                 </a>
 
@@ -113,7 +113,7 @@
                 {{-- =================================================
                     COINS
                 ================================================== --}}
-              
+
                 @auth
                     <a href="{{ route('user.dashboard') }}" class="relative group cursor-pointer hidden sm:block">
 
@@ -125,13 +125,11 @@
                             </span>
 
                             <span
-                                class="w-6 h-6 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-xs shadow-md">
+                                class="w-6 h-4 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-xs shadow-md">
                                 💰
                             </span>
 
-                            <span class="text-white text-xs font-medium hidden lg:inline">
-                                Coins
-                            </span>
+
 
                         </div>
 
@@ -679,9 +677,9 @@
         <div class="Container mx-auto px-2">
 
             <ul
-                class="flex items-center gap-5
-                       h-11
-                       text-[14px]
+                class="flex items-center gap-3
+                       
+                       text-[12px]
                        font-semibold
                        text-[#111827]">
 
@@ -728,7 +726,7 @@
                             <div
                                 class="absolute left-0 top-full
                                         hidden group-hover:block
-                                        w-72
+                                        w-70
                                         bg-white
                                         rounded-xl
                                         shadow-2xl
@@ -748,7 +746,7 @@
                                                justify-between
                                                font-semibold
                                                text-gray-800
-                                               hover:text-blue-600">
+                                               hover:text-blue-600 gap-1">
 
                                         <span>
                                             All {{ $parent->name }}
@@ -773,8 +771,8 @@
                                             <a href="{{ route('category.show', ['slug' => $child->slug]) }}"
                                                 class="flex items-center
                                                        justify-between
-                                                       px-5 py-3
-                                                       text-sm
+                                                       px-4 py-1
+                                                       text-[12px]
                                                        text-gray-700
                                                        hover:bg-blue-50
                                                        hover:text-blue-600
