@@ -227,7 +227,7 @@
                                     <div class="flex items-end">
                                         <button
                                             type="button"
-                                            onclick="saveNewAddress()"
+                                            onclick="saveNewAddress(event)"
                                             class="px-6 py-2 bg-[#2563EB] hover:bg-blue-700 text-white rounded-lg font-semibold transition"
                                         >
                                             Save Address
@@ -559,12 +559,7 @@
                                 </span>
                             </div>
 
-<<<<<<< HEAD
-                            {{-- Reward Coins --}}
-=======
-                                         {{-- Coupon --}}
-
-
+                            {{-- ✅ Coupon Section --}}
                             <div class="border-t border-gray-200 pt-4 mt-4 mb-4">
                                 <div class="flex items-center gap-2 mb-3">
                                     <span class="text-lg">🎁</span>
@@ -604,9 +599,7 @@
 
                             <input type="hidden" name="coupon_code" id="couponCodeHidden" value="{{ $appliedCoupon['code'] ?? '' }}">
 
-
-                            {{-- ✅ Coin Discount Section --}}
->>>>>>> d4a2cc29f5fd769834c7a2e3d8abba1e5f14726a
+                            {{-- ✅ Reward Coins Section --}}
                             @if($coinSummary['available'] > 0)
 
                                 <div class="border-t border-gray-200 pt-4 mt-4">
@@ -666,7 +659,6 @@
 
                                             <input
                                                 type="range"
-                                                name="redeem_points"
                                                 id="redeemPoints"
                                                 min="0"
                                                 max="{{ $maxRedeemPoints }}"
@@ -794,7 +786,7 @@
 
     <script>
 
-        // Data from PHP
+        // ============ Data from PHP ============
         const subtotal = {{ $subtotal }};
         const deliveryCharge = {{ $deliveryCharge }};
         const tax = {{ $tax }};
@@ -802,54 +794,38 @@
         const maxDiscountPercent = {{ $coinSummary['max_discount_percent'] ?? 10 }};
         let couponDiscount = {{ $couponDiscount ?? 0 }};
 
-        // DOM elements
+        // ============ DOM Elements ============
         const grandTotalEl = document.getElementById('grandTotal');
         const savingsText = document.getElementById('savingsText');
         const savingsAmount = document.getElementById('savingsAmount');
         const redeemPointsInput = document.getElementById('redeemPointsHidden');
 
-        // Address radio toggle
+        // ============ Address Radio Toggle ============
         document.querySelectorAll('.address-radio').forEach(el => {
-
             el.addEventListener('change', function() {
-
                 const form = document.getElementById('newAddressForm');
 
                 if (this.value === 'new') {
-
                     form.style.display = 'block';
 
-                    document
-                        .querySelectorAll('input[name="address_id"]')
-                        .forEach(radio => {
-
-                            if (radio.value !== 'new') {
-                                radio.required = false;
-                            }
-
-                        });
-
+                    document.querySelectorAll('input[name="address_id"]').forEach(radio => {
+                        if (radio.value !== 'new') {
+                            radio.required = false;
+                        }
+                    });
                 } else {
-
                     form.style.display = 'none';
 
-                    document
-                        .querySelectorAll('input[name="address_id"]')
-                        .forEach(radio => {
-
-                            if (radio.value !== 'new') {
-                                radio.required = true;
-                            }
-
-                        });
-
+                    document.querySelectorAll('input[name="address_id"]').forEach(radio => {
+                        if (radio.value !== 'new') {
+                            radio.required = true;
+                        }
+                    });
                 }
-
             });
-
         });
 
-        // Toggle online payment fields
+        // ============ Payment Method Toggle ============
         const paymentCod = document.getElementById('paymentCod');
         const paymentOnline = document.getElementById('paymentOnline');
         const onlinePaymentDetails = document.getElementById('onlinePaymentDetails');
@@ -857,110 +833,47 @@
         const paymentScreenshotInput = document.getElementById('payment_screenshot');
 
         function toggleOnlinePaymentFields() {
-
             if (paymentOnline.checked) {
-
                 onlinePaymentDetails.style.display = 'block';
-
                 transactionIdInput.required = true;
                 paymentScreenshotInput.required = true;
-
             } else {
-
                 onlinePaymentDetails.style.display = 'none';
-
                 transactionIdInput.required = false;
                 paymentScreenshotInput.required = false;
-
                 transactionIdInput.value = '';
                 paymentScreenshotInput.value = '';
-
             }
-
         }
 
-        paymentCod.addEventListener(
-            'change',
-            toggleOnlinePaymentFields
-        );
+        paymentCod.addEventListener('change', toggleOnlinePaymentFields);
+        paymentOnline.addEventListener('change', toggleOnlinePaymentFields);
 
-        paymentOnline.addEventListener(
-            'change',
-            toggleOnlinePaymentFields
-        );
-
-        // Save new address via AJAX
-        function saveNewAddress() {
-
+        // ============ Save New Address via AJAX ============
+        function saveNewAddress(event) {
             const formData = new FormData();
 
-            formData.append(
-                'full_name',
-                document.getElementById('new_full_name').value
-            );
+            formData.append('full_name', document.getElementById('new_full_name').value);
+            formData.append('phone', document.getElementById('new_phone').value);
+            formData.append('province', document.getElementById('new_province').value);
+            formData.append('district', document.getElementById('new_district').value);
+            formData.append('city', document.getElementById('new_city').value);
+            formData.append('address', document.getElementById('new_address').value);
+            formData.append('postal_code', document.getElementById('new_postal_code').value);
+            formData.append('_token', '{{ csrf_token() }}');
 
-            formData.append(
-                'phone',
-                document.getElementById('new_phone').value
-            );
-
-            formData.append(
-                'province',
-                document.getElementById('new_province').value
-            );
-
-            formData.append(
-                'district',
-                document.getElementById('new_district').value
-            );
-
-            formData.append(
-                'city',
-                document.getElementById('new_city').value
-            );
-
-            formData.append(
-                'address',
-                document.getElementById('new_address').value
-            );
-
-            formData.append(
-                'postal_code',
-                document.getElementById('new_postal_code').value
-            );
-
-            formData.append(
-                '_token',
-                '{{ csrf_token() }}'
-            );
-
-            const required = [
-                'full_name',
-                'phone',
-                'province',
-                'district',
-                'city',
-                'address'
-            ];
+            const required = ['full_name', 'phone', 'province', 'district', 'city', 'address'];
 
             for (let field of required) {
-
-                const val = document
-                    .getElementById('new_' + field)
-                    .value
-                    .trim();
+                const val = document.getElementById('new_' + field).value.trim();
 
                 if (!val) {
-
                     alert('Please fill in all required fields.');
-
                     return;
                 }
-
             }
 
             const btn = event.target;
-
             btn.disabled = true;
             btn.textContent = 'Saving...';
 
@@ -971,159 +884,80 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-
             .then(response => response.json())
-
             .then(data => {
-
                 if (data.success) {
-
                     alert('Address saved successfully!');
-
                     location.reload();
-
                 } else {
-
-                    alert(
-                        data.message ||
-                        'Failed to save address.'
-                    );
-
+                    alert(data.message || 'Failed to save address.');
                 }
-
             })
-
             .catch(error => {
-
-                alert(
-                    'An error occurred. Please try again.'
-                );
-
+                alert('An error occurred. Please try again.');
             })
-
             .finally(() => {
-
                 btn.disabled = false;
                 btn.textContent = 'Save Address';
-
             });
-
         }
 
         function cancelNewAddress() {
-
             document.getElementById('newAddressForm').style.display = 'none';
-
             document.getElementById('newAddressRadio').checked = false;
 
-            document
-                .querySelectorAll('input[name="address_id"]')
-                .forEach(radio => {
+            document.querySelectorAll('input[name="address_id"]').forEach(radio => {
+                if (radio.value !== 'new') {
+                    radio.required = true;
+                }
+            });
 
-                    if (radio.value !== 'new') {
-                        radio.required = true;
-                    }
-
-                });
-
-            document
-                .querySelectorAll('#newAddressForm input')
-                .forEach(input => input.value = '');
-
+            document.querySelectorAll('#newAddressForm input').forEach(input => input.value = '');
         }
 
-        // Coin section toggle
+        // ============ Coin Section Toggle ============
         function toggleCoinSection() {
+            const checked = document.getElementById('useCoins').checked;
 
-            const checked =
-                document.getElementById('useCoins').checked;
-
-            document.getElementById('coinSection').style.display =
-                checked ? 'block' : 'none';
+            document.getElementById('coinSection').style.display = checked ? 'block' : 'none';
 
             if (!checked) {
-
                 document.getElementById('redeemPoints').value = 0;
-
                 updateCoinValue(0);
-
             }
-
         }
 
         function updateCoinValue(value) {
-
             const points = parseInt(value) || 0;
-
             const coinDiscount = points / redeemRate;
 
-            document.getElementById('pointsDisplay').textContent =
-                points;
-
-            document.getElementById('discountDisplay').textContent =
-                coinDiscount.toFixed(2);
-
+            document.getElementById('pointsDisplay').textContent = points;
+            document.getElementById('discountDisplay').textContent = coinDiscount.toFixed(2);
             redeemPointsInput.value = points;
 
             updateOrderSummary();
-
         }
 
-<<<<<<< HEAD
+        // ============ Main Update Order Summary ============
         function updateOrderSummary() {
-
-            const coinPoints =
-                parseInt(redeemPointsInput.value) || 0;
-
-            const coinDiscount =
-                coinPoints / redeemRate;
-
-            const maxCoinDiscount =
-                subtotal * (maxDiscountPercent / 100);
-
-            const finalCoinDiscount =
-                Math.min(
-                    coinDiscount,
-                    maxCoinDiscount
-                );
-
-            if (finalCoinDiscount > 0) {
-
-                savingsText.style.display = 'block';
-
-                savingsAmount.textContent =
-                    finalCoinDiscount.toFixed(2);
-
-=======
-        // ✅ Main update function
-                function updateOrderSummary() {
+            // Coin discount calculate
             const coinPoints = parseInt(redeemPointsInput.value) || 0;
             const coinDiscount = coinPoints / redeemRate;
             const maxCoinDiscount = subtotal * (maxDiscountPercent / 100);
             const finalCoinDiscount = Math.min(coinDiscount, maxCoinDiscount);
+
+            // Total discount = Coupon + Coins (subtotal भन्दा बढी हुन सक्दैन)
             const totalDiscount = Math.min(subtotal, couponDiscount + finalCoinDiscount);
 
+            // Savings display
             if (totalDiscount > 0) {
                 savingsText.style.display = 'block';
                 savingsAmount.textContent = totalDiscount.toFixed(2);
->>>>>>> d4a2cc29f5fd769834c7a2e3d8abba1e5f14726a
             } else {
-
                 savingsText.style.display = 'none';
-
             }
 
-<<<<<<< HEAD
-            const grandTotal =
-                subtotal +
-                deliveryCharge +
-                tax -
-                finalCoinDiscount;
-
-            grandTotalEl.textContent =
-                'Rs ' + grandTotal.toFixed(2);
-
-=======
+            // Coupon discount row display
             const couponRow = document.getElementById('couponDiscountRow');
             if (couponDiscount > 0) {
                 couponRow.classList.remove('hidden');
@@ -1132,10 +966,12 @@
                 couponRow.classList.add('hidden');
             }
 
+            // Grand total calculate
             const grandTotal = subtotal + deliveryCharge + tax - totalDiscount;
             grandTotalEl.textContent = 'Rs ' + Math.max(grandTotal, 0).toFixed(2);
         }
 
+        // ============ Coupon Apply ============
         function applyCoupon() {
             const code = document.getElementById('couponInput').value.trim();
             const msg = document.getElementById('couponMessage');
@@ -1161,13 +997,16 @@
                 if (!res.ok || !data.success) {
                     throw new Error(data.message || 'Could not apply coupon.');
                 }
+
                 couponDiscount = parseFloat(data.discount) || 0;
+
                 document.getElementById('couponCodeHidden').value = data.code;
                 document.getElementById('couponCodeLabel').textContent = data.code;
                 document.getElementById('couponDiscountLabel').textContent = couponDiscount.toFixed(2);
                 document.getElementById('couponIdle').classList.add('hidden');
                 document.getElementById('couponApplied').classList.remove('hidden');
                 msg.textContent = '';
+
                 updateOrderSummary();
             })
             .catch((err) => {
@@ -1176,6 +1015,7 @@
             });
         }
 
+        // ============ Coupon Remove ============
         function removeCoupon() {
             fetch('{{ route("checkout.coupon.remove") }}', {
                 method: 'DELETE',
@@ -1187,106 +1027,62 @@
             })
             .then(() => {
                 couponDiscount = 0;
+
                 document.getElementById('couponCodeHidden').value = '';
                 document.getElementById('couponInput').value = '';
                 document.getElementById('couponIdle').classList.remove('hidden');
                 document.getElementById('couponApplied').classList.add('hidden');
                 document.getElementById('couponMessage').textContent = '';
+
                 updateOrderSummary();
             });
->>>>>>> d4a2cc29f5fd769834c7a2e3d8abba1e5f14726a
         }
 
-        // Place order validation
-        document
-            .getElementById('checkoutForm')
-            .addEventListener('submit', function(e) {
+        // ============ Place Order Validation ============
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
 
-                const address =
-                    document.querySelector(
-                        'input[name="address_id"]:checked'
-                    );
+            const address = document.querySelector('input[name="address_id"]:checked');
 
-                if (!address) {
-
-                    e.preventDefault();
-
-                    alert(
-                        'Please select a shipping address.'
-                    );
-
-                    return;
-                }
-
-                if (address.value === 'new') {
-
-                    e.preventDefault();
-
-                    alert(
-                        'Please save the new address first.'
-                    );
-
-                    return;
-                }
-
-                const payment =
-                    document.querySelector(
-                        'input[name="payment_method"]:checked'
-                    );
-
-                if (!payment) {
-
-                    e.preventDefault();
-
-                    alert(
-                        'Please select a payment method.'
-                    );
-
-                    return;
-                }
-
-                if (payment.value === 'online') {
-
-                    if (!transactionIdInput.value.trim()) {
-
-                        e.preventDefault();
-
-                        alert(
-                            'Please enter the transaction ID for your online payment.'
-                        );
-
-                        return;
-                    }
-
-                    if (
-                        !paymentScreenshotInput.files ||
-                        paymentScreenshotInput.files.length === 0
-                    ) {
-
-                        e.preventDefault();
-
-                        alert(
-                            'Please upload a screenshot of your payment.'
-                        );
-
-                        return;
-                    }
-
-                }
-
-            });
-
-        // Initial update
-        document.addEventListener(
-            'DOMContentLoaded',
-            function() {
-
-                updateOrderSummary();
-
-                toggleOnlinePaymentFields();
-
+            if (!address) {
+                e.preventDefault();
+                alert('Please select a shipping address.');
+                return;
             }
-        );
+
+            if (address.value === 'new') {
+                e.preventDefault();
+                alert('Please save the new address first.');
+                return;
+            }
+
+            const payment = document.querySelector('input[name="payment_method"]:checked');
+
+            if (!payment) {
+                e.preventDefault();
+                alert('Please select a payment method.');
+                return;
+            }
+
+            if (payment.value === 'online') {
+                if (!transactionIdInput.value.trim()) {
+                    e.preventDefault();
+                    alert('Please enter the transaction ID for your online payment.');
+                    return;
+                }
+
+                if (!paymentScreenshotInput.files || paymentScreenshotInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('Please upload a screenshot of your payment.');
+                    return;
+                }
+            }
+        });
+
+        // ============ Initial Update ============
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOrderSummary();
+            toggleOnlinePaymentFields();
+        });
 
     </script>
 

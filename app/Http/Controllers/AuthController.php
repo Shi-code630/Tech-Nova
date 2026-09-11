@@ -94,6 +94,12 @@ class AuthController extends Controller
 
     /**
      * Update Profile
+     *
+     * ✅ FIXED:
+     * - Uses getRawOriginal('image') to fetch the DB value
+     *   (avoids the accessor returning a full URL).
+     * - Checks Storage::exists() before deleting old image.
+     * - Properly saves new image path.
      */
     public function updateProfile(Request $request)
     {
@@ -114,14 +120,14 @@ class AuthController extends Controller
             'phone' => [
                 'nullable',
                 'string',
-                'max:20'
+                'max:20',
             ],
 
             'image' => [
                 'nullable',
                 'image',
                 'mimes:jpg,jpeg,png,webp',
-                'max:2048'
+                'max:2048',
             ],
         ]);
 
@@ -132,18 +138,25 @@ class AuthController extends Controller
         $user->phone = $validated['phone'] ?? null;
 
 
-        // Profile Image
+        // ============================
+        // Profile Image Upload
+        // ============================
         if ($request->hasFile('image')) {
 
-            // Delete old image
-            if ($user->image) {
-                Storage::disk('public')->delete($user->image);
+            // Get RAW value from DB (not the accessor URL)
+           $oldImage = $user->getAttributes()['image'] ?? null;
+
+            // Delete old image if it exists
+            if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+                Storage::disk('public')->delete($oldImage);
             }
 
-            // Save new image
-            $user->image = $request
-                ->file('image')
-                ->store('users', 'public');
+            // Store new image
+            // Returns something like: "users/abc123.jpg"
+            $newImagePath = $request->file('image')->store('users', 'public');
+
+            // Save new image path
+            $user->image = $newImagePath;
         }
 
 

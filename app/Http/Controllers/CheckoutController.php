@@ -529,7 +529,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Create order items and REDUCE STOCK
+     * Create order items and REDUCE STOCK.
      */
     private function createOrderItemsAndReduceStock($cartItems, $order): void
     {

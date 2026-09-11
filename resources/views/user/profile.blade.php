@@ -20,31 +20,13 @@
                     {{-- =================================================
                          PAGE HEADER
                     ================================================== --}}
-                    <div
-                        class="
-                        bg-white
-                        rounded-2xl
-                        shadow-sm
-                        border border-gray-100
-                        p-6
-                        mb-6
-                    ">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
 
-                        <h1
-                            class="
-                            text-2xl
-                            font-bold
-                            text-[#111827]
-                        ">
+                        <h1 class="text-2xl font-bold text-[#111827]">
                             Profile Information
                         </h1>
 
-                        <p
-                            class="
-                            text-sm
-                            text-gray-500
-                            mt-1
-                        ">
+                        <p class="text-sm text-gray-500 mt-1">
                             Manage your personal information and account details.
                         </p>
 
@@ -55,28 +37,9 @@
                          SUCCESS MESSAGE
                     ================================================== --}}
                     @if (session('success'))
-                        <div
-                            class="
-                            mb-6
-                            flex
-                            items-center
-                            gap-3
-                            rounded-xl
-                            border border-green-200
-                            bg-green-50
-                            px-5 py-4
-                            text-sm
-                            text-green-700
-                        ">
+                        <div class="mb-6 flex items-center gap-3 rounded-xl border border-green-200 bg-green-50 px-5 py-4 text-sm text-green-700">
 
-                            <div
-                                class="
-                                w-8 h-8
-                                rounded-full
-                                bg-green-100
-                                flex items-center justify-center
-                                flex-shrink-0
-                            ">
+                            <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
                                 ✓
                             </div>
 
@@ -91,69 +54,30 @@
                     {{-- =================================================
                          PROFILE CARD
                     ================================================== --}}
-                    <div
-                        class="
-                        bg-white
-                        rounded-2xl
-                        shadow-sm
-                        border border-gray-100
-                        overflow-hidden
-                    ">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
 
 
                         {{-- =================================================
                              BLUE PROFILE HEADER
                         ================================================== --}}
-                        <div
-                            class="
-                            h-32
-                            bg-gradient-to-r
-                            from-[#2563EB]
-                            to-[#1E40AF]
-                            relative
-                        ">
+                        <div class="h-32 bg-gradient-to-r from-[#2563EB] to-[#1E40AF] relative">
 
                             {{-- Profile Image Area --}}
-                            <div
-                                class="
-                                absolute
-                                left-6
-                                -bottom-14
-                            ">
+                            <div class="absolute left-6 -bottom-14">
 
-                                <div
-                                    class="
-                                    w-28 h-28
-                                    rounded-full
-                                    bg-white
-                                    p-1
-                                    shadow-lg
-                                    relative
-                                ">
+                                <div class="w-28 h-28 rounded-full bg-white p-1 shadow-lg relative">
 
 
                                     {{-- =====================================
                                          PROFILE IMAGE
+                                        
                                     ====================================== --}}
                                     @if (auth()->user()->image)
-                                        <img src="{{ asset('storage/' . auth()->user()->image) }}"
+                                        <img src="{{ auth()->user()->image }}"
                                             alt="{{ auth()->user()->name }}"
                                             class="w-full h-full rounded-full object-cover">
                                     @else
-                                        <div
-                                            class="
-        w-full h-full
-        rounded-full
-        bg-gradient-to-br
-        from-[#F59E0B]
-        to-[#D97706]
-        flex
-        items-center
-        justify-center
-        text-white
-        text-3xl
-        font-bold
-    ">
+                                        <div class="w-full h-full rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-white text-3xl font-bold">
                                             {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
                                         </div>
                                     @endif
@@ -163,24 +87,7 @@
                                          CAMERA BUTTON
                                     ====================================== --}}
                                     <label for="profile_image"
-                                        class="
-                                            absolute
-                                            bottom-1
-                                            right-1
-                                            w-9 h-9
-                                            rounded-full
-                                            bg-[#2563EB]
-                                            hover:bg-[#1D4ED8]
-                                            border-4
-                                            border-white
-                                            flex
-                                            items-center
-                                            justify-center
-                                            text-white
-                                            cursor-pointer
-                                            shadow-md
-                                            transition
-                                        "
+                                        class="absolute bottom-1 right-1 w-9 h-9 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] border-4 border-white flex items-center justify-center text-white cursor-pointer shadow-md transition"
                                         title="Change Profile Picture">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
@@ -205,39 +112,17 @@
                         {{-- =================================================
                              USER BASIC INFORMATION
                         ================================================== --}}
-                        <div
-                            class="
-                            px-6
-                            pt-16
-                            pb-6
-                            border-b
-                            border-gray-100
-                        ">
+                        <div class="px-6 pt-16 pb-6 border-b border-gray-100">
 
-                            <h2
-                                class="
-                                text-xl
-                                font-bold
-                                text-[#111827]
-                            ">
+                            <h2 class="text-xl font-bold text-[#111827]">
                                 {{ auth()->user()->name ?? 'User' }}
                             </h2>
 
-                            <p
-                                class="
-                                text-sm
-                                text-gray-500
-                                mt-1
-                            ">
+                            <p class="text-sm text-gray-500 mt-1">
                                 {{ auth()->user()->email ?? 'No email available' }}
                             </p>
 
-                            <p
-                                class="
-                                text-xs
-                                text-gray-400
-                                mt-2
-                            ">
+                            <p class="text-xs text-gray-400 mt-2">
                                 Click the camera icon to change your profile picture.
                             </p>
 
@@ -266,21 +151,11 @@
                                 ========================================== --}}
                                 <div class="mb-5">
 
-                                    <h3
-                                        class="
-                                        text-lg
-                                        font-semibold
-                                        text-[#111827]
-                                    ">
+                                    <h3 class="text-lg font-semibold text-[#111827]">
                                         Personal Information
                                     </h3>
 
-                                    <p
-                                        class="
-                                        text-sm
-                                        text-gray-500
-                                        mt-1
-                                    ">
+                                    <p class="text-sm text-gray-500 mt-1">
                                         Update your personal information below.
                                     </p>
 
@@ -290,13 +165,7 @@
                                 {{-- =========================================
                                      FORM FIELDS
                                 ========================================== --}}
-                                <div
-                                    class="
-                                    grid
-                                    grid-cols-1
-                                    md:grid-cols-2
-                                    gap-5
-                                ">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
 
 
                                     {{-- =====================================
@@ -304,41 +173,16 @@
                                     ====================================== --}}
                                     <div>
 
-                                        <label
-                                            class="
-                                            block
-                                            text-sm
-                                            font-medium
-                                            text-gray-700
-                                            mb-2
-                                        ">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
                                             Full Name
                                         </label>
 
                                         <input type="text" name="name"
                                             value="{{ old('name', auth()->user()->name) }}" required
-                                            class="
-                                                w-full
-                                                rounded-xl
-                                                border border-gray-200
-                                                bg-white
-                                                px-4 py-3
-                                                text-sm
-                                                text-gray-700
-                                                outline-none
-                                                focus:border-[#2563EB]
-                                                focus:ring-2
-                                                focus:ring-blue-100
-                                                transition
-                                            ">
+                                            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition">
 
                                         @error('name')
-                                            <p
-                                                class="
-                                                text-xs
-                                                text-red-500
-                                                mt-1
-                                            ">
+                                            <p class="text-xs text-red-500 mt-1">
                                                 {{ $message }}
                                             </p>
                                         @enderror
@@ -351,36 +195,14 @@
                                     ====================================== --}}
                                     <div>
 
-                                        <label
-                                            class="
-                                            block
-                                            text-sm
-                                            font-medium
-                                            text-gray-700
-                                            mb-2
-                                        ">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
                                             Email Address
                                         </label>
 
                                         <input type="email" value="{{ auth()->user()->email }}" readonly
-                                            class="
-                                                w-full
-                                                rounded-xl
-                                                border border-gray-200
-                                                bg-gray-50
-                                                px-4 py-3
-                                                text-sm
-                                                text-gray-500
-                                                outline-none
-                                                cursor-not-allowed
-                                            ">
+                                            class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-500 outline-none cursor-not-allowed">
 
-                                        <p
-                                            class="
-                                            text-xs
-                                            text-gray-400
-                                            mt-1
-                                        ">
+                                        <p class="text-xs text-gray-400 mt-1">
                                             Email address cannot be changed here.
                                         </p>
 
@@ -392,42 +214,17 @@
                                     ====================================== --}}
                                     <div>
 
-                                        <label
-                                            class="
-                                            block
-                                            text-sm
-                                            font-medium
-                                            text-gray-700
-                                            mb-2
-                                        ">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
                                             Phone Number
                                         </label>
 
                                         <input type="text" name="phone"
                                             value="{{ old('phone', auth()->user()->phone ?? '') }}"
                                             placeholder="Enter phone number"
-                                            class="
-                                                w-full
-                                                rounded-xl
-                                                border border-gray-200
-                                                bg-white
-                                                px-4 py-3
-                                                text-sm
-                                                text-gray-700
-                                                outline-none
-                                                focus:border-[#2563EB]
-                                                focus:ring-2
-                                                focus:ring-blue-100
-                                                transition
-                                            ">
+                                            class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 transition">
 
                                         @error('phone')
-                                            <p
-                                                class="
-                                                text-xs
-                                                text-red-500
-                                                mt-1
-                                            ">
+                                            <p class="text-xs text-red-500 mt-1">
                                                 {{ $message }}
                                             </p>
                                         @enderror
@@ -440,63 +237,24 @@
                                     ====================================== --}}
                                     <div>
 
-                                        <label
-                                            class="
-                                            block
-                                            text-sm
-                                            font-medium
-                                            text-gray-700
-                                            mb-2
-                                        ">
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">
                                             Account Status
                                         </label>
 
-                                        <div
-                                            class="
-                                            w-full
-                                            rounded-xl
-                                            border border-gray-200
-                                            bg-gray-50
-                                            px-4 py-3
-                                            text-sm
-                                        ">
+                                        <div class="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm">
 
                                             @if (auth()->user()->status)
-                                                <span
-                                                    class="
-                                                    inline-flex
-                                                    items-center
-                                                    gap-2
-                                                    text-green-600
-                                                    font-medium
-                                                ">
+                                                <span class="inline-flex items-center gap-2 text-green-600 font-medium">
 
-                                                    <span
-                                                        class="
-                                                        w-2 h-2
-                                                        rounded-full
-                                                        bg-green-500
-                                                    "></span>
+                                                    <span class="w-2 h-2 rounded-full bg-green-500"></span>
 
                                                     Active
 
                                                 </span>
                                             @else
-                                                <span
-                                                    class="
-                                                    inline-flex
-                                                    items-center
-                                                    gap-2
-                                                    text-red-600
-                                                    font-medium
-                                                ">
+                                                <span class="inline-flex items-center gap-2 text-red-600 font-medium">
 
-                                                    <span
-                                                        class="
-                                                        w-2 h-2
-                                                        rounded-full
-                                                        bg-red-500
-                                                    "></span>
+                                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
 
                                                     Inactive
 
@@ -513,53 +271,21 @@
                                 {{-- =========================================
                                      IMAGE INFORMATION
                                 ========================================== --}}
-                                <div
-                                    class="
-                                    mt-5
-                                    rounded-xl
-                                    border border-blue-100
-                                    bg-blue-50
-                                    px-4 py-3
-                                ">
+                                <div class="mt-5 rounded-xl border border-blue-100 bg-blue-50 px-4 py-3">
 
-                                    <div
-                                        class="
-                                        flex
-                                        items-start
-                                        gap-3
-                                    ">
+                                    <div class="flex items-start gap-3">
 
-                                        <div
-                                            class="
-                                            w-8 h-8
-                                            rounded-lg
-                                            bg-blue-100
-                                            flex
-                                            items-center
-                                            justify-center
-                                            text-[#2563EB]
-                                            flex-shrink-0
-                                        ">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-100 flex items-center justify-center text-[#2563EB] flex-shrink-0">
                                             📷
                                         </div>
 
                                         <div>
 
-                                            <p
-                                                class="
-                                                text-sm
-                                                font-semibold
-                                                text-blue-900
-                                            ">
+                                            <p class="text-sm font-semibold text-blue-900">
                                                 Profile Picture
                                             </p>
 
-                                            <p
-                                                class="
-                                                text-xs
-                                                text-blue-700
-                                                mt-1
-                                            ">
+                                            <p class="text-xs text-blue-700 mt-1">
                                                 JPG, JPEG, PNG or WEBP. Maximum size 2MB.
                                             </p>
 
@@ -573,32 +299,10 @@
                                 {{-- =========================================
                                      SAVE BUTTON
                                 ========================================== --}}
-                                <div
-                                    class="
-                                    flex
-                                    justify-end
-                                    mt-6
-                                    pt-5
-                                    border-t
-                                    border-gray-100
-                                ">
+                                <div class="flex justify-end mt-6 pt-5 border-t border-gray-100">
 
                                     <button type="submit"
-                                        class="
-                                            inline-flex
-                                            items-center
-                                            gap-2
-                                            px-6 py-3
-                                            rounded-xl
-                                            bg-[#2563EB]
-                                            hover:bg-[#1D4ED8]
-                                            text-white
-                                            text-sm
-                                            font-semibold
-                                            shadow-md
-                                            hover:shadow-lg
-                                            transition
-                                        ">
+                                        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold shadow-md hover:shadow-lg transition">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -623,51 +327,21 @@
                     {{-- =================================================
                          SAVED ADDRESSES
                     ================================================== --}}
-                    <div
-                        class="
-                        bg-white
-                        rounded-2xl
-                        shadow-sm
-                        border border-gray-100
-                        overflow-hidden
-                        mt-6
-                    ">
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mt-6">
 
 
                         {{-- =============================================
                              ADDRESS HEADER
                         ============================================== --}}
-                        <div
-                            class="
-                            flex
-                            items-center
-                            justify-between
-                            gap-4
-                            px-6 py-5
-                            border-b
-                            border-gray-100
-                            bg-gradient-to-r
-                            from-white
-                            to-blue-50/40
-                        ">
+                        <div class="flex items-center justify-between gap-4 px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-white to-blue-50/40">
 
                             <div>
 
-                                <h2
-                                    class="
-                                    text-lg
-                                    font-bold
-                                    text-[#111827]
-                                ">
+                                <h2 class="text-lg font-bold text-[#111827]">
                                     Saved Addresses
                                 </h2>
 
-                                <p
-                                    class="
-                                    text-sm
-                                    text-gray-500
-                                    mt-1
-                                ">
+                                <p class="text-sm text-gray-500 mt-1">
                                     Manage your delivery addresses.
                                 </p>
 
@@ -676,22 +350,7 @@
 
                             {{-- Add Address --}}
                             <a href="{{ route('checkout.address.create') }}"
-                                class="
-                                    inline-flex
-                                    items-center
-                                    gap-1.5
-                                    px-4 py-2.5
-                                    rounded-xl
-                                    bg-[#2563EB]
-                                    hover:bg-[#1D4ED8]
-                                    text-white
-                                    text-sm
-                                    font-semibold
-                                    shadow-sm
-                                    hover:shadow-md
-                                    transition
-                                    whitespace-nowrap
-                                ">
+                                class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold shadow-sm hover:shadow-md transition whitespace-nowrap">
 
                                 <span class="text-base">
                                     +
@@ -718,54 +377,20 @@
                                 {{-- =====================================
                                      ADDRESS CARD
                                 ====================================== --}}
-                                <div
-                                    class="
-                                    {{ $loop->first ? '' : 'mt-4' }}
-                                    group
-                                    border
-                                    border-gray-200
-                                    rounded-2xl
-                                    p-5
-                                    bg-white
-                                    hover:border-blue-300
-                                    hover:shadow-md
-                                    transition-all
-                                    duration-200
-                                ">
+                                <div class="{{ $loop->first ? '' : 'mt-4' }} group border border-gray-200 rounded-2xl p-5 bg-white hover:border-blue-300 hover:shadow-md transition-all duration-200">
 
 
                                     {{-- =================================
                                          TOP SECTION
                                     ================================== --}}
-                                    <div
-                                        class="
-                                        flex
-                                        items-start
-                                        justify-between
-                                        gap-4
-                                    ">
+                                    <div class="flex items-start justify-between gap-4">
 
 
                                         {{-- User / Address Name --}}
-                                        <div
-                                            class="
-                                            flex
-                                            items-start
-                                            gap-3
-                                        ">
+                                        <div class="flex items-start gap-3">
 
                                             {{-- Location Icon --}}
-                                            <div
-                                                class="
-                                                w-11 h-11
-                                                flex-shrink-0
-                                                rounded-xl
-                                                bg-blue-50
-                                                flex
-                                                items-center
-                                                justify-center
-                                                text-[#2563EB]
-                                            ">
+                                            <div class="w-11 h-11 flex-shrink-0 rounded-xl bg-blue-50 flex items-center justify-center text-[#2563EB]">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -783,21 +408,11 @@
 
                                             <div>
 
-                                                <h3
-                                                    class="
-                                                    font-semibold
-                                                    text-[#111827]
-                                                    text-base
-                                                ">
+                                                <h3 class="font-semibold text-[#111827] text-base">
                                                     {{ $address->full_name }}
                                                 </h3>
 
-                                                <p
-                                                    class="
-                                                    text-sm
-                                                    text-gray-500
-                                                    mt-1
-                                                ">
+                                                <p class="text-sm text-gray-500 mt-1">
                                                     📞 {{ $address->phone }}
                                                 </p>
 
@@ -809,29 +424,12 @@
                                         {{-- =================================
                                              RIGHT SIDE
                                         ================================== --}}
-                                        <div
-                                            class="
-                                            flex
-                                            items-center
-                                            gap-2
-                                            flex-wrap
-                                            justify-end
-                                        ">
+                                        <div class="flex items-center gap-2 flex-wrap justify-end">
 
 
                                             {{-- Default Badge --}}
                                             @if ($address->is_default)
-                                                <span
-                                                    class="
-                                                    px-3 py-1
-                                                    rounded-full
-                                                    text-xs
-                                                    font-semibold
-                                                    bg-blue-50
-                                                    text-[#2563EB]
-                                                    border
-                                                    border-blue-100
-                                                ">
+                                                <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-[#2563EB] border border-blue-100">
                                                     Default
                                                 </span>
                                             @endif
@@ -839,19 +437,7 @@
 
                                             {{-- Edit Button --}}
                                             <a href="{{ route('checkout.address.edit', $address->id) }}"
-                                                class="
-                                                    inline-flex
-                                                    items-center
-                                                    gap-1.5
-                                                    px-3 py-1.5
-                                                    rounded-lg
-                                                    text-xs
-                                                    font-semibold
-                                                    text-[#2563EB]
-                                                    bg-blue-50
-                                                    hover:bg-blue-100
-                                                    transition
-                                                ">
+                                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#2563EB] bg-blue-50 hover:bg-blue-100 transition">
 
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4"
                                                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -875,38 +461,17 @@
 
 
                                     {{-- Divider --}}
-                                    <div
-                                        class="
-                                        border-t
-                                        border-gray-100
-                                        my-4
-                                    ">
-                                    </div>
+                                    <div class="border-t border-gray-100 my-4"></div>
 
 
                                     {{-- =================================
                                          ADDRESS DETAILS
                                     ================================== --}}
-                                    <div
-                                        class="
-                                        flex
-                                        items-start
-                                        gap-3
-                                    ">
+                                    <div class="flex items-start gap-3">
 
 
                                         {{-- Address Icon --}}
-                                        <div
-                                            class="
-                                            mt-0.5
-                                            w-8 h-8
-                                            flex-shrink-0
-                                            rounded-lg
-                                            bg-gray-100
-                                            flex
-                                            items-center
-                                            justify-center
-                                        ">
+                                        <div class="mt-0.5 w-8 h-8 flex-shrink-0 rounded-lg bg-gray-100 flex items-center justify-center">
 
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-600"
                                                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -925,26 +490,13 @@
                                         <div class="min-w-0">
 
                                             {{-- Main Address --}}
-                                            <p
-                                                class="
-                                                text-sm
-                                                font-medium
-                                                text-gray-700
-                                                leading-6
-                                            ">
-
+                                            <p class="text-sm font-medium text-gray-700 leading-6">
                                                 {{ $address->address }}
-
                                             </p>
 
 
                                             {{-- Location --}}
-                                            <p
-                                                class="
-                                                text-sm
-                                                text-gray-500
-                                                leading-6
-                                            ">
+                                            <p class="text-sm text-gray-500 leading-6">
 
                                                 {{ $address->city }},
                                                 {{ $address->district }},
@@ -969,24 +521,11 @@
                                 {{-- =====================================
                                      EMPTY ADDRESS
                                 ====================================== --}}
-                                <div
-                                    class="
-                                    text-center
-                                    py-12
-                                ">
+                                <div class="text-center py-12">
 
 
                                     {{-- Icon --}}
-                                    <div
-                                        class="
-                                        w-16 h-16
-                                        mx-auto
-                                        rounded-2xl
-                                        bg-blue-50
-                                        flex
-                                        items-center
-                                        justify-center
-                                    ">
+                                    <div class="w-16 h-16 mx-auto rounded-2xl bg-blue-50 flex items-center justify-center">
 
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-[#2563EB]"
                                             fill="none" viewBox="0 0 24 24" stroke="currentColor"
@@ -1003,26 +542,13 @@
 
 
                                     {{-- Title --}}
-                                    <h3
-                                        class="
-                                        font-bold
-                                        text-lg
-                                        text-[#111827]
-                                        mt-5
-                                    ">
+                                    <h3 class="font-bold text-lg text-[#111827] mt-5">
                                         No Saved Addresses
                                     </h3>
 
 
                                     {{-- Description --}}
-                                    <p
-                                        class="
-                                        text-sm
-                                        text-gray-500
-                                        mt-2
-                                        max-w-sm
-                                        mx-auto
-                                    ">
+                                    <p class="text-sm text-gray-500 mt-2 max-w-sm mx-auto">
                                         Add your delivery address to make checkout
                                         faster and easier.
                                     </p>
@@ -1030,22 +556,7 @@
 
                                     {{-- Add Address --}}
                                     <a href="{{ route('checkout.address.create') }}"
-                                        class="
-                                            inline-flex
-                                            items-center
-                                            gap-2
-                                            mt-5
-                                            px-5 py-3
-                                            rounded-xl
-                                            bg-[#2563EB]
-                                            hover:bg-[#1D4ED8]
-                                            text-white
-                                            text-sm
-                                            font-semibold
-                                            shadow-sm
-                                            hover:shadow-md
-                                            transition
-                                        ">
+                                        class="inline-flex items-center gap-2 mt-5 px-5 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-sm font-semibold shadow-sm hover:shadow-md transition">
 
                                         <span class="text-lg">
                                             +

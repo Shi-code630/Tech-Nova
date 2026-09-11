@@ -8,12 +8,14 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactMessageController;
+use App\Http\Controllers\CouponController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReturnRequestController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\UserOrderController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -143,15 +145,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
 
+    // Coupon apply/remove during checkout
+    Route::post('/checkout/coupon', [CouponController::class, 'apply'])->name('checkout.coupon.apply');
+    Route::delete('/checkout/coupon', [CouponController::class, 'remove'])->name('checkout.coupon.remove');
+
     /*
     |----------------------------------------------------------------------
     | Addresses
     |----------------------------------------------------------------------
     */
-    // Single route with a single name (avoids duplicate URL registration)
     Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('checkout.addresses');
 
-    // Address CRUD
     Route::delete('/my-addresses/{id}', [CheckoutController::class, 'deleteAddress'])->name('checkout.address.delete');
     Route::get('/checkout/address/create', [CheckoutController::class, 'createAddress'])->name('checkout.address.create');
     Route::post('/checkout/address', [CheckoutController::class, 'storeAddress'])->name('checkout.address.store');
@@ -160,22 +164,23 @@ Route::middleware(['auth'])->group(function () {
 
     /*
     |----------------------------------------------------------------------
-    | Wishlist / Reviews / Coupons / Settings / Coins
+    | Wishlist
     |----------------------------------------------------------------------
     */
-    Route::get('/wishlist', function () {
-        return view('user.wishlist.index');
-    })->name('user.wishlist');
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('user.wishlist');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('user.wishlist.toggle');
+    Route::delete('/wishlist/{productId}', [WishlistController::class, 'destroy'])->name('user.wishlist.remove');
 
+    /*
+    |----------------------------------------------------------------------
+    | Reviews / Coupons / Settings / Coins
+    |----------------------------------------------------------------------
+    */
     Route::get('/reviews', [UserDashboardController::class, 'reviews'])->name('user.reviews');
 
-    Route::get('/coupons', function () {
-        return view('user.coupons.index');
-    })->name('user.coupons');
+    Route::get('/coupons', [CouponController::class, 'index'])->name('user.coupons');
 
-    Route::get('/settings', function () {
-        return view('user.settings');
-    })->name('user.settings');
+    Route::get('/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
 
     Route::get('/coins', function () {
         $user = request()->user();
