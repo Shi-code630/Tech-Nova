@@ -29,13 +29,14 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'status' => 'boolean',
-        'reward_points' => 'integer',
+        'status'           => 'boolean',
+        'reward_points'    => 'integer',
     ];
 
     // =========================================================
     // RELATIONSHIPS
-    // =========================================================
+    // =========================================================\
+
 
     public function addresses()
     {
@@ -44,8 +45,7 @@ class User extends Authenticatable
 
     public function defaultAddress()
     {
-        return $this->hasOne(Address::class)
-            ->where('is_default', true);
+        return $this->hasOne(Address::class)->where('is_default', true);
     }
 
     public function carts()
@@ -53,12 +53,6 @@ class User extends Authenticatable
         return $this->hasMany(Cart::class);
     }
 
-    /**
-     * User wishlists
-     *
-     * IMPORTANT:
-     * The relationship name is "wishlists" (plural).
-     */
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class);
@@ -95,16 +89,39 @@ class User extends Authenticatable
 
     public function getFirstNameAttribute()
     {
-        $nameParts = explode(' ', $this->name);
-
-        return $nameParts[0] ?? $this->name;
+        $parts = explode(' ', $this->name);
+        return $parts[0] ?? $this->name;
     }
 
     public function getLastNameAttribute()
     {
-        $nameParts = explode(' ', $this->name);
+        $parts = explode(' ', $this->name);
+        return end($parts) ?? $this->name;
+    }
 
-        return end($nameParts) ?? $this->name;
+    /**
+     * Returns full public URL of profile image
+     */
+    public function getImageAttribute($value)
+    {
+        if (empty($value)) {
+            return null;
+        }
+
+        // Already a full URL
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
+        }
+
+        return asset('storage/' . ltrim($value, '/'));
+    }
+
+    /**
+     * Alias for image
+     */
+    public function getProfileImageUrlAttribute()
+    {
+        return $this->image;
     }
 
     public function getFormattedRewardPointsAttribute()
@@ -146,25 +163,16 @@ class User extends Authenticatable
         return $this->carts()->count();
     }
 
-    /**
-     * Available coins
-     */
     public function getAvailableCoinsAttribute()
     {
         return $this->reward_points ?? 0;
     }
 
-    /**
-     * Points value in currency,
-     * using the configured redeem rate.
-     */
     public function getCoinsValueAttribute()
     {
-        $redeemRate = \App\Helpers\RewardHelper::getRedeemRate();
+        $rate = \App\Helpers\RewardHelper::getRedeemRate();
 
-        return $redeemRate > 0
-            ? $this->reward_points / $redeemRate
-            : 0;
+        return $rate > 0 ? $this->reward_points / $rate : 0;
     }
 
     public function getTotalCoinsEarnedAttribute()
@@ -181,17 +189,14 @@ class User extends Authenticatable
             ->sum('points');
     }
 
-    /**
-     * Backward compatibility
-     */
     public function getTotalPointsEarnedAttribute()
     {
-        return $this->getTotalCoinsEarnedAttribute();
+        return $this->total_coins_earned;
     }
 
     public function getTotalPointsRedeemedAttribute()
     {
-        return $this->getTotalCoinsRedeemedAttribute();
+        return $this->total_coins_redeemed;
     }
 
     public function getPointsValueAttribute()
@@ -215,113 +220,59 @@ class User extends Authenticatable
 
     public function setPhoneAttribute($value)
     {
-        $this->attributes['phone'] = preg_replace(
-            '/[^0-9+]/',
-            '',
-            $value
-        );
+        $this->attributes['phone'] = preg_replace('/[^0-9+]/', '', $value);
     }
 
     // =========================================================
-    // REWARD POINT METHODS
+    // REWARD METHODS
     // =========================================================
 
-    /**
-     * Add reward points safely.
-     */
-    public function addRewardPoints(
-        $points,
-        $remarks = null,
-        $orderId = null
-    ) {
-        return DB::transaction(function () use (
-            $points,
-            $orderId,
-            $remarks
-        ) {
-            $user = static::query()
-                ->lockForUpdate()
-                ->findOrFail($this->id);
+    public function addRewardPoints($points, $remarks = null, $orderId = null)
+    {
+        return DB::transaction(function () use ($points, $orderId, $remarks) {
+            $user = static::query()->lockForUpdate()->findOrFail($this->id);
 
             $user->increment('reward_points', $points);
-
-            // Keep current instance in sync
             $this->reward_points = $user->fresh()->reward_points;
 
             return $this->rewardTransactions()->create([
                 'order_id' => $orderId,
-                'points' => $points,
-                'type' => 'earned',
-                'remarks' => $remarks
-                    ?? 'Coins earned from order',
+                'points'   => $points,
+                'type'     => 'earned',
+                'remarks'  => $remarks ?? 'Coins earned from order',
             ]);
         });
     }
 
-    /**
-     * Redeem reward points safely.
-     */
-    public function redeemRewardPoints(
-        $points,
-        $remarks = null,
-        $orderId = null
-    ) {
-        return DB::transaction(function () use (
-            $points,
-            $orderId,
-            $remarks
-        ) {
-            $user = static::query()
-                ->lockForUpdate()
-                ->findOrFail($this->id);
+    public function redeemRewardPoints($points, $remarks = null, $orderId = null)
+    {
+        return DB::transaction(function () use ($points, $orderId, $remarks) {
+            $user = static::query()->lockForUpdate()->findOrFail($this->id);
 
             if ($user->reward_points < $points) {
-                throw new \Exception(
-                    'Insufficient reward points. You have '
-                    . $user->reward_points
-                    . ' points.'
-                );
+                throw new \Exception('Insufficient reward points. You have ' . $user->reward_points . ' points.');
             }
 
             $user->decrement('reward_points', $points);
-
             $this->reward_points = $user->fresh()->reward_points;
 
             return $this->rewardTransactions()->create([
                 'order_id' => $orderId,
-                'points' => $points,
-                'type' => 'redeemed',
-                'remarks' => $remarks ?? 'Coins redeemed',
+                'points'   => $points,
+                'type'     => 'redeemed',
+                'remarks'  => $remarks ?? 'Coins redeemed',
             ]);
         });
     }
 
-    // =========================================================
-    // COINS ALIASES
-    // =========================================================
-
-    public function addCoins(
-        $points,
-        $orderId = null,
-        $remarks = null
-    ) {
-        return $this->addRewardPoints(
-            $points,
-            $remarks,
-            $orderId
-        );
+    public function addCoins($points, $orderId = null, $remarks = null)
+    {
+        return $this->addRewardPoints($points, $remarks, $orderId);
     }
 
-    public function redeemCoins(
-        $points,
-        $orderId = null,
-        $remarks = null
-    ) {
-        return $this->redeemRewardPoints(
-            $points,
-            $remarks,
-            $orderId
-        );
+    public function redeemCoins($points, $orderId = null, $remarks = null)
+    {
+        return $this->redeemRewardPoints($points, $remarks, $orderId);
     }
 
     public function hasSufficientPoints($points): bool
@@ -348,34 +299,23 @@ class User extends Authenticatable
         return $query->where('status', false);
     }
 
-    public function scopeWithMinRewardPoints(
-        $query,
-        $points
-    ) {
-        return $query->where(
-            'reward_points',
-            '>=',
-            $points
-        );
+    public function scopeWithMinRewardPoints($query, $points)
+    {
+        return $query->where('reward_points', '>=', $points);
     }
 
-    public function scopeWithMaxRewardPoints(
-        $query,
-        $points
-    ) {
-        return $query->where(
-            'reward_points',
-            '<=',
-            $points
-        );
+    public function scopeWithMaxRewardPoints($query, $points)
+    {
+        return $query->where('reward_points', '<=', $points);
     }
 
     public function scopeSearch($query, $search)
     {
-        return $query
-            ->where('name', 'LIKE', "%{$search}%")
-            ->orWhere('email', 'LIKE', "%{$search}%")
-            ->orWhere('phone', 'LIKE', "%{$search}%");
+        return $query->where(function ($q) use ($search) {
+            $q->where('name', 'LIKE', "%{$search}%")
+                ->orWhere('email', 'LIKE', "%{$search}%")
+                ->orWhere('phone', 'LIKE', "%{$search}%");
+        });
     }
 
     public function scopeHasOrders($query)
@@ -388,15 +328,9 @@ class User extends Authenticatable
         return $query->doesntHave('orders');
     }
 
-    public function scopeDateRange(
-        $query,
-        $startDate,
-        $endDate
-    ) {
-        return $query->whereBetween(
-            'created_at',
-            [$startDate, $endDate]
-        );
+    public function scopeDateRange($query, $startDate, $endDate)
+    {
+        return $query->whereBetween('created_at', [$startDate, $endDate]);
     }
 
     // =========================================================
@@ -408,52 +342,29 @@ class User extends Authenticatable
         return $this->orders()->count() === 0;
     }
 
-    /**
-     * Get all wishlist product IDs.
-     */
     public function getWishlistProductIds()
     {
-        return $this->wishlists()
-            ->pluck('product_id')
-            ->toArray();
+        return $this->wishlists()->pluck('product_id')->toArray();
     }
 
-    /**
-     * Check whether product is in wishlist.
-     */
     public function hasInWishlist($productId)
     {
-        return $this->wishlists()
-            ->where('product_id', $productId)
-            ->exists();
+        return $this->wishlists()->where('product_id', $productId)->exists();
     }
 
-    /**
-     * Add/remove product from wishlist.
-     */
     public function toggleWishlist($productId)
     {
         if ($this->hasInWishlist($productId)) {
-
-            $this->wishlists()
-                ->where('product_id', $productId)
-                ->delete();
-
+            $this->wishlists()->where('product_id', $productId)->delete();
             return false;
         }
 
-        $this->wishlists()->create([
-            'product_id' => $productId,
-        ]);
-
+        $this->wishlists()->create(['product_id' => $productId]);
         return true;
     }
 
     public function recentOrders($limit = 5)
     {
-        return $this->orders()
-            ->latest()
-            ->limit($limit)
-            ->get();
+        return $this->orders()->latest()->limit($limit)->get();
     }
 }

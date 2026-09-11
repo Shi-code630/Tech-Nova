@@ -11,7 +11,7 @@
                 </span>
 
                 <span class="hidden sm:inline text-[#dbeafe] text-[12px] sm:text-[12px] ml-8">
-                    🚛 Free Delivery On All Orders Above Rs. 500
+                    🚛 Free Delivery On All Orders Above Rs. 10000
                 </span>
 
             </div>
@@ -20,8 +20,8 @@
             {{-- RIGHT --}}
             <div class="flex items-center gap-4 sm:gap-5">
 
-                {{-- ✅ resolved: kept the dynamic link, not href="#" --}}
-                <a href="{{ route('user.orders') }}" class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
+                <a href="{{ route('user.orders') }}"
+                    class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
                     Track Order
                 </a>
 
@@ -53,9 +53,7 @@
         <div class="Container mx-auto flex items-center justify-between  p-2">
 
 
-            {{-- =================================================
-                LOGO
-            ================================================== --}}
+            {{-- LOGO --}}
             <a href="{{ route('home') }}" class="flex-shrink-0">
 
                 <img src="{{ asset('image/logo.png') }}" alt="Logo" class="w-auto h-11 drop-shadow-sm">
@@ -64,9 +62,7 @@
 
 
 
-            {{-- =================================================
-                SEARCH
-            ================================================== --}}
+            {{-- SEARCH --}}
             <form action="{{ route('search') }}" method="GET"
                 class="hidden md:flex flex-1 max-w-xl mx-6 lg:mx-8 relative">
 
@@ -104,16 +100,11 @@
 
 
 
-            {{-- =================================================
-                RIGHT SIDE
-            ================================================== --}}
+            {{-- RIGHT SIDE --}}
             <div class="flex items-center gap-3 sm:gap-5">
 
 
-                {{-- =================================================
-                    COINS
-                ================================================== --}}
-
+                {{-- COINS --}}
                 @auth
                     <a href="{{ route('user.dashboard') }}" class="relative group cursor-pointer hidden sm:block">
 
@@ -129,11 +120,8 @@
                                 💰
                             </span>
 
-
-
                         </div>
 
-                        {{-- Tooltip --}}
                         <div
                             class="absolute -bottom-10 left-1/2
                                     -translate-x-1/2
@@ -161,9 +149,7 @@
 
 
 
-                {{-- =================================================
-                    CART
-                ================================================== --}}
+                {{-- CART --}}
                 <a href="{{ route('user.cart') }}" class="relative group">
 
                     <div
@@ -191,7 +177,6 @@
                         </svg>
 
 
-                        {{-- Cart Count --}}
                         @auth
 
                             @php
@@ -220,7 +205,6 @@
                     </div>
 
 
-                    {{-- Tooltip --}}
                     <span
                         class="absolute -bottom-7 left-1/2
                                  -translate-x-1/2
@@ -243,9 +227,7 @@
 
 
 
-                {{-- =================================================
-                    WISHLIST
-                ================================================== --}}
+                {{-- WISHLIST --}}
                 <a href="{{ route('user.wishlist') }}" class="relative group">
 
                     <div
@@ -274,7 +256,6 @@
                     </div>
 
 
-                    {{-- Tooltip --}}
                     <span
                         class="absolute -bottom-7 left-1/2
                                  -translate-x-1/2
@@ -297,12 +278,9 @@
 
 
 
-                {{-- =================================================
-                    ACCOUNT
-                ================================================== --}}
+                {{-- ACCOUNT --}}
                 @auth
 
-                    {{-- ================= LOGGED IN ================= --}}
                     <div class="relative group">
 
                         {{-- Account Button --}}
@@ -329,10 +307,10 @@
                                         shadow-inner">
 
                                 @if (!empty(auth()->user()->image))
-                                    <img src="{{ asset('storage/' . auth()->user()->image) }}"
-                                        alt="{{ auth()->user()->name }}" class="w-full h-full object-cover">
+                                    <img src="{{ auth()->user()->image }}"
+                                        alt="{{ auth()->user()->name }}"
+                                        class="w-full h-full object-cover">
                                 @else
-                                    {{-- Default User Icon --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" class="w-5 h-5">
 
@@ -378,9 +356,7 @@
 
 
 
-                        {{-- =================================================
-                            ACCOUNT DROPDOWN
-                        ================================================== --}}
+                        {{-- ACCOUNT DROPDOWN --}}
                         <div
                             class="absolute right-0 top-full mt-2
                                     w-60
@@ -416,10 +392,10 @@
                                                 shrink-0">
 
                                         @if (!empty(auth()->user()->image))
-                                            <img src="{{ asset('storage/' . auth()->user()->image) }}"
-                                                alt="{{ auth()->user()->name }}" class="w-full h-full object-cover">
+                                            <img src="{{ auth()->user()->image }}"
+                                                alt="{{ auth()->user()->name }}"
+                                                class="w-full h-full object-cover">
                                         @else
-                                            {{-- Default Icon --}}
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                                 stroke="currentColor" class="w-5 h-5">
 
@@ -593,9 +569,7 @@
 
                     </div>
                 @else
-                    {{-- =================================================
-                        GUEST / NOT LOGGED IN
-                    ================================================== --}}
+                    {{-- GUEST / NOT LOGGED IN --}}
                     <a href="{{ route('login') }}"
                         class="flex items-center gap-2
                                bg-[#0959e8]
@@ -719,9 +693,7 @@
 
 
 
-                        {{-- =================================================
-                            CHILD CATEGORIES DROPDOWN
-                        ================================================== --}}
+                        {{-- CHILD CATEGORIES DROPDOWN --}}
                         @if ($parent->children->count())
                             <div
                                 class="absolute left-0 top-full

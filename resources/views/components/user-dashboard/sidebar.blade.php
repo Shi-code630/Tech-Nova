@@ -16,25 +16,24 @@
     <div class="px-6 py-5 text-center border-b border-white/20">
 
         <!-- Avatar -->
+        <!-- Avatar -->
         <div class="w-20 h-20 mx-auto mb-3 rounded-full bg-white
-            flex items-center justify-center shadow-lg">
+    flex items-center justify-center shadow-lg">
 
             @php
                 $user = auth()->user();
-                $imagePath = $user->image ?? null;
-                $hasImage = $imagePath && file_exists(public_path('storage/' . $imagePath));
             @endphp
 
-            @if($hasImage)
-                <img src="{{ asset('storage/' . $imagePath) }}"
-                     alt="{{ $user->name }}"
-                     class="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
-                     onerror="this.style.display='none'; this.parentElement.innerHTML = `<div class='w-16 h-16 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-white text-2xl font-bold'>{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>`;">
+            @if ($user->image)
+                <img src="{{ $user->image }}" alt="{{ $user->name }}"
+                    class="w-16 h-16 rounded-full object-cover border-2 border-white shadow"
+                    onerror="this.style.display='none'; this.parentElement.innerHTML = `<div class='w-16 h-16 rounded-full bg-gradient-to-br from-[#F59E0B] to-[#D97706] flex items-center justify-center text-white text-2xl font-bold'>{{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}</div>`;">
             @else
-                <div class="w-16 h-16 rounded-full
-                       bg-gradient-to-br from-[#F59E0B] to-[#D97706]
-                       flex items-center justify-center
-                       text-white text-2xl font-bold">
+                <div
+                    class="w-16 h-16 rounded-full
+               bg-gradient-to-br from-[#F59E0B] to-[#D97706]
+               flex items-center justify-center
+               text-white text-2xl font-bold">
                     {{ strtoupper(substr($user->name ?? 'U', 0, 1)) }}
                 </div>
             @endif
@@ -230,15 +229,9 @@
         </a>
 
         <!-- =========================
-<<<<<<< HEAD
              LOGOUT
         ========================== -->
         <div class="mt-4 pt-4 border-t border-white/20">
-=======
-         LOGOUT
-    ========================== -->
-        <div class="py-2">
->>>>>>> 20a0ea999459addac9ef04032d04154f02d58141
 
             <form method="POST" action="{{ route('logout') }}">
 
