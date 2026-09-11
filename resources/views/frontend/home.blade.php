@@ -2,70 +2,65 @@
     <Section class="bg-[#f0f9ff]">
         <div class="Container mx-auto px-4">
             <div class="mt-[10px]">
-    <div class="relative max-w-[1500px] mx-auto h-[400px] overflow-hidden rounded-2xl shadow-2xl">
+                <div class="relative max-w-[1500px] mx-auto h-[350px] overflow-hidden rounded-2xl shadow-2xl">
 
-        <!-- Slides Wrapper -->
-        <div id="slider"
-            class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
+                    <!-- Slides Wrapper -->
+                    <div id="slider"
+                        class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
 
-            @foreach ($banners as $banner)
+                        @foreach ($banners as $banner)
+                            <!-- Full Banner Clickable -->
+                            <div class="relative w-full h-full flex-shrink-0">
 
-                <!-- Full Banner Clickable -->
-                <div class="relative w-full h-full flex-shrink-0">
+                                <a href="{{ $banner->button_link ?? '#' }}" class="block w-full h-100">
 
-                    <a href="{{ $banner->button_link ?? '#' }}"
-                        class="block w-full h-100">
+                                    <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->alt_text }}"
+                                        class="w-full h-full object-cover">
 
-                        <img src="{{ asset('storage/' . $banner->image) }}"
-                            alt="{{ $banner->alt_text }}"
-                            class="w-full h-full object-cover">
+                                </a>
 
-                    </a>
+                            </div>
+                        @endforeach
 
-                </div>
-
-            @endforeach
-
-        </div>
+                    </div>
 
 
-        <!-- Left Arrow -->
-        <button onclick="moveSlide(-1)"
-            class="absolute top-1/2 left-4 -translate-y-1/2
+                    <!-- Left Arrow -->
+                    <button onclick="moveSlide(-1)"
+                        class="absolute top-1/2 left-4 -translate-y-1/2
                    bg-black/50 hover:bg-black/70
                    text-white p-3 rounded-full z-10
                    transition">
-            ❮
-        </button>
+                        ❮
+                    </button>
 
 
-        <!-- Right Arrow -->
-        <button onclick="moveSlide(1)"
-            class="absolute top-1/2 right-4 -translate-y-1/2
+                    <!-- Right Arrow -->
+                    <button onclick="moveSlide(1)"
+                        class="absolute top-1/2 right-4 -translate-y-1/2
                    bg-black/50 hover:bg-black/70
                    text-white p-3 rounded-full z-10
                    transition">
-            ❯
-        </button>
+                        ❯
+                    </button>
 
 
-        <!-- Dots -->
-        <div class="absolute bottom-4 left-1/2 -translate-x-1/2
+                    <!-- Dots -->
+                    <div class="absolute bottom-4 left-1/2 -translate-x-1/2
                     flex gap-2 z-10">
 
-            @foreach ($banners as $index => $banner)
-
-                <span class="dot w-3 h-3 rounded-full
+                        @foreach ($banners as $index => $banner)
+                            <span
+                                class="dot w-3 h-3 rounded-full
                              bg-white/50 cursor-pointer"
-                    data-index="{{ $index }}">
-                </span>
+                                data-index="{{ $index }}">
+                            </span>
+                        @endforeach
 
-            @endforeach
+                    </div>
 
-        </div>
-
-    </div>
-</div>
+                </div>
+            </div>
 
             <div class="py-3 bg-[#f0f9ff]">
                 <div class=" mb-6 ">
@@ -742,70 +737,70 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 pt-5 gap-6 pb-10">
 
-                @foreach ($blogs as $blog)
-                    <article
-                        class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition duration-300">
+                            @foreach ($blogs as $blog)
+                                <article
+                                    class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition duration-300">
 
-                        {{-- Blog Image --}}
-                        <div class="h-52 overflow-hidden">
+                                    {{-- Blog Image --}}
+                                    <div class="h-52 overflow-hidden">
 
-                            <img src="{{ $blog->featured_image
-                                ? asset('storage/' . $blog->featured_image)
-                                : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80' }}"
-                                alt="{{ $blog->title }}"
-                                class="w-full h-full object-cover hover:scale-105 transition duration-500">
+                                        <img src="{{ $blog->featured_image
+                                            ? asset('storage/' . $blog->featured_image)
+                                            : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80' }}"
+                                            alt="{{ $blog->title }}"
+                                            class="w-full h-full object-cover hover:scale-105 transition duration-500">
+
+                                    </div>
+
+
+                                    <div class="p-4">
+
+                                        {{-- Category + Date --}}
+                                        <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
+
+                                            <span class="text-blue-600 font-medium line-clamp-1">
+                                                {{ $blog->category->name ?? 'Blog' }}
+                                            </span>
+
+
+
+                                        </div>
+
+
+                                        {{-- Title --}}
+                                        <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-2">
+                                            {{ $blog->title }}
+                                        </h3>
+
+
+                                        {{-- Excerpt - Maximum 3 Lines --}}
+                                        <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
+                                            {{ $blog->excerpt }}
+                                        </p>
+
+
+                                        {{-- Date + Read More --}}
+                                        <div class="flex items-center justify-between">
+
+                                            {{-- Date - Left --}}
+                                            <span class="text-sm text-gray-500">📅
+                                                {{ $blog->published_at ? $blog->published_at->format('d M Y') : $blog->created_at->format('d M Y') }}
+                                            </span>
+
+                                            {{-- Read More - Right --}}
+                                            <a href="{{ route('blogs.view', $blog->slug) }}"
+                                                class="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center">
+                                                Read More
+                                                <span class="ml-2">→</span>
+                                            </a>
+
+                                        </div>
+                                    </div>
+
+                                </article>
+                            @endforeach
 
                         </div>
-
-
-                        <div class="p-4">
-
-                            {{-- Category + Date --}}
-                            <div class="flex items-center gap-2 text-sm text-gray-500 mb-3">
-
-                                <span class="text-blue-600 font-medium line-clamp-1">
-                                    {{ $blog->category->name ?? 'Blog' }}
-                                </span>
-
-
-
-                            </div>
-
-
-                            {{-- Title --}}
-                            <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-2">
-                                {{ $blog->title }}
-                            </h3>
-
-
-                            {{-- Excerpt - Maximum 3 Lines --}}
-                            <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                                {{ $blog->excerpt }}
-                            </p>
-
-
-                            {{-- Date + Read More --}}
-                            <div class="flex items-center justify-between">
-
-                                {{-- Date - Left --}}
-                                <span class="text-sm text-gray-500">📅
-                                    {{ $blog->published_at ? $blog->published_at->format('d M Y') : $blog->created_at->format('d M Y') }}
-                                </span>
-
-                                {{-- Read More - Right --}}
-                                <a href="{{ route('blogs.view', $blog->slug) }}"
-                                    class="text-sm text-blue-600 hover:text-blue-800 inline-flex items-center">
-                                    Read More
-                                    <span class="ml-2">→</span>
-                                </a>
-
-                            </div>
-                        </div>
-
-                    </article>
-                @endforeach
-
-            </div>
                     </div>
                     <!-- Modern & User-Friendly Professional Contact Box -->
                     <div

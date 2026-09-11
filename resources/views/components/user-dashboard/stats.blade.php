@@ -10,14 +10,14 @@
 
         <div class="flex items-center justify-between gap-4">
 
-            <div class="w-16 h-16 flex-shrink-0 rounded-2xl
+            <div class="w-12 h-12 flex-shrink-0 rounded-2xl
                         bg-blue-100
                         flex items-center justify-center
                         text-3xl">
                 📦
             </div>
 
-            <h2 class="text-1xl lg:text-3xl font-bold text-blue-600 text-right">
+            <h2 class="text-1xl lg:text-2xl font-bold text-blue-600 text-right">
                 {{ $totalOrders }}
             </h2>
 
@@ -59,14 +59,14 @@
 
         <div class="flex items-center justify-between gap-4">
 
-            <div class="w-16 h-16 flex-shrink-0 rounded-2xl
+            <div class="w-12 h-12 flex-shrink-0 rounded-2xl
                         bg-green-100
                         flex items-center justify-center
                         text-3xl">
                 🚚
             </div>
 
-            <h2 class="text-3xl lg:text-3xl font-bold text-green-600 text-right">
+            <h2 class="text-3xl lg:text-2xl font-bold text-green-600 text-right">
                 {{ $inProgress }}
             </h2>
 
@@ -108,14 +108,14 @@
 
         <div class="flex items-center justify-between gap-4">
 
-            <div class="w-16 h-16 flex-shrink-0 rounded-2xl
+            <div class="w-12 h-12 flex-shrink-0 rounded-2xl
                         bg-pink-100
                         flex items-center justify-center
                         text-3xl">
                 ❤️
             </div>
 
-            <h2 class="text-3xl lg:text-3xl font-bold text-pink-600 text-right">
+            <h2 class="text-3xl lg:text-2xl font-bold text-pink-600 text-right">
                 {{ $wishlistCount }}
             </h2>
 
@@ -157,7 +157,7 @@
 
         <div class="flex items-center justify-between gap-4">
 
-            <div class="w-16 h-16 flex-shrink-0 rounded-2xl
+            <div class="w-12 h-12 flex-shrink-0 rounded-2xl
                         bg-orange-100
                         flex items-center justify-center
                         text-3xl">
@@ -165,7 +165,7 @@
             </div>
 
             <h2 class="text-2xl lg:text-1xl font-bold text-orange-600 text-right">
-                Rs {{ number_format($totalSpent, 2) }}
+                Rs {{ number_format($totalSpent) }}
             </h2>
 
         </div>

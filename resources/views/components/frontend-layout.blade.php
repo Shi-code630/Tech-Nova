@@ -7,6 +7,7 @@
     <title>Technova Nepal</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('frontend/style.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .Container{
                 width:97%;
