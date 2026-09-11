@@ -352,7 +352,7 @@
                                          text-sm
                                          font-medium
                                          hidden sm:inline
-                                         max-w-[100px]
+                                         max-w-[70px]
                                          truncate">
 
                                 {{ auth()->user()->name }}
@@ -678,7 +678,7 @@
 
             <ul
                 class="flex items-center gap-3
-                       
+
                        text-[12px]
                        font-semibold
                        text-[#111827]">

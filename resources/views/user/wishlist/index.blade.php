@@ -39,7 +39,7 @@
                                        bg-blue-50
                                        text-blue-600">
 
-                                <i class="fa-regular fa-heart text-xl"></i>
+                                <span class="text-xl">🩵</span>
 
                             </div>
 
