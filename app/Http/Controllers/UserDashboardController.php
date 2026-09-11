@@ -25,12 +25,12 @@ class UserDashboardController extends Controller
             ->count();
 
         $orderCounts = [
-            'total' => $totalOrders,
-            'pending' => $user->orders()->where('order_status', 'pending')->count(),
+            'total'      => $totalOrders,
+            'pending'    => $user->orders()->where('order_status', 'pending')->count(),
             'processing' => $user->orders()->where('order_status', 'processing')->count(),
-            'shipped' => $user->orders()->where('order_status', 'shipped')->count(),
-            'delivered' => $user->orders()->where('order_status', 'delivered')->count(),
-            'cancelled' => $user->orders()->where('order_status', 'cancelled')->count(),
+            'shipped'    => $user->orders()->where('order_status', 'shipped')->count(),
+            'delivered'  => $user->orders()->where('order_status', 'delivered')->count(),
+            'cancelled'  => $user->orders()->where('order_status', 'cancelled')->count(),
         ];
 
         // ==================== WISHLIST ====================
@@ -75,12 +75,42 @@ class UserDashboardController extends Controller
         ));
     }
 
+    /**
+     * Full HTML page for the user's coins / rewards.
+     */
+    public function coins(Request $request)
+    {
+        $user = $request->user();
+
+        // Coin summary (RewardHelper बाट)
+        $coinSummary = RewardHelper::getUserCoinsSummary($user);
+
+        // Total orders (view मा $totalOrders प्रयोग भएको छ)
+        $totalOrders = $user->orders()->count();
+
+        // Transactions — PAGINATED (view ले ->total() र ->links() चाहन्छ)
+        $transactions = \App\Models\RewardTransaction::with('order')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->paginate(15);
+
+        return view('user.coins.index', compact(
+            'user',
+            'coinSummary',
+            'totalOrders',
+            'transactions'
+        ));
+    }
+
+    /**
+     * JSON endpoint for live coin updates (AJAX).
+     */
     public function liveCoins(Request $request)
     {
         $user = $request->user();
 
         return response()->json([
-            'coinSummary' => RewardHelper::getUserCoinsSummary($user),
+            'coinSummary'        => RewardHelper::getUserCoinsSummary($user),
             'recentTransactions' => RewardHelper::getRecentTransactions($user, 5),
         ]);
     }

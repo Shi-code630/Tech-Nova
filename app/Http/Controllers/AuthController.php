@@ -11,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
-     * Show login page
+     * Show login page.
      */
     public function showLogin()
     {
@@ -19,7 +19,7 @@ class AuthController extends Controller
     }
 
     /**
-     * Handle login
+     * Handle login.
      */
     public function login(Request $request)
     {
@@ -42,7 +42,10 @@ class AuthController extends Controller
             ]);
         }
 
-        if (!Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (!Auth::attempt(
+            $credentials,
+            $request->boolean('remember')
+        )) {
             throw ValidationException::withMessages([
                 'email' => 'The email or password is incorrect.',
             ]);
@@ -53,18 +56,16 @@ class AuthController extends Controller
         return redirect()->intended(route('user.dashboard'));
     }
 
-
     /**
-     * Show registration page
+     * Show registration page.
      */
     public function showRegister()
     {
         return view('auth.register');
     }
 
-
     /**
-     * Handle registration
+     * Handle registration.
      */
     public function register(Request $request)
     {
@@ -91,29 +92,22 @@ class AuthController extends Controller
         return redirect()->intended(route('user.dashboard'));
     }
 
-
+    /**
+     * Update logged-in user's profile.
+     */
     public function updateProfile(Request $request)
     {
-        // Currently logged-in user
         $user = Auth::user();
 
-        // If user is not logged in
         if (!$user) {
             return redirect()
                 ->route('login')
                 ->with('error', 'Please login first.');
         }
 
-        // Validate
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-
-            'phone' => [
-                'nullable',
-                'string',
-                'max:20',
-            ],
-
+            'phone' => ['nullable', 'string', 'max:20'],
             'image' => [
                 'nullable',
                 'image',
@@ -122,54 +116,52 @@ class AuthController extends Controller
             ],
         ]);
 
-        // Update name
         $user->name = $validated['name'];
-
-        // Update phone
         $user->phone = $validated['phone'] ?? null;
 
+        /*
+        |--------------------------------------------------------------------------
+        | Profile Image Upload
+        |--------------------------------------------------------------------------
+        */
 
-        // ============================
-        // Profile Image Upload
-        // ============================
         if ($request->hasFile('image')) {
+            // Get the original image path directly from the database.
+            $oldImage = $user->getAttributes()['image'] ?? null;
 
-            // Get RAW value from DB (not the accessor URL)
-           $oldImage = $user->getAttributes()['image'] ?? null;
-
-            // Delete old image if it exists
-            if ($oldImage && Storage::disk('public')->exists($oldImage)) {
+            // Delete old profile image.
+            if (
+                $oldImage &&
+                Storage::disk('public')->exists($oldImage)
+            ) {
                 Storage::disk('public')->delete($oldImage);
             }
 
-            // Store new image
-            // Returns something like: "users/abc123.jpg"
-            $newImagePath = $request->file('image')->store('users', 'public');
+            // Store new profile image.
+            $newImagePath = $request->file('image')->store(
+                'users',
+                'public'
+            );
 
-            // Save new image path
+            // Save new image path.
             $user->image = $newImagePath;
         }
 
-
-        // Save user
         $user->save();
-
 
         return redirect()
             ->route('user.profile')
             ->with('success', 'Profile updated successfully.');
     }
 
-
     /**
-     * Logout
+     * Logout the authenticated user.
      */
     public function logout(Request $request)
     {
         Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
 
         return redirect()->route('home');
