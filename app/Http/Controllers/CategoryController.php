@@ -177,7 +177,7 @@ class CategoryController extends Controller
         // =========================================================
 $wishlistProductIds = Auth::check()
     ? Auth::user()
-        ->wishlist()
+        ->wishlists()
         ->pluck('product_id')
         ->toArray()
     : [];
@@ -419,7 +419,7 @@ $wishlistProductIds = Auth::check()
 
 $wishlistProductIds = Auth::check()
     ? Auth::user()
-        ->wishlist()
+        ->wishlists()
         ->pluck('product_id')
         ->toArray()
     : [];
