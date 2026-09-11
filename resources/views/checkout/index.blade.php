@@ -212,6 +212,49 @@
                                 <span class="font-medium" id="taxDisplay">Rs {{ number_format($tax, 2) }}</span>
                             </div>
 
+                                         {{-- Coupon --}}
+
+
+                            <div class="border-t border-gray-200 pt-4 mt-4 mb-4">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <span class="text-lg">🎁</span>
+                                    <span class="font-medium text-[#111827]">Coupon</span>
+                                </div>
+
+                                <div id="couponIdle" class="{{ !empty($appliedCoupon) ? 'hidden' : '' }}">
+                                    <div class="flex gap-2">
+                                        <input type="text" id="couponInput" placeholder="Enter code"
+                                               value="{{ old('coupon_code', $appliedCoupon['code'] ?? '') }}"
+                                               class="flex-1 px-3 py-2 rounded-lg border border-gray-200 text-sm uppercase focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-none">
+                                        <button type="button" onclick="applyCoupon()"
+                                                class="px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-blue-700 text-white text-sm font-semibold">
+                                            Apply
+                                        </button>
+                                    </div>
+                                    <p id="couponMessage" class="text-xs mt-2"></p>
+                                </div>
+
+                                <div id="couponApplied" class="{{ empty($appliedCoupon) ? 'hidden' : '' }}">
+                                    <div class="flex items-center justify-between rounded-xl bg-green-50 border border-green-200 px-3 py-2">
+                                        <div>
+                                            <p class="text-sm font-bold text-green-700" id="couponCodeLabel">{{ $appliedCoupon['code'] ?? '' }}</p>
+                                            <p class="text-xs text-green-600">Discount: Rs. <span id="couponDiscountLabel">{{ number_format($couponDiscount ?? 0, 2) }}</span></p>
+                                        </div>
+                                        <button type="button" onclick="removeCoupon()" class="text-xs font-semibold text-red-600 hover:underline">
+                                            Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="couponDiscountRow" class="flex justify-between text-sm mb-4 {{ ($couponDiscount ?? 0) > 0 ? '' : 'hidden' }}">
+                                <span class="text-green-600">Coupon discount</span>
+                                <span class="font-medium text-green-600">- Rs <span id="couponDiscountDisplay">{{ number_format($couponDiscount ?? 0, 2) }}</span></span>
+                            </div>
+
+                            <input type="hidden" name="coupon_code" id="couponCodeHidden" value="{{ $appliedCoupon['code'] ?? '' }}">
+
+
                             {{-- ✅ Coin Discount Section --}}
                             @if($coinSummary['available'] > 0)
                                 <div class="border-t border-gray-200 pt-4 mt-4">
@@ -291,6 +334,7 @@
         const tax = {{ $tax }};
         const redeemRate = {{ $coinSummary['redeem_rate'] ?? 20 }};
         const maxDiscountPercent = {{ $coinSummary['max_discount_percent'] ?? 10 }};
+        let couponDiscount = {{ $couponDiscount ?? 0 }};
 
         // ✅ DOM elements
         const grandTotalEl = document.getElementById('grandTotal');
@@ -442,21 +486,90 @@
         }
 
         // ✅ Main update function
-        function updateOrderSummary() {
+                function updateOrderSummary() {
             const coinPoints = parseInt(redeemPointsInput.value) || 0;
             const coinDiscount = coinPoints / redeemRate;
             const maxCoinDiscount = subtotal * (maxDiscountPercent / 100);
             const finalCoinDiscount = Math.min(coinDiscount, maxCoinDiscount);
+            const totalDiscount = Math.min(subtotal, couponDiscount + finalCoinDiscount);
 
-            if (finalCoinDiscount > 0) {
+            if (totalDiscount > 0) {
                 savingsText.style.display = 'block';
-                savingsAmount.textContent = finalCoinDiscount.toFixed(2);
+                savingsAmount.textContent = totalDiscount.toFixed(2);
             } else {
                 savingsText.style.display = 'none';
             }
 
-            const grandTotal = subtotal + deliveryCharge + tax - finalCoinDiscount;
-            grandTotalEl.textContent = 'Rs ' + grandTotal.toFixed(2);
+            const couponRow = document.getElementById('couponDiscountRow');
+            if (couponDiscount > 0) {
+                couponRow.classList.remove('hidden');
+                document.getElementById('couponDiscountDisplay').textContent = couponDiscount.toFixed(2);
+            } else {
+                couponRow.classList.add('hidden');
+            }
+
+            const grandTotal = subtotal + deliveryCharge + tax - totalDiscount;
+            grandTotalEl.textContent = 'Rs ' + Math.max(grandTotal, 0).toFixed(2);
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponInput').value.trim();
+            const msg = document.getElementById('couponMessage');
+
+            if (!code) {
+                msg.className = 'text-xs mt-2 text-red-600';
+                msg.textContent = 'Enter a coupon code.';
+                return;
+            }
+
+            fetch('{{ route("checkout.coupon.apply") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ code }),
+            })
+            .then(async (res) => {
+                const data = await res.json();
+                if (!res.ok || !data.success) {
+                    throw new Error(data.message || 'Could not apply coupon.');
+                }
+                couponDiscount = parseFloat(data.discount) || 0;
+                document.getElementById('couponCodeHidden').value = data.code;
+                document.getElementById('couponCodeLabel').textContent = data.code;
+                document.getElementById('couponDiscountLabel').textContent = couponDiscount.toFixed(2);
+                document.getElementById('couponIdle').classList.add('hidden');
+                document.getElementById('couponApplied').classList.remove('hidden');
+                msg.textContent = '';
+                updateOrderSummary();
+            })
+            .catch((err) => {
+                msg.className = 'text-xs mt-2 text-red-600';
+                msg.textContent = err.message;
+            });
+        }
+
+        function removeCoupon() {
+            fetch('{{ route("checkout.coupon.remove") }}', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(() => {
+                couponDiscount = 0;
+                document.getElementById('couponCodeHidden').value = '';
+                document.getElementById('couponInput').value = '';
+                document.getElementById('couponIdle').classList.remove('hidden');
+                document.getElementById('couponApplied').classList.add('hidden');
+                document.getElementById('couponMessage').textContent = '';
+                updateOrderSummary();
+            });
         }
 
         // ✅ Place order validation

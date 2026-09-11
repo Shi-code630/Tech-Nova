@@ -17,6 +17,8 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReturnRequestController;
 
+use App\Http\Controllers\CouponController;
+
 
 // ==================== HOME ====================
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -150,9 +152,9 @@ Route::middleware(['auth'])->group(function () {
     })->name('user.reviews');
 
 
-    Route::get('/coupons', function () {
-        return view('user.coupons.index');
-    })->name('user.coupons');
+    Route::get('/coupons', [CouponController::class, 'index'])->name('user.coupons');
+    Route::post('/checkout/coupon', [CouponController::class, 'apply'])->name('checkout.coupon.apply');
+    Route::delete('/checkout/coupon', [CouponController::class, 'remove'])->name('checkout.coupon.remove');
 
 
     Route::get('/settings', function () {
