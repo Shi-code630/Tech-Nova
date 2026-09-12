@@ -97,6 +97,7 @@ class AuthController extends Controller
      */
     public function updateProfile(Request $request)
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if (!$user) {
@@ -106,7 +107,7 @@ class AuthController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name'  => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
             'image' => [
                 'nullable',
@@ -116,35 +117,24 @@ class AuthController extends Controller
             ],
         ]);
 
-        $user->name = $validated['name'];
+        $user->name  = $validated['name'];
         $user->phone = $validated['phone'] ?? null;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Profile Image Upload
-        |--------------------------------------------------------------------------
-        */
-
         if ($request->hasFile('image')) {
-            // Get the original image path directly from the database.
-            $oldImage = $user->getAttributes()['image'] ?? null;
 
-            // Delete old profile image.
+            $oldImage = $user->image;
+
+            $newImagePath = $request->file('image')->store('users', 'public');
+
+            $user->image = $newImagePath;
+
             if (
                 $oldImage &&
+                $oldImage !== $newImagePath &&
                 Storage::disk('public')->exists($oldImage)
             ) {
                 Storage::disk('public')->delete($oldImage);
             }
-
-            // Store new profile image.
-            $newImagePath = $request->file('image')->store(
-                'users',
-                'public'
-            );
-
-            // Save new image path.
-            $user->image = $newImagePath;
         }
 
         $user->save();
