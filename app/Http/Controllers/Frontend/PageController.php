@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Brand;
+use App\Models\Job;
 use Illuminate\Http\Request;
 
 
@@ -52,7 +53,7 @@ class PageController extends Controller
     {
         return view('frontend.warranty-policy');
     }
-  
+
     public function search(Request $request)
     {
         $query = $request->input('q');
@@ -69,72 +70,15 @@ class PageController extends Controller
 
         return view('frontend.search', compact('products', 'query'));
     }
-
     public function careers()
     {
-        $jobs = [
-            [
-                'id' => 1,
-                'title' => 'Senior Laravel Developer',
-                'department' => 'Engineering',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '3+ years',
-                'salary' => 'Negotiable',
-                'posted' => '2 days ago',
-            ],
-            [
-                'id' => 2,
-                'title' => 'Frontend Developer (React)',
-                'department' => 'Engineering',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '2+ years',
-                'salary' => 'Negotiable',
-                'posted' => '5 days ago',
-            ],
-            [
-                'id' => 3,
-                'title' => 'Digital Marketing Specialist',
-                'department' => 'Marketing',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '1+ years',
-                'salary' => 'Negotiable',
-                'posted' => '1 week ago',
-            ],
-            [
-                'id' => 4,
-                'title' => 'UI/UX Designer',
-                'department' => 'Design',
-                'location' => 'Remote / Kathmandu',
-                'type' => 'Full-time',
-                'experience' => '2+ years',
-                'salary' => 'Negotiable',
-                'posted' => '3 days ago',
-            ],
-            [
-                'id' => 5,
-                'title' => 'Customer Support Executive',
-                'department' => 'Support',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '0-1 years',
-                'salary' => 'Negotiable',
-                'posted' => '1 day ago',
-            ],
-            [
-                'id' => 6,
-                'title' => 'Product Manager',
-                'department' => 'Product',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '4+ years',
-                'salary' => 'Negotiable',
-                'posted' => '3 days ago',
-            ],
-        ];
+        $jobs = Job::published()
+            ->latest()
+            ->get();
 
-        return view('frontend.careers', compact('jobs'));
+        $employeeRating = config('company.employee_rating', 4.9);
+        $employeeReviewCount = config('company.employee_review_count');
+
+        return view('frontend.careers', compact('jobs', 'employeeRating', 'employeeReviewCount'));
     }
 }

@@ -19,6 +19,7 @@ use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | Home
@@ -185,6 +186,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/coins', [UserDashboardController::class, 'coins'])->name('user.coins');
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])->name('user.coins.live');
+
+    Route::post('/careers/apply', [\App\Http\Controllers\JobApplicationController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('careers.apply');
 });
 
 
