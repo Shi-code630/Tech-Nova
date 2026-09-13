@@ -2,7 +2,7 @@
 
     <div class="min-h-screen bg-gray-50 py-8">
 
-        <div class="flex Container mx-auto">
+        <div class="flex Container mx-auto px-4">
 
             {{-- Sidebar --}}
             <x-user-dashboard.sidebar />

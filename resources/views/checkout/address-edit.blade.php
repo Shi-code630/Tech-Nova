@@ -1,8 +1,8 @@
 <x-frontend-layout>
 
-    <div class="min-h-screen bg-gray-100 py-8">
+    <div class="bg-gray-100 py-8">
 
-        <div class="Container mx-auto px-4 max-w-4xl">
+        <div class="Container mx-auto px-4 ">
 
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
 

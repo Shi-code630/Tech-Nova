@@ -1,8 +1,8 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-100 min-h-screen py-8">
+    <div class="bg-gray-100  py-8">
 
-        <div class="Container mx-auto flex gap-6 items-start">
+        <div class="Container mx-auto px-4 flex gap-6 items-start">
 
             {{-- Dashboard Sidebar --}}
             <x-user-dashboard.sidebar />

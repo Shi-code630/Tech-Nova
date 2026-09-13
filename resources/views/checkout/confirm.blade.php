@@ -2,7 +2,7 @@
 
     <div class="bg-gray-100 min-h-screen py-10">
 
-        <div class="max-w-4xl mx-auto px-6">
+        <div class="Container mx-auto px-6">
 
             <div class="bg-white rounded-2xl shadow-sm p-6">
 

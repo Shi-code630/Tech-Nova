@@ -1,7 +1,7 @@
 <x-frontend-layout>
 
     <div class="bg-gray-50 py-8">
-        <div class="Container mx-auto">
+        <div class="Container mx-auto px-4">
 
             <div class="flex flex-col lg:flex-row gap-6">
 
@@ -70,7 +70,7 @@
 
                                     {{-- =====================================
                                          PROFILE IMAGE
-                                        
+
                                     ====================================== --}}
                                     @if (auth()->user()->image)
                                         <img src="{{ auth()->user()->image }}"

@@ -1,7 +1,7 @@
 <x-frontend-layout>
 
     <div class="bg-gray-100 py-8 min-h-screen">
-        <div class="Container mx-auto">
+        <div class="Container mx-auto px-4">
             <div class="flex gap-6">
 
                 <x-user-dashboard.sidebar />

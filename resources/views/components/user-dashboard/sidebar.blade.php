@@ -1,7 +1,7 @@
 <aside
     class="w-64
        sticky top-4
-       h-[calc(110vh-2rem)]
+       h-[calc(115vh-2rem)]
        flex-shrink-0
        bg-gradient-to-b from-[#2563EB] to-[#1E40AF]
        text-white

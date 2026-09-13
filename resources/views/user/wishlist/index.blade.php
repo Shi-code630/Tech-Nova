@@ -2,7 +2,7 @@
 
     <div class="bg-gray-100 min-h-screen py-8">
 
-        <div class="Container mx-auto">
+        <div class="Container mx-auto px-4">
 
             <div class="flex gap-6">
 

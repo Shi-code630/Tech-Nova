@@ -192,5 +192,5 @@ Route::middleware(['auth'])->group(function () {
     ->name('careers.apply');
 });
 
-
-
+Route::get('/settings', [UserDashboardController::class, 'settings'])
+    ->name('user.settings');

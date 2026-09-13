@@ -1,6 +1,6 @@
 <x-frontend-layout>
 
-    <div class="bg-gradient-to-br from-gray-50 to-gray-100 py-8 min-h-screen">
+    <div class="bg-gradient-to-br from-gray-50 to-gray-100 py-8 ">
 
         <div class="container mx-auto px-4">
 

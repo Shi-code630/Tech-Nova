@@ -1290,60 +1290,59 @@
 
     <script>
         /*
-                            |--------------------------------------------------------------------------
-                            | WISHLIST
-                            |--------------------------------------------------------------------------
-                            */
+                                |--------------------------------------------------------------------------
+                                | WISHLIST
+                                |--------------------------------------------------------------------------
+                                */
 
         async function toggleWishlist(event, button, productId) {
-    event.preventDefault();
-    event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
 
-    const token = document
-        .querySelector('meta[name="csrf-token"]')
-        ?.getAttribute('content');
+            const token = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute('content');
 
-    if (!token) {
-        alert('Security token not found. Please refresh the page.');
-        return;
-    }
-
-    try {
-        const response = await fetch(
-            "{{ route('user.wishlist.toggle') }}",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    "X-CSRF-TOKEN": token,
-                    "X-Requested-With": "XMLHttpRequest"
-                },
-
-                body: JSON.stringify({
-                    product_id: productId
-                })
+            if (!token) {
+                alert('Security token not found. Please refresh the page.');
+                return;
             }
-        );
 
-        const data = await response.json();
+            try {
+                const response = await fetch(
+                    "{{ route('user.wishlist.toggle') }}", {
+                        method: "POST",
 
-        if (!response.ok) {
-            throw new Error(
-                data.message || "Wishlist update failed."
-            );
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRF-TOKEN": token,
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
+
+                        body: JSON.stringify({
+                            product_id: productId
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || "Wishlist update failed."
+                    );
+                }
+
+                if (data.success) {
+                    window.location.reload();
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
         }
-
-        if (data.success) {
-            window.location.reload();
-        }
-
-    } catch (error) {
-        console.error(error);
-        alert(error.message);
-    }
-}
 
         /*
         |--------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-50 py-8 min-h-screen">
+    <div class="bg-gray-50 py-8">
 
         <div class="container mx-auto px-4">
 

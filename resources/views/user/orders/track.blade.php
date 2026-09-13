@@ -1,8 +1,8 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-100 min-h-screen py-8">
+    <div class="bg-gray-100 py-8">
 
-        <div class="w-[95%] max-w-7xl mx-auto">
+        <div class="Container mx-auto px-4">
 
             {{-- ========================================= --}}
             {{-- BACK BUTTON --}}
