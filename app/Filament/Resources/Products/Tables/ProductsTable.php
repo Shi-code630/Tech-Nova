@@ -17,7 +17,7 @@ use Filament\Tables\Table;
 
 class ProductsTable
 {
-   
+
     protected static function effectiveStockSql(): string
     {
         return '
@@ -37,7 +37,7 @@ class ProductsTable
                     ->withCount('variants')
                     ->selectRaw(self::effectiveStockSql() . ' as effective_stock')
             )
-       
+
             ->poll('15s')
             ->columns([
 
@@ -66,14 +66,14 @@ class ProductsTable
                         isToggledHiddenByDefault: true
                     ),
 
-                TextColumn::make('price')
+                               TextColumn::make('price')
                     ->label('Price')
-                    ->money('Rs.')
+                    ->formatStateUsing(fn ($state) => 'Rs. ' . number_format((float) $state, 2))
                     ->sortable(),
 
                 TextColumn::make('discount_price')
                     ->label('Discount')
-                    ->money('Rs.')
+                    ->formatStateUsing(fn ($state) => $state ? 'Rs. ' . number_format((float) $state, 2) : '—')
                     ->sortable()
                     ->toggleable(
                         isToggledHiddenByDefault: true
@@ -81,13 +81,12 @@ class ProductsTable
 
                 TextColumn::make('final_price')
                     ->label('Final Price')
-                    ->money('Rs.')
+                    ->formatStateUsing(fn ($state) => 'Rs. ' . number_format((float) $state, 2))
                     ->sortable(),
 
-                
                 TextColumn::make('effective_stock')
                     ->label('Stock')
-                    ->numeric()
+                    ->formatStateUsing(fn ($state) => number_format((int) $state))
                     ->sortable()
                     ->tooltip(
                         fn ($record) => $record->variants_count > 0

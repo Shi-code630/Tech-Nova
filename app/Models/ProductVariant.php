@@ -11,13 +11,15 @@ class ProductVariant extends Model
 
     protected $table = 'product_variants';
 
-    protected $fillable = [
+        protected $fillable = [
         'product_id',
         'color',
         'size',
         'price',
         'stock',
+        'description',
         'image',
+        'images',
         'status',
     ];
 
@@ -25,6 +27,7 @@ class ProductVariant extends Model
         'price' => 'decimal:2',
         'stock' => 'integer',
         'status' => 'boolean',
+        'images' => 'array',
     ];
 
     public function product()
@@ -107,5 +110,25 @@ class ProductVariant extends Model
     {
         $this->stock += $quantity;
         $this->save();
+    }
+
+        public function getGalleryAttribute(): array
+    {
+        if (is_array($this->images) && count($this->images)) {
+            return array_values($this->images);
+        }
+
+        $legacy = $this->attributes['image'] ?? null;
+
+        return $legacy ? [$legacy] : [];
+    }
+
+    protected static function booted(): void
+    {
+        static::saving(function (ProductVariant $variant) {
+            if (is_array($variant->images) && count($variant->images)) {
+                $variant->image = $variant->images[0];
+            }
+        });
     }
 }

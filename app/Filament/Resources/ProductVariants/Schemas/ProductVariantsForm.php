@@ -28,13 +28,17 @@ class ProductVariantsForm
                                     ->required()
                                     ->helperText('Select the product this variant belongs to'),
 
-                                FileUpload::make('image')
-                                    ->label('Variant Image')
+                                FileUpload::make('images')
+                                    ->label('Variant Images')
                                     ->image()
+                                    ->multiple()
+                                    ->reorderable()
+                                    ->maxFiles(8)
+                                    ->disk('public')
                                     ->directory('product-variants')
-                                    ->imageResizeTargetWidth('500')
-                                    ->imageResizeTargetHeight('500')
-                                    ->helperText('Upload an image for this variant (recommended: 500x500)')
+                                    ->imageResizeTargetWidth('800')
+                                    ->imageResizeTargetHeight('800')
+                                    ->helperText('Up to 8 photos. First image is the main photo.')
                                     ->columnSpanFull(),
                             ]),
                     ]),

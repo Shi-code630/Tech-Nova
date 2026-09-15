@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->authGuard('admin')
             ->login()
+            ->registration()
             ->profile()
             ->brandName('Tech Nova Admin')
             ->colors([

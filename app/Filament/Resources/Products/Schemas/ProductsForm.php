@@ -123,85 +123,82 @@ class ProductForm
 
 
 
-                Section::make('Product Variants')
-                    ->description(
-                        'Add color, size, price and stock variations for this product.'
-                    )
+                                Section::make('Product SKUs (Finish + Config)')
+                    ->description('Each row is one sellable SKU. Example: Luna Grey + 16GB/512GB. Description and photos on a row show only when that SKU is selected on the site.')
                     ->columnSpanFull()
                     ->schema([
-
                         Repeater::make('variants')
                             ->relationship('variants')
-                            ->label('Variants')
+                            ->label('SKUs')
                             ->schema([
+                                Grid::make(2)->schema([
+                                    TextInput::make('color')
+                                        ->label('Finish')
+                                        ->placeholder('Luna Grey, Midnight, Silver')
+                                        ->maxLength(255)
+                                        ->required(),
 
-                                Grid::make(4)
-                                    ->schema([
+                                    TextInput::make('size')
+                                        ->label('Storage / RAM / Config')
+                                        ->placeholder('16GB / 512GB SSD')
+                                        ->maxLength(255)
+                                        ->required(),
+                                ]),
 
-                                        TextInput::make('color')
-                                            ->label('Color')
-                                            ->placeholder(
-                                                'e.g. Red, Blue, Black'
-                                            )
-                                            ->maxLength(255),
+                                Grid::make(3)->schema([
+                                    TextInput::make('price')
+                                        ->label('SKU Price (Rs.)')
+                                        ->numeric()
+                                        ->prefix('Rs.')
+                                        ->step(0.01)
+                                        ->minValue(0)
+                                        ->required(),
 
-                                        TextInput::make('size')
-                                            ->label('Size')
-                                            ->placeholder(
-                                                'e.g. S, M, L, XL'
-                                            )
-                                            ->maxLength(255),
+                                    TextInput::make('stock')
+                                        ->label('Stock')
+                                        ->numeric()
+                                        ->integer()
+                                        ->minValue(0)
+                                        ->default(0)
+                                        ->required(),
 
-                                        TextInput::make('price')
-                                            ->label('Price (Rs.)')
-                                            ->numeric()
-                                            ->default(0)
-                                            ->prefix('Rs.')
-                                            ->step(0.01)
-                                            ->minValue(0),
+                                    Toggle::make('status')
+                                        ->label('Active')
+                                        ->default(true)
+                                        ->inline(false),
+                                ]),
 
-                                        TextInput::make('stock')
-                                            ->label('Stock')
-                                            ->numeric()
+                                Textarea::make('description')
+                                    ->label('Description for this SKU')
+                                    ->rows(5)
+                                    ->placeholder('Shown on the product page when this finish + config is selected.')
+                                    ->columnSpanFull(),
 
-                                            ->default(0)
-                                            ->integer()
-                                            ->minValue(0),
-                                    ]),
-
-                                Grid::make(2)
-                                    ->schema([
-
-                                        FileUpload::make('image')
-                                            ->label('Variant Image')
-                                            ->image()
-                                            ->disk('public')
-                                            ->directory('product-variants')
-                                            ->imageResizeTargetWidth('500')
-                                            ->imageResizeTargetHeight('500')
-                                            ->helperText(
-                                                'Optional variant image.'
-                                            ),
-
-                                        Toggle::make('status')
-                                            ->label('Active')
-                                            ->default(true),
-                                    ]),
+                                FileUpload::make('images')
+                                    ->label('SKU photos (up to 8)')
+                                    ->image()
+                                    ->multiple()
+                                    ->reorderable()
+                                    ->maxFiles(8)
+                                    ->disk('public')
+                                    ->directory('product-variants')
+                                    ->imageResizeTargetWidth('800')
+                                    ->imageResizeTargetHeight('800')
+                                    ->helperText('First photo is the main image for this SKU.')
+                                    ->columnSpanFull(),
                             ])
                             ->columns(1)
                             ->defaultItems(0)
-                            ->addActionLabel('Add Product Variant')
+                            ->addActionLabel('Add SKU')
                             ->collapsible()
-                            ->itemLabel(
-                                fn(array $state): ?string =>
-                                trim(
-                                    ($state['color'] ?? '') .
-                                        ' ' .
-                                        ($state['size'] ?? '')
-                                ) ?: 'New Variant'
-                            )
+                            ->cloneable()
                             ->reorderable()
-                            ->cloneable(),
+                            ->itemLabel(function (array $state): string {
+                                $finish = $state['color'] ?? '';
+                                $config = $state['size'] ?? '';
+                                $label = trim($finish . ' · ' . $config);
+                                return $label !== '·' && $label !== '' ? $label : 'New SKU';
+                            }),
                     ]),
 
 

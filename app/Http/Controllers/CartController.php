@@ -162,10 +162,15 @@ class CartController extends Controller
                 );
             }
 
+                        if ($request->boolean('buy_now')) {
+                return redirect()
+                    ->route('checkout')
+                    ->with('success', 'Product added. Complete your order.');
+            }
+
             return redirect()
                 ->route('user.cart')
                 ->with('success', 'Product added to cart successfully.');
-
         } catch (\Exception $e) {
             Log::error('Add to cart error: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
@@ -434,5 +439,6 @@ class CartController extends Controller
         return back()->with('error', $message);
     }
 
-    
+
 }
+
