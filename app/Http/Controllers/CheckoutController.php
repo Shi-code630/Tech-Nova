@@ -123,6 +123,7 @@ class CheckoutController extends Controller
         return view('checkout.address-edit', compact('address'));
     }
 
+
     /**
      * Update address.
      */
@@ -253,18 +254,36 @@ class CheckoutController extends Controller
             return redirect()->route('checkout')->with('error', 'Your selected delivery address is no longer available.');
         }
 
+
+        $appliedCoupon = session('applied_coupon');
+        $subtotal = $checkout['subtotal'];
+
+        $couponCode = $appliedCoupon['code'] ?? $checkout['coupon_code'] ?? null;
+        $couponDiscount = $appliedCoupon['discount'] ?? $checkout['coupon_discount'] ?? 0;
+
+        $pointsDiscount = $checkout['points_discount'] ?? 0;
+        $discount = round($couponDiscount + $pointsDiscount, 2);
+        if ($discount > $subtotal) {
+            $discount = $subtotal;
+        }
+
+        $grandTotal = round(
+            $subtotal - $discount + $checkout['delivery_charge'] + ($checkout['tax'] ?? 0),
+            2
+        );
+
         return view('checkout.confirm', [
-            'address' => $address,
-            'paymentMethod' => $checkout['payment_method'],
-            'subtotal' => $checkout['subtotal'],
-            'couponCode' => $checkout['coupon_code'] ?? null,
-            'couponDiscount' => $checkout['coupon_discount'] ?? 0,
-            'redeemPoints' => $checkout['redeem_points'] ?? 0,
-            'pointsDiscount' => $checkout['points_discount'] ?? 0,
-            'discount' => $checkout['discount'],
+            'address'        => $address,
+            'paymentMethod'  => $checkout['payment_method'],
+            'subtotal'       => $subtotal,
+            'couponCode'     => $couponCode,
+            'couponDiscount' => $couponDiscount,
+            'redeemPoints'   => $checkout['redeem_points'] ?? 0,
+            'pointsDiscount' => $pointsDiscount,
+            'discount'       => $discount,
             'deliveryCharge' => $checkout['delivery_charge'],
-            'tax' => $checkout['tax'] ?? 0,
-            'grandTotal' => $checkout['grand_total'],
+            'tax'            => $checkout['tax'] ?? 0,
+            'grandTotal'     => $grandTotal,
         ]);
     }
 
@@ -360,7 +379,6 @@ class CheckoutController extends Controller
 
             return redirect()->route('user.order.view', $order->id)
                 ->with('success', 'Your order has been placed successfully.');
-
         } catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Order placement error: ' . $e->getMessage());

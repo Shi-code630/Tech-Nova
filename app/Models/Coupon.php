@@ -191,41 +191,41 @@ class Coupon extends Model
         return $this->is_valid;
     }
 
-    public function apply($subtotal)
-    {
-        if (!$this->isValid()) {
-            return [
-                'valid' => false,
-                'message' => 'Coupon is not valid'
-            ];
-        }
+    // public function apply($subtotal)
+    // {
+    //     if (!$this->isValid()) {
+    //         return [
+    //             'valid' => false,
+    //             'message' => 'Coupon is not valid'
+    //         ];
+    //     }
 
-        if ($this->minimum_amount && $subtotal < $this->minimum_amount) {
-            return [
-                'valid' => false,
-                'message' => 'Minimum order amount of Rs. ' . number_format($this->minimum_amount, 2) . ' required'
-            ];
-        }
+    //     if ($this->minimum_amount && $subtotal < $this->minimum_amount) {
+    //         return [
+    //             'valid' => false,
+    //             'message' => 'Minimum order amount of Rs. ' . number_format($this->minimum_amount, 2) . ' required'
+    //         ];
+    //     }
 
-        $discount = 0;
+    //     $discount = 0;
 
-        if ($this->type === 'percentage') {
-            $discount = ($subtotal * $this->amount) / 100;
-            if ($this->maximum_discount && $discount > $this->maximum_discount) {
-                $discount = $this->maximum_discount;
-            }
-        } else {
-            $discount = $this->amount;
-        }
+    //     if ($this->type === 'percentage') {
+    //         $discount = ($subtotal * $this->amount) / 100;
+    //         if ($this->maximum_discount && $discount > $this->maximum_discount) {
+    //             $discount = $this->maximum_discount;
+    //         }
+    //     } else {
+    //         $discount = $this->amount;
+    //     }
 
-        $discount = min($discount, $subtotal);
+    //     $discount = min($discount, $subtotal);
 
-        return [
-            'valid' => true,
-            'discount' => $discount,
-            'message' => 'Coupon applied successfully'
-        ];
-    }
+    //     return [
+    //         'valid' => true,
+    //         'discount' => $discount,
+    //         'message' => 'Coupon applied successfully'
+    //     ];
+    // }
 
     public function incrementUsage()
     {
@@ -259,10 +259,7 @@ class Coupon extends Model
 
     // ============ STATIC METHODS ============
 
-    public static function findByCode($code)
-    {
-        return self::where('code', strtoupper($code))->first();
-    }
+
 
     public static function getValidCoupon($code, $subtotal = 0)
     {
@@ -282,4 +279,44 @@ class Coupon extends Model
 
         return $code;
     }
+
+    // app/Models/Coupon.php
+public static function findByCode(string $code): ?self
+{
+    return static::where('code', strtoupper(trim($code)))
+        ->where('is_active', true)
+        ->where(function ($q) {
+            $q->whereNull('valid_from')
+              ->orWhere('valid_from', '<=', now());
+        })
+        ->where(function ($q) {
+            $q->whereNull('valid_until')
+              ->orWhere('valid_until', '>=', now());
+        })
+        ->first();
+}
+
+public function apply(float $subtotal): array
+{
+    if ($subtotal < $this->min_order_amount) {
+        return [
+            'valid' => false,
+            'message' => 'Minimum order amount is Rs. ' . number_format($this->min_order_amount, 2),
+        ];
+    }
+
+    $discount = $this->type === 'percentage'
+        ? $subtotal * ($this->value / 100)
+        : $this->value;
+
+    if ($this->max_discount && $discount > $this->max_discount) {
+        $discount = $this->max_discount;
+    }
+
+    return [
+        'valid' => true,
+        'discount' => round($discount, 2),
+        'message' => 'Coupon applied successfully.',
+    ];
+}
 }

@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 | Home
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/search', [PageController::class, 'search'])->name('search');
 
@@ -150,6 +151,10 @@ Route::middleware(['auth'])->group(function () {
     // Coupon apply/remove during checkout
     Route::post('/checkout/coupon', [CouponController::class, 'apply'])->name('checkout.coupon.apply');
     Route::delete('/checkout/coupon', [CouponController::class, 'remove'])->name('checkout.coupon.remove');
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])->name('checkout.continue');
+    Route::get('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
 
     /*
     |----------------------------------------------------------------------
@@ -188,8 +193,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])->name('user.coins.live');
 
     Route::post('/careers/apply', [\App\Http\Controllers\JobApplicationController::class, 'store'])
-    ->middleware('throttle:5,1')
-    ->name('careers.apply');
+        ->middleware('throttle:5,1')
+        ->name('careers.apply');
 });
 
 Route::get('/settings', [UserDashboardController::class, 'settings'])
