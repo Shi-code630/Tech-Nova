@@ -60,7 +60,8 @@
 
                     @if (!empty($couponCode))
                         {{-- Coupon Applied → Remove Form --}}
-                        <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-green-50 border border-green-200 px-3 sm:px-4 py-3">
+                        <div
+                            class="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-green-50 border border-green-200 px-3 sm:px-4 py-3">
                             <div class="flex items-center gap-2 min-w-0">
                                 <span class="text-lg flex-shrink-0">✅</span>
                                 <div class="min-w-0">
@@ -76,7 +77,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                        class="text-xs font-semibold text-red-600 hover:text-red-800 hover:underline transition">
+                                    class="text-xs font-semibold text-red-600 hover:text-red-800 hover:underline transition">
                                     Remove
                                 </button>
                             </form>
@@ -88,15 +89,16 @@
 
                             <div class="flex gap-2">
                                 <div class="relative flex-1 min-w-0">
-                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+                                    <span
+                                        class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
                                         🎟️
                                     </span>
                                     <input type="text" name="code" placeholder="Enter coupon code"
-                                           value="{{ old('code') }}"
-                                           class="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 text-sm uppercase focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-none transition">
+                                        value="{{ old('code') }}"
+                                        class="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-300 text-sm uppercase focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-none transition">
                                 </div>
                                 <button type="submit"
-                                        class="px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold flex-shrink-0 transition">
+                                    class="px-4 py-2 rounded-lg bg-[#2563EB] hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-semibold flex-shrink-0 transition">
                                     Apply
                                 </button>
                             </div>
@@ -141,7 +143,7 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-500">Delivery</span>
                             <span class="font-medium">
-                                @if($deliveryCharge == 0)
+                                @if ($deliveryCharge == 0)
                                     <span class="text-green-600">Free</span>
                                 @else
                                     Rs. {{ number_format($deliveryCharge, 2) }}
@@ -155,14 +157,16 @@
                         </div>
                     </div>
 
-                    <div class="bg-blue-50 px-3 sm:px-4 py-3 border-t flex justify-between font-bold text-base sm:text-lg">
+                    <div
+                        class="bg-blue-50 px-3 sm:px-4 py-3 border-t flex justify-between font-bold text-base sm:text-lg">
                         <span class="text-[#111827]">Total</span>
                         <span class="text-[#2563EB]">Rs. {{ number_format($grandTotal, 2) }}</span>
                     </div>
                 </div>
 
                 {{-- Place Order Form --}}
-                <form action="{{ route('checkout.place-order') }}" method="POST" enctype="multipart/form-data" class="mt-6">
+                <form action="{{ route('checkout.place-order') }}" method="POST" enctype="multipart/form-data"
+                    class="mt-6">
                     @csrf
 
                     <input type="hidden" name="address_id" value="{{ $address->id }}">
@@ -185,8 +189,8 @@
                                 <div class="mt-4 flex justify-center">
                                     <div class="bg-white p-3 rounded-xl shadow-sm border">
                                         <img src="{{ asset('image/payment/merchant-qr.png') }}"
-                                             alt="TechNova Nepal eSewa QR Code"
-                                             class="w-48 h-48 sm:w-56 sm:h-56 object-contain">
+                                            alt="TechNova Nepal eSewa QR Code"
+                                            class="w-48 h-48 sm:w-56 sm:h-56 object-contain">
                                     </div>
                                 </div>
 
@@ -201,9 +205,9 @@
                                     Transaction ID
                                 </label>
                                 <input type="text" id="transaction_id" name="transaction_id"
-                                       value="{{ old('transaction_id') }}" required maxlength="100"
-                                       placeholder="Enter your eSewa transaction ID"
-                                       class="w-full rounded-xl border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-none transition">
+                                    value="{{ old('transaction_id') }}" required maxlength="100"
+                                    placeholder="Enter your eSewa transaction ID"
+                                    class="w-full rounded-xl border border-gray-300 px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-none transition">
                             </div>
 
                             <div class="mt-4">
@@ -211,8 +215,8 @@
                                     Payment Screenshot
                                 </label>
                                 <input type="file" id="payment_screenshot" name="payment_screenshot"
-                                       accept="image/jpeg,image/png,image/jpg,image/webp" required
-                                       class="w-full rounded-xl border border-gray-300 bg-white px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-none transition">
+                                    accept="image/jpeg,image/png,image/jpg,image/webp" required
+                                    class="w-full rounded-xl border border-gray-300 bg-white px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100 outline-none transition">
                                 <p class="text-xs text-gray-500 mt-2">
                                     Upload a clear screenshot. Maximum size: 5 MB.
                                 </p>
@@ -221,7 +225,7 @@
                     @endif
 
                     <button type="submit"
-                            class="mt-6 w-full bg-[#2563EB] hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2.5 sm:py-3 text-sm sm:text-base rounded-xl transition">
+                        class="mt-6 w-full bg-[#2563EB] hover:bg-blue-700 active:bg-blue-800 text-white font-semibold py-2.5 sm:py-3 text-sm sm:text-base rounded-xl transition">
                         Place Order
                     </button>
 
@@ -229,6 +233,6 @@
 
             </div>
         </div>
-    </div>
 
+    </div>
 </x-frontend-layout>

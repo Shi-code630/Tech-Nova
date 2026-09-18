@@ -1,33 +1,23 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-100 py-8">
+    <div class="bg-gray-100 w-full py-6 sm:py-8">
 
-        <div class="Container mx-auto px-4">
+        <div class="Container mx-auto px-3 sm:px-4">
 
             {{-- ========================================= --}}
-            {{-- BACK --}}
+            {{-- BACK                                      --}}
             {{-- ========================================= --}}
+            <div class="mb-4 sm:mb-5">
 
-            <div class="mb-5">
+                <a href="{{ route('user.orders') }}"
+                    class="inline-flex items-center gap-1.5 sm:gap-2
+                           text-xs sm:text-sm font-medium
+                           text-gray-600 hover:text-[#2563EB] transition">
 
-                <a
-                    href="{{ route('user.orders') }}"
-                    class="inline-flex items-center gap-2
-                           text-sm font-medium text-gray-600
-                           hover:text-[#2563EB] transition">
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="w-5 h-5"
-                        fill="none"
-                        viewBox="0 0 24 24"
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
 
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M15 19l-7-7 7-7" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
 
                     </svg>
 
@@ -40,67 +30,44 @@
 
 
             {{-- ========================================= --}}
-            {{-- ORDER HEADER --}}
+            {{-- ORDER HEADER                              --}}
             {{-- ========================================= --}}
+            <div
+                class="bg-white rounded-2xl sm:rounded-3xl shadow-sm
+                        border border-gray-100 p-4 sm:p-6 mb-4 sm:mb-6">
 
-            <div class="bg-white rounded-3xl shadow-sm
-                        border border-gray-100 p-6 mb-6">
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 sm:gap-5">
 
-                <div class="flex flex-col lg:flex-row
-                            lg:items-center
-                            lg:justify-between gap-5">
+                    <div class="min-w-0">
 
-                    <div>
-
-                        <p class="text-sm text-gray-500">
+                        <p class="text-xs sm:text-sm text-gray-500">
                             Order Details
                         </p>
 
-                        <div class="flex flex-wrap
-                                    items-center gap-3 mt-1">
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-3 mt-1">
 
-                            <h1 class="text-2xl lg:text-3xl
-                                       font-bold text-[#111827]">
-
+                            <h1 class="text-lg sm:text-2xl lg:text-3xl font-bold text-[#111827] break-words">
                                 Order #{{ $order->order_number ?? $order->id }}
-
                             </h1>
 
 
                             @php
+                                $status = strtolower($order->order_status ?? 'pending');
 
-                                $status = strtolower(
-                                    $order->order_status ?? 'pending'
-                                );
-
-                                $statusClass = match($status) {
-
-                                    'delivered', 'completed' =>
-                                        'bg-green-100 text-green-700',
-
-                                    'shipped', 'out_for_delivery' =>
-                                        'bg-blue-100 text-blue-700',
-
-                                    'processing', 'confirmed' =>
-                                        'bg-yellow-100 text-yellow-700',
-
-                                    'cancelled', 'canceled' =>
-                                        'bg-red-100 text-red-700',
-
-                                    'returned', 'refunded' =>
-                                        'bg-purple-100 text-purple-700',
-
-                                    default =>
-                                        'bg-gray-100 text-gray-700',
-
+                                $statusClass = match ($status) {
+                                    'delivered', 'completed' => 'bg-green-100 text-green-700',
+                                    'shipped', 'out_for_delivery' => 'bg-blue-100 text-blue-700',
+                                    'processing', 'confirmed' => 'bg-yellow-100 text-yellow-700',
+                                    'cancelled', 'canceled' => 'bg-red-100 text-red-700',
+                                    'returned', 'refunded' => 'bg-purple-100 text-purple-700',
+                                    default => 'bg-gray-100 text-gray-700',
                                 };
-
                             @endphp
 
 
-                            <span class="px-3 py-1.5
-                                         rounded-full
-                                         text-xs font-semibold
+                            <span
+                                class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full
+                                         text-[10px] sm:text-xs font-semibold
                                          {{ $statusClass }}">
 
                                 {{ ucfirst(str_replace('_', ' ', $status)) }}
@@ -110,10 +77,9 @@
                         </div>
 
 
-                        <p class="text-sm text-gray-500 mt-2">
+                        <p class="text-xs sm:text-sm text-gray-500 mt-2">
 
                             Placed on
-
                             <span class="font-medium text-gray-700">
                                 {{ $order->created_at->format('M d, Y h:i A') }}
                             </span>
@@ -123,19 +89,15 @@
                     </div>
 
 
-
                     {{-- Total --}}
-                    <div class="lg:text-right">
+                    <div class="lg:text-right flex-shrink-0">
 
-                        <p class="text-sm text-gray-500">
+                        <p class="text-xs sm:text-sm text-gray-500">
                             Order Total
                         </p>
 
-                        <p class="text-2xl font-bold
-                                  text-[#2563EB] mt-1">
-
+                        <p class="text-xl sm:text-2xl font-bold text-[#2563EB] mt-1">
                             Rs {{ number_format($order->grand_total ?? 0, 2) }}
-
                         </p>
 
                     </div>
@@ -147,41 +109,29 @@
 
 
             {{-- ========================================= --}}
-            {{-- RETURN / EXCHANGE NOTICE --}}
+            {{-- RETURN / EXCHANGE NOTICE                  --}}
             {{-- ========================================= --}}
-
             @if ($order->canRequestReturnExchange() && $hasReturnableItems)
+                <div
+                    class="mb-4 sm:mb-6 rounded-2xl
+                            border border-blue-200 bg-blue-50
+                            p-4 sm:p-5">
 
-                <div class="mb-6 rounded-2xl
-                            border border-blue-200
-                            bg-blue-50 p-5">
+                    <div
+                        class="flex flex-col lg:flex-row
+                                lg:items-center lg:justify-between gap-3 sm:gap-4">
 
-                    <div class="flex flex-col
-                                lg:flex-row
-                                lg:items-center
-                                lg:justify-between gap-4">
+                        <div class="flex gap-3 min-w-0">
 
-                        <div class="flex gap-3">
+                            <div
+                                class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl
+                                        bg-blue-100 text-blue-600
+                                        flex items-center justify-center flex-shrink-0">
 
-                            <div class="w-10 h-10 rounded-xl
-                                        bg-blue-100
-                                        text-blue-600
-                                        flex items-center
-                                        justify-center
-                                        flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
 
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-5 h-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor">
-
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="1.8"
-                                        d="M4 4v6h6M20 20v-6h-6
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 4v6h6M20 20v-6h-6
                                            M5.5 15a7 7 0 0011.5 1
                                            M18.5 9a7 7 0 00-11.5-1" />
 
@@ -190,15 +140,14 @@
                             </div>
 
 
-                            <div>
+                            <div class="min-w-0">
 
-                                <p class="font-semibold text-blue-900">
+                                <p class="font-semibold text-blue-900 text-sm sm:text-base">
                                     Need to return or exchange an item?
                                 </p>
 
-                                <p class="mt-1 text-sm text-blue-700">
-                                    You can submit a request within 7 days
-                                    of delivery.
+                                <p class="mt-1 text-xs sm:text-sm text-blue-700">
+                                    You can submit a request within 7 days of delivery.
                                 </p>
 
                             </div>
@@ -206,31 +155,19 @@
                         </div>
 
 
-                        <a
-                            href="{{ route('return-requests.create', $order) }}"
-                            class="inline-flex justify-center
-                                   items-center gap-2
-                                   rounded-xl
-                                   bg-blue-600
-                                   px-5 py-2.5
-                                   text-sm font-semibold
-                                   text-white
-                                   hover:bg-blue-700
-                                   transition">
+                        <a href="{{ route('return-requests.create', $order) }}"
+                            class="inline-flex justify-center items-center gap-2
+                                   rounded-xl bg-blue-600 hover:bg-blue-700
+                                   px-4 sm:px-5 py-2.5
+                                   text-xs sm:text-sm font-semibold
+                                   text-white transition w-full sm:w-auto">
 
                             Request Return / Exchange
 
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="w-4 h-4"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
 
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M9 5l7 7-7 7" />
 
                             </svg>
@@ -240,75 +177,56 @@
                     </div>
 
                 </div>
-
             @endif
 
 
 
             {{-- ========================================= --}}
-            {{-- MAIN GRID --}}
+            {{-- MAIN GRID                                 --}}
             {{-- ========================================= --}}
-
-            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-4 sm:gap-6">
 
 
                 {{-- ========================================= --}}
-                {{-- LEFT --}}
+                {{-- LEFT                                      --}}
                 {{-- ========================================= --}}
-
-                <div class="xl:col-span-2 space-y-6">
+                <div class="xl:col-span-2 space-y-4 sm:space-y-6">
 
 
                     {{-- ================================= --}}
-                    {{-- PRODUCTS --}}
+                    {{-- PRODUCTS                          --}}
                     {{-- ================================= --}}
+                    <div
+                        class="bg-white rounded-2xl sm:rounded-3xl shadow-sm
+                                border border-gray-100 overflow-hidden">
 
-                    <div class="bg-white rounded-3xl shadow-sm
-                                border border-gray-100
-                                overflow-hidden">
+                        <div class="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-100">
 
-                        <div class="px-6 py-5
-                                    border-b border-gray-100">
+                            <div class="flex items-center justify-between gap-3">
 
-                            <div class="flex items-center
-                                        justify-between">
+                                <div class="min-w-0">
 
-                                <div>
-
-                                    <h2 class="text-lg font-bold
-                                               text-[#111827]">
-
+                                    <h2 class="text-base sm:text-lg font-bold text-[#111827]">
                                         Products
-
                                     </h2>
 
-                                    <p class="text-sm text-gray-500 mt-1">
-
+                                    <p class="text-xs sm:text-sm text-gray-500 mt-1">
                                         {{ $items->count() }}
                                         {{ $items->count() == 1 ? 'item' : 'items' }}
                                         in this order
-
                                     </p>
 
                                 </div>
 
 
-                                <div class="w-10 h-10 rounded-xl
-                                            bg-blue-50
-                                            flex items-center
-                                            justify-center">
+                                <div
+                                    class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl
+                                            bg-blue-50 flex items-center justify-center flex-shrink-0">
 
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        class="w-5 h-5 text-[#2563EB]"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-[#2563EB]"
+                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
 
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="1.8"
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                             d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
 
                                     </svg>
@@ -324,119 +242,68 @@
                         {{-- Product List --}}
                         <div class="divide-y divide-gray-100">
 
-                            @foreach($items as $item)
-
+                            @foreach ($items as $item)
                                 @php
-
                                     $product = $item->product;
                                     $variant = $item->variant;
 
-                                    /*
-                                     * Product Image
-                                     */
                                     $productImage = null;
 
                                     if ($product && !empty($product->thumbnails)) {
-
                                         $productImage = is_array($product->thumbnails)
-                                            ? ($product->thumbnails[0] ?? null)
+                                            ? $product->thumbnails[0] ?? null
                                             : $product->thumbnails;
-
                                     } elseif ($product && $product->image) {
-
                                         $productImage = $product->image;
-
                                     }
 
-
-                                    /*
-                                     * Price
-                                     */
                                     $price = $item->price ?? 0;
+                                    $originalPrice = $product->price ?? $price;
+                                    $discount = max(0, $originalPrice - $price);
+                                    $discountPercent =
+                                        $originalPrice > 0 ? round(($discount / $originalPrice) * 100) : 0;
 
-                                    $originalPrice = $product->price
-                                        ?? $price;
-
-                                    $discount = max(
-                                        0,
-                                        $originalPrice - $price
-                                    );
-
-                                    $discountPercent = $originalPrice > 0
-                                        ? round(($discount / $originalPrice) * 100)
-                                        : 0;
-
-
-                                    /*
-                                     * Quantity
-                                     */
                                     $quantity = $item->quantity ?? 1;
-
-
-                                    /*
-                                     * Item Total
-                                     */
-                                    $itemTotal = $item->total
-                                        ?? ($price * $quantity);
-
+                                    $itemTotal = $item->total ?? $price * $quantity;
                                 @endphp
 
 
 
-                                <div class="p-6">
+                                <div class="p-4 sm:p-6">
 
-                                    <div class="flex flex-col
-                                                sm:flex-row gap-5">
+                                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-5">
 
 
                                         {{-- ================= --}}
-                                        {{-- IMAGE --}}
+                                        {{-- IMAGE             --}}
                                         {{-- ================= --}}
+                                        <div class="flex-shrink-0 mx-auto sm:mx-0">
 
-                                        <div class="flex-shrink-0">
-
-                                            <div class="w-28 h-28
-                                                        sm:w-32 sm:h-32
-                                                        rounded-2xl
-                                                        bg-gray-50
-                                                        border
-                                                        border-gray-200
+                                            <div
+                                                class="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32
+                                                        rounded-2xl bg-gray-50
+                                                        border border-gray-200
                                                         overflow-hidden">
 
-                                                @if($productImage)
-
-                                                    <img
-                                                        src="{{ asset('storage/' . $productImage) }}"
-                                                        alt="{{ $product->name ?? 'Product' }}"
-                                                        class="w-full h-full
-                                                               object-contain
-                                                               p-2"
-                                                    >
-
+                                                @if ($productImage)
+                                                    <img src="{{ asset('storage/' . $productImage) }}"
+                                                        alt="{{ $product->name ?? 'Product' }}" loading="lazy"
+                                                        class="w-full h-full object-contain p-2">
                                                 @else
+                                                    <div
+                                                        class="w-full h-full flex items-center justify-center text-gray-400">
 
-                                                    <div class="w-full h-full
-                                                                flex items-center
-                                                                justify-center
-                                                                text-gray-400">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="w-8 h-8 sm:w-10 sm:h-10" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
 
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            class="w-10 h-10"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor">
-
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
                                                                 stroke-width="1.5"
                                                                 d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10" />
 
                                                         </svg>
 
                                                     </div>
-
                                                 @endif
 
                                             </div>
@@ -446,24 +313,19 @@
 
 
                                         {{-- ================= --}}
-                                        {{-- DETAILS --}}
+                                        {{-- DETAILS           --}}
                                         {{-- ================= --}}
-
                                         <div class="flex-1 min-w-0">
 
-                                            <div class="flex flex-col
-                                                        lg:flex-row
-                                                        lg:justify-between
-                                                        gap-4">
+                                            <div class="flex flex-col lg:flex-row lg:justify-between gap-3 sm:gap-4">
 
 
                                                 {{-- Product --}}
-                                                <div>
+                                                <div class="min-w-0">
 
-                                                    <h3 class="text-base
-                                                               sm:text-lg
-                                                               font-semibold
-                                                               text-[#111827]">
+                                                    <h3
+                                                        class="text-sm sm:text-base md:text-lg font-semibold
+                                                               text-[#111827] break-words">
 
                                                         {{ $product->name ?? 'Product Unavailable' }}
 
@@ -471,66 +333,52 @@
 
 
                                                     {{-- Variant --}}
-                                                    <div class="flex flex-wrap
-                                                                items-center
-                                                                gap-2 mt-3">
+                                                    @if ($variant?->color || $variant?->size)
+                                                        <div
+                                                            class="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2 sm:mt-3">
 
-                                                        @if($variant?->color)
+                                                            @if ($variant?->color)
+                                                                <span
+                                                                    class="px-2 sm:px-3 py-1 rounded-lg
+                                                                             bg-gray-100 text-[10px] sm:text-xs
+                                                                             text-gray-600">
 
-                                                            <span class="px-3 py-1
-                                                                         rounded-lg
-                                                                         bg-gray-100
-                                                                         text-xs
-                                                                         text-gray-600">
-
-                                                                Color:
-                                                                <span class="font-semibold
-                                                                             text-gray-800">
-
-                                                                    {{ $variant->color }}
+                                                                    Color:
+                                                                    <span class="font-semibold text-gray-800">
+                                                                        {{ $variant->color }}
+                                                                    </span>
 
                                                                 </span>
-
-                                                            </span>
-
-                                                        @endif
+                                                            @endif
 
 
-                                                        @if($variant?->size)
+                                                            @if ($variant?->size)
+                                                                <span
+                                                                    class="px-2 sm:px-3 py-1 rounded-lg
+                                                                             bg-gray-100 text-[10px] sm:text-xs
+                                                                             text-gray-600">
 
-                                                            <span class="px-3 py-1
-                                                                         rounded-lg
-                                                                         bg-gray-100
-                                                                         text-xs
-                                                                         text-gray-600">
-
-                                                                Size:
-                                                                <span class="font-semibold
-                                                                             text-gray-800">
-
-                                                                    {{ $variant->size }}
+                                                                    Size:
+                                                                    <span class="font-semibold text-gray-800">
+                                                                        {{ $variant->size }}
+                                                                    </span>
 
                                                                 </span>
+                                                            @endif
 
-                                                            </span>
-
-                                                        @endif
-
-                                                    </div>
+                                                        </div>
+                                                    @endif
 
 
                                                     {{-- Quantity --}}
-                                                    <div class="mt-3">
+                                                    <div class="mt-2 sm:mt-3">
 
-                                                        <span class="text-sm text-gray-500">
+                                                        <span class="text-xs sm:text-sm text-gray-500">
                                                             Quantity:
                                                         </span>
 
-                                                        <span class="font-semibold
-                                                                     text-gray-700">
-
+                                                        <span class="font-semibold text-gray-700 text-xs sm:text-sm">
                                                             {{ $quantity }}
-
                                                         </span>
 
                                                     </div>
@@ -540,67 +388,41 @@
 
 
                                                 {{-- ================= --}}
-                                                {{-- PRICE --}}
+                                                {{-- PRICE             --}}
                                                 {{-- ================= --}}
+                                                <div class="lg:text-right flex-shrink-0">
 
-                                                <div class="lg:text-right
-                                                            flex-shrink-0">
+                                                    <div class="flex items-center lg:justify-end gap-2 flex-wrap">
 
-                                                    <div class="flex items-center
-                                                                lg:justify-end
-                                                                gap-2">
-
-                                                        <span class="text-lg
-                                                                     font-bold
-                                                                     text-[#111827]">
-
+                                                        <span class="text-base sm:text-lg font-bold text-[#111827]">
                                                             Rs {{ number_format($price, 2) }}
-
                                                         </span>
 
 
-                                                        @if($discount > 0)
-
-                                                            <span class="text-sm
-                                                                         text-gray-400
-                                                                         line-through">
-
+                                                        @if ($discount > 0)
+                                                            <span
+                                                                class="text-xs sm:text-sm text-gray-400 line-through">
                                                                 Rs {{ number_format($originalPrice, 2) }}
-
                                                             </span>
-
                                                         @endif
 
                                                     </div>
 
 
-                                                    @if($discount > 0)
-
-                                                        <p class="mt-1
-                                                                  text-xs
-                                                                  font-semibold
-                                                                  text-green-600">
-
+                                                    @if ($discount > 0)
+                                                        <p
+                                                            class="mt-1 text-[10px] sm:text-xs font-semibold text-green-600">
                                                             {{ $discountPercent }}% OFF
-
-                                                            · Save
-                                                            Rs {{ number_format($discount, 2) }}
-
+                                                            · Save Rs {{ number_format($discount, 2) }}
                                                         </p>
-
                                                     @endif
 
 
-                                                    <p class="text-sm
-                                                              text-gray-500 mt-2">
+                                                    <p class="text-xs sm:text-sm text-gray-500 mt-2">
 
                                                         Item Total:
-
-                                                        <span class="font-bold
-                                                                     text-[#2563EB]">
-
+                                                        <span class="font-bold text-[#2563EB]">
                                                             Rs {{ number_format($itemTotal, 2) }}
-
                                                         </span>
 
                                                     </p>
@@ -612,111 +434,72 @@
 
 
                                             {{-- ================= --}}
-                                            {{-- RETURN REQUESTS --}}
+                                            {{-- RETURN REQUESTS   --}}
                                             {{-- ================= --}}
-
                                             @if ($item->returnRequests->isNotEmpty())
+                                                <div
+                                                    class="mt-4 sm:mt-5 rounded-2xl
+                                                            border border-gray-200 bg-gray-50
+                                                            p-3 sm:p-4">
 
-                                                <div class="mt-5
-                                                            rounded-2xl
-                                                            border
-                                                            border-gray-200
-                                                            bg-gray-50
-                                                            p-4">
+                                                    <div class="flex items-center gap-2 mb-2 sm:mb-3">
 
-                                                    <div class="flex items-center
-                                                                gap-2 mb-3">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                            class="w-4 h-4 sm:w-5 sm:h-5 text-gray-500" fill="none"
+                                                            viewBox="0 0 24 24" stroke="currentColor">
 
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            class="w-5 h-5 text-gray-500"
-                                                            fill="none"
-                                                            viewBox="0 0 24 24"
-                                                            stroke="currentColor">
-
-                                                            <path
-                                                                stroke-linecap="round"
-                                                                stroke-linejoin="round"
-                                                                stroke-width="1.8"
-                                                                d="M4 4v6h6M20 20v-6h-6
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="1.8" d="M4 4v6h6M20 20v-6h-6
                                                                    M5.5 15a7 7 0 0011.5 1
                                                                    M18.5 9a7 7 0 00-11.5-1" />
 
                                                         </svg>
 
-                                                        <h4 class="font-semibold
-                                                                   text-gray-800">
-
+                                                        <h4 class="font-semibold text-gray-800 text-xs sm:text-sm">
                                                             Return / Exchange Requests
-
                                                         </h4>
 
                                                     </div>
 
 
-                                                    <div class="space-y-3">
+                                                    <div class="space-y-2 sm:space-y-3">
 
-                                                        @foreach($item->returnRequests as $returnRequest)
-
+                                                        @foreach ($item->returnRequests as $returnRequest)
                                                             @php
-
-                                                                $returnStatusClass = match(
-                                                                    $returnRequest->status
-                                                                ) {
-
-                                                                    'requested' =>
-                                                                        'bg-yellow-100 text-yellow-800',
-
-                                                                    'approved' =>
-                                                                        'bg-blue-100 text-blue-800',
-
-                                                                    'rejected' =>
-                                                                        'bg-red-100 text-red-800',
-
-                                                                    'received' =>
-                                                                        'bg-indigo-100 text-indigo-800',
-
-                                                                    'completed' =>
-                                                                        'bg-green-100 text-green-800',
-
-                                                                    default =>
-                                                                        'bg-gray-100 text-gray-800',
-
+                                                                $returnStatusClass = match ($returnRequest->status) {
+                                                                    'requested' => 'bg-yellow-100 text-yellow-800',
+                                                                    'approved' => 'bg-blue-100 text-blue-800',
+                                                                    'rejected' => 'bg-red-100 text-red-800',
+                                                                    'received' => 'bg-indigo-100 text-indigo-800',
+                                                                    'completed' => 'bg-green-100 text-green-800',
+                                                                    default => 'bg-gray-100 text-gray-800',
                                                                 };
-
                                                             @endphp
 
 
-                                                            <div class="rounded-xl
-                                                                        border
-                                                                        border-gray-200
-                                                                        bg-white
-                                                                        p-3">
+                                                            <div
+                                                                class="rounded-xl border border-gray-200
+                                                                        bg-white p-2.5 sm:p-3">
 
-                                                                <div class="flex flex-wrap
-                                                                            items-center
-                                                                            justify-between
-                                                                            gap-2">
+                                                                <div
+                                                                    class="flex flex-wrap items-center
+                                                                            justify-between gap-2">
 
-                                                                    <span class="text-sm
-                                                                                 font-medium
+                                                                    <span
+                                                                        class="text-xs sm:text-sm font-medium
                                                                                  text-gray-800">
 
                                                                         {{ $returnRequest->request_type_label }}
                                                                         Request
-
-                                                                        · Qty:
-                                                                        {{ $returnRequest->quantity }}
+                                                                        · Qty: {{ $returnRequest->quantity }}
 
                                                                     </span>
 
 
                                                                     <span
-                                                                        class="rounded-full
-                                                                               px-2.5 py-1
-                                                                               text-xs
-                                                                               font-semibold
-                                                                               {{ $returnStatusClass }}">
+                                                                        class="rounded-full px-2 sm:px-2.5 py-0.5 sm:py-1
+                                                                                 text-[10px] sm:text-xs font-semibold
+                                                                                 {{ $returnStatusClass }}">
 
                                                                         {{ $returnRequest->status_label }}
 
@@ -725,61 +508,44 @@
                                                                 </div>
 
 
-                                                                @if(
-                                                                    $returnRequest->request_type === 'exchange'
-                                                                    && $returnRequest->exchangeVariant
-                                                                )
-
-                                                                    <p class="mt-2 text-xs
-                                                                              text-gray-600">
+                                                                @if ($returnRequest->request_type === 'exchange' && $returnRequest->exchangeVariant)
+                                                                    <p
+                                                                        class="mt-2 text-[10px] sm:text-xs text-gray-600">
 
                                                                         Replacement:
-
                                                                         <span class="font-medium">
 
                                                                             {{ $returnRequest->exchangeVariant->color ?: 'Default color' }}
 
-                                                                            {{ $returnRequest->exchangeVariant->size
-                                                                                ? ' · ' . $returnRequest->exchangeVariant->size
-                                                                                : '' }}
+                                                                            {{ $returnRequest->exchangeVariant->size ? ' · ' . $returnRequest->exchangeVariant->size : '' }}
 
                                                                         </span>
 
                                                                     </p>
-
                                                                 @endif
 
 
-                                                                @if($returnRequest->admin_note)
+                                                                @if ($returnRequest->admin_note)
+                                                                    <div class="mt-2 rounded-lg bg-gray-50 p-2">
 
-                                                                    <div class="mt-2
-                                                                                rounded-lg
-                                                                                bg-gray-50
-                                                                                p-2">
+                                                                        <p
+                                                                            class="text-[10px] sm:text-xs text-gray-600">
 
-                                                                        <p class="text-xs
-                                                                                  text-gray-600">
-
-                                                                            <span class="font-semibold">
-                                                                                TechNova:
-                                                                            </span>
-
+                                                                            <span
+                                                                                class="font-semibold">TechNova:</span>
                                                                             {{ $returnRequest->admin_note }}
 
                                                                         </p>
 
                                                                     </div>
-
                                                                 @endif
 
                                                             </div>
-
                                                         @endforeach
 
                                                     </div>
 
                                                 </div>
-
                                             @endif
 
                                         </div>
@@ -787,7 +553,6 @@
                                     </div>
 
                                 </div>
-
                             @endforeach
 
                         </div>
@@ -797,118 +562,77 @@
 
 
                     {{-- ================================= --}}
-                    {{-- ORDER INFORMATION --}}
+                    {{-- ORDER INFORMATION                 --}}
                     {{-- ================================= --}}
+                    <div
+                        class="bg-white rounded-2xl sm:rounded-3xl shadow-sm
+                                border border-gray-100 p-4 sm:p-6">
 
-                    <div class="bg-white rounded-3xl shadow-sm
-                                border border-gray-100 p-6">
-
-                        <h2 class="text-lg font-bold
-                                   text-[#111827] mb-5">
-
+                        <h2 class="text-base sm:text-lg font-bold text-[#111827] mb-4 sm:mb-5">
                             Order Information
-
                         </h2>
 
 
-                        <div class="grid grid-cols-1
-                                    sm:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
 
 
                             {{-- Order ID --}}
-                            <div class="rounded-xl bg-gray-50 p-4">
+                            <div class="rounded-xl bg-gray-50 p-3 sm:p-4">
 
-                                <p class="text-xs uppercase
-                                          tracking-wide
-                                          text-gray-500">
-
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wide text-gray-500">
                                     Order ID
-
                                 </p>
 
-                                <p class="font-semibold
-                                          text-gray-800 mt-1">
-
+                                <p class="font-semibold text-gray-800 mt-1 text-xs sm:text-sm">
                                     #{{ $order->order_number ?? $order->id }}
-
                                 </p>
 
                             </div>
 
 
                             {{-- Date --}}
-                            <div class="rounded-xl bg-gray-50 p-4">
+                            <div class="rounded-xl bg-gray-50 p-3 sm:p-4">
 
-                                <p class="text-xs uppercase
-                                          tracking-wide
-                                          text-gray-500">
-
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wide text-gray-500">
                                     Order Date
-
                                 </p>
 
-                                <p class="font-semibold
-                                          text-gray-800 mt-1">
-
+                                <p class="font-semibold text-gray-800 mt-1 text-xs sm:text-sm">
                                     {{ $order->created_at->format('M d, Y') }}
-
                                 </p>
 
                             </div>
 
 
                             {{-- Payment --}}
-                            <div class="rounded-xl bg-gray-50 p-4">
+                            <div class="rounded-xl bg-gray-50 p-3 sm:p-4">
 
-                                <p class="text-xs uppercase
-                                          tracking-wide
-                                          text-gray-500">
-
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wide text-gray-500">
                                     Payment Method
-
                                 </p>
 
-                                <p class="font-semibold
-                                          text-gray-800 mt-1">
-
-                                    {{ ucfirst(
-                                        str_replace(
-                                            '_',
-                                            ' ',
-                                            $order->payment_method ?? 'N/A'
-                                        )
-                                    ) }}
-
+                                <p class="font-semibold text-gray-800 mt-1 text-xs sm:text-sm">
+                                    {{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}
                                 </p>
 
                             </div>
 
 
                             {{-- Payment Status --}}
-                            <div class="rounded-xl bg-gray-50 p-4">
+                            <div class="rounded-xl bg-gray-50 p-3 sm:p-4">
 
-                                <p class="text-xs uppercase
-                                          tracking-wide
-                                          text-gray-500">
-
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wide text-gray-500">
                                     Payment Status
-
                                 </p>
 
                                 @php
-                                    $paymentStatus = strtolower(
-                                        $order->payment_status ?? 'pending'
-                                    );
+                                    $paymentStatus = strtolower($order->payment_status ?? 'pending');
                                 @endphp
 
                                 <span
-                                    class="inline-flex mt-1
-                                           px-2.5 py-1
-                                           rounded-full
-                                           text-xs font-semibold
-                                           {{ $paymentStatus === 'paid'
-                                              ? 'bg-green-100 text-green-700'
-                                              : 'bg-yellow-100 text-yellow-700' }}">
+                                    class="inline-flex mt-1 px-2 sm:px-2.5 py-0.5 sm:py-1
+                                             rounded-full text-[10px] sm:text-xs font-semibold
+                                             {{ $paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
 
                                     {{ ucfirst($paymentStatus) }}
 
@@ -925,59 +649,44 @@
 
 
                 {{-- ========================================= --}}
-                {{-- RIGHT --}}
+                {{-- RIGHT                                     --}}
                 {{-- ========================================= --}}
-
-                <div class="space-y-6">
+                <div class="space-y-4 sm:space-y-6">
 
 
                     {{-- ================================= --}}
-                    {{-- DELIVERY ADDRESS --}}
+                    {{-- DELIVERY ADDRESS                  --}}
                     {{-- ================================= --}}
+                    <div
+                        class="bg-white rounded-2xl sm:rounded-3xl shadow-sm
+                                border border-gray-100 p-4 sm:p-6">
 
-                    <div class="bg-white rounded-3xl
-                                shadow-sm
-                                border border-gray-100
-                                p-6">
+                        <div class="flex items-center gap-3 mb-4 sm:mb-5">
 
-                        <div class="flex items-center
-                                    gap-3 mb-5">
+                            <div
+                                class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-blue-50
+                                        flex items-center justify-center flex-shrink-0">
 
-                            <div class="w-10 h-10 rounded-xl
-                                        bg-blue-50
-                                        flex items-center
-                                        justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5 text-[#2563EB]"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
 
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-5 h-5 text-[#2563EB]"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor">
-
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="1.8"
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                         d="M12 21s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
 
-                                    <circle
-                                        cx="12"
-                                        cy="11"
-                                        r="2.5" />
+                                    <circle cx="12" cy="11" r="2.5" />
 
                                 </svg>
 
                             </div>
 
 
-                            <div>
+                            <div class="min-w-0">
 
-                                <h2 class="font-bold text-[#111827]">
+                                <h2 class="font-bold text-[#111827] text-sm sm:text-base">
                                     Delivery Address
                                 </h2>
 
-                                <p class="text-xs text-gray-500">
+                                <p class="text-[10px] sm:text-xs text-gray-500">
                                     Shipping information
                                 </p>
 
@@ -986,73 +695,46 @@
                         </div>
 
 
-                        @if($order->address)
+                        @if ($order->address)
 
-                            <div class="space-y-2
-                                        text-sm text-gray-600">
+                            <div class="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-gray-600">
 
-                                <p class="font-bold
-                                          text-[#111827]">
-
-                                    {{ $order->address->full_name
-                                        ?? $order->address->name
-                                        ?? 'Customer' }}
-
+                                <p class="font-bold text-[#111827]">
+                                    {{ $order->address->full_name ?? ($order->address->name ?? 'Customer') }}
                                 </p>
 
 
-                                @if($order->address->phone)
-
-                                    <p>
-                                        {{ $order->address->phone }}
-                                    </p>
-
+                                @if ($order->address->phone)
+                                    <p>{{ $order->address->phone }}</p>
                                 @endif
 
 
-                                @if($order->address->address)
-
-                                    <p>
-                                        {{ $order->address->address }}
-                                    </p>
-
+                                @if ($order->address->address)
+                                    <p>{{ $order->address->address }}</p>
                                 @endif
 
 
                                 <p>
-
                                     {{ $order->address->city ?? '' }}
 
-                                    @if($order->address->district)
+                                    @if ($order->address->district)
                                         , {{ $order->address->district }}
                                     @endif
-
                                 </p>
 
 
-                                @if($order->address->province)
-
-                                    <p>
-                                        {{ $order->address->province }}
-                                    </p>
-
+                                @if ($order->address->province)
+                                    <p>{{ $order->address->province }}</p>
                                 @endif
 
 
-                                @if($order->address->postal_code)
-
-                                    <p>
-                                        Postal Code:
-                                        {{ $order->address->postal_code }}
-                                    </p>
-
+                                @if ($order->address->postal_code)
+                                    <p>Postal Code: {{ $order->address->postal_code }}</p>
                                 @endif
 
                             </div>
-
                         @else
-
-                            <p class="text-sm text-gray-500">
+                            <p class="text-xs sm:text-sm text-gray-500">
                                 Delivery address not available.
                             </p>
 
@@ -1063,62 +745,43 @@
 
 
                     {{-- ================================= --}}
-                    {{-- PAYMENT --}}
+                    {{-- PAYMENT                           --}}
                     {{-- ================================= --}}
+                    <div
+                        class="bg-white rounded-2xl sm:rounded-3xl shadow-sm
+                                border border-gray-100 p-4 sm:p-6">
 
-                    <div class="bg-white rounded-3xl
-                                shadow-sm
-                                border border-gray-100
-                                p-6">
-
-                        <h2 class="text-lg font-bold
-                                   text-[#111827] mb-5">
-
+                        <h2 class="text-base sm:text-lg font-bold text-[#111827] mb-4 sm:mb-5">
                             Payment
-
                         </h2>
 
 
-                        <div class="space-y-4">
+                        <div class="space-y-3 sm:space-y-4">
 
 
-                            <div class="flex justify-between
-                                        items-center gap-4">
+                            <div class="flex justify-between items-center gap-3">
 
-                                <span class="text-sm text-gray-500">
+                                <span class="text-xs sm:text-sm text-gray-500">
                                     Method
                                 </span>
 
-                                <span class="text-sm font-semibold
-                                             text-gray-800 text-right">
-
-                                    {{ ucfirst(
-                                        str_replace(
-                                            '_',
-                                            ' ',
-                                            $order->payment_method ?? 'N/A'
-                                        )
-                                    ) }}
-
+                                <span class="text-xs sm:text-sm font-semibold text-gray-800 text-right">
+                                    {{ ucfirst(str_replace('_', ' ', $order->payment_method ?? 'N/A')) }}
                                 </span>
 
                             </div>
 
 
-                            <div class="flex justify-between
-                                        items-center gap-4">
+                            <div class="flex justify-between items-center gap-3">
 
-                                <span class="text-sm text-gray-500">
+                                <span class="text-xs sm:text-sm text-gray-500">
                                     Status
                                 </span>
 
                                 <span
-                                    class="px-3 py-1
-                                           rounded-full
-                                           text-xs font-semibold
-                                           {{ $paymentStatus === 'paid'
-                                              ? 'bg-green-100 text-green-700'
-                                              : 'bg-yellow-100 text-yellow-700' }}">
+                                    class="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full
+                                             text-[10px] sm:text-xs font-semibold
+                                             {{ $paymentStatus === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700' }}">
 
                                     {{ ucfirst($paymentStatus) }}
 
@@ -1133,146 +796,85 @@
 
 
                     {{-- ================================= --}}
-                    {{-- ORDER SUMMARY --}}
+                    {{-- ORDER SUMMARY                     --}}
                     {{-- ================================= --}}
+                    <div
+                        class="bg-white rounded-2xl sm:rounded-3xl shadow-sm
+                                border border-gray-100 p-4 sm:p-6">
 
-                    <div class="bg-white rounded-3xl
-                                shadow-sm
-                                border border-gray-100
-                                p-6">
-
-                        <h2 class="text-lg font-bold
-                                   text-[#111827] mb-5">
-
+                        <h2 class="text-base sm:text-lg font-bold text-[#111827] mb-4 sm:mb-5">
                             Order Summary
-
                         </h2>
 
 
-                        <div class="space-y-3 text-sm">
+                        <div class="space-y-2.5 sm:space-y-3 text-xs sm:text-sm">
 
 
                             {{-- Subtotal --}}
                             <div class="flex justify-between">
 
-                                <span class="text-gray-500">
-                                    Subtotal
-                                </span>
+                                <span class="text-gray-500">Subtotal</span>
 
                                 <span class="font-medium text-gray-700">
-
-                                    Rs {{ number_format(
-                                        $order->subtotal ?? 0,
-                                        2
-                                    ) }}
-
+                                    Rs {{ number_format($order->subtotal ?? 0, 2) }}
                                 </span>
 
                             </div>
 
 
                             {{-- Discount --}}
-                            @if(($order->discount ?? 0) > 0)
-
+                            @if (($order->discount ?? 0) > 0)
                                 <div class="flex justify-between">
 
-                                    <span class="text-gray-500">
-                                        Discount
-                                    </span>
+                                    <span class="text-gray-500">Discount</span>
 
-                                    <span class="font-semibold
-                                                 text-green-600">
-
-                                        - Rs {{ number_format(
-                                            $order->discount,
-                                            2
-                                        ) }}
-
+                                    <span class="font-semibold text-green-600">
+                                        - Rs {{ number_format($order->discount, 2) }}
                                     </span>
 
                                 </div>
-
                             @endif
 
 
                             {{-- Delivery --}}
                             <div class="flex justify-between">
 
-                                <span class="text-gray-500">
-                                    Delivery
-                                </span>
+                                <span class="text-gray-500">Delivery</span>
 
-                                @if(($order->delivery_charge ?? 0) > 0)
-
+                                @if (($order->delivery_charge ?? 0) > 0)
                                     <span class="font-medium">
-
-                                        Rs {{ number_format(
-                                            $order->delivery_charge,
-                                            2
-                                        ) }}
-
+                                        Rs {{ number_format($order->delivery_charge, 2) }}
                                     </span>
-
                                 @else
-
-                                    <span class="font-semibold
-                                                 text-green-600">
-
-                                        Free
-
-                                    </span>
-
+                                    <span class="font-semibold text-green-600">Free</span>
                                 @endif
 
                             </div>
 
 
                             {{-- Tax --}}
-                            @if(($order->tax ?? 0) > 0)
-
+                            @if (($order->tax ?? 0) > 0)
                                 <div class="flex justify-between">
 
-                                    <span class="text-gray-500">
-                                        Tax
-                                    </span>
+                                    <span class="text-gray-500">Tax</span>
 
                                     <span class="font-medium">
-
-                                        Rs {{ number_format(
-                                            $order->tax,
-                                            2
-                                        ) }}
-
+                                        Rs {{ number_format($order->tax, 2) }}
                                     </span>
 
                                 </div>
-
                             @endif
 
 
                             {{-- Total --}}
-                            <div class="border-t
-                                        border-gray-200
-                                        pt-4 mt-4
-                                        flex justify-between
-                                        items-center">
+                            <div
+                                class="border-t border-gray-200 pt-3 sm:pt-4 mt-3 sm:mt-4
+                                        flex justify-between items-center">
 
-                                <span class="font-bold
-                                             text-[#111827]">
+                                <span class="font-bold text-[#111827]">Total</span>
 
-                                    Total
-
-                                </span>
-
-                                <span class="text-xl
-                                             font-bold
-                                             text-[#2563EB]">
-
-                                    Rs {{ number_format(
-                                        $order->grand_total ?? 0,
-                                        2
-                                    ) }}
-
+                                <span class="text-lg sm:text-xl font-bold text-[#2563EB]">
+                                    Rs {{ number_format($order->grand_total ?? 0, 2) }}
                                 </span>
 
                             </div>
@@ -1284,38 +886,20 @@
 
 
                     {{-- ================================= --}}
-                    {{-- TRACK ORDER --}}
+                    {{-- TRACK ORDER                       --}}
                     {{-- ================================= --}}
+                    @if (!in_array($status, ['cancelled', 'canceled']))
+                        <a href="{{ route('user.order.track', $order->id) }}"
+                            class="w-full inline-flex items-center justify-center gap-2
+                                   rounded-2xl bg-[#2563EB] hover:bg-blue-700
+                                   px-4 sm:px-5 py-2.5 sm:py-3
+                                   text-xs sm:text-sm font-semibold
+                                   text-white transition">
 
-                    @if(!in_array($status, ['cancelled', 'canceled']))
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor">
 
-                        <a
-                            href="{{ route('user.order.track', $order->id) }}"
-                            class="w-full
-                                   inline-flex
-                                   items-center
-                                   justify-center
-                                   gap-2
-                                   rounded-2xl
-                                   bg-[#2563EB]
-                                   hover:bg-blue-700
-                                   px-5 py-3
-                                   text-sm font-semibold
-                                   text-white
-                                   transition">
-
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor">
-
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="1.8"
-                                    d="M9 17a2 2 0 104 0M5 17a2 2 0 104 0
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17a2 2 0 104 0M5 17a2 2 0 104 0
                                        M13 17h1a2 2 0 002-2V7a2 2 0 00-2-2h-1
                                        M12 5H4a2 2 0 00-2 2v8a2 2 0 002 2h1
                                        m10-10h3l4 4v6h-4" />
@@ -1325,7 +909,6 @@
                             Track Order
 
                         </a>
-
                     @endif
 
                 </div>

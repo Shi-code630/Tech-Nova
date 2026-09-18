@@ -4,69 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Order Cancelled</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body style="
-    margin: 0;
-    padding: 0;
-    background-color: #f1f5f9;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #1f2937;
-">
+<body class="m-0 p-0 bg-[#f1f5f9] font-sans text-[#1f2937] antialiased">
 
-    <div style="
-        width: 100%;
-        padding: 40px 15px;
-        box-sizing: border-box;
-    ">
+    <div class="w-full p-[30px_12px] sm:p-[40px_15px] box-border">
 
-        <div style="
-            max-width: 650px;
-            margin: 0 auto;
-            background: #ffffff;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
-        ">
+        <div class="w-full max-w-[650px] mx-auto bg-white rounded-2xl sm:rounded-[18px] overflow-hidden shadow-[0_10px_35px_rgba(0,0,0,0.08)]">
 
             {{-- =====================================================
                 HEADER
             ====================================================== --}}
-            <div style="
-                background: linear-gradient(135deg, #ef4444, #dc2626);
-                padding: 35px 25px;
-                text-align: center;
-                color: #ffffff;
-            ">
+            <div class="bg-gradient-to-br from-[#ef4444] to-[#dc2626] p-[28px_20px] sm:p-[35px_25px] text-center text-white">
 
                 {{-- Cancel Icon --}}
-                <div style="
-                    width: 65px;
-                    height: 65px;
-                    line-height: 65px;
-                    margin: 0 auto 15px;
-                    background: rgba(255,255,255,0.18);
-                    border-radius: 50%;
-                    font-size: 30px;
-                ">
+                <div class="w-[58px] h-[58px] sm:w-[65px] sm:h-[65px]
+                            leading-[58px] sm:leading-[65px]
+                            mx-auto mb-[15px]
+                            bg-[rgba(255,255,255,0.18)] rounded-full
+                            text-[26px] sm:text-[30px]">
                     ✕
                 </div>
 
-                <h1 style="
-                    margin: 0;
-                    font-size: 26px;
-                    font-weight: 700;
-                ">
+                <h1 class="m-0 text-[22px] sm:text-[26px] font-bold leading-snug">
                     Order Cancelled
                 </h1>
 
-                <p style="
-                    margin: 9px 0 0;
-                    font-size: 14px;
-                    color: #fee2e2;
-                ">
+                <p class="m-0 mt-[9px] text-[13px] sm:text-[14px] text-[#fee2e2] leading-relaxed">
                     Your Tech Nova order has been cancelled
                 </p>
 
@@ -76,27 +43,16 @@
             {{-- =====================================================
                 CONTENT
             ====================================================== --}}
-            <div style="
-                padding: 30px 25px;
-            ">
+            <div class="p-[22px_18px] sm:p-[30px_25px]">
 
                 {{-- Greeting --}}
-                <h2 style="
-                    margin: 0 0 10px;
-                    font-size: 21px;
-                    color: #111827;
-                ">
+                <h2 class="m-0 mb-[10px] text-[18px] sm:text-[21px] text-[#111827] font-semibold leading-snug">
                     Dear {{ $order->user->name ?? 'Customer' }},
                 </h2>
 
-                <p style="
-                    margin: 0 0 25px;
-                    font-size: 15px;
-                    line-height: 1.7;
-                    color: #6b7280;
-                ">
+                <p class="m-0 mb-[25px] text-[14px] sm:text-[15px] leading-[1.7] text-[#6b7280]">
                     We're writing to let you know that your order
-                    <strong style="color: #111827;">
+                    <strong class="text-[#111827]">
                         #{{ $order->order_number ?? $order->id }}
                     </strong>
                     has been cancelled.
@@ -106,39 +62,18 @@
                 {{-- =================================================
                     ORDER SUMMARY
                 ================================================== --}}
-                <div style="
-                    border: 1px solid #fecaca;
-                    border-radius: 12px;
-                    overflow: hidden;
-                    margin-bottom: 25px;
-                ">
+                <div class="border border-[#fecaca] rounded-xl overflow-hidden mb-[25px]">
 
                     {{-- Status --}}
-                    <div style="
-                        padding: 16px 18px;
-                        background: #fff7f7;
-                        border-bottom: 1px solid #fee2e2;
-                    ">
+                    <div class="p-[14px_16px] sm:p-[16px_18px] bg-[#fff7f7] border-b border-[#fee2e2]">
 
-                        <div style="
-                            font-size: 12px;
-                            color: #6b7280;
-                            margin-bottom: 7px;
-                            text-transform: uppercase;
-                            letter-spacing: 0.5px;
-                        ">
+                        <div class="text-[11px] sm:text-[12px] text-[#6b7280] mb-[7px] uppercase tracking-[0.5px]">
                             Order Status
                         </div>
 
-                        <span style="
-                            display: inline-block;
-                            background: #ef4444;
-                            color: #ffffff;
-                            padding: 6px 15px;
-                            border-radius: 20px;
-                            font-size: 12px;
-                            font-weight: 700;
-                        ">
+                        <span class="inline-block bg-[#ef4444] text-white
+                                     px-[14px] py-[5px] sm:px-[15px] sm:py-[6px]
+                                     rounded-full text-[11px] sm:text-[12px] font-bold">
                             {{ $order->status_label }}
                         </span>
 
@@ -146,26 +81,13 @@
 
 
                     {{-- Order ID --}}
-                    <div style="
-                        padding: 16px 18px;
-                        border-bottom: 1px solid #e5e7eb;
-                    ">
+                    <div class="p-[14px_16px] sm:p-[16px_18px] border-b border-[#e5e7eb]">
 
-                        <div style="
-                            font-size: 12px;
-                            color: #6b7280;
-                            margin-bottom: 5px;
-                            text-transform: uppercase;
-                            letter-spacing: 0.5px;
-                        ">
+                        <div class="text-[11px] sm:text-[12px] text-[#6b7280] mb-[5px] uppercase tracking-[0.5px]">
                             Order ID
                         </div>
 
-                        <div style="
-                            font-size: 16px;
-                            font-weight: 700;
-                            color: #111827;
-                        ">
+                        <div class="text-[15px] sm:text-[16px] font-bold text-[#111827] break-words">
                             #{{ $order->order_number ?? $order->id }}
                         </div>
 
@@ -173,25 +95,13 @@
 
 
                     {{-- Grand Total --}}
-                    <div style="
-                        padding: 16px 18px;
-                    ">
+                    <div class="p-[14px_16px] sm:p-[16px_18px]">
 
-                        <div style="
-                            font-size: 12px;
-                            color: #6b7280;
-                            margin-bottom: 5px;
-                            text-transform: uppercase;
-                            letter-spacing: 0.5px;
-                        ">
+                        <div class="text-[11px] sm:text-[12px] text-[#6b7280] mb-[5px] uppercase tracking-[0.5px]">
                             Grand Total
                         </div>
 
-                        <div style="
-                            font-size: 20px;
-                            font-weight: 700;
-                            color: #dc2626;
-                        ">
+                        <div class="text-[18px] sm:text-[20px] font-bold text-[#dc2626]">
                             Rs. {{ number_format($order->grand_total, 2) }}
                         </div>
 
@@ -203,51 +113,30 @@
                 {{-- =================================================
                     ORDER ITEMS
                 ================================================== --}}
-                <div style="
-                    margin-bottom: 25px;
-                ">
+                <div class="mb-[25px]">
 
-                    <h3 style="
-                        margin: 0 0 12px;
-                        font-size: 17px;
-                        color: #111827;
-                    ">
+                    <h3 class="m-0 mb-[12px] text-[15px] sm:text-[17px] text-[#111827] font-semibold">
                         📦 Order Items
                     </h3>
 
-
-                    <div style="
-                        background: #f8fafc;
-                        border: 1px solid #e2e8f0;
-                        border-radius: 12px;
-                        padding: 5px 18px;
-                    ">
+                    <div class="bg-[#f8fafc] border border-[#e2e8f0] rounded-xl px-[14px] sm:px-[18px] py-[5px]">
 
                         @foreach ($order->items as $item)
 
-                            <div style="
-                                padding: 14px 0;
-                                border-bottom: 1px solid #e5e7eb;
-                            ">
+                            <div class="py-[14px] border-b border-[#e5e7eb] last:border-b-0">
 
-                                <table width="100%" cellpadding="0" cellspacing="0">
+                                <table class="w-full border-collapse">
                                     <tr>
 
-                                        <td style="
-                                            font-size: 14px;
-                                            color: #374151;
-                                            font-weight: 600;
-                                            padding-right: 10px;
-                                        ">
+                                        <td class="text-[13px] sm:text-[14px] text-[#374151]
+                                                   font-semibold pr-[10px]
+                                                   break-words align-top">
                                             {{ $item->product->name ?? 'Product' }}
                                         </td>
 
-                                        <td style="
-                                            text-align: right;
-                                            font-size: 14px;
-                                            color: #6b7280;
-                                            white-space: nowrap;
-                                        ">
+                                        <td class="text-right text-[13px] sm:text-[14px]
+                                                   text-[#6b7280] whitespace-nowrap
+                                                   align-top">
                                             × {{ $item->quantity }}
                                         </td>
 
@@ -266,20 +155,11 @@
                 {{-- =================================================
                     INFORMATION MESSAGE
                 ================================================== --}}
-                <div style="
-                    background: #fff7ed;
-                    border-left: 4px solid #f97316;
-                    border-radius: 8px;
-                    padding: 16px 18px;
-                    margin-bottom: 25px;
-                ">
+                <div class="bg-[#fff7ed] border-l-4 border-[#f97316]
+                            rounded-lg p-[14px_16px] sm:p-[16px_18px]
+                            mb-[25px]">
 
-                    <p style="
-                        margin: 0;
-                        font-size: 14px;
-                        line-height: 1.7;
-                        color: #7c2d12;
-                    ">
+                    <p class="m-0 text-[13px] sm:text-[14px] leading-[1.7] text-[#7c2d12]">
                         If you believe this cancellation was made in error
                         or if you have any questions, please contact our
                         support team. We're happy to help.
@@ -291,22 +171,16 @@
                 {{-- =================================================
                     SUPPORT BUTTON
                 ================================================== --}}
-                <div style="
-                    text-align: center;
-                    margin-top: 28px;
-                ">
+                <div class="text-center mt-[28px]">
 
                     <a href="#"
-                        style="
-                            display: inline-block;
-                            background: #2563eb;
-                            color: #ffffff;
-                            text-decoration: none;
-                            padding: 12px 26px;
-                            border-radius: 8px;
-                            font-size: 14px;
-                            font-weight: 600;
-                        ">
+                        class="block sm:inline-block w-full sm:w-auto text-center
+                               bg-[#2563eb] hover:bg-[#1d4ed8]
+                               text-white no-underline
+                               px-[22px] py-[12px] sm:px-[26px]
+                               rounded-lg text-[13px] sm:text-[14px]
+                               font-semibold leading-snug
+                               transition-colors duration-200">
                         Contact Support
                     </a>
 
@@ -318,35 +192,18 @@
             {{-- =====================================================
                 FOOTER
             ====================================================== --}}
-            <div style="
-                background: #f8fafc;
-                border-top: 1px solid #e5e7eb;
-                padding: 24px 20px;
-                text-align: center;
-            ">
+            <div class="bg-[#f8fafc] border-t border-[#e5e7eb]
+                        p-[20px_18px] sm:p-[24px_20px] text-center">
 
-                <div style="
-                    font-size: 18px;
-                    font-weight: 700;
-                    color: #2563eb;
-                    margin-bottom: 7px;
-                ">
+                <div class="text-[16px] sm:text-[18px] font-bold text-[#2563eb] mb-[7px]">
                     Tech Nova
                 </div>
 
-                <p style="
-                    margin: 0 0 6px;
-                    font-size: 13px;
-                    color: #6b7280;
-                ">
+                <p class="m-0 mb-[6px] text-[12px] sm:text-[13px] text-[#6b7280] leading-relaxed">
                     Thank you for choosing Tech Nova.
                 </p>
 
-                <p style="
-                    margin: 0;
-                    font-size: 12px;
-                    color: #9ca3af;
-                ">
+                <p class="m-0 text-[11px] sm:text-[12px] text-[#9ca3af] leading-relaxed">
                     © {{ date('Y') }} Tech Nova. All rights reserved.
                 </p>
 

@@ -1,12 +1,12 @@
 <x-frontend-layout>
 
-    <div class="Container mx-auto py-5">
+    <div class="container mx-auto px-3 sm:px-4 lg:px-0 py-5">
 
         {{-- =====================================================
             BREADCRUMB
         ====================================================== --}}
-        <div class="bg-white">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
 
                 <nav class="flex items-center gap-2 text-[12px] overflow-x-auto whitespace-nowrap">
 
@@ -44,7 +44,7 @@
         {{-- =====================================================
             MAIN CONTENT
         ====================================================== --}}
-        <div class=" lg:px-8 py-5">
+        <div class="px-0 sm:px-2 lg:px-8 py-5">
 
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
@@ -52,7 +52,7 @@
                 {{-- =================================================
                     SIDEBAR
                 ================================================== --}}
-                <aside class="lg:col-span-1">
+                <aside class="lg:col-span-1 w-full min-w-0">
 
                     <div
                         class="bg-white rounded-2xl
@@ -118,6 +118,7 @@
                                         unset($allCategoryParams['page']);
                                         unset($allCategoryParams['child']);
                                         $allCategoryUrl = route('category.show', $category->slug);
+
                                         if (!empty($allCategoryParams)) {
                                             $allCategoryUrl .= '?' . http_build_query($allCategoryParams);
                                         }
@@ -203,6 +204,7 @@
                                     unset($allBrandParams['page']);
                                     unset($allBrandParams['brand']);
                                     $allBrandUrl = route('category.show', $category->slug);
+
                                     if (!empty($allBrandParams)) {
                                         $allBrandUrl .= '?' . http_build_query($allBrandParams);
                                     }
@@ -379,7 +381,9 @@
                                     unset($clearPriceParams['page']);
                                     unset($clearPriceParams['min_price']);
                                     unset($clearPriceParams['max_price']);
+
                                     $clearPriceUrl = route('category.show', $category->slug);
+
                                     if (!empty($clearPriceParams)) {
                                         $clearPriceUrl .= '?' . http_build_query($clearPriceParams);
                                     }
@@ -406,7 +410,7 @@
                 {{-- =================================================
                     PRODUCTS
                 ================================================== --}}
-                <main class="lg:col-span-3">
+                <main class="lg:col-span-3 min-w-0">
 
 
                     {{-- PRODUCT TOOLBAR --}}
@@ -424,7 +428,7 @@
                                     gap-4">
 
 
-                            <div>
+                            <div class="min-w-0">
 
                                 <h2 class="text-lg font-bold text-slate-900">
                                     {{ $category->name }} Products
@@ -458,7 +462,7 @@
 
 
                             {{-- ACTIVE FILTERS --}}
-                            <div class="flex flex-wrap items-center gap-2">
+                            <div class="flex flex-wrap items-center gap-2 min-w-0">
 
                                 @if (request('child'))
                                     <span
@@ -525,7 +529,6 @@
                                     lg:grid-cols-4
                                     gap-3">
 
-
                             @foreach ($products as $index => $product)
                                 @php
                                     $hasDiscount =
@@ -558,7 +561,8 @@
                                            hover:border-blue-200
                                            transition duration-300
                                            cursor-pointer
-                                           flex flex-col"
+                                           flex flex-col
+                                           min-w-0"
                                     data-index="{{ $index }}">
 
 
@@ -698,7 +702,7 @@
 
 
                                     {{-- PRODUCT INFORMATION --}}
-                                    <div class="p-2.5 flex flex-col flex-1">
+                                    <div class="p-2.5 flex flex-col flex-1 min-w-0">
 
 
                                         {{-- BRAND --}}
@@ -758,7 +762,8 @@
                                                     flex
                                                     items-center
                                                     gap-1
-                                                    flex-wrap">
+                                                    flex-wrap
+                                                    min-w-0">
 
                                             @if ($hasDiscount)
                                                 <span
@@ -847,7 +852,6 @@
                                         @endif
 
 
-
                                         {{-- ADD TO CART --}}
                                         <div class="mt-auto pt-2">
 
@@ -872,15 +876,20 @@
                                                 <form method="POST"
                                                     action="{{ route('cart.add', ['product' => $product->id]) }}"
                                                     onclick="event.stopPropagation();" class="w-full">
+
                                                     @csrf
 
                                                     <input type="hidden" name="quantity" value="1">
 
                                                     <button type="submit" onclick="event.stopPropagation();"
                                                         class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 px-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
+
                                                         <i class="fa-solid fa-cart-shopping"></i>
+
                                                         Add to Cart
+
                                                     </button>
+
                                                 </form>
                                             @endif
 
@@ -900,16 +909,24 @@
                         @if ($products->hasPages())
 
                             @php
+
                                 $currentPage = $products->currentPage();
+
                                 $lastPage = $products->lastPage();
+
                                 $window = 1;
+
                                 $start = max(1, $currentPage - $window);
+
                                 $end = min($lastPage, $currentPage + $window);
+
                             @endphp
 
-                            <nav class="flex items-center justify-center mt-8" aria-label="Pagination">
 
-                                <ul class="inline-flex items-center gap-1">
+                            <nav class="flex items-center justify-center mt-8 px-2 overflow-x-auto"
+                                aria-label="Pagination">
+
+                                <ul class="inline-flex items-center gap-1 flex-shrink-0">
 
                                     {{-- PREVIOUS --}}
                                     @if ($products->onFirstPage())
@@ -977,6 +994,7 @@
                                             </a>
 
                                         </li>
+
 
                                         @if ($start > 2)
                                             <li>
@@ -1064,6 +1082,7 @@
 
                                             </li>
                                         @endif
+
 
                                         <li>
 
@@ -1238,7 +1257,8 @@
                                 class="w-9 h-9
                                         rounded-lg
                                         bg-blue-50
-                                        flex items-center
+                                        flex
+                                        items-center
                                         justify-center">
 
                                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor"
@@ -1290,12 +1310,13 @@
 
     <script>
         /*
-                                |--------------------------------------------------------------------------
-                                | WISHLIST
-                                |--------------------------------------------------------------------------
-                                */
+            |--------------------------------------------------------------------------
+            | WISHLIST
+            |--------------------------------------------------------------------------
+            */
 
         async function toggleWishlist(event, button, productId) {
+
             event.preventDefault();
             event.stopPropagation();
 
@@ -1304,11 +1325,14 @@
                 ?.getAttribute('content');
 
             if (!token) {
+
                 alert('Security token not found. Please refresh the page.');
+
                 return;
             }
 
             try {
+
                 const response = await fetch(
                     "{{ route('user.wishlist.toggle') }}", {
                         method: "POST",
@@ -1329,20 +1353,29 @@
                 const data = await response.json();
 
                 if (!response.ok) {
+
                     throw new Error(
                         data.message || "Wishlist update failed."
                     );
+
                 }
 
                 if (data.success) {
+
                     window.location.reload();
+
                 }
 
             } catch (error) {
+
                 console.error(error);
+
                 alert(error.message);
+
             }
+
         }
+
 
         /*
         |--------------------------------------------------------------------------

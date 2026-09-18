@@ -43,26 +43,28 @@ class PageController extends Controller
         // Latest 5 products for every parent category
         foreach ($parentCategories as $category) {
 
-    $category->homeProducts = Product::query()
-        ->where('status', true)
-        ->whereHas('category', function ($query) use ($category) {
-            $query->where('id', $category->id)
-                ->orWhere('parent_id', $category->id);
-        })
-        ->with(['category', 'brand'])
-        ->withCount('reviews')
-        ->orderByDesc('created_at')
-        ->orderByDesc('id')
-        ->limit(5)
-        ->get();
-}
+            $category->homeProducts = Product::query()
+                ->where('status', true)
+                ->whereHas('category', function ($query) use ($category) {
+                    $query->where('id', $category->id)
+                        ->orWhere('parent_id', $category->id);
+                })
+                ->with(['category', 'brand'])
+                ->withCount('reviews')
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
+                ->limit(5)
+                ->get();
+        }
 
         // Wishlist products
         $wishlistProductIds = [];
 
         if (Auth::check()) {
-            $wishlistProductIds = Auth::user()
-                ->wishlists()
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+
+            $wishlistProductIds = $user->wishlists()
                 ->pluck('product_id')
                 ->toArray();
         }

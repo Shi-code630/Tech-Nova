@@ -13,6 +13,7 @@
 @import "flowbite/src/themes/default";
 @plugin "flowbite/plugin";
 @source "../../node_modules/flowbite";
+@plugin "@tailwindcss/typography";
 
 
 /* ================================
@@ -108,6 +109,33 @@
         opacity: 1;
         transform: scale(1.1);
     }
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.prose table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+@media (min-width: 640px) {
+    .prose table {
+        display: table;
+    }
+}
+
+.prose {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.prose a {
+    word-break: break-word;
 }
 
 
