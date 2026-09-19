@@ -985,7 +985,7 @@
                     class="rounded-3xl
                                 bg-gradient-to-br
                                 from-[#2563EB] to-[#1E40AF]
-                                p-6 text-white w-320">
+                                p-6 text-white w-300">
 
                     <div
                         class="w-11 h-11 rounded-xl

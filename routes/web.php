@@ -68,6 +68,8 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.view');
 Route::get('/brand/{slug}', [PageController::class, 'show'])->name('brand.show');
 Route::get('/today-deals', [CategoryController::class, 'todayDeals'])->name('today-deals');
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
+Route::get('/limited-time', [CategoryController::class, 'limitedTime'])
+    ->name('limited-time');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
 /*
@@ -172,6 +174,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('user.wishlist');
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('user.wishlist.toggle');
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'destroy'])->name('user.wishlist.remove');
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])
+    ->name('wishlist.toggle');
 
     /*
     |----------------------------------------------------------------------
@@ -194,3 +198,5 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/settings', [UserDashboardController::class, 'settings'])
     ->name('user.settings');
+
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'] ) ->name('user.wishlist.toggle');

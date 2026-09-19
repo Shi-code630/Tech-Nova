@@ -62,277 +62,119 @@
                 </div>
             </div>
 
-            <div class="py-3 bg-[#f0f9ff]">
-                <div class=" mb-6 ">
-                    <div class="flex items-center justify-between">
+            <div class="py-5 bg-[#f0f9ff]">
+                <div class="mb-6">
 
-                        <!-- Left Side: Limited Time Offer -->
-                        <div class="flex items-center gap-3">
-                            <div class=" text-black text-lg font-semibold px-5 py-2 rounded-lg ">
-                                Limited Time Offer
-                            </div>
-                            <div class="h-px w-12 bg-gradient-to-r from-purple-600 to-transparent"></div>
+
+                    <div onclick="window.location.href='{{ route('limited-time') }}'"
+                        class="group relative overflow-hidden cursor-pointer
+           bg-gradient-to-r from-red-600 via-red-500 to-orange-500
+           rounded-2xl px-4 py-3
+           shadow-md hover:shadow-lg
+           transition-all duration-300">
+
+                        {{-- Decorative Circle --}}
+                        <div class="absolute -right-8 -top-10 w-28 h-35
+                rounded-full bg-white/10"></div>
+
+                        <div class="absolute -left-8 -bottom-12 w-24 h-24
+                rounded-full bg-black/10">
                         </div>
 
-                        <!-- Right Side: View More -->
-                        <a href=""
-                            class="flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium transition-colors group">
-                            View More
-                            <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
-                        </a>
+                        <div class="relative flex items-center justify-between gap-3">
+
+                            {{-- Left Content --}}
+                            <div class="flex items-center gap-3 min-w-0">
+
+                                {{-- Icon --}}
+                                <div
+                                    class="flex-shrink-0 w-10 h-10
+                       rounded-xl bg-white/20
+                       backdrop-blur-sm
+                       flex items-center justify-center
+                       text-xl">
+
+                                    ⚡
+
+                                </div>
+
+                                {{-- Text --}}
+                                <div class="min-w-0">
+
+                                    <div class="flex items-center gap-2">
+
+                                        <span
+                                            class="text-[9px] font-bold uppercase
+                               tracking-widest
+                               text-yellow-200">
+
+                                            Limited Time Offer
+
+                                        </span>
+
+                                        <span
+                                            class="px-1.5 py-0.5 rounded-full
+                               bg-white text-red-600
+                               text-[8px] font-black">
+
+                                            HOT
+
+                                        </span>
+
+                                    </div>
+
+                                    <h3
+                                        class="text-sm sm:text-base
+                           font-black text-white
+                           leading-tight">
+
+                                        Flash Deals Are Live!
+
+                                    </h3>
+
+                                    <p
+                                        class="text-[9px] sm:text-[10px]
+                           text-white/80 mt-0.5">
+
+                                        Grab amazing deals before time runs out.
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Right Button --}}
+                            <div
+                                class="flex-shrink-0
+                   bg-white text-red-600
+                   px-3 py-2
+                   rounded-lg
+                   text-[9px] sm:text-[10px]
+                   font-extrabold
+                   flex items-center gap-1
+                   group-hover:bg-yellow-300
+                   transition-colors duration-300">
+
+                                Shop Now
+
+                                <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
 
                     </div>
-                    <div class="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide">
 
-                        <!-- Card 1 -->
-                        <div
-                            class="product-card min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/1015/500/350" alt="Lenovo Legion"
-                                        class="w-full h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
 
-                            <div class="p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-sm">Rs. 350,000</span>
-                                </div>
-
-                                <!-- Timer -->
-                                <div class="flex items-center justify-between bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer1" class="font-bold text-orange-700 timer">03:07:31</span>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                        Add to Cart
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 2 -->
-                        <div
-                            class="product-card min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
-                            <div class="p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-sm">Rs. 350,000</span>
-                                </div>
-                                <div class="flex items-center justify-between bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer2" class="font-bold text-orange-700 timer">03:07:31</span>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div
-                            class="product-card min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/1015/500/350" alt="Lenovo Legion"
-                                        class="w-full h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
-
-                            <div class="p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-sm">Rs. 350,000</span>
-                                </div>
-
-                                <!-- Timer -->
-                                <div
-                                    class="flex items-center justify-between bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer1" class="font-bold text-orange-700 timer">03:07:31</span>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                        Add to Cart
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 4 -->
-                        <div
-                            class="product-card min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
-                            <div class="p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-sm">Rs. 350,000</span>
-                                </div>
-                                <div
-                                    class="flex items-center justify-between bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer2" class="font-bold text-orange-700 timer">03:07:31</span>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Card 5 -->
-                        <div
-                            class="product-card min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
-                            <div class="p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-                                <div class="flex items-center gap-3 mb-3">
-                                    <span class="text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-sm">Rs. 350,000</span>
-                                </div>
-                                <div
-                                    class="flex items-center justify-between bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer2" class="font-bold text-orange-700 timer">03:07:31</span>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="py-3 bg-[#f0f9ff]">
+                    <div class="py-4 bg-[#f0f9ff]">
                         <div class="">
 
                             @foreach ($parentCategories as $category)
@@ -487,47 +329,41 @@
 
 
                                                         {{-- WISHLIST --}}
-                                                       {{-- WISHLIST --}}
-<button
-    type="button"
-    onclick="toggleWishlist(event, this, {{ $product->id }})"
-    data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
-    aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
-    class="wishlist-button
-        absolute
-        right-1.5
-        bottom-1.5
-        z-20
-        w-7
-        h-7
-        rounded-full
-        bg-white
-        border
-        shadow-sm
-        flex
-        items-center
-        justify-center
-        transition
-        duration-200
-        {{ $isWishlisted
-            ? 'text-blue-600 border-blue-300'
-            : 'text-slate-400 border-slate-200 hover:text-blue-600 hover:border-blue-300' }}">
+                                                        {{-- WISHLIST --}}
+                                                        <button type="button"
+                                                            onclick="toggleWishlist(event, this, {{ $product->id }})"
+                                                            data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
+                                                            aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
+                                                            class="wishlist-button
+                                                            absolute
+                                                            right-1.5
+                                                            bottom-1.5
+                                                            z-20
+                                                            w-7
+                                                            h-7
+                                                            rounded-full
+                                                            bg-white
+                                                            border
+                                                            shadow-sm
+                                                            flex
+                                                            items-center
+                                                            justify-center
+                                                            transition
+                                                            duration-200
+                                                            {{ $isWishlisted
+                                                                ? 'text-blue-600 border-blue-300'
+                                                                : 'text-slate-400 border-slate-200 hover:text-blue-600 hover:border-blue-300' }}">
 
-    <svg
-        class="wishlist-icon w-3.5 h-3.5"
-        viewBox="0 0 24 24"
-        fill="{{ $isWishlisted ? 'currentColor' : 'none' }}"
-        stroke="currentColor"
-        stroke-width="2">
+                                                            <svg class="wishlist-icon w-3.5 h-3.5" viewBox="0 0 24 24"
+                                                                fill="{{ $isWishlisted ? 'currentColor' : 'none' }}"
+                                                                stroke="currentColor" stroke-width="2">
 
-        <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
 
-    </svg>
+                                                            </svg>
 
-</button>
+                                                        </button>
 
 
                                                         {{-- IMAGE --}}
@@ -550,8 +386,8 @@
                                                                 <svg class="w-10 h-10 text-slate-300" fill="none"
                                                                     stroke="currentColor" viewBox="0 0 24 24">
 
-                                                                    <path stroke-linecap="round"
-                                                                        stroke-linejoin="round" stroke-width="1.5"
+                                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                                        stroke-width="1.5"
                                                                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 
                                                                 </svg>
@@ -1122,59 +958,58 @@
                 </div>
 
     </Section>
-<script>
-    async function toggleWishlist(event, button, productId) {
-        event.preventDefault();
-        event.stopPropagation();
+    <script>
+        async function toggleWishlist(event, button, productId) {
+            event.preventDefault();
+            event.stopPropagation();
 
-        const token = document
-            .querySelector('meta[name="csrf-token"]')
-            ?.getAttribute('content');
+            const token = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute('content');
 
-        if (!token) {
-            alert('Security token not found. Please refresh the page.');
-            return;
-        }
+            if (!token) {
+                alert('Security token not found. Please refresh the page.');
+                return;
+            }
 
-        try {
-            const response = await fetch(
-                "{{ route('user.wishlist.toggle') }}",
-                {
-                    method: "POST",
+            try {
+                const response = await fetch(
+                    "{{ route('user.wishlist.toggle') }}", {
+                        method: "POST",
 
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "X-CSRF-TOKEN": token,
-                        "X-Requested-With": "XMLHttpRequest"
-                    },
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json",
+                            "X-CSRF-TOKEN": token,
+                            "X-Requested-With": "XMLHttpRequest"
+                        },
 
-                    body: JSON.stringify({
-                        product_id: productId
-                    })
-                }
-            );
-
-            const data = await response.json();
-
-            console.log('Wishlist Response:', data);
-
-            if (!response.ok) {
-                throw new Error(
-                    data.message || "Wishlist update failed."
+                        body: JSON.stringify({
+                            product_id: productId
+                        })
+                    }
                 );
-            }
 
-            if (data.success) {
-                window.location.reload();
-            } else {
-                alert(data.message || "Wishlist update failed.");
-            }
+                const data = await response.json();
 
-        } catch (error) {
-            console.error('Wishlist Error:', error);
-            alert(error.message || 'Something went wrong.');
+                console.log('Wishlist Response:', data);
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.message || "Wishlist update failed."
+                    );
+                }
+
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert(data.message || "Wishlist update failed.");
+                }
+
+            } catch (error) {
+                console.error('Wishlist Error:', error);
+                alert(error.message || 'Something went wrong.');
+            }
         }
-    }
-</script>
+    </script>
 </x-frontend-layout>

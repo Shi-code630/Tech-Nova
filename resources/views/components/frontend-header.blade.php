@@ -1,16 +1,16 @@
 <header class="sticky top-0 z-50">
     <div class="bg-[#0959e8] sticky top-0 z-50">
 
-        <div class="Container mx-auto flex justify-between py-1 ">
+        <div class="Container mx-auto flex justify-between py-1 px-5 ">
 
             {{-- LEFT --}}
             <div class="flex items-center">
 
-                <span class="text-[#dbeafe] text-[12px] sm:text-[12px]">
+                <span class="text-[#dbeafe] text-[10px] sm:text-[10px]">
                     📍 Kathmandu, Nepal
                 </span>
 
-                <span class="hidden sm:inline text-[#dbeafe] text-[12px] sm:text-[12px] ml-8">
+                <span class="hidden sm:inline text-[#dbeafe] text-[10px] sm:text-[10px] ml-8">
                     🚛 Free Delivery On All Orders Above Rs. 10000
                 </span>
 
@@ -21,19 +21,19 @@
             <div class="flex items-center gap-4 sm:gap-5">
 
                 <a href="{{ route('user.orders') }}"
-                    class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
+                    class="text-[#dbeafe] text-[10px] sm:text-[10px] hover:text-white transition">
                     Track Order
                 </a>
 
                 <span class="h-4 w-px bg-white/40"></span>
 
-                <a href="#" class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
+                <a href="#" class="text-[#dbeafe] text-[10px] sm:text-[10px] hover:text-white transition">
                     Help
                 </a>
 
                 <span class="h-4 w-px bg-white/40"></span>
 
-                <a href="#" class="text-[#dbeafe] text-[12px] sm:text-[12px] hover:text-white transition">
+                <a href="#" class="text-[#dbeafe] text-[10px] sm:text-[10px] hover:text-white transition">
                     English
                 </a>
 
@@ -307,16 +307,15 @@
                                         shadow-inner">
 
                                 @if (!empty(auth()->user()->image))
-                                    <img src="{{ auth()->user()->image }}"
-                                        alt="{{ auth()->user()->name }}"
+                                    <img src="{{ auth()->user()->image }}" alt="{{ auth()->user()->name }}"
                                         class="w-full h-full object-cover">
                                 @else
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                         stroke="currentColor" class="w-5 h-5">
 
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 7a3 3 0 11-6 0
-                                                       3 3 0 016 0z
-                                                       M4.5 20a7.5 7.5 0 0115 0" />
+                                                           3 3 0 016 0z
+                                                           M4.5 20a7.5 7.5 0 0115 0" />
 
                                     </svg>
                                 @endif
@@ -392,8 +391,7 @@
                                                 shrink-0">
 
                                         @if (!empty(auth()->user()->image))
-                                            <img src="{{ auth()->user()->image }}"
-                                                alt="{{ auth()->user()->name }}"
+                                            <img src="{{ auth()->user()->image }}" alt="{{ auth()->user()->name }}"
                                                 class="w-full h-full object-cover">
                                         @else
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -401,8 +399,8 @@
 
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                                     d="M15 7a3 3 0 11-6 0
-                                                               3 3 0 016 0z
-                                                               M4.5 20a7.5 7.5 0 0115 0" />
+                                                                   3 3 0 016 0z
+                                                                   M4.5 20a7.5 7.5 0 0115 0" />
 
                                             </svg>
                                         @endif
@@ -454,8 +452,8 @@
                                     viewBox="0 0 24 24" stroke="currentColor">
 
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 12l9-9 9 9
-                                                   M5 10v10h14V10
-                                                   M9 20v-6h6v6" />
+                                                       M5 10v10h14V10
+                                                       M9 20v-6h6v6" />
 
                                 </svg>
 
@@ -479,14 +477,14 @@
                                     viewBox="0 0 24 24" stroke="currentColor">
 
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2
-                                                   M7 13h10l4-8H5.4
-                                                   M7 13L5.4 5
-                                                   M7 13l-2.293 2.293
-                                                   c-.63.63-.184 1.707.707 1.707H17
-                                                   m0 0a2 2 0 100 4
-                                                   2 2 0 000-4zm-8 2
-                                                   a2 2 0 11-4 0
-                                                   2 2 0 014 0z" />
+                                                       M7 13h10l4-8H5.4
+                                                       M7 13L5.4 5
+                                                       M7 13l-2.293 2.293
+                                                       c-.63.63-.184 1.707.707 1.707H17
+                                                       m0 0a2 2 0 100 4
+                                                       2 2 0 000-4zm-8 2
+                                                       a2 2 0 11-4 0
+                                                       2 2 0 014 0z" />
 
                                 </svg>
 
@@ -510,11 +508,11 @@
                                     viewBox="0 0 24 24" stroke="currentColor">
 
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318
-                                                   a4.5 4.5 0 016.364 0L12 7.636
-                                                   l1.318-1.318
-                                                   a4.5 4.5 0 116.364 6.364L12 20.364
-                                                   4.318 12.682
-                                                   a4.5 4.5 0 010-6.364z" />
+                                                       a4.5 4.5 0 016.364 0L12 7.636
+                                                       l1.318-1.318
+                                                       a4.5 4.5 0 116.364 6.364L12 20.364
+                                                       4.318 12.682
+                                                       a4.5 4.5 0 010-6.364z" />
 
                                 </svg>
 
@@ -549,11 +547,11 @@
                                             viewBox="0 0 24 24" stroke="currentColor">
 
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4
-                                                           m4 4H7
-                                                           m6 4v1a3 3 0 01-3 3H6
-                                                           a3 3 0 01-3-3V7
-                                                           a3 3 0 013-3h4
-                                                           a3 3 0 013 3v1" />
+                                                               m4 4H7
+                                                               m6 4v1a3 3 0 01-3 3H6
+                                                               a3 3 0 01-3-3V7
+                                                               a3 3 0 013-3h4
+                                                               a3 3 0 013 3v1" />
 
                                         </svg>
 
@@ -595,8 +593,8 @@
                                 stroke="currentColor" class="w-5 h-5">
 
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15 7a3 3 0 11-6 0
-                                               3 3 0 016 0z
-                                               M4.5 20a7.5 7.5 0 0115 0" />
+                                                   3 3 0 016 0z
+                                                   M4.5 20a7.5 7.5 0 0115 0" />
 
                             </svg>
 
@@ -662,7 +660,9 @@
 
 
                         {{-- Parent Category --}}
-                        <a href="{{ $parent->slug === 'today-deals' ? route('today-deals') : route('category.show', ['slug' => $parent->slug]) }}"
+                        <a href="{{ in_array($parent->slug, ['todays-deals', 'today-deals'])
+                            ? route('today-deals')
+                            : route('category.show', ['slug' => $parent->slug]) }}"
                             class="flex items-center gap-1
                                    hover:text-[#2563EB]
                                    py-3 px-3
@@ -713,7 +713,9 @@
                                             bg-gray-50
                                             border-b">
 
-                                    <a href="{{ $parent->slug === 'today-deals' ? route('today-deals') : route('category.show', ['slug' => $parent->slug]) }}"
+                                    <a href="{{ in_array($parent->slug, ['todays-deals', 'today-deals'])
+                                        ? route('today-deals')
+                                        : route('category.show', ['slug' => $parent->slug]) }}"
                                         class="flex items-center
                                                justify-between
                                                font-semibold

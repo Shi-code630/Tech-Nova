@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -11,292 +10,298 @@ use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
-    /**
-     * Products per page.
-     */
     private const PER_PAGE = 20;
 
-    /**
-     * Show category products
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | Normal Category
+    |--------------------------------------------------------------------------
+    */
     public function show($slug, Request $request)
     {
-        // =========================================================
-        // 1. Fetch Category with children and parent
-        // =========================================================
+        /*
+        |--------------------------------------------------------------------------
+        | Load Category
+        |--------------------------------------------------------------------------
+        */
         $category = Category::with([
-            'children',
+            'children' => function ($query) {
+                $query->where('status', true)
+                    ->orderBy('name');
+            },
             'parent',
         ])
-        ->where('slug', $slug)
-        ->firstOrFail();
+            ->where('slug', $slug)
+            ->where('status', true)
+            ->firstOrFail();
 
-
-        // =========================================================
-        // 2. Get all category IDs (self + descendants)
-        // =========================================================
-        $categoryIds = $this->getAllCategoryIds($category);
-
-
-        // =========================================================
-        // 3. Breadcrumb Ancestors
-        // =========================================================
-        $ancestors = collect();
-
-        $parent = $category->parent;
-
-        while ($parent) {
-
-            $ancestors->prepend($parent);
-
-            $parent = $parent->parent;
+        /*
+        |--------------------------------------------------------------------------
+        | Limited Time category ko separate page par bhejo
+        |--------------------------------------------------------------------------
+        */
+        if ($category->slug === 'limited-time-offer') {
+            return redirect()->route('limited-time');
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Get all category IDs
+        |--------------------------------------------------------------------------
+        */
+        $categoryIds = $this->getAllCategoryIds($category);
 
-        // =========================================================
-        // 4. Base Product Query
-        // =========================================================
-        $productsQuery = Product::whereIn(
-            'category_id',
-            $categoryIds
-        )
-        ->where('status', true)
-        ->with([
-            'brand',
-            'category',
-        ]);
-
-
-        // =========================================================
-        // 5. Child Category Filter
-        // =========================================================
-        if ($request->filled('child')) {
-
-            $child = Category::where(
-                'slug',
-                $request->child
-            )
-            ->whereIn(
-                'id',
-                $categoryIds
-            )
+        /*
+        |--------------------------------------------------------------------------
+        | Today Deals Parent
+        |--------------------------------------------------------------------------
+        */
+        $todayDealsParent = Category::whereIn('slug', [
+            'todays-deals',
+            'today-deals',
+        ])
+            ->where('status', true)
             ->first();
 
-            if ($child) {
+        /*
+        |--------------------------------------------------------------------------
+        | Normal Today Deals se Limited Time products remove
+        |--------------------------------------------------------------------------
+        */
+        if (
+            $todayDealsParent &&
+            in_array($category->slug, [
+                'todays-deals',
+                'today-deals',
+            ])
+        ) {
+            $limitedTimeCategory = Category::where(
+                'slug',
+                'limited-time-offer'
+            )
+                ->where('status', true)
+                ->first();
 
-                $childCategoryIds = $this->getAllCategoryIds($child);
+            if ($limitedTimeCategory) {
+                $limitedTimeIds = $this->getAllCategoryIds(
+                    $limitedTimeCategory
+                );
 
-                $productsQuery->whereIn(
-                    'category_id',
-                    $childCategoryIds
+                $categoryIds = array_values(
+                    array_diff($categoryIds, $limitedTimeIds)
                 );
             }
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Breadcrumb
+        |--------------------------------------------------------------------------
+        */
+        $breadcrumbs = [];
 
-        // =========================================================
-        // 6. Brand Filter
-        // =========================================================
-        if ($brandSlug = $request->query('brand')) {
+        $current = $category;
 
-            $brand = Brand::where('slug', $brandSlug)->first();
+        while ($current) {
+            array_unshift($breadcrumbs, $current);
 
-            if ($brand) {
-
-                $productsQuery->where('brand_id', $brand->id);
+            if ($current->parent_id) {
+                $current = Category::find($current->parent_id);
+            } else {
+                $current = null;
             }
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Product Query
+        |--------------------------------------------------------------------------
+        */
+        $query = Product::whereIn('category_id', $categoryIds)
+            ->where('status', 'active')
+            ->with([
+                'brand',
+                'category',
+            ]);
 
-        // =========================================================
-        // 7. Minimum Price Filter
-        // =========================================================
+        /*
+        |--------------------------------------------------------------------------
+        | Child Filter
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('child')) {
+            $childCategory = Category::where('slug', $request->child)
+                ->where('status', true)
+                ->first();
+
+            if ($childCategory) {
+                $childIds = $this->getAllCategoryIds($childCategory);
+
+                $query->whereIn('category_id', $childIds);
+            }
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Brand Filter
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('brand')) {
+            $query->whereIn(
+                'brand_id',
+                (array) $request->brand
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Minimum Price
+        |--------------------------------------------------------------------------
+        */
         if ($request->filled('min_price')) {
-
-            $productsQuery->where(
+            $query->where(
                 'price',
                 '>=',
-                (float) $request->min_price
+                $request->min_price
             );
         }
 
-
-        // =========================================================
-        // 8. Maximum Price Filter
-        // =========================================================
+        /*
+        |--------------------------------------------------------------------------
+        | Maximum Price
+        |--------------------------------------------------------------------------
+        */
         if ($request->filled('max_price')) {
-
-            $productsQuery->where(
+            $query->where(
                 'price',
                 '<=',
-                (float) $request->max_price
+                $request->max_price
             );
         }
 
-
-        // =========================================================
-        // 9. Products  (PAGINATED — 20 per page)
-        //
-        //   latest() → newest products always land on page 1
-        //   paginate(20) → 20 cards per page
-        //   withQueryString() → brand / child / price filters
-        //                       are preserved across pages
-        // =========================================================
-        $products = $productsQuery
+        /*
+        |--------------------------------------------------------------------------
+        | Products
+        |--------------------------------------------------------------------------
+        */
+        $products = $query
             ->latest()
             ->paginate(self::PER_PAGE)
             ->withQueryString();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Brands
+        |--------------------------------------------------------------------------
+        */
+        $brands = Brand::where('status', true)
+            ->whereHas('products', function ($q) use ($categoryIds) {
+                $q->whereIn('category_id', $categoryIds)
+                    ->where('status', 'active');
+            })
+            ->withCount([
+                'products' => function ($q) use ($categoryIds) {
+                    $q->whereIn('category_id', $categoryIds)
+                        ->where('status', 'active');
+                },
+            ])
+            ->orderBy('name')
+            ->get();
 
-        // =========================================================
-        // 10. Brands for Sidebar
-        // =========================================================
-        $brands = Brand::whereHas(
-            'products',
-            function ($query) use ($categoryIds) {
+        /*
+        |--------------------------------------------------------------------------
+        | Wishlist
+        |--------------------------------------------------------------------------
+        */
+        $wishlistProductIds = [];
 
-                $query
-                    ->whereIn('category_id', $categoryIds)
-                    ->where('status', true);
-            }
-        )
-        ->withCount([
-            'products' => function ($query) use ($categoryIds) {
+        if (Auth::check()) {
+            $wishlistProductIds = Auth::user()
+                ->wishlists()
+                ->pluck('product_id')
+                ->toArray();
+        }
 
-                $query
-                    ->whereIn('category_id', $categoryIds)
-                    ->where('status', true);
-            }
-        ])
-        ->orderBy('name')
-        ->get();
-
-
-        // =========================================================
-        // 11. Wishlist product IDs (for the heart icon state)
-        // =========================================================
-$wishlistProductIds = Auth::check()
-    ? Auth::user()
-        ->wishlists()
-        ->pluck('product_id')
-        ->toArray()
-    : [];
-        // NOTE: adjust ->wishlist() to your actual relation name
-        //       (e.g. ->wishlists(), ->wishlistItems(), etc.).
-
-
-        // =========================================================
-        // 12. Today's Deals Main Page
-        // =========================================================
+        /*
+        |--------------------------------------------------------------------------
+        | Today Deals View
+        |--------------------------------------------------------------------------
+        */
         if (
-            $category->slug === 'todays-deals' ||
-            $category->slug === 'today-deals'
+            in_array($category->slug, [
+                'todays-deals',
+                'today-deals',
+            ])
         ) {
-
             return view(
                 'frontend.today-deals.show',
                 compact(
                     'category',
                     'products',
                     'brands',
-                    'ancestors',
+                    'breadcrumbs',
                     'wishlistProductIds'
                 )
             );
         }
 
-
-        // =========================================================
-        // 13. Limited Time Offer (top-level)
-        // =========================================================
-        if ($category->slug === 'limited-time-offer') {
-
+        /*
+        |--------------------------------------------------------------------------
+        | Festive Deals
+        |--------------------------------------------------------------------------
+        */
+        if (
+            $todayDealsParent &&
+            $category->parent_id === $todayDealsParent->id
+        ) {
             return view(
-                'frontend.today-deals.limited-time',
+                'frontend.today-deals.festive',
                 compact(
                     'category',
                     'products',
                     'brands',
-                    'ancestors',
+                    'breadcrumbs',
                     'wishlistProductIds'
                 )
             );
         }
 
-
-        // =========================================================
-        // 14. Today's Deals Child Categories
-        // =========================================================
-        if ($category->parent_id) {
-
-            $parent = Category::find($category->parent_id);
-
-            if (
-                $parent &&
-                (
-                    $parent->slug === 'todays-deals' ||
-                    $parent->slug === 'today-deals'
-                )
-            ) {
-
-                // Limited Time Offer
-                if ($category->slug === 'limited-time-offer') {
-
-                    return view(
-                        'frontend.today-deals.limited-time',
-                        compact(
-                            'category',
-                            'products',
-                            'brands',
-                            'ancestors',
-                            'wishlistProductIds'
-                        )
-                    );
-                }
-
-                // Other Today's Deals children
-                return view(
-                    'frontend.today-deals.festive',
-                    compact(
-                        'category',
-                        'products',
-                        'brands',
-                        'ancestors',
-                        'wishlistProductIds'
-                    )
-                );
-            }
-        }
-
-
-        // =========================================================
-        // 15. Normal Category Page
-        // =========================================================
+        /*
+        |--------------------------------------------------------------------------
+        | Normal Category
+        |--------------------------------------------------------------------------
+        */
         return view(
             'frontend.category.show',
             compact(
                 'category',
                 'products',
                 'brands',
-                'ancestors',
+                'breadcrumbs',
                 'wishlistProductIds'
             )
         );
     }
 
 
-    /**
-     * Today's Deals
-     */
-    public function todayDeals(Request $request)
-    {
-        // =========================================================
-        // 1. Today's Deals Parent Category
-        // =========================================================
-        $category = Category::with([
-            'children',
-            'parent',
-        ])
+    /*
+|--------------------------------------------------------------------------
+| Today Deals
+|--------------------------------------------------------------------------
+*/
+public function todayDeals(Request $request)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | Find Today Deals Parent
+    |--------------------------------------------------------------------------
+    */
+    $category = Category::with([
+        'children' => function ($query) {
+            $query->where('status', true)
+                ->orderBy('name');
+        },
+    ])
         ->whereIn('slug', [
             'todays-deals',
             'today-deals',
@@ -304,160 +309,364 @@ $wishlistProductIds = Auth::check()
         ->where('status', true)
         ->firstOrFail();
 
+    /*
+    |--------------------------------------------------------------------------
+    | Limited Time Category
+    |--------------------------------------------------------------------------
+    | Limited Time Offer ko Today's Deals se exclude karna hai.
+    |--------------------------------------------------------------------------
+    */
+    $limitedTimeCategory = Category::where(
+        'slug',
+        'limited-time-offer'
+    )
+        ->where('status', true)
+        ->first();
 
-        // =========================================================
-        // 2. Category IDs
-        // =========================================================
+    $limitedTimeIds = [];
+
+    if ($limitedTimeCategory) {
+        $limitedTimeIds = $this->getAllCategoryIds(
+            $limitedTimeCategory
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Child Categories + Products
+    |--------------------------------------------------------------------------
+    */
+    $childCategories = $category->children;
+
+    foreach ($childCategories as $child) {
+
+        /*
+        |----------------------------------------------------------------------
+        | Get child + descendants IDs
+        |----------------------------------------------------------------------
+        */
+        $childIds = $this->getAllCategoryIds($child);
+
+        /*
+        |----------------------------------------------------------------------
+        | Remove Limited Time products
+        |----------------------------------------------------------------------
+        */
+        $childIds = array_values(
+            array_diff($childIds, $limitedTimeIds)
+        );
+
+        /*
+        |----------------------------------------------------------------------
+        | Products
+        |----------------------------------------------------------------------
+        */
+        $child->today_deals_products = Product::whereIn(
+            'category_id',
+            $childIds
+        )
+            ->where('status', 'active')
+            ->with([
+                'brand',
+                'category',
+            ])
+            ->latest()
+            ->take(5)
+            ->get();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Wishlist
+    |--------------------------------------------------------------------------
+    */
+    $wishlistProductIds = [];
+
+    if (Auth::check()) {
+        $wishlistProductIds = Auth::user()
+            ->wishlists()
+            ->pluck('product_id')
+            ->toArray();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Breadcrumb
+    |--------------------------------------------------------------------------
+    */
+    $breadcrumbs = [$category];
+
+    /*
+    |--------------------------------------------------------------------------
+    | View
+    |--------------------------------------------------------------------------
+    */
+    return view(
+        'frontend.today-deals.show',
+        compact(
+            'category',
+            'childCategories',
+            'breadcrumbs',
+            'wishlistProductIds'
+        )
+    );
+}
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Limited Time Offer
+    |--------------------------------------------------------------------------
+    */
+    public function limitedTime(Request $request)
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | Limited Time Category
+        |--------------------------------------------------------------------------
+        */
+        $category = Category::with([
+            'children' => function ($query) {
+                $query->where('status', true)
+                    ->orderBy('name');
+            },
+        ])
+            ->where('slug', 'limited-time-offer')
+            ->where('status', true)
+            ->firstOrFail();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Category IDs
+        |--------------------------------------------------------------------------
+        */
         $categoryIds = $this->getAllCategoryIds($category);
 
+        /*
+        |--------------------------------------------------------------------------
+        | TODAY START / TOMORROW START
+        |--------------------------------------------------------------------------
+        */
+        $todayStart = now()->startOfDay();
 
-        // =========================================================
-        // 3. Breadcrumb Ancestors
-        // =========================================================
-        $ancestors = collect();
+        $tomorrowStart = now()
+            ->copy()
+            ->addDay()
+            ->startOfDay();
 
-        $parent = $category->parent;
+        /*
+        |--------------------------------------------------------------------------
+        | Limited Time Products
+        |--------------------------------------------------------------------------
+        |
+        | Active hona zaroori hai.
+        |
+        | Aur last activation aaj ka hona zaroori hai.
+        |
+        */
+        $query = Product::whereIn('category_id', $categoryIds)
+            ->where('status', 'active')
+            ->where(
+                'limited_time_activated_at',
+                '>=',
+                $todayStart
+            )
+            ->where(
+                'limited_time_activated_at',
+                '<',
+                $tomorrowStart
+            )
+            ->with([
+                'brand',
+                'category',
+            ]);
 
-        while ($parent) {
+        /*
+        |--------------------------------------------------------------------------
+        | Child Filter
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('child')) {
+            $childCategory = Category::where('slug', $request->child)
+                ->where('status', true)
+                ->first();
 
-            $ancestors->prepend($parent);
+            if ($childCategory) {
+                $childIds = $this->getAllCategoryIds(
+                    $childCategory
+                );
 
-            $parent = $parent->parent;
-        }
-
-
-        // =========================================================
-        // 4. Products Query
-        // =========================================================
-        $productsQuery = Product::whereIn(
-            'category_id',
-            $categoryIds
-        )
-        ->where('status', true)
-        ->with([
-            'brand',
-            'category',
-        ]);
-
-
-        // =========================================================
-        // 5. Brand Filter
-        // =========================================================
-        if ($brandSlug = $request->query('brand')) {
-
-            $brand = Brand::where('slug', $brandSlug)->first();
-
-            if ($brand) {
-
-                $productsQuery->where('brand_id', $brand->id);
+                $query->whereIn('category_id', $childIds);
             }
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Brand Filter
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('brand')) {
+            $query->whereIn(
+                'brand_id',
+                (array) $request->brand
+            );
+        }
 
-        // =========================================================
-        // 6. Minimum Price
-        // =========================================================
+        /*
+        |--------------------------------------------------------------------------
+        | Price Filter
+        |--------------------------------------------------------------------------
+        */
         if ($request->filled('min_price')) {
-
-            $productsQuery->where(
+            $query->where(
                 'price',
                 '>=',
-                (float) $request->min_price
+                $request->min_price
             );
         }
 
-
-        // =========================================================
-        // 7. Maximum Price
-        // =========================================================
         if ($request->filled('max_price')) {
-
-            $productsQuery->where(
+            $query->where(
                 'price',
                 '<=',
-                (float) $request->max_price
+                $request->max_price
             );
         }
 
-
-        // =========================================================
-        // 8. Products  (PAGINATED)
-        // =========================================================
-        $products = $productsQuery
+        /*
+        |--------------------------------------------------------------------------
+        | Products
+        |--------------------------------------------------------------------------
+        */
+        $products = $query
             ->latest()
             ->paginate(self::PER_PAGE)
             ->withQueryString();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Brands
+        |--------------------------------------------------------------------------
+        */
+        $brands = Brand::where('status', true)
+            ->whereHas('products', function ($q) use (
+                $categoryIds,
+                $todayStart,
+                $tomorrowStart
+            ) {
+                $q->whereIn('category_id', $categoryIds)
+                    ->where('status', 'active')
+                    ->where(
+                        'limited_time_activated_at',
+                        '>=',
+                        $todayStart
+                    )
+                    ->where(
+                        'limited_time_activated_at',
+                        '<',
+                        $tomorrowStart
+                    );
+            })
+            ->withCount([
+                'products' => function ($q) use (
+                    $categoryIds,
+                    $todayStart,
+                    $tomorrowStart
+                ) {
+                    $q->whereIn('category_id', $categoryIds)
+                        ->where('status', 'active')
+                        ->where(
+                            'limited_time_activated_at',
+                            '>=',
+                            $todayStart
+                        )
+                        ->where(
+                            'limited_time_activated_at',
+                            '<',
+                            $tomorrowStart
+                        );
+                },
+            ])
+            ->orderBy('name')
+            ->get();
 
-        // =========================================================
-        // 9. Brands
-        // =========================================================
-        $brands = Brand::whereHas(
-            'products',
-            function ($query) use ($categoryIds) {
+        /*
+        |--------------------------------------------------------------------------
+        | Breadcrumb
+        |--------------------------------------------------------------------------
+        */
+        $breadcrumbs = [];
 
-                $query
-                    ->whereIn('category_id', $categoryIds)
-                    ->where('status', true);
+        $current = $category;
+
+        while ($current) {
+            array_unshift($breadcrumbs, $current);
+
+            if ($current->parent_id) {
+                $current = Category::find(
+                    $current->parent_id
+                );
+            } else {
+                $current = null;
             }
-        )
-        ->withCount([
-            'products' => function ($query) use ($categoryIds) {
+        }
 
-                $query
-                    ->whereIn('category_id', $categoryIds)
-                    ->where('status', true);
-            }
-        ])
-        ->orderBy('name')
-        ->get();
+        /*
+        |--------------------------------------------------------------------------
+        | Wishlist
+        |--------------------------------------------------------------------------
+        */
+        $wishlistProductIds = [];
 
+        if (Auth::check()) {
+            $wishlistProductIds = Auth::user()
+                ->wishlists()
+                ->pluck('product_id')
+                ->toArray();
+        }
 
-        // =========================================================
-        // 10. Wishlist product IDs
-        // =========================================================
-
-$wishlistProductIds = Auth::check()
-    ? Auth::user()
-        ->wishlists()
-        ->pluck('product_id')
-        ->toArray()
-    : [];
-
-        // =========================================================
-        // 11. Return Today's Deals
-        // =========================================================
+        /*
+        |--------------------------------------------------------------------------
+        | Limited Time View
+        |--------------------------------------------------------------------------
+        */
         return view(
-            'frontend.today-deals.show',
+            'frontend.limited-time-offer.limited-time',
             compact(
                 'category',
                 'products',
                 'brands',
-                'ancestors',
+                'breadcrumbs',
                 'wishlistProductIds'
             )
         );
     }
 
 
-    /**
-     * Recursively get all category IDs
-     * (self + children + grandchildren...)
-     */
-    private function getAllCategoryIds($category)
-    {
-        $ids = collect([$category->id]);
+    /*
+    |--------------------------------------------------------------------------
+    | Get All Category IDs
+    |--------------------------------------------------------------------------
+    */
+    private function getAllCategoryIds(
+        Category $category
+    ): array {
+        $ids = [$category->id];
 
-        foreach ($category->children as $child) {
+        $children = Category::where(
+            'parent_id',
+            $category->id
+        )
+            ->where('status', true)
+            ->get();
 
-            $ids = $ids->merge(
+        foreach ($children as $child) {
+            $ids = array_merge(
+                $ids,
                 $this->getAllCategoryIds($child)
             );
         }
 
-        return $ids
-            ->unique()
-            ->values()
-            ->toArray();
+        return $ids;
     }
 }

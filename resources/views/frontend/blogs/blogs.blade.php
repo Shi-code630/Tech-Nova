@@ -1,7 +1,7 @@
 <x-frontend-layout>
 
     <div class="bg-[#ebf4fa] full">
-        <div class="Container mx-auto px-4 pb-10 ">
+        <div class="Container mx-auto px-4 pb-5">
 
             <!-- Hero Banner -->
             <section class="Container mx-auto ">
@@ -106,6 +106,149 @@
             </div>
 
         </div>
+        <section class="Conteiner mx-auto px-8 mt-3 mb-6">
+            <div
+                class="relative overflow-hidden
+    rounded-3xl
+    bg-gradient-to-r
+    from-gray-900
+    via-gray-800
+    to-gray-900
+    shadow-xl">
+
+                {{-- Decorative elements --}}
+                <div class="absolute -top-24 -right-20
+        w-72 h-72
+        rounded-full
+        bg-red-600/20">
+                </div>
+
+                <div
+                    class="absolute -bottom-32 -left-20
+        w-80 h-80
+        rounded-full
+        bg-orange-500/10">
+                </div>
+
+
+                <div class="relative
+        px-6 py-9
+        md:px-10 md:py-11">
+
+                    <div
+                        class="flex flex-col
+            md:flex-row
+            md:items-center
+            md:justify-between
+            gap-7">
+
+
+                        {{-- Content --}}
+                        <div class="max-w-2xl">
+
+                            <div
+                                class="inline-flex items-center gap-2
+                    bg-red-500/10
+                    border border-red-400/20
+                    text-red-400
+                    px-3 py-1.5
+                    rounded-full
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-widest
+                    mb-4">
+
+                                <i class="fa-solid fa-bolt"></i>
+
+                                More Flash Deals
+
+                            </div>
+
+
+                            <h2
+                                class="text-2xl md:text-3xl
+                    font-extrabold
+                    text-white
+                    leading-tight">
+
+                                Don't Miss Our
+                                <span class="text-red-400">
+                                    Limited-Time Offers
+                                </span>
+
+                            </h2>
+
+
+                            <p
+                                class="mt-3
+                    text-sm
+                    text-gray-400
+                    leading-relaxed
+                    max-w-xl">
+
+                                Explore more limited-time categories and discover
+                                exclusive deals available for a short period.
+                                New offers can disappear quickly.
+
+                            </p>
+
+                        </div>
+
+
+                        {{-- CTA --}}
+                        <div class="flex-shrink-0">
+
+                            <a href="{{ route('limited-time') }}"
+                                class="group inline-flex
+                    items-center
+                    justify-center
+                    gap-3
+                    bg-red-600
+                    hover:bg-red-500
+                    text-white
+                    px-6 py-3.5
+                    rounded-2xl
+                    text-sm
+                    font-bold
+                    shadow-lg
+                    shadow-red-900/20
+                    transition-all
+                    duration-300
+                    hover:-translate-y-0.5">
+
+                                <span>
+                                    Explore All Deals
+                                </span>
+
+                                <span
+                                    class="w-8 h-8
+                        rounded-xl
+                        bg-white/15
+                        flex items-center
+                        justify-center
+                        group-hover:translate-x-1
+                        transition-transform">
+
+                                    <i class="fa-solid fa-arrow-right text-xs"></i>
+
+                                </span>
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+
+
+        </section>
     </div>
 
 </x-frontend-layout>

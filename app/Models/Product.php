@@ -27,6 +27,7 @@ class Product extends Model
         'discount_price',
         'stock',
         'status',
+        'limited_time_activated_at',
         'thumbnails',
         'featured',
         'meta_title',
@@ -40,7 +41,53 @@ class Product extends Model
         'discount_price' => 'decimal:2',
         'featured' => 'boolean',
         'stock' => 'integer',
+        'limited_time_activated_at' => 'datetime',
     ];
+
+    // =========================
+    // MODEL EVENTS
+    // =========================
+
+    protected static function booted(): void
+    {
+        /*
+        |--------------------------------------------------------------------------
+        | New Product
+        |--------------------------------------------------------------------------
+        |
+        | Agar naya product Active hai to activation time save hoga.
+        |
+        */
+        static::creating(function (Product $product) {
+
+            if ($product->status === 'active') {
+                $product->limited_time_activated_at = now();
+            }
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Existing Product
+        |--------------------------------------------------------------------------
+        |
+        | Jab bhi status:
+        |
+        | inactive -> active
+        | out_of_stock -> active
+        |
+        | hoga, naya activation time save hoga.
+        |
+        */
+        static::updating(function (Product $product) {
+
+            if (
+                $product->isDirty('status') &&
+                $product->status === 'active'
+            ) {
+                $product->limited_time_activated_at = now();
+            }
+        });
+    }
 
     // =========================
     // RELATIONSHIPS
@@ -162,10 +209,14 @@ class Product extends Model
             default => ucfirst($this->status),
         };
     }
-     public function getFirstThumbnailAttribute()
+
+    public function getFirstThumbnailAttribute()
     {
         $thumbnails = $this->thumbnails;
-        return !empty($thumbnails) && is_array($thumbnails) ? $thumbnails[0] : null;
+
+        return !empty($thumbnails) && is_array($thumbnails)
+            ? $thumbnails[0]
+            : null;
     }
 
     /**
@@ -174,7 +225,10 @@ class Product extends Model
     public function getThumbnailUrlAttribute()
     {
         $thumbnail = $this->first_thumbnail;
-        return $thumbnail ? asset('storage/' . $thumbnail) : asset('images/default-product.png');
+
+        return $thumbnail
+            ? asset('storage/' . $thumbnail)
+            : asset('images/default-product.png');
     }
 
     /**
@@ -183,6 +237,7 @@ class Product extends Model
     public function getThumbnailUrlsAttribute()
     {
         $thumbnails = $this->thumbnails;
+
         if (empty($thumbnails) || !is_array($thumbnails)) {
             return [];
         }
@@ -191,7 +246,6 @@ class Product extends Model
             return asset('storage/' . $thumbnail);
         }, $thumbnails);
     }
-
 
     // =========================
     // SCOPES
