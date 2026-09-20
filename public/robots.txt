@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /cart
+Disallow: /login
+Disallow: /register
+
+Sitemap: {{ change this to your live domain }}/sitemap.xml

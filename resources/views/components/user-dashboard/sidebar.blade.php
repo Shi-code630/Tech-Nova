@@ -1,11 +1,8 @@
-{{-- =====================================================
-     SIDEBAR (Desktop only — mobile ma hidden)
-====================================================== --}}
 <aside
     class="hidden lg:flex
            w-64
            sticky top-4
-           h-[calc(100vh-2rem)]
+           h-[calc(115vh-2rem)]
            flex-shrink-0
            bg-gradient-to-b from-[#2563EB] to-[#1E40AF]
            text-white

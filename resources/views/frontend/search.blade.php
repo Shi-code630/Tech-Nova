@@ -1,5 +1,9 @@
-<x-frontend-layout>
-
+<x-frontend-layout
+    title="Search | TechNova Nepal"
+    description="Search laptops, gadgets and accessories at TechNova Nepal."
+    robots="noindex,follow"
+    :canonical="route('search')"
+>
     {{-- =========================================================
         SEARCH RESULTS PAGE
     ========================================================== --}}

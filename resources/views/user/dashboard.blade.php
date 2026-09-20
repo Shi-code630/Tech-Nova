@@ -1,4 +1,4 @@
-<x-frontend-layout>
+<x-frontend-layout title="Dashboard">
 
     <section class="bg-slate-100 w-full min-h-screen py-6 sm:py-8">
 
@@ -40,7 +40,9 @@
                     {{-- Recently Viewed + Recommended --}}
                     <div class="grid grid-cols-1 gap-4 sm:gap-6">
 
-                        <x-user-dashboard.recently-viewed />
+                       <x-user-dashboard.recently-viewed
+    :recently-viewed-products="$recentlyViewedProducts"
+/>
 
                         <x-user-dashboard.recommended-products />
 

@@ -1,4 +1,4 @@
-<x-frontend-layout>
+<x-frontend-layout title="Checkout">
 
     <div class="bg-gray-100 min-h-screen py-6 sm:py-10">
         <div class="w-[95%] max-w-7xl mx-auto">

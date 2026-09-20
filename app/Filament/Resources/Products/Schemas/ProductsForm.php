@@ -123,7 +123,7 @@ class ProductForm
 
 
 
-                                Section::make('Product SKUs (Finish + Config)')
+                Section::make('Product SKUs (Finish + Config)')
                     ->description('Each row is one sellable SKU. Example: Luna Grey + 16GB/512GB. Description and photos on a row show only when that SKU is selected on the site.')
                     ->columnSpanFull()
                     ->schema([
@@ -232,7 +232,6 @@ class ProductForm
                     ->schema([
                         Grid::make(2)
                             ->schema([
-
                                 Select::make('status')
                                     ->label('Status')
                                     ->options([
@@ -251,6 +250,7 @@ class ProductForm
                                     ),
                             ]),
                     ]),
+
             ]);
     }
 }

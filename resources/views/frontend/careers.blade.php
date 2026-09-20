@@ -1,5 +1,4 @@
-<x-frontend-layout>
-
+<x-frontend-layout title="Careers | TechNova Nepal" description="Jobs at TechNova Nepal, Kathmandu." :canonical="route('careers')">
     {{-- ========================================================= --}}
     {{-- 1. HERO SECTION --}}
     {{-- ========================================================= --}}

@@ -800,9 +800,19 @@
 
 
 
-                    {{-- ================================= --}}
-                    {{-- SUPPORT CARD                      --}}
-                    {{-- ================================= --}}
+
+
+                </div>
+                {{-- ================================= --}}
+                {{-- SUPPORT CARD --}}
+                {{-- ================================= --}}
+
+                <div
+                    class="rounded-3xl
+                                bg-gradient-to-br
+                                from-[#2563EB] to-[#1E40AF]
+                                p-6 text-white w-300">
+
                     <div
                         class="rounded-2xl sm:rounded-3xl
                                 bg-gradient-to-br from-[#2563EB] to-[#1E40AF]
