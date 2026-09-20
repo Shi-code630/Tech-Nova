@@ -1,14 +1,14 @@
 <x-frontend-layout>
 
-    <div class="min-h-screen bg-gray-100 py-8">
+    <div class="min-h-screen bg-gray-100 py-6 sm:py-8">
 
-        <div class="Container mx-auto px-4 max-w-4xl">
+        <div class="container mx-auto px-4 max-w-4xl">
 
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 sm:p-6">
 
                 {{-- Header --}}
                 <div class="mb-6">
-                    <h1 class="text-2xl font-bold text-gray-900">
+                    <h1 class="text-xl sm:text-2xl font-bold text-gray-900">
                         Edit Address
                     </h1>
 
@@ -32,7 +32,7 @@
                 <form
                     action="{{ route('checkout.address.update', $address->id) }}"
                     method="POST"
-                    class="space-y-6"
+                    class="space-y-5 sm:space-y-6"
                 >
 
                     @csrf
@@ -49,8 +49,8 @@
                             name="full_name"
                             value="{{ old('full_name', $address->full_name) }}"
                             required
-                            class="w-full rounded-xl border border-gray-300 px-4 py-3
-                                   focus:border-blue-500 focus:ring-blue-500"
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 sm:py-3
+                                   focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
                             placeholder="Enter full name"
                         >
                     </div>
@@ -66,8 +66,8 @@
                             name="phone"
                             value="{{ old('phone', $address->phone) }}"
                             required
-                            class="w-full rounded-xl border border-gray-300 px-4 py-3
-                                   focus:border-blue-500 focus:ring-blue-500"
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 sm:py-3
+                                   focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
                             placeholder="Enter phone number"
                         >
                     </div>
@@ -85,8 +85,8 @@
                                 name="province"
                                 value="{{ old('province', $address->province) }}"
                                 required
-                                class="w-full rounded-xl border border-gray-300 px-4 py-3
-                                       focus:border-blue-500 focus:ring-blue-500"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 sm:py-3
+                                       focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
                                 placeholder="Enter province"
                             >
                         </div>
@@ -101,8 +101,8 @@
                                 name="district"
                                 value="{{ old('district', $address->district) }}"
                                 required
-                                class="w-full rounded-xl border border-gray-300 px-4 py-3
-                                       focus:border-blue-500 focus:ring-blue-500"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 sm:py-3
+                                       focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
                                 placeholder="Enter district"
                             >
                         </div>
@@ -122,8 +122,8 @@
                                 name="city"
                                 value="{{ old('city', $address->city) }}"
                                 required
-                                class="w-full rounded-xl border border-gray-300 px-4 py-3
-                                       focus:border-blue-500 focus:ring-blue-500"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 sm:py-3
+                                       focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
                                 placeholder="Enter city"
                             >
                         </div>
@@ -137,8 +137,8 @@
                                 type="text"
                                 name="postal_code"
                                 value="{{ old('postal_code', $address->postal_code) }}"
-                                class="w-full rounded-xl border border-gray-300 px-4 py-3
-                                       focus:border-blue-500 focus:ring-blue-500"
+                                class="w-full rounded-xl border border-gray-300 px-4 py-2.5 sm:py-3
+                                       focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
                                 placeholder="Enter postal code"
                             >
                         </div>
@@ -155,8 +155,8 @@
                             name="address"
                             rows="4"
                             required
-                            class="w-full rounded-xl border border-gray-300 px-4 py-3
-                                   focus:border-blue-500 focus:ring-blue-500"
+                            class="w-full rounded-xl border border-gray-300 px-4 py-2.5 sm:py-3
+                                   focus:border-blue-500 focus:ring-blue-500 text-sm sm:text-base"
                             placeholder="Enter complete address"
                         >{{ old('address', $address->address) }}</textarea>
                     </div>
@@ -167,9 +167,9 @@
                         <a
                             href="{{ route('checkout.addresses') }}"
                             class="flex-1 inline-flex items-center justify-center
-                                   px-5 py-3 rounded-xl
+                                   px-5 py-2.5 sm:py-3 rounded-xl
                                    border border-gray-300
-                                   text-gray-700 font-semibold
+                                   text-gray-700 font-semibold text-sm sm:text-base
                                    hover:bg-gray-50 transition"
                         >
                             Cancel
@@ -178,9 +178,9 @@
                         <button
                             type="submit"
                             class="flex-1 inline-flex items-center justify-center
-                                   px-5 py-3 rounded-xl
+                                   px-5 py-2.5 sm:py-3 rounded-xl
                                    bg-blue-600 hover:bg-blue-700
-                                   text-white font-semibold
+                                   text-white font-semibold text-sm sm:text-base
                                    transition shadow-sm"
                         >
                             Update Address

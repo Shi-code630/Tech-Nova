@@ -1,15 +1,16 @@
 <x-frontend-layout title="Register">
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
 
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-8 sm:py-12 px-4">
 
-            <div class="text-center mb-8">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8">
 
-                <h1 class="text-3xl font-bold text-[#111827]">
+            <div class="text-center mb-6 sm:mb-8">
+
+                <h1 class="text-2xl sm:text-3xl font-bold text-[#111827]">
                     Create Account
                 </h1>
 
-                <p class="text-gray-500 mt-2">
+                <p class="text-sm sm:text-base text-gray-500 mt-2">
                     Join TechNova Nepal today
                 </p>
 
@@ -20,21 +21,16 @@
                 <div class="mb-5 rounded-xl bg-red-50 border border-red-200 p-4">
 
                     @foreach ($errors->all() as $error)
-
                         <p class="text-sm text-red-600">
                             {{ $error }}
                         </p>
-
                     @endforeach
 
                 </div>
 
             @endif
 
-            <form
-                method="POST"
-                action="{{ route('register.submit') }}"
-                class="space-y-5">
+            <form method="POST" action="{{ route('register.submit') }}" class="space-y-4 sm:space-y-5">
 
                 @csrf
 
@@ -44,17 +40,12 @@
                         Full Name
                     </label>
 
-                    <input
-                        type="text"
-                        name="name"
-                        value="{{ old('name') }}"
-                        required
-                        autofocus
+                    <input type="text" name="name" value="{{ old('name') }}" required autofocus
                         placeholder="Enter your full name"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200
+                        class="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200
                                focus:border-[#2563EB]
                                focus:ring-2 focus:ring-blue-100
-                               outline-none transition">
+                               outline-none transition text-sm sm:text-base">
 
                 </div>
 
@@ -64,16 +55,12 @@
                         Email Address
                     </label>
 
-                    <input
-                        type="email"
-                        name="email"
-                        value="{{ old('email') }}"
-                        required
+                    <input type="email" name="email" value="{{ old('email') }}" required
                         placeholder="Enter your email"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200
+                        class="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200
                                focus:border-[#2563EB]
                                focus:ring-2 focus:ring-blue-100
-                               outline-none transition">
+                               outline-none transition text-sm sm:text-base">
 
                 </div>
 
@@ -83,15 +70,11 @@
                         Phone Number
                     </label>
 
-                    <input
-                        type="text"
-                        name="phone"
-                        value="{{ old('phone') }}"
-                        placeholder="98XXXXXXXX"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200
+                    <input type="text" name="phone" value="{{ old('phone') }}" placeholder="98XXXXXXXX"
+                        class="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200
                                focus:border-[#2563EB]
                                focus:ring-2 focus:ring-blue-100
-                               outline-none transition">
+                               outline-none transition text-sm sm:text-base">
 
                 </div>
 
@@ -102,19 +85,14 @@
                     </label>
 
                     <div class="relative">
-                        <input
-                            id="register-password"
-                            type="password"
-                            name="password"
-                            required
+                        <input id="register-password" type="password" name="password" required
                             placeholder="Minimum 8 characters"
-                            class="w-full px-4 py-3 pr-16 rounded-xl border border-gray-200
+                            class="w-full px-4 py-2.5 sm:py-3 pr-16 rounded-xl border border-gray-200
                                    focus:border-[#2563EB]
                                    focus:ring-2 focus:ring-blue-100
-                                   outline-none transition">
+                                   outline-none transition text-sm sm:text-base">
 
-                        <button
-                            type="button"
+                        <button type="button"
                             onclick="
                                 const input = document.getElementById('register-password');
                                 const isHidden = input.type === 'password';
@@ -137,19 +115,14 @@
                     </label>
 
                     <div class="relative">
-                        <input
-                            id="register-password-confirmation"
-                            type="password"
-                            name="password_confirmation"
-                            required
+                        <input id="register-password-confirmation" type="password" name="password_confirmation" required
                             placeholder="Confirm your password"
-                            class="w-full px-4 py-3 pr-16 rounded-xl border border-gray-200
+                            class="w-full px-4 py-2.5 sm:py-3 pr-16 rounded-xl border border-gray-200
                                    focus:border-[#2563EB]
                                    focus:ring-2 focus:ring-blue-100
-                                   outline-none transition">
+                                   outline-none transition text-sm sm:text-base">
 
-                        <button
-                            type="button"
+                        <button type="button"
                             onclick="
                                 const input = document.getElementById('register-password-confirmation');
                                 const isHidden = input.type === 'password';
@@ -165,11 +138,10 @@
 
                 </div>
 
-                <button
-                    type="submit"
-                    class="w-full py-3 rounded-xl bg-[#2563EB]
+                <button type="submit"
+                    class="w-full py-2.5 sm:py-3 rounded-xl bg-[#2563EB]
                            hover:bg-[#1D4ED8]
-                           text-white font-semibold
+                           text-white font-semibold text-sm sm:text-base
                            transition duration-200">
 
                     Create Account
@@ -178,15 +150,13 @@
 
             </form>
 
-            <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+            <div class="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-gray-100 text-center">
 
-                <p class="text-sm text-gray-500">
+                <p class="text-xs sm:text-sm text-gray-500">
 
                     Already have an account?
 
-                    <a
-                        href="{{ route('login') }}"
-                        class="text-[#2563EB] font-semibold hover:underline">
+                    <a href="{{ route('login') }}" class="text-[#2563EB] font-semibold hover:underline">
 
                         Login
 

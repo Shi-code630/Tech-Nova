@@ -48,6 +48,7 @@ class AdminPanelProvider extends PanelProvider
             )
             ->navigationGroups([
                 NavigationGroup::make()->label('Customer Management')->collapsible(),
+                NavigationGroup::make()->label('HR Management')->collapsible(),
                 NavigationGroup::make()->label('Product Management')->collapsible(),
                 NavigationGroup::make()->label('Sales Management')->collapsible(),
                 NavigationGroup::make()->label('Marketing')->collapsible(),

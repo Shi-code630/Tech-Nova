@@ -1,6 +1,6 @@
 <x-frontend-layout>
 
-    <div class="bg-gradient-to-br from-gray-50 to-gray-100 py-8 min-h-screen">
+    <div class="bg-gradient-to-br from-gray-50 to-gray-100 py-8 ">
 
         <div class="container mx-auto px-4">
 
@@ -8,7 +8,7 @@
             <div class="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
                 <div class="flex items-center justify-between gap-4 flex-wrap">
                     <div class="flex items-center gap-4">
-                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-200">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-200 flex-shrink-0">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-7 h-7 text-white">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.086.836L5.75 7.5m0 0h13.5l-1.5 7.5H7.25L5.75 7.5Zm1.5 10.5h10.5M9 21a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm9 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1-3 0Z"/>
                             </svg>
@@ -142,7 +142,7 @@
                                 <div class="flex flex-col sm:flex-row gap-5">
 
                                     {{-- Product Image --}}
-                                    <div class="w-full sm:w-28 h-28 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                    <div class="w-20 h-20 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden flex-shrink-0">
                                         @if($image)
                                             <img src="{{ asset('storage/' . $image) }}" alt="{{ $product->name }}" class="w-full h-full object-contain p-3" onerror="this.src='{{ asset('images/default-product.png') }}'">
                                         @else
@@ -220,7 +220,7 @@
                         @endforeach
 
                         {{-- Clear Cart Button --}}
-                        <div class="flex justify-between items-center mt-4">
+                        <div class="flex flex-wrap gap-3 justify-between items-center mt-4">
                             <form action="{{ route('cart.clear') }}" method="POST" onsubmit="return confirm('Are you sure you want to clear your entire cart?');">
                                 @csrf
                                 @method('DELETE')

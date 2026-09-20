@@ -6,11 +6,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\Blog;
 use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Job;
+use App\Models\Product;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 
 class PageController extends Controller
 {
+    /**
+     * Home Page
+     */
+
     public function home()
     {
         $banners = Banner::where('status', true)
@@ -20,121 +27,166 @@ class PageController extends Controller
         $brands = Brand::where('status', true)
             ->orderBy('name')
             ->get();
+
         $blogs = Blog::with('category')
             ->latest('created_at')
             ->take(4)
             ->get();
 
-        return view('frontend.home', compact('banners', 'brands', 'blogs'));
+        // Parent Categories
+        $parentCategories = Category::query()
+            ->whereNull('parent_id')
+            ->where('status', true)
+            ->orderBy('name')
+            ->get();
+
+        // Latest 5 products for every parent category
+        foreach ($parentCategories as $category) {
+
+            $category->homeProducts = Product::query()
+                ->where('status', true)
+                ->whereHas('category', function ($query) use ($category) {
+                    $query->where('id', $category->id)
+                        ->orWhere('parent_id', $category->id);
+                })
+                ->with(['category', 'brand'])
+                ->withCount('reviews')
+                ->orderByDesc('created_at')
+                ->orderByDesc('id')
+                ->limit(5)
+                ->get();
+        }
+
+        // Wishlist products
+        $wishlistProductIds = [];
+
+        if (Auth::check()) {
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+
+            $wishlistProductIds = $user->wishlists()
+                ->pluck('product_id')
+                ->toArray();
+        }
+
+        return view('frontend.home', compact(
+            'banners',
+            'brands',
+            'blogs',
+            'parentCategories',
+            'wishlistProductIds'
+        ));
     }
 
 
-
-
-
+    /**
+     * Privacy Policy
+     */
     public function privacypolicy()
     {
         return view('frontend.privacy-policy');
     }
+
+
+    /**
+     * Refund Policy
+     */
     public function refundpolicy()
     {
         return view('frontend.refund-policy');
     }
+
+
+    /**
+     * Terms of Service
+     */
     public function termsofservice()
     {
         return view('frontend.terms-of-service');
     }
+
+
+    /**
+     * Contact Us
+     */
     public function contactus()
     {
         return view('frontend.contact-us');
     }
+
+
+    /**
+     * Warranty Policy
+     */
     public function warrantypolicy()
     {
         return view('frontend.warranty-policy');
     }
-  
+
+
+    /**
+     * Search Products
+     */
     public function search(Request $request)
     {
         $query = $request->input('q');
 
-        $products = \App\Models\Product::query()
-            ->where('status', 'active')
-            ->when($query, function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                    ->orWhere('description', 'like', "%{$query}%");
-            })
-            ->with(['category', 'brand', 'images'])
-            ->latest()
-            ->paginate(12);
+        $products = Product::query()
+            ->where('status', true)
 
-        return view('frontend.search', compact('products', 'query'));
+            ->when($query, function ($q) use ($query) {
+
+                $q->where(function ($search) use ($query) {
+
+                    $search->where('name', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%");
+                });
+            })
+
+            ->with([
+                'category',
+                'brand',
+                'images',
+            ])
+
+            ->withCount('reviews')
+
+            ->latest('created_at')
+            ->paginate(12)
+            ->withQueryString();
+
+        return view(
+            'frontend.search',
+            compact('products', 'query')
+        );
     }
 
+
+    /**
+     * Careers
+     */
     public function careers()
     {
-        $jobs = [
-            [
-                'id' => 1,
-                'title' => 'Senior Laravel Developer',
-                'department' => 'Engineering',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '3+ years',
-                'salary' => 'Negotiable',
-                'posted' => '2 days ago',
-            ],
-            [
-                'id' => 2,
-                'title' => 'Frontend Developer (React)',
-                'department' => 'Engineering',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '2+ years',
-                'salary' => 'Negotiable',
-                'posted' => '5 days ago',
-            ],
-            [
-                'id' => 3,
-                'title' => 'Digital Marketing Specialist',
-                'department' => 'Marketing',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '1+ years',
-                'salary' => 'Negotiable',
-                'posted' => '1 week ago',
-            ],
-            [
-                'id' => 4,
-                'title' => 'UI/UX Designer',
-                'department' => 'Design',
-                'location' => 'Remote / Kathmandu',
-                'type' => 'Full-time',
-                'experience' => '2+ years',
-                'salary' => 'Negotiable',
-                'posted' => '3 days ago',
-            ],
-            [
-                'id' => 5,
-                'title' => 'Customer Support Executive',
-                'department' => 'Support',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '0-1 years',
-                'salary' => 'Negotiable',
-                'posted' => '1 day ago',
-            ],
-            [
-                'id' => 6,
-                'title' => 'Product Manager',
-                'department' => 'Product',
-                'location' => 'Kathmandu, Nepal',
-                'type' => 'Full-time',
-                'experience' => '4+ years',
-                'salary' => 'Negotiable',
-                'posted' => '3 days ago',
-            ],
-        ];
+        $jobs = Job::published()
+            ->latest()
+            ->get();
 
-        return view('frontend.careers', compact('jobs'));
+        $employeeRating = config(
+            'company.employee_rating',
+            4.9
+        );
+
+        $employeeReviewCount = config(
+            'company.employee_review_count'
+        );
+
+        return view(
+            'frontend.careers',
+            compact(
+                'jobs',
+                'employeeRating',
+                'employeeReviewCount'
+            )
+        );
     }
 }

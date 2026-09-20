@@ -1,17 +1,17 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-100 min-h-screen py-10">
+    <div class="bg-gray-100 min-h-screen py-6 sm:py-10">
 
-        <div class="max-w-4xl mx-auto px-6">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6">
 
             {{-- Header --}}
-            <div class="mb-8">
+            <div class="mb-6 sm:mb-8">
 
-                <h1 class="text-3xl font-bold text-[#111827]">
+                <h1 class="text-2xl sm:text-3xl font-bold text-[#111827]">
                     Add New Address
                 </h1>
 
-                <p class="text-gray-500 mt-2">
+                <p class="text-sm sm:text-base text-gray-500 mt-2">
                     Enter your delivery information.
                 </p>
 
@@ -19,7 +19,7 @@
 
 
             {{-- Form --}}
-            <div class="bg-white rounded-2xl shadow-sm p-6">
+            <div class="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
 
                 <form
                     action="{{ route('checkout.address.store') }}"
@@ -34,7 +34,7 @@
                         value="{{ request('from') }}">
 
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
 
                         {{-- Full Name --}}
                         <div>
@@ -48,9 +48,9 @@
                                 value="{{ old('full_name') }}"
                                 required
                                 class="w-full rounded-xl border border-gray-300
-                                       px-4 py-3 focus:ring-2
+                                       px-4 py-2.5 sm:py-3 focus:ring-2
                                        focus:ring-[#2563EB]
-                                       focus:border-[#2563EB]">
+                                       focus:border-[#2563EB] text-sm sm:text-base">
 
                             @error('full_name')
                                 <p class="text-sm text-red-500 mt-1">
@@ -72,9 +72,9 @@
                                 value="{{ old('phone') }}"
                                 required
                                 class="w-full rounded-xl border border-gray-300
-                                       px-4 py-3 focus:ring-2
+                                       px-4 py-2.5 sm:py-3 focus:ring-2
                                        focus:ring-[#2563EB]
-                                       focus:border-[#2563EB]">
+                                       focus:border-[#2563EB] text-sm sm:text-base">
 
                             @error('phone')
                                 <p class="text-sm text-red-500 mt-1">
@@ -96,9 +96,9 @@
                                 value="{{ old('province') }}"
                                 required
                                 class="w-full rounded-xl border border-gray-300
-                                       px-4 py-3 focus:ring-2
+                                       px-4 py-2.5 sm:py-3 focus:ring-2
                                        focus:ring-[#2563EB]
-                                       focus:border-[#2563EB]">
+                                       focus:border-[#2563EB] text-sm sm:text-base">
 
                             @error('province')
                                 <p class="text-sm text-red-500 mt-1">
@@ -120,9 +120,9 @@
                                 value="{{ old('district') }}"
                                 required
                                 class="w-full rounded-xl border border-gray-300
-                                       px-4 py-3 focus:ring-2
+                                       px-4 py-2.5 sm:py-3 focus:ring-2
                                        focus:ring-[#2563EB]
-                                       focus:border-[#2563EB]">
+                                       focus:border-[#2563EB] text-sm sm:text-base">
 
                             @error('district')
                                 <p class="text-sm text-red-500 mt-1">
@@ -144,9 +144,9 @@
                                 value="{{ old('city') }}"
                                 required
                                 class="w-full rounded-xl border border-gray-300
-                                       px-4 py-3 focus:ring-2
+                                       px-4 py-2.5 sm:py-3 focus:ring-2
                                        focus:ring-[#2563EB]
-                                       focus:border-[#2563EB]">
+                                       focus:border-[#2563EB] text-sm sm:text-base">
 
                             @error('city')
                                 <p class="text-sm text-red-500 mt-1">
@@ -167,9 +167,9 @@
                                 name="postal_code"
                                 value="{{ old('postal_code') }}"
                                 class="w-full rounded-xl border border-gray-300
-                                       px-4 py-3 focus:ring-2
+                                       px-4 py-2.5 sm:py-3 focus:ring-2
                                        focus:ring-[#2563EB]
-                                       focus:border-[#2563EB]">
+                                       focus:border-[#2563EB] text-sm sm:text-base">
 
                             @error('postal_code')
                                 <p class="text-sm text-red-500 mt-1">
@@ -191,9 +191,9 @@
                                 rows="4"
                                 required
                                 class="w-full rounded-xl border border-gray-300
-                                       px-4 py-3 focus:ring-2
+                                       px-4 py-2.5 sm:py-3 focus:ring-2
                                        focus:ring-[#2563EB]
-                                       focus:border-[#2563EB]">{{ old('address') }}</textarea>
+                                       focus:border-[#2563EB] text-sm sm:text-base">{{ old('address') }}</textarea>
 
                             @error('address')
                                 <p class="text-sm text-red-500 mt-1">
@@ -207,15 +207,15 @@
 
 
                     {{-- Buttons --}}
-                    <div class="flex justify-end gap-3 mt-8">
+                    <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 mt-6 sm:mt-8">
 
                         <a
                             href="{{ request('from') === 'addresses'
                                 ? route('checkout.addresses')
                                 : route('checkout') }}"
-                            class="px-6 py-3 rounded-xl bg-gray-100
+                            class="w-full sm:w-auto text-center px-6 py-2.5 sm:py-3 rounded-xl bg-gray-100
                                    hover:bg-gray-200 text-gray-700
-                                   font-semibold transition">
+                                   font-semibold text-sm sm:text-base transition">
 
                             Cancel
 
@@ -224,9 +224,9 @@
 
                         <button
                             type="submit"
-                            class="px-6 py-3 rounded-xl
+                            class="w-full sm:w-auto px-6 py-2.5 sm:py-3 rounded-xl
                                    bg-[#2563EB] hover:bg-blue-700
-                                   text-white font-semibold transition">
+                                   text-white font-semibold text-sm sm:text-base transition">
 
                             Save Address
 

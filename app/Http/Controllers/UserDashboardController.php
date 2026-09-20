@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\RewardHelper;
-use Illuminate\Http\Request;
 use App\Models\Review;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserDashboardController extends Controller
@@ -74,7 +75,10 @@ class UserDashboardController extends Controller
             'recentTransactions'
         ));
     }
-
+public function settings()
+{
+    return view('user.settings');
+}
     /**
      * Full HTML page for the user's coins / rewards.
      */

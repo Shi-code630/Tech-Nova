@@ -1,13 +1,14 @@
 <x-frontend-layout title="Login">
-    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
 
-        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
+    <div class="min-h-screen flex items-center justify-center bg-gray-50 py-8 sm:py-12 px-4">
 
-            <h1 class="text-3xl font-bold text-center text-[#111827]">
+        <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8">
+
+            <h1 class="text-2xl sm:text-3xl font-bold text-center text-[#111827]">
                 Welcome Back
             </h1>
 
-            <p class="text-center text-gray-500 mt-2 mb-8">
+            <p class="text-sm sm:text-base text-center text-gray-500 mt-2 mb-6 sm:mb-8">
                 Login to your TechNova Nepal account
             </p>
 
@@ -21,7 +22,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('login.submit') }}" class="space-y-5">
+            <form method="POST" action="{{ route('login.submit') }}" class="space-y-4 sm:space-y-5">
 
                 @csrf
 
@@ -30,16 +31,11 @@
                         Email Address
                     </label>
 
-                    <input
-                        type="email"
-                        name="email"
-                        value="{{ old('email') }}"
-                        required
-                        autofocus
+                    <input type="email" name="email" value="{{ old('email') }}" required autofocus
                         placeholder="Enter your email"
-                        class="w-full px-4 py-3 rounded-xl border border-gray-200
+                        class="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-gray-200
                                focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100
-                               outline-none transition">
+                               outline-none transition text-sm sm:text-base">
                 </div>
 
                 <div>
@@ -48,18 +44,13 @@
                     </label>
 
                     <div class="relative">
-                        <input
-                            id="login-password"
-                            type="password"
-                            name="password"
-                            required
+                        <input id="login-password" type="password" name="password" required
                             placeholder="Enter your password"
-                            class="w-full px-4 py-3 pr-16 rounded-xl border border-gray-200
+                            class="w-full px-4 py-2.5 sm:py-3 pr-16 rounded-xl border border-gray-200
                                    focus:border-[#2563EB] focus:ring-2 focus:ring-blue-100
-                                   outline-none transition">
+                                   outline-none transition text-sm sm:text-base">
 
-                        <button
-                            type="button"
+                        <button type="button"
                             onclick="
                                 const input = document.getElementById('login-password');
                                 const isHidden = input.type === 'password';
@@ -76,10 +67,7 @@
 
                 <div class="flex items-center gap-2">
 
-                    <input
-                        type="checkbox"
-                        name="remember"
-                        value="1"
+                    <input type="checkbox" name="remember" value="1"
                         class="rounded border-gray-300 text-[#2563EB] focus:ring-[#2563EB]">
 
                     <label class="text-sm text-gray-600">
@@ -88,25 +76,24 @@
 
                 </div>
 
-                <button
-                    type="submit"
-                    class="w-full py-3 rounded-xl bg-[#2563EB]
-                           hover:bg-[#1D4ED8] text-white font-semibold
+                <button type="submit"
+                    class="w-full py-2.5 sm:py-3 rounded-xl bg-[#2563EB]
+                           hover:bg-[#1D4ED8] text-white font-semibold text-sm sm:text-base
                            transition duration-200">
                     Login
                 </button>
 
             </form>
 
-            <div class="mt-6 pt-6 border-t border-gray-100 text-center">
+            <div class="mt-5 sm:mt-6 pt-5 sm:pt-6 border-t border-gray-100 text-center">
 
-                <p class="text-sm text-gray-500">
+                <p class="text-xs sm:text-sm text-gray-500">
                     Don't have an account?
 
-                    <a
-                        href="{{ route('register') }}"
-                        class="text-[#2563EB] font-semibold hover:underline">
-                        Create Account
+                    <a  
+                    href="{{ route('register') }}"
+                    class="text-[#2563EB] font-semibold hover:underline">
+                    Create Account
                     </a>
                 </p>
 

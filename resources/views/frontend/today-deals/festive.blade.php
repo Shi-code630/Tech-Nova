@@ -1,273 +1,1751 @@
-<x-frontend-layout title="Today's deals | TechNova Nepal" description="Limited-time laptop and gadget deals at TechNova Nepal, Kathmandu." :canonical="route('today-deals')">    <div class="bg-gradient-to-b from-orange-50 py-2">
-               {{-- Breadcrumb --}}
-        <nav class=" Container mx-auto px-4 flex items-center gap-2 text-sm text-gray-500 mb-6 mt-6">
-            <a href="{{ route('home') }}" class="hover:text-blue-600 transition">Home</a>
-            <span>/</span>
-            <a href="{{ route('category.show', ['slug' => 'todays-deals']) }}" class="hover:text-orange-600 transition">
-                Today's Deals
-            </a> <span>/</span>
-            <span class="text-gray-800 font-medium">{{ $category->name }}</span>
-        </nav>
-        <div class="relative overflow-hidden bg-gradient-to-b from-orange-50 via-white to-amber-50">
-            {{-- Festive Hero --}}
-            <div class="mb-12 text-center">
+<x-frontend-layout title="Today's deals | TechNova Nepal" description="Limited-time laptop and gadget deals at TechNova Nepal, Kathmandu." :canonical="route('today-deals')" class="bg-[#eef2f7]">
+    <style>
+        [x-cloak] {
+            display: none !important
+        }
+
+        .tn-zoom {
+            overflow: hidden;
+            cursor: crosshair;
+        }
+
+        .tn-zoom img {
+            transition: transform .12s ease;
+            will-change: transform;
+            max-width: 100%;
+        }
+
+        @media (hover:hover) {
+            .tn-zoom:hover img {
+                transform: scale(1.55)
+            }
+        }
+
+        @media (hover:none) {
+            .tn-zoom {
+                cursor: default;
+            }
+
+            .tn-zoom img {
+                transform: none !important;
+            }
+        }
+
+        .finish-on span {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px #2563EB
+        }
+
+        .cfg-on {
+            border-color: #2563EB !important;
+            background: #eff6ff !important;
+            color: #1d4ed8 !important
+        }
+    </style>
+
+    <div>
+
+        @if (session('success'))
+            <div class="Container mx-auto px-3 sm:px-4 pt-3 sm:pt-4">
                 <div
-                    class="inline-block bg-gradient-to-r from-yellow-400 to-orange-500 text-white px-6 py-2 rounded-full text-sm font-bold uppercase tracking-wider mb-4">
-                    🎉 Festive Season
+                    class="rounded-xl bg-green-50 border border-green-200 text-green-800 px-3 sm:px-4 py-3 text-sm font-medium">
+                    {{ session('success') }}
                 </div>
-                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">
-                    {{ $category->name }}
-                </h1>
-                <p class="mt-3 text-gray-500 max-w-2xl mx-auto">
-                    Celebrate with exclusive festive discounts and offers!
-                </p>
             </div>
+        @endif
 
-            {{-- Sub‑Categories --}}
-            @if ($category->children->count())
-                <div class="flex flex-wrap justify-center gap-3 mb-10">
-                    <a href="{{ route('category.show', ['slug' => $category->slug]) }}"
-                        class="px-5 py-2.5 rounded-full bg-orange-600 text-white font-semibold text-sm shadow-md hover:bg-orange-700 transition">
-                        All Festive Deals
-                    </a>
-                    @foreach ($category->children as $child)
-                        <a href="{{ route('category.show', ['slug' => $child->slug]) }}"
-                            class="px-5 py-2.5 rounded-full bg-gray-100 text-gray-700 font-medium text-sm hover:bg-orange-100 hover:text-orange-600 transition border border-transparent hover:border-orange-300">
-                            {{ $child->name }}
-                        </a>
-                    @endforeach
+        @if (session('error'))
+            <div class="Container mx-auto px-3 sm:px-4 pt-3 sm:pt-4">
+                <div
+                    class="rounded-xl bg-red-50 border border-red-200 text-red-800 px-3 sm:px-4 py-3 text-sm font-medium">
+                    {{ session('error') }}
                 </div>
-            @endif
+            </div>
+        @endif
 
-            {{-- Same filters and product grid as show.blade.php --}}
-            <div class="Container mx-auto px-4 mb-10 bg-white rounded-xl shadow-sm border border-gray-100 p-6 lg:p-8">
-                <div class="flex flex-col lg:flex-row gap-8">
-                    <aside class="w-full lg:w-64 flex-shrink-0">
-                        <div class="space-y-6 sticky top-24">
-                            {{-- Brand Filter --}}
-                            @if ($brands->count())
-                                <div>
-                                    <h3 class="font-semibold text-gray-800 text-lg mb-3 flex items-center">
-                                        <svg class="w-5 h-5 mr-2 text-orange-500" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                        </svg>
-                                        Brands
-                                    </h3>
-                                    <div class="space-y-1">
-                                        @php
-                                            $activeBrand = request()->query('brand');
-                                            $queryWithoutBrand = request()->except('brand', 'page');
-                                        @endphp
-                                        <a href="{{ route('category.show', array_merge(['slug' => $category->slug], $queryWithoutBrand)) }}"
-                                            class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition {{ !$activeBrand ? 'bg-orange-50 text-orange-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
-                                            <span>All Brands</span>
-                                            <span
-                                                class="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">{{ $products->total() }}</span>
-                                        </a>
-                                        @foreach ($brands as $brand)
-                                            @php
-                                                $isActive = $activeBrand == $brand->slug;
-                                                $queryWithBrand = array_merge($queryWithoutBrand, [
-                                                    'brand' => $brand->slug,
-                                                ]);
-                                            @endphp
-                                            <a href="{{ route('category.show', array_merge(['slug' => $category->slug], $queryWithBrand)) }}"
-                                                class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition {{ $isActive ? 'bg-orange-50 text-orange-700 font-medium' : 'text-gray-600 hover:bg-gray-50' }}">
-                                                <span>{{ $brand->name }}</span>
-                                                <span
-                                                    class="text-xs bg-gray-200 text-gray-700 px-2 py-0.5 rounded-full">{{ $brand->products_count }}</span>
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            @endif
+        <div class="Container mx-auto px-3 sm:px-4 pb-10 sm:pb-14">
 
-                            {{-- Price Filter --}}
-                            <div>
-                                <h3 class="font-semibold text-gray-800 text-lg mb-3 flex items-center">
-                                    <svg class="w-5 h-5 mr-2 text-orange-500" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    Price Range
-                                </h3>
-                                <form action="{{ route('category.show', ['slug' => $category->slug]) }}" method="GET"
-                                    class="space-y-3">
-                                    @foreach (request()->except('min_price', 'max_price', 'page') as $key => $value)
-                                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
-                                    @endforeach
-                                    <div class="flex items-center gap-2">
-                                        <input type="number" name="min_price" placeholder="Min"
-                                            value="{{ request('min_price') }}"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-orange-500 focus:border-orange-500">
-                                        <span class="text-gray-400">—</span>
-                                        <input type="number" name="max_price" placeholder="Max"
-                                            value="{{ request('max_price') }}"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-orange-500 focus:border-orange-500">
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button type="submit"
-                                            class="flex-1 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition">
-                                            Apply
-                                        </button>
-                                        @if (request()->has('min_price') || request()->has('max_price'))
-                                            <a href="{{ route('category.show', array_merge(['slug' => $category->slug], request()->except('min_price', 'max_price', 'page'))) }}"
-                                                class="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-600 hover:bg-gray-50 transition">
-                                                Clear
-                                            </a>
-                                        @endif
-                                    </div>
-                                </form>
-                            </div>
+            @php
+                $category = $product->category;
+                $ancestors = $category ? $category->getAncestors() : collect();
+                $images = is_array($product->thumbnails) ? $product->thumbnails : [];
+                $mainImage = $images[0] ?? null;
 
-                            {{-- Active filters summary --}}
-                            @if (request()->has('brand') || request()->has('min_price') || request()->has('max_price'))
-                                <div class="pt-4 border-t border-gray-200">
-                                    <p class="text-xs text-gray-500 mb-2">Active filters:</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        @if (request()->has('brand'))
-                                            @php
-                                                $brandName =
-                                                    $brands->firstWhere('slug', request('brand'))?->name ??
-                                                    request('brand');
-                                            @endphp
-                                            <span
-                                                class="inline-flex items-center bg-orange-50 text-orange-700 text-xs px-2.5 py-1 rounded-full">
-                                                {{ $brandName }}
-                                                <a href="{{ route('category.show', array_merge(['slug' => $category->slug], request()->except('brand', 'page'))) }}"
-                                                    class="ml-1 hover:text-orange-900">✕</a>
-                                            </span>
-                                        @endif
-                                        @if (request()->has('min_price') || request()->has('max_price'))
-                                            <span
-                                                class="inline-flex items-center bg-orange-50 text-orange-700 text-xs px-2.5 py-1 rounded-full">
-                                                {{ request('min_price') ? 'Rs. ' . number_format(request('min_price')) : '' }}
-                                                {{ request('min_price') && request('max_price') ? ' — ' : '' }}
-                                                {{ request('max_price') ? 'Rs. ' . number_format(request('max_price')) : '' }}
-                                                <a href="{{ route('category.show', array_merge(['slug' => $category->slug], request()->except('min_price', 'max_price', 'page'))) }}"
-                                                    class="ml-1 hover:text-orange-900">✕</a>
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                    </aside>
+                $originalPrice = (float) ($product->price ?? 0);
 
-                    {{-- Product Grid (same as show.blade.php) --}}
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between mb-6">
-                            <h2 class="text-xl font-semibold text-gray-800">
-                                Festive Offers
-                                <span class="ml-2 text-sm font-normal text-gray-400">({{ $products->total() }})</span>
-                            </h2>
-                        </div>
-                        @if ($products->count())
-                            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                                @foreach ($products as $product)
-                                    @php
-                                        $thumb = !empty($product->thumbnails)
-                                            ? asset('storage/' . $product->thumbnails[0])
-                                            : null;
-                                        $discountPercent =
-                                            $product->discount_price && $product->price > 0
-                                                ? round((1 - $product->discount_price / $product->price) * 100)
-                                                : null;
-                                    @endphp
-                                    <div
-                                        class="group bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col">
-                                        <div class="relative overflow-hidden bg-gray-50 aspect-square">
-                                            <a href="{{ route('product.show', ['slug' => $product->slug]) }}"
-                                                class="block w-full h-full">
-                                                @if ($thumb)
-                                                    <img src="{{ $thumb }}" alt="{{ $product->name }}"
-                                                        class="w-full h-full object-contain p-4 group-hover:scale-110 transition duration-500">
-                                                @else
-                                                    <div
-                                                        class="w-full h-full flex items-center justify-center text-gray-300 text-sm">
-                                                        No image</div>
-                                                @endif
-                                            </a>
-                                            @if ($discountPercent)
-                                                <span
-                                                    class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">-{{ $discountPercent }}%</span>
-                                            @else
-                                                <span
-                                                    class="absolute top-3 left-3 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md">🎁
-                                                    Festive</span>
-                                            @endif
-                                            <button onclick="toggleWishlist(this, {{ $product->id }})"
-                                                class="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-gray-600 hover:bg-red-500 hover:text-white transition shadow-sm">
-                                                <i class="fa-regular fa-heart text-sm"></i>
-                                            </button>
-                                        </div>
-                                        <div class="p-4 flex flex-col flex-1">
-                                            @if ($product->category)
-                                                <p class="text-xs text-blue-600 font-semibold mb-1">
-                                                    {{ $product->category->name }}</p>
-                                            @endif
-                                            <a href="{{ route('product.show', ['slug' => $product->slug]) }}"
-                                                class="text-sm font-bold text-gray-800 leading-snug mb-2 line-clamp-2 group-hover:text-blue-600 transition">
-                                                {{ $product->name }}
-                                            </a>
-                                            <div class="flex items-center gap-1 mb-3">
-                                                <div class="flex text-yellow-400 text-sm">★★★★★</div>
-                                                <span class="text-gray-500 text-xs">(0)</span>
-                                            </div>
-                                            <div class="flex items-center gap-2 mb-4">
-                                                @if ($product->discount_price)
-                                                    <span class="text-xl font-bold text-gray-900">Rs.
-                                                        {{ number_format($product->discount_price) }}</span>
-                                                    <span class="text-sm text-gray-400 line-through">Rs.
-                                                        {{ number_format($product->price) }}</span>
-                                                @else
-                                                    <span class="text-xl font-bold text-gray-900">Rs.
-                                                        {{ number_format($product->price) }}</span>
-                                                @endif
-                                            </div>
-                                            @if ($product->stock > 0)
-                                                <button onclick="addToCart({{ $product->id }})"
-                                                    class="w-full bg-gray-900 hover:bg-orange-600 text-white py-2.5 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2">
-                                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                                                </button>
-                                            @else
-                                                <button disabled
-                                                    class="w-full bg-gray-300 text-gray-500 py-2.5 rounded-xl font-semibold text-sm cursor-not-allowed flex items-center justify-center gap-2">
-                                                    <i class="fa-solid fa-cart-plus"></i> Out of Stock
-                                                </button>
-                                            @endif
-                                        </div>
-                                    </div>
+                $discountPrice =
+                    $product->discount_price !== null && (float) $product->discount_price > 0
+                        ? (float) $product->discount_price
+                        : null;
+
+                $discountPercent =
+                    $discountPrice && $originalPrice > 0 && $discountPrice < $originalPrice
+                        ? round((1 - $discountPrice / $originalPrice) * 100)
+                        : 0;
+
+                $finalPrice = $discountPrice && $discountPrice < $originalPrice ? $discountPrice : $originalPrice;
+
+                $youSave = $discountPrice && $discountPrice < $originalPrice ? $originalPrice - $discountPrice : 0;
+
+                $activeVariants = $product->variants ?? collect();
+
+                $productStock = $activeVariants->count()
+                    ? (int) $activeVariants->sum('stock')
+                    : (int) ($product->stock ?? 0);
+
+                $avgRating = round((float) ($product->average_rating ?? 0), 1);
+                $reviewsCount = (int) ($product->reviews_count ?? 0);
+
+                $colors = $activeVariants->pluck('color')->filter()->unique()->values();
+                $sizes = $activeVariants->pluck('size')->filter()->unique()->values();
+
+                $ratingBreakdown =
+                    $ratingBreakdown ??
+                    collect([
+                        5 => 0,
+                        4 => 0,
+                        3 => 0,
+                        2 => 0,
+                        1 => 0,
+                    ]);
+
+                $colorHexMap = [
+                    'black' => '#111827',
+                    'white' => '#f8fafc',
+                    'red' => '#dc2626',
+                    'blue' => '#2563EB',
+                    'navy' => '#1e3a8a',
+                    'green' => '#16a34a',
+                    'silver' => '#c0c7d1',
+                    'grey' => '#6b7280',
+                    'gray' => '#6b7280',
+                    'gold' => '#d4af37',
+                    'pink' => '#ec4899',
+                    'purple' => '#7c3aed',
+                    'orange' => '#f97316',
+                    'space gray' => '#4b5563',
+                    'graphite' => '#374151',
+                    'midnight' => '#0f172a',
+                    'starlight' => '#f5f0e6',
+                    'natural titanium' => '#b8b0a4',
+                    'blue titanium' => '#5b6b7a',
+                ];
+
+                $colorSwatches = [];
+
+                foreach ($colors as $color) {
+                    $match =
+                        $activeVariants->first(function ($v) use ($color) {
+                            return $v->color === $color && count($v->gallery ?? []);
+                        }) ?:
+                        $activeVariants->firstWhere('color', $color);
+
+                    $gallery = $match->gallery ?? [];
+
+                    $colorSwatches[$color] = [
+                        'image' => $gallery ? asset('storage/' . $gallery[0]) : null,
+
+                        'hex' => $colorHexMap[strtolower(trim($color))] ?? null,
+                    ];
+                }
+
+                $variantsForJs = $activeVariants
+                    ->map(function ($v) {
+                        $gallery = collect($v->gallery ?? [])
+                            ->map(fn($img) => asset('storage/' . $img))
+                            ->values();
+
+                        return [
+                            'id' => $v->id,
+                            'color' => $v->color,
+                            'size' => $v->size,
+                            'price' => (float) $v->price,
+                            'stock' => (int) $v->stock,
+                            'image' => $gallery->first(),
+                            'images' => $gallery,
+                            'description' => $v->description,
+                        ];
+                    })
+                    ->values();
+
+                $productImagesForJs = collect($images)->map(fn($img) => asset('storage/' . $img))->values();
+            @endphp
+
+
+            {{-- Breadcrumb --}}
+            <nav
+                class="flex items-center gap-2 text-[12px] sm:text-[13px] text-slate-500 py-3 sm:py-4 overflow-x-auto whitespace-nowrap scrollbar-hide">
+                <a href="{{ route('home') }}" class="hover:text-[#2563EB] shrink-0">
+                    Home
+                </a>
+
+                @foreach ($ancestors as $ancestor)
+                    <span class="shrink-0">/</span>
+
+                    <a href="{{ route('category.show', ['slug' => $ancestor->slug]) }}"
+                        class="hover:text-[#2563EB] shrink-0">
+                        {{ $ancestor->name }}
+                    </a>
+                @endforeach
+
+                @if ($category)
+                    <span class="shrink-0">/</span>
+
+                    <a href="{{ route('category.show', ['slug' => $category->slug]) }}"
+                        class="hover:text-[#2563EB] shrink-0">
+                        {{ $category->name }}
+                    </a>
+                @endif
+
+                <span class="shrink-0">/</span>
+
+                <span class="text-slate-700 truncate min-w-0">
+                    {{ $product->name }}
+                </span>
+            </nav>
+
+
+            {{-- Main Product Area --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
+
+
+                {{-- Gallery --}}
+                <div class="lg:col-span-5 lg:sticky lg:top-20 min-w-0">
+
+                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+
+                        <div class="flex flex-col-reverse md:flex-row">
+
+                            {{-- Thumbnails --}}
+                            <div id="productThumbs"
+                                class="flex md:flex-col gap-2 p-2.5 sm:p-3 overflow-x-auto md:overflow-y-auto md:overflow-x-hidden md:max-h-[500px] md:w-[76px] bg-slate-50 {{ count($images) > 1 ? '' : 'hidden' }}">
+
+                                @foreach ($images as $index => $image)
+                                    <button type="button"
+                                        onclick="changeProductImage(@js(asset('storage/' . $image)), this)"
+                                        class="thumb-btn shrink-0 w-[56px] h-[56px] sm:w-[60px] sm:h-[60px] rounded-lg border-2 overflow-hidden bg-white {{ $index === 0 ? 'border-[#2563EB]' : 'border-slate-200' }}">
+
+                                        <img src="{{ asset('storage/' . $image) }}"
+                                            class="w-full h-full object-contain p-1" alt="">
+                                    </button>
                                 @endforeach
+
                             </div>
-                            <div class="mt-10">{{ $products->links() }}</div>
-                        @else
-                            <div class="text-center py-16 bg-white rounded-xl border border-gray-200">
-                                <div class="text-5xl mb-4">🎄</div>
-                                <h3 class="text-xl font-semibold text-gray-700">No festive offers right now</h3>
-                                <p class="text-gray-400 mt-2">Check back later for seasonal deals.</p>
+
+
+                            {{-- Main Image --}}
+                            <div class="relative flex-1 min-w-0 bg-[#0f172a]">
+
+                                @if ($discountPercent > 0)
+                                    <span
+                                        class="absolute z-10 top-2.5 sm:top-3 left-2.5 sm:left-3 bg-red-500 text-white text-xs font-bold px-2.5 py-1 rounded">
+                                        -{{ $discountPercent }}%
+                                    </span>
+                                @endif
+
+                                <button type="button" onclick="toggleWishlist({{ $product->id }})"
+                                    class="absolute z-10 top-2.5 sm:top-3 right-2.5 sm:right-3 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/95 flex items-center justify-center {{ !empty($isWishlisted) ? 'text-red-500' : 'text-slate-500' }}">
+
+                                    <svg id="wishlistIcon" class="w-5 h-5"
+                                        fill="{{ !empty($isWishlisted) ? 'currentColor' : 'none' }}" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+
+                                    </svg>
+                                </button>
+
+
+                                <div class="tn-zoom min-h-[280px] sm:min-h-[340px] md:min-h-[460px] flex items-center justify-center w-full"
+                                    onmousemove="zoomMove(event)" onmouseleave="zoomLeave(event)">
+
+                                    @if ($mainImage)
+                                        <img id="mainProductImage" src="{{ asset('storage/' . $mainImage) }}"
+                                            alt="{{ $product->name }}"
+                                            class="max-h-[300px] sm:max-h-[360px] md:max-h-[440px] max-w-full w-auto object-contain p-4 sm:p-6">
+                                    @else
+                                        <span class="text-slate-400 text-sm">
+                                            No image
+                                        </span>
+
+                                        <img id="mainProductImage" src="" alt="" class="hidden">
+                                    @endif
+
+                                </div>
                             </div>
-                        @endif
+                        </div>
+
+
+                        <div
+                            class="flex items-center justify-between gap-3 px-3 sm:px-4 py-2.5 bg-slate-900 text-slate-300 text-[10px] sm:text-[11px] tracking-wide">
+
+                            <span class="truncate">
+                                TECHNOVA NEPAL · GENUINE HARDWARE
+                            </span>
+
+                            <span class="hidden sm:inline shrink-0">
+                                Hover image to inspect
+                            </span>
+
+                        </div>
+
                     </div>
                 </div>
+
+
+                {{-- Buy Box --}}
+                <div class="lg:col-span-7 space-y-4 min-w-0">
+
+                    <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 md:p-6">
+
+                        <div
+                            class="flex flex-wrap items-center gap-2 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider">
+
+                            @if ($product->brand)
+                                <a href="{{ url('/brand/' . $product->brand->slug) }}"
+                                    class="max-w-full truncate px-2 py-1 rounded bg-slate-900 text-white hover:bg-[#2563EB]">
+
+                                    {{ $product->brand->name }}
+
+                                </a>
+                            @endif
+
+                            @if ($product->category)
+                                <a href="{{ route('category.show', ['slug' => $product->category->slug]) }}"
+                                    class="max-w-full truncate px-2 py-1 rounded bg-slate-100 text-slate-600">
+
+                                    {{ $product->category->name }}
+
+                                </a>
+                            @endif
+
+                            @if ($product->featured)
+                                <span class="px-2 py-1 rounded bg-blue-50 text-[#2563EB]">
+                                    Featured
+                                </span>
+                            @endif
+
+                        </div>
+
+
+                        <h1
+                            class="mt-3 text-xl sm:text-[22px] md:text-[26px] font-bold text-slate-900 leading-snug break-words">
+                            {{ $product->name }}
+                        </h1>
+
+
+                        @if ($product->description)
+                            <p id="productExcerpt" class="mt-3 text-sm text-slate-600 leading-6 break-words">
+
+                                {{ \Illuminate\Support\Str::limit(strip_tags($product->description), 240) }}
+
+                            </p>
+
+                            <button type="button" onclick="switchTab('description')"
+                                class="mt-1 text-sm text-[#2563EB] hover:underline">
+
+                                Read full description
+
+                            </button>
+                        @endif
+
+
+                        <p id="selectedComboLabel" class="mt-1 text-sm text-slate-500 font-mono break-words">
+
+                            {{ $activeVariants->count() ? 'Select finish & configuration' : 'Standard configuration' }}
+
+                        </p>
+
+
+                        <div class="mt-3 flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
+
+                            <span
+                                class="inline-flex items-center gap-1 bg-slate-900 text-white text-xs font-bold px-2 py-1 rounded">
+                                {{ $avgRating > 0 ? number_format($avgRating, 1) : 'New' }} ★
+                            </span>
+
+                            <button type="button" onclick="setProductTab('reviews')"
+                                class="text-[#2563EB] hover:underline">
+
+                                {{ $reviewsCount }} reviews
+
+                            </button>
+
+                            <span class="text-slate-300">|</span>
+
+                            <span class="text-slate-600">
+                                {{ number_format($soldCount ?? 0) }} units sold
+                            </span>
+
+                        </div>
+
+
+                        {{-- Price --}}
+                        <div class="mt-5 rounded-xl bg-slate-50 border border-slate-100 p-3 sm:p-4">
+
+                            <div class="flex flex-wrap items-end gap-2 sm:gap-3">
+
+                                <span id="displayPrice"
+                                    class="text-2xl sm:text-3xl md:text-[34px] font-bold text-slate-900 tracking-tight break-words">
+
+                                    Rs. {{ number_format($finalPrice, 2) }}
+
+                                </span>
+
+                                <span id="displayOldPrice"
+                                    class="{{ $youSave > 0 ? '' : 'hidden' }} text-sm sm:text-base text-slate-400 line-through">
+
+                                    Rs. {{ number_format($originalPrice, 2) }}
+
+                                </span>
+
+                                <span id="displayOff"
+                                    class="{{ $youSave > 0 ? '' : 'hidden' }} text-xs font-bold px-2 py-1 rounded bg-emerald-100 text-emerald-700">
+
+                                    {{ $discountPercent }}% OFF
+
+                                </span>
+
+                            </div>
+
+                            <p id="saveLine" class="text-sm text-emerald-700 mt-1 {{ $youSave > 0 ? '' : 'hidden' }}">
+
+                                You save Rs. {{ number_format($youSave, 2) }}
+
+                            </p>
+
+                            @if (($coinsEarnable ?? 0) > 0)
+                                <p class="text-sm text-amber-700 mt-1">
+                                    Earn {{ $coinsEarnable }} TechNova coins
+                                </p>
+                            @endif
+
+                            <p class="text-xs text-slate-400 mt-1">
+                                Price for selected SKU · 13% VAT at checkout
+                            </p>
+
+                        </div>
+
+
+                        @if ($activeVariants->count())
+
+                            <div class="mt-6 space-y-6">
+
+                                {{-- Colors --}}
+                                @if ($colors->count())
+
+                                    <div class="min-w-0">
+
+                                        <div class="flex items-baseline justify-between gap-3 mb-3">
+
+                                            <p class="text-sm font-bold text-slate-900">
+                                                Finish
+                                            </p>
+
+                                            <span id="selectedColorLabel"
+                                                class="text-sm text-[#2563EB] font-medium truncate">
+
+                                                Choose
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="flex flex-wrap gap-2.5 sm:gap-3">
+
+                                            @foreach ($colors as $color)
+                                                @php
+                                                    $sw = $colorSwatches[$color] ?? [];
+                                                @endphp
+
+                                                <button type="button" data-color="{{ $color }}"
+                                                    onclick="selectColor(@js($color))"
+                                                    class="color-btn disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+                                                    title="{{ $color }}">
+
+                                                    <span
+                                                        class="block w-16 h-16 sm:w-[72px] sm:h-[72px] rounded-xl overflow-hidden border border-slate-200 bg-slate-100">
+
+                                                        @if (!empty($sw['image']))
+                                                            <img src="{{ $sw['image'] }}"
+                                                                class="w-full h-full object-contain p-1"
+                                                                alt="">
+                                                        @elseif (!empty($sw['hex']))
+                                                            <span class="block w-full h-full"
+                                                                style="background:{{ $sw['hex'] }}">
+                                                            </span>
+                                                        @endif
+
+                                                    </span>
+
+                                                    <span
+                                                        class="block mt-1.5 text-[11px] text-center text-slate-600 w-16 sm:w-[72px] truncate">
+                                                        {{ $color }}
+                                                    </span>
+
+                                                </button>
+                                            @endforeach
+
+                                        </div>
+
+                                    </div>
+
+                                @endif
+
+
+                                {{-- Sizes --}}
+                                @if ($sizes->count())
+
+                                    <div class="min-w-0">
+
+                                        <div class="flex items-baseline justify-between gap-3 mb-3">
+
+                                            <p class="text-sm font-bold text-slate-900">
+                                                Storage / RAM / Config
+                                            </p>
+
+                                            <span id="selectedSizeLabel"
+                                                class="text-sm text-[#2563EB] font-medium truncate">
+
+                                                Choose
+
+                                            </span>
+
+                                        </div>
+
+
+                                        <div class="flex flex-wrap gap-2">
+
+                                            @foreach ($sizes as $size)
+                                                <button type="button" data-size="{{ $size }}"
+                                                    onclick="selectSize(@js($size))"
+                                                    class="size-btn min-w-[76px] sm:min-w-[88px] min-h-12 h-auto px-3 sm:px-4 py-2 rounded-xl border-2 border-slate-200 text-sm font-semibold text-slate-800 hover:border-[#2563EB] disabled:opacity-30 disabled:line-through disabled:cursor-not-allowed">
+
+                                                    {{ $size }}
+
+                                                </button>
+                                            @endforeach
+
+                                        </div>
+
+                                        <p class="text-[11px] text-slate-400 mt-2">
+                                            Use admin Size field for 128GB, 8/256, 16GB RAM, etc.
+                                        </p>
+
+                                    </div>
+
+                                @endif
+
+
+                                <p id="variantHint" class="text-sm text-amber-600">
+
+                                    Select finish and configuration to add to cart.
+
+                                </p>
+
+                                <p id="stockLine" class="text-sm font-semibold">
+                                </p>
+
+                            </div>
+                        @else
+                            <p
+                                class="mt-4 text-sm font-semibold {{ $productStock > 0 ? 'text-emerald-700' : 'text-red-600' }}">
+
+                                {{ $productStock > 0 ? 'In stock · ' . $productStock . ' units' : 'Out of stock' }}
+
+                            </p>
+
+                        @endif
+
+
+                        {{-- Cart --}}
+                        @if ($productStock > 0)
+                            <form method="POST" action="{{ route('cart.add', $product->id) }}" id="addToCartForm"
+                                class="mt-6">
+
+                                @csrf
+
+                                <input type="hidden" name="variant_id" id="variant_id" value="">
+
+                                <input type="hidden" name="buy_now" id="buy_now" value="0">
+
+
+                                <div class="flex items-center gap-3 mb-3">
+
+                                    <span class="text-sm font-medium text-slate-600">
+                                        Qty
+                                    </span>
+
+                                    <div
+                                        class="flex items-center h-11 rounded-xl border border-slate-300 overflow-hidden">
+
+                                        <button type="button" onclick="changeQty(-1)"
+                                            class="w-10 h-11 text-slate-600">
+
+                                            −
+
+                                        </button>
+
+                                        <input type="number" id="quantity" name="quantity" value="1"
+                                            min="1" max="{{ min(max($productStock, 1), 10) }}"
+                                            class="w-12 h-11 text-center border-0 font-bold">
+
+                                        <button type="button" onclick="changeQty(1)"
+                                            class="w-10 h-11 text-slate-600">
+
+                                            +
+
+                                        </button>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                                    <button type="submit" id="addToCartBtn"
+                                        class="h-12 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white font-bold">
+
+                                        Add to Cart
+
+                                    </button>
+
+                                    <button type="button" id="buyNowBtn" onclick="buyNow()"
+                                        class="h-12 rounded-xl bg-slate-900 hover:bg-black text-white font-bold">
+
+                                        Buy Now
+
+                                    </button>
+
+                                </div>
+
+                            </form>
+                        @endif
+
+
+                        <button type="button" id="wishlistBtn" onclick="toggleWishlist({{ $product->id }})"
+                            class="mt-3 text-sm {{ !empty($isWishlisted) ? 'text-red-500' : 'text-slate-500' }}">
+
+                            <span id="wishlistLabel">
+                                {{ !empty($isWishlisted) ? 'Saved to wishlist' : 'Save to wishlist' }}
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    {{-- Features --}}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 sm:gap-3">
+
+                        <div class="bg-white rounded-xl border border-slate-200 p-3 text-center min-w-0">
+                            <p class="text-[11px] font-bold text-slate-900">WARRANTY</p>
+                            <p class="text-[11px] text-slate-500 mt-1 break-words">Brand authorized</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl border border-slate-200 p-3 text-center min-w-0">
+                            <p class="text-[11px] font-bold text-slate-900">VAT BILL</p>
+                            <p class="text-[11px] text-slate-500 mt-1 break-words">13% at checkout</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl border border-slate-200 p-3 text-center min-w-0">
+                            <p class="text-[11px] font-bold text-slate-900">COD / ESEWA</p>
+                            <p class="text-[11px] text-slate-500 mt-1 break-words">Khalti supported</p>
+                        </div>
+
+                        <div class="bg-white rounded-xl border border-slate-200 p-3 text-center min-w-0">
+                            <p class="text-[11px] font-bold text-slate-900">VALLEY SHIP</p>
+                            <p class="text-[11px] text-slate-500 mt-1 break-words">Free over 10k</p>
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
+
+
+            {{-- Product Tabs --}}
+            <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 md:p-8 mt-5 sm:mt-6 min-w-0"
+                id="productTabs">
+
+                <div class="flex flex-wrap gap-2 mb-6">
+
+                    <button type="button" data-tab="description" onclick="switchTab('description')"
+                        class="tn-tab px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold bg-slate-900 text-white">
+
+                        Description
+
+                    </button>
+
+                    <button type="button" data-tab="specs" onclick="switchTab('specs')"
+                        class="tn-tab px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold bg-slate-100 text-slate-600">
+
+                        Specifications
+
+                    </button>
+
+                    <button type="button" data-tab="reviews" onclick="switchTab('reviews')"
+                        class="tn-tab px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold bg-slate-100 text-slate-600">
+
+                        Reviews ({{ $reviewsCount }})
+
+                    </button>
+
+                    <button type="button" data-tab="shipping" onclick="switchTab('shipping')"
+                        class="tn-tab px-3 sm:px-4 py-2 rounded-lg text-sm font-semibold bg-slate-100 text-slate-600">
+
+                        Delivery
+
+                    </button>
+
+                </div>
+
+
+                {{-- Description --}}
+                <div data-panel="description" class="tn-panel min-w-0">
+
+                    <div id="productDescription"
+                        class="text-slate-600 leading-7 whitespace-pre-line max-w-3xl break-words">
+
+                        {{ $product->description ?: 'No description added for this product yet.' }}
+
+                    </div>
+
+                </div>
+
+
+                {{-- Specifications --}}
+                <div data-panel="specs" class="tn-panel hidden min-w-0">
+
+                    <div class="overflow-x-auto rounded-xl border border-slate-200 max-w-3xl">
+
+                        <table class="w-full min-w-[560px] text-sm">
+
+                            <tbody class="divide-y divide-slate-100">
+
+                                <tr class="bg-slate-50">
+                                    <td class="px-4 py-3 w-48 font-medium text-slate-500">
+                                        Model
+                                    </td>
+
+                                    <td class="px-4 py-3 font-medium text-slate-900 break-words">
+                                        {{ $product->name }}
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-slate-500">
+                                        Brand
+                                    </td>
+
+                                    <td class="px-4 py-3 break-words">
+                                        {{ $product->brand->name ?? '—' }}
+                                    </td>
+                                </tr>
+
+                                <tr class="bg-slate-50">
+                                    <td class="px-4 py-3 font-medium text-slate-500">
+                                        Category
+                                    </td>
+
+                                    <td class="px-4 py-3 break-words">
+                                        {{ $product->category->name ?? '—' }}
+                                    </td>
+                                </tr>
+
+                                @if ($colors->count())
+                                    <tr>
+                                        <td class="px-4 py-3 font-medium text-slate-500">
+                                            Available finishes
+                                        </td>
+
+                                        <td class="px-4 py-3 break-words">
+                                            {{ $colors->join(', ') }}
+                                        </td>
+                                    </tr>
+                                @endif
+
+                                @if ($sizes->count())
+                                    <tr class="bg-slate-50">
+                                        <td class="px-4 py-3 font-medium text-slate-500">
+                                            Configurations
+                                        </td>
+
+                                        <td class="px-4 py-3 font-mono text-[13px] break-words">
+                                            {{ $sizes->join(' · ') }}
+                                        </td>
+                                    </tr>
+                                @endif
+
+                                <tr>
+                                    <td class="px-4 py-3 font-medium text-slate-500">
+                                        Stock
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        {{ $productStock }} units
+                                    </td>
+                                </tr>
+
+                                <tr class="bg-slate-50">
+                                    <td class="px-4 py-3 font-medium text-slate-500">
+                                        Seller
+                                    </td>
+
+                                    <td class="px-4 py-3 break-words">
+                                        TechNova Nepal · Kathmandu
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                {{-- Reviews --}}
+                <div data-panel="reviews" class="tn-panel hidden min-w-0">
+
+                    @if ($reviewsCount > 0)
+
+                        <div class="flex flex-wrap gap-8 mb-8">
+
+                            <div>
+                                <p class="text-4xl font-bold">
+                                    {{ number_format($avgRating, 1) }}
+                                </p>
+
+                                <p class="text-sm text-slate-500 mt-1">
+                                    {{ $reviewsCount }} verified reviews
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="space-y-3">
+
+                            @foreach ($product->reviews as $review)
+                                <div class="border border-slate-100 rounded-xl p-4 min-w-0">
+
+                                    <div class="flex flex-wrap items-start justify-between gap-2 sm:gap-3">
+
+                                        <p class="font-semibold text-slate-800 break-words">
+                                            {{ $review->user->name ?? 'Customer' }}
+                                        </p>
+
+                                        <span class="text-xs text-slate-400 shrink-0">
+                                            {{ $review->created_at?->format('d M Y') }}
+                                        </span>
+
+                                    </div>
+
+                                    <p class="text-amber-400 text-sm mt-1">
+                                        {!! $review->rating_stars_html !!}
+                                    </p>
+
+                                    @if ($review->review)
+                                        <p class="text-slate-600 text-sm mt-2 break-words">
+                                            {{ $review->review }}
+                                        </p>
+                                    @endif
+
+                                </div>
+                            @endforeach
+
+                        </div>
+                    @else
+                        <p class="text-slate-500">
+                            No reviews yet. Review from My Orders after delivery.
+                        </p>
+
+                    @endif
+
+                </div>
+
+
+                {{-- Shipping --}}
+                <div data-panel="shipping"
+                    class="tn-panel hidden text-sm text-slate-600 leading-7 max-w-3xl space-y-4">
+
+                    <div>
+                        <p class="font-bold text-slate-900">
+                            Kathmandu Valley
+                        </p>
+
+                        <p>
+                            Free over Rs. 10,000 · otherwise Rs. 80–150 by order value.
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="font-bold text-slate-900">
+                            Outside Valley
+                        </p>
+
+                        <p>
+                            Rs. 100–500 by order value. Charge is calculated from your default address at checkout.
+                        </p>
+                    </div>
+
+                    <p>
+                        Sun–Fri 9:00–19:00. Returns from My Orders after delivery.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            {{-- Related Products --}}
+            @if (isset($relatedProducts) && $relatedProducts->count())
+
+                <div class="mt-8 sm:mt-10">
+
+                    <h2 class="text-xl font-bold text-slate-900 mb-4">
+                        More in this category
+                    </h2>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+
+                        @foreach ($relatedProducts as $related)
+                            @php
+                                $rp = (float) ($related->price ?? 0);
+                                $rd = $related->discount_price !== null ? (float) $related->discount_price : null;
+
+                                $rf = $rd !== null && $rd < $rp ? $rd : $rp;
+                            @endphp
+
+                            <a href="{{ route('product.show', ['slug' => $related->slug]) }}"
+                                class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:border-[#2563EB] transition min-w-0">
+
+                                <div class="bg-slate-50 aspect-square">
+
+                                    @if (!empty($related->thumbnails[0]))
+                                        <img src="{{ asset('storage/' . $related->thumbnails[0]) }}"
+                                            class="w-full h-full object-contain p-3 sm:p-4" alt="">
+                                    @endif
+
+                                </div>
+
+                                <div class="p-2.5 sm:p-3 min-w-0">
+
+                                    @if ($related->brand)
+                                        <p
+                                            class="text-[9px] sm:text-[10px] uppercase tracking-wide text-slate-400 truncate">
+                                            {{ $related->brand->name }}
+                                        </p>
+                                    @endif
+
+                                    <p class="text-sm font-semibold text-slate-800 line-clamp-2 break-words">
+                                        {{ $related->name }}
+                                    </p>
+
+                                    <p class="mt-1 font-bold text-slate-900 text-sm sm:text-base">
+                                        Rs. {{ number_format($rf, 2) }}
+                                    </p>
+
+                                </div>
+
+                            </a>
+                        @endforeach
+
+                    </div>
+
+                </div>
+
+            @endif
+
         </div>
 
+
         <script>
-            function toggleWishlist(btn, productId) {
-                btn.classList.toggle('text-red-500');
-                btn.querySelector('i').classList.toggle('fa-regular');
-                btn.querySelector('i').classList.toggle('fa-solid');
-                console.log('Toggle wishlist for product ' + productId);
+            const variants = @json($variantsForJs);
+            const productImages = @json($productImagesForJs);
+            const productDefaultDescription = @json($product->description ?? '');
+
+            const hasColors = variants.some(v => v.color);
+            const hasSizes = variants.some(v => v.size);
+
+            const basePrice = {{ $finalPrice }};
+            const baseOld = {{ $originalPrice }};
+
+            let selectedColor = null;
+            let selectedSize = null;
+
+
+            function selectColor(color) {
+
+                const btn = document.querySelector(
+                    '.color-btn[data-color="' + color + '"]'
+                );
+
+                if (btn && btn.disabled) return;
+
+                selectedColor = selectedColor === color ? null : color;
+
+                const lab = document.getElementById('selectedColorLabel');
+
+                if (lab) {
+                    lab.textContent = selectedColor || 'Choose';
+                }
+
+                document.querySelectorAll('.color-btn').forEach(function(el) {
+
+                    el.classList.toggle(
+                        'finish-on',
+                        el.dataset.color === selectedColor
+                    );
+
+                });
+
+                if (selectedSize && !findVariant(selectedColor, selectedSize)) {
+
+                    selectedSize = null;
+
+                    const sl = document.getElementById('selectedSizeLabel');
+
+                    if (sl) {
+                        sl.textContent = 'Choose';
+                    }
+
+                    document.querySelectorAll('.size-btn').forEach(function(el) {
+                        el.classList.remove('cfg-on');
+                    });
+
+                }
+
+                previewColorGallery();
+                applyVariant();
             }
 
-            function addToCart(productId) {
-                const qty = 1;
-                console.log('Add product ' + productId + ' to cart (qty: ' + qty + ')');
-                alert('Product added to cart!');
+
+            function selectSize(size) {
+
+                const btn = document.querySelector(
+                    '.size-btn[data-size="' + size + '"]'
+                );
+
+                if (btn && btn.disabled) return;
+
+                selectedSize = selectedSize === size ? null : size;
+
+                const lab = document.getElementById('selectedSizeLabel');
+
+                if (lab) {
+                    lab.textContent = selectedSize || 'Choose';
+                }
+
+                document.querySelectorAll('.size-btn').forEach(function(el) {
+
+                    el.classList.toggle(
+                        'cfg-on',
+                        el.dataset.size === selectedSize
+                    );
+
+                });
+
+                if (selectedColor && !findVariant(selectedColor, selectedSize)) {
+
+                    selectedColor = null;
+
+                    const cl = document.getElementById('selectedColorLabel');
+
+                    if (cl) {
+                        cl.textContent = 'Choose';
+                    }
+
+                    document.querySelectorAll('.color-btn').forEach(function(el) {
+                        el.classList.remove('finish-on');
+                    });
+
+                }
+
+                applyVariant();
+            }
+
+
+            function findVariant(color, size) {
+
+                return variants.find(function(v) {
+
+                    return (!hasColors || v.color === color) &&
+                        (!hasSizes || v.size === size);
+
+                }) || null;
+            }
+
+
+            function currentVariant() {
+
+                if (hasColors && !selectedColor) return null;
+                if (hasSizes && !selectedSize) return null;
+
+                return findVariant(selectedColor, selectedSize);
+            }
+
+
+            function matching() {
+
+                return variants.filter(function(v) {
+
+                    return (!selectedColor || v.color === selectedColor) &&
+                        (!selectedSize || v.size === selectedSize);
+
+                });
+            }
+
+
+            function refreshAvailability() {
+
+                document.querySelectorAll('.size-btn').forEach(function(btn) {
+
+                    const inStock = variants.some(function(v) {
+
+                        return v.size === btn.dataset.size &&
+                            v.stock > 0 &&
+                            (!selectedColor || v.color === selectedColor);
+
+                    });
+
+                    btn.disabled = !inStock;
+                });
+
+
+                document.querySelectorAll('.color-btn').forEach(function(btn) {
+
+                    const inStock = variants.some(function(v) {
+
+                        return v.color === btn.dataset.color &&
+                            v.stock > 0 &&
+                            (!selectedSize || v.size === selectedSize);
+
+                    });
+
+                    btn.disabled = !inStock;
+                });
+            }
+
+
+            function previewColorGallery() {
+
+                if (!selectedColor) {
+                    setVariantGallery(productImages);
+                    return;
+                }
+
+                const v =
+                    variants.find(function(x) {
+                        return x.color === selectedColor &&
+                            x.images &&
+                            x.images.length;
+                    }) ||
+                    variants.find(function(x) {
+                        return x.color === selectedColor;
+                    });
+
+                if (v) {
+                    setVariantGallery(
+                        v.images && v.images.length ?
+                        v.images :
+                        productImages
+                    );
+                }
+            }
+
+
+            function applyVariant() {
+
+                refreshAvailability();
+
+                const variant = currentVariant();
+
+                const hint = document.getElementById('variantHint');
+                const input = document.getElementById('variant_id');
+                const qty = document.getElementById('quantity');
+                const addBtn = document.getElementById('addToCartBtn');
+                const buyBtn = document.getElementById('buyNowBtn');
+                const priceEl = document.getElementById('displayPrice');
+                const stockLine = document.getElementById('stockLine');
+                const combo = document.getElementById('selectedComboLabel');
+
+                const parts = [
+                    selectedColor,
+                    selectedSize
+                ].filter(Boolean);
+
+
+                if (combo) {
+
+                    combo.textContent =
+                        parts.length ?
+                        parts.join(' · ') :
+                        (
+                            variants.length ?
+                            'Select finish & configuration' :
+                            'Standard configuration'
+                        );
+                }
+
+
+                const pool = matching();
+
+                const prices = pool.map(function(v) {
+                    return v.price > 0 ?
+                        v.price :
+                        basePrice;
+                });
+
+
+                if (prices.length && priceEl) {
+
+                    const min = Math.min.apply(null, prices);
+                    const max = Math.max.apply(null, prices);
+
+                    priceEl.textContent =
+                        min === max ?
+                        ('Rs. ' + min.toFixed(2)) :
+                        (
+                            'Rs. ' +
+                            min.toFixed(2) +
+                            ' - ' +
+                            max.toFixed(2)
+                        );
+                }
+
+
+                if (!variant) {
+
+                    if (input) {
+                        input.value = '';
+                    }
+
+                    var descBox =
+                        document.getElementById('productDescription');
+
+                    var excerpt =
+                        document.getElementById('productExcerpt');
+
+                    if (descBox) {
+                        descBox.textContent =
+                            productDefaultDescription ||
+                            'No description added for this product yet.';
+                    }
+
+                    if (excerpt) {
+                        excerpt.textContent =
+                            productDefaultDescription ?
+                            productDefaultDescription.substring(0, 240) :
+                            '';
+                    }
+
+                    if (hint) {
+
+                        hint.classList.remove('hidden');
+
+                        hint.textContent =
+                            'Select finish and configuration to add to cart.';
+                    }
+
+                    if (addBtn) {
+                        addBtn.disabled = variants.length > 0;
+                    }
+
+                    if (buyBtn) {
+                        buyBtn.disabled = variants.length > 0;
+                    }
+
+                    if (stockLine) {
+                        stockLine.textContent = '';
+                    }
+
+                    return;
+                }
+
+
+                if (hint) {
+                    hint.classList.add('hidden');
+                }
+
+                if (input) {
+                    input.value = variant.id;
+                }
+
+
+                var desc =
+                    (variant && variant.description) ?
+                    variant.description :
+                    productDefaultDescription;
+
+                var descBox =
+                    document.getElementById('productDescription');
+
+                var excerpt =
+                    document.getElementById('productExcerpt');
+
+
+                if (descBox) {
+                    descBox.textContent =
+                        desc ||
+                        'No description added for this product yet.';
+                }
+
+                if (excerpt) {
+                    excerpt.textContent =
+                        desc ?
+                        desc.substring(0, 240) :
+                        '';
+                }
+
+
+                if (combo) {
+
+                    combo.textContent =
+                        parts.join(' · ') +
+                        '  SKU #' +
+                        variant.id;
+                }
+
+
+                if (priceEl) {
+
+                    priceEl.textContent =
+                        'Rs. ' +
+                        Number(
+                            variant.price > 0 ?
+                            variant.price :
+                            basePrice
+                        ).toFixed(2);
+                }
+
+
+                if (qty) {
+
+                    qty.max =
+                        Math.min(
+                            Math.max(variant.stock, 1),
+                            10
+                        );
+
+                    if (parseInt(qty.value) > qty.max) {
+                        qty.value = qty.max;
+                    }
+                }
+
+
+                if (stockLine) {
+
+                    stockLine.textContent =
+                        variant.stock > 0 ?
+                        (
+                            'In stock · ' +
+                            variant.stock +
+                            ' units for this SKU'
+                        ) :
+                        'This configuration is out of stock';
+
+                    stockLine.className =
+                        'text-sm font-semibold ' +
+                        (
+                            variant.stock > 0 ?
+                            'text-emerald-700' :
+                            'text-red-600'
+                        );
+                }
+
+
+                if (addBtn) {
+                    addBtn.disabled = variant.stock <= 0;
+                }
+
+                if (buyBtn) {
+                    buyBtn.disabled = variant.stock <= 0;
+                }
+
+
+                setVariantGallery(
+                    variant.images && variant.images.length ?
+                    variant.images :
+                    productImages
+                );
+            }
+
+
+            function setVariantGallery(urls) {
+
+                const list =
+                    (urls && urls.length) ?
+                    urls :
+                    productImages;
+
+                const main =
+                    document.getElementById('mainProductImage');
+
+                const thumbs =
+                    document.getElementById('productThumbs');
+
+
+                if (main && list.length) {
+
+                    main.src = list[0];
+                    main.classList.remove('hidden');
+                }
+
+
+                if (!thumbs) return;
+
+
+                if (list.length <= 1) {
+
+                    thumbs.classList.add('hidden');
+                    thumbs.innerHTML = '';
+
+                    return;
+                }
+
+
+                thumbs.classList.remove('hidden');
+
+
+                thumbs.innerHTML =
+                    list.map(function(src, i) {
+
+                        const border =
+                            i === 0 ?
+                            'border-[#2563EB]' :
+                            'border-slate-200';
+
+                        return `
+                        <button
+                            type="button"
+                            onclick="changeProductImage('${src}', this)"
+                            class="thumb-btn shrink-0 w-[56px] h-[56px] sm:w-[60px] sm:h-[60px] rounded-lg border-2 overflow-hidden bg-white ${border}">
+
+                            <img
+                                src="${src}"
+                                class="w-full h-full object-contain p-1"
+                                alt="">
+
+                        </button>
+                    `;
+
+                    }).join('');
+            }
+
+
+            function changeProductImage(src, btn) {
+
+                const main =
+                    document.getElementById('mainProductImage');
+
+                if (main) {
+                    main.src = src;
+                }
+
+                document.querySelectorAll('.thumb-btn').forEach(function(el) {
+
+                    el.classList.remove('border-[#2563EB]');
+                    el.classList.add('border-slate-200');
+
+                });
+
+                if (btn) {
+
+                    btn.classList.remove('border-slate-200');
+                    btn.classList.add('border-[#2563EB');
+
+                }
+            }
+
+
+            function changeQty(d) {
+
+                const input =
+                    document.getElementById('quantity');
+
+                if (!input) return;
+
+                const min =
+                    parseInt(input.min) || 1;
+
+                const max =
+                    parseInt(input.max) || 10;
+
+                input.value =
+                    Math.min(
+                        Math.max(
+                            (parseInt(input.value) || 1) + d,
+                            min
+                        ),
+                        max
+                    );
+            }
+
+
+            function buyNow() {
+
+                const form =
+                    document.getElementById('addToCartForm');
+
+                if (!form) return;
+
+                if (
+                    variants.length &&
+                    !document.getElementById('variant_id').value
+                ) {
+
+                    alert(
+                        'Select finish and configuration first.'
+                    );
+
+                    return;
+                }
+
+                document.getElementById('buy_now').value = '1';
+
+                form.submit();
+            }
+
+
+            function switchTab(tab) {
+
+                document.querySelectorAll('.tn-tab').forEach(function(btn) {
+
+                    const on =
+                        btn.getAttribute('data-tab') === tab;
+
+                    btn.classList.toggle(
+                        'bg-slate-900',
+                        on
+                    );
+
+                    btn.classList.toggle(
+                        'text-white',
+                        on
+                    );
+
+                    btn.classList.toggle(
+                        'bg-slate-100',
+                        !on
+                    );
+
+                    btn.classList.toggle(
+                        'text-slate-600',
+                        !on
+                    );
+                });
+
+
+                document.querySelectorAll('.tn-panel').forEach(function(panel) {
+
+                    if (
+                        panel.getAttribute('data-panel') === tab
+                    ) {
+
+                        panel.classList.remove('hidden');
+
+                    } else {
+
+                        panel.classList.add('hidden');
+
+                    }
+
+                });
+
+
+                const box =
+                    document.getElementById('productTabs');
+
+                if (
+                    box &&
+                    tab !== 'description'
+                ) {
+
+                    box.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+
+
+            function setProductTab(tab) {
+                switchTab(tab);
+            }
+
+
+            function toggleWishlist(productId) {
+
+                const body = new FormData();
+
+                body.append(
+                    'product_id',
+                    productId
+                );
+
+                body.append(
+                    '_token',
+                    '{{ csrf_token() }}'
+                );
+
+
+                fetch(
+                        '{{ route('user.wishlist.toggle') }}', {
+                            method: 'POST',
+
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+
+                            credentials: 'same-origin',
+
+                            body: body
+                        }
+                    )
+                    .then(function(res) {
+
+                        if (
+                            res.status === 401 ||
+                            res.status === 419 ||
+                            res.redirected
+                        ) {
+
+                            window.location.href =
+                                '{{ route('login') }}';
+
+                            return null;
+                        }
+
+                        return res.json();
+                    })
+                    .then(function(data) {
+
+                        if (!data) return;
+
+                        const icon =
+                            document.getElementById('wishlistIcon');
+
+                        const label =
+                            document.getElementById('wishlistLabel');
+
+                        const on = !!data.wishlisted;
+
+
+                        if (icon) {
+
+                            icon.setAttribute(
+                                'fill',
+                                on ?
+                                'currentColor' :
+                                'none'
+                            );
+                        }
+
+
+                        if (label) {
+
+                            label.textContent =
+                                on ?
+                                'Saved to wishlist' :
+                                'Save to wishlist';
+                        }
+
+                    })
+                    .catch(function() {
+
+                        window.location.href =
+                            '{{ route('login') }}';
+
+                    });
+            }
+
+
+            function zoomMove(e) {
+
+                if (
+                    window.matchMedia &&
+                    window.matchMedia('(hover: none)').matches
+                ) {
+                    return;
+                }
+
+                const img =
+                    e.currentTarget.querySelector('img');
+
+                if (!img) return;
+
+                const r =
+                    e.currentTarget.getBoundingClientRect();
+
+                img.style.transformOrigin =
+                    (
+                        (e.clientX - r.left) /
+                        r.width *
+                        100
+                    ) +
+                    '% ' +
+                    (
+                        (e.clientY - r.top) /
+                        r.height *
+                        100
+                    ) +
+                    '%';
+            }
+
+
+            function zoomLeave(e) {
+
+                const img =
+                    e.currentTarget.querySelector('img');
+
+                if (img) {
+                    img.style.transformOrigin =
+                        'center center';
+                }
+            }
+
+
+            refreshAvailability();
+
+
+            if (variants.length === 1) {
+
+                if (variants[0].color) {
+                    selectColor(
+                        variants[0].color
+                    );
+                }
+
+                if (variants[0].size) {
+                    selectSize(
+                        variants[0].size
+                    );
+                }
+
+            } else if (variants.length > 0) {
+
+                const addBtn =
+                    document.getElementById('addToCartBtn');
+
+                const buyBtn =
+                    document.getElementById('buyNowBtn');
+
+                if (addBtn) {
+                    addBtn.disabled = true;
+                }
+
+                if (buyBtn) {
+                    buyBtn.disabled = true;
+                }
             }
         </script>
+
+    </div>
 </x-frontend-layout>
