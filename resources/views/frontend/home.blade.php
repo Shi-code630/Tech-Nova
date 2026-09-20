@@ -1,5 +1,10 @@
-<x-frontend-layout>
-    <Section class="bg-[#f0f9ff]">
+@php $setting = \App\Models\Setting::query()->first(); @endphp
+<x-frontend-layout
+    :title="$setting->meta_title ?: ($setting->site_name ?: 'TechNova Nepal')"
+    :description="$setting->meta_description ?: 'Buy genuine laptops, gadgets and accessories in Nepal. TechNova Nepal — Kathmandu.'"
+    :keywords="$setting->meta_keywords"
+    :canonical="route('home')"
+>    <Section class="bg-[#f0f9ff]">
         <div class="Container mx-auto px-4">
             <div class="mt-[10px]">
                 <div class="relative max-w-[1500px] mx-auto h-[350px] overflow-hidden rounded-2xl shadow-2xl">

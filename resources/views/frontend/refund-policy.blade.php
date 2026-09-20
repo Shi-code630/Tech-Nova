@@ -1,5 +1,4 @@
-<x-frontend-layout>
-    <div class="bg-[#ebf4fa] full py-2">
+<x-frontend-layout title="Refund policy | TechNova Nepal" description="Refund and return rules for orders from TechNova Nepal." :canonical="route('refund-policy')">    <div class="bg-[#ebf4fa] full py-2">
         <section class="Container mx-auto px-4 pb-10">
             <!-- Hero Banner -->
         <section class="py-4 px-4">

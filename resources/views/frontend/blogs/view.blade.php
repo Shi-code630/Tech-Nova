@@ -1,5 +1,11 @@
-<x-frontend-layout>
-
+<x-frontend-layout
+    :title="($blog->meta_title ?: $blog->title) . ' | TechNova Nepal'"
+    :description="$blog->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($blog->excerpt ?: $blog->content), 155)"
+    :keywords="$blog->meta_keywords"
+    :image="$blog->featured_image ? asset('storage/' . $blog->featured_image) : asset('image/logo.png')"
+    :canonical="route('blogs.view', $blog->slug)"
+    ogType="article"
+>
     <div class="bg-[#ebf4fa] full">
         <section class="Container mx-auto px-4 pb-10 ">
             {{-- Breadcrumb --}}

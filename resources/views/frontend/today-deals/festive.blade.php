@@ -1,5 +1,4 @@
-<x-frontend-layout>
-    <div class="bg-gradient-to-b from-orange-50 py-2">
+<x-frontend-layout title="Today's deals | TechNova Nepal" description="Limited-time laptop and gadget deals at TechNova Nepal, Kathmandu." :canonical="route('today-deals')">    <div class="bg-gradient-to-b from-orange-50 py-2">
                {{-- Breadcrumb --}}
         <nav class=" Container mx-auto px-4 flex items-center gap-2 text-sm text-gray-500 mb-6 mt-6">
             <a href="{{ route('home') }}" class="hover:text-blue-600 transition">Home</a>

@@ -1,4 +1,8 @@
-<x-frontend-layout>
+<x-frontend-layout
+    :title="($category->meta_title ?: $category->name) . ' | TechNova Nepal'"
+    :description="$category->meta_description ?: ('Shop ' . $category->name . ' at TechNova Nepal. Genuine tech, Kathmandu.')"
+    :keywords="$category->meta_keywords"
+    :canonical="route('category.show', $category->slug)">
 
     <div class="Container mx-auto py-5">
 
@@ -22,7 +26,7 @@
                     @foreach ($ancestors ?? collect() as $ancestor)
                         <a href="{{ route('category.show', $ancestor->slug) }}"
                             class="text-slate-500 hover:text-blue-600 transition">
-                            {{ $ancestor->name }}
+                            {{$ancestor->name }}
                         </a>
 
                         <svg class="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" stroke="currentColor"

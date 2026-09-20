@@ -1,5 +1,4 @@
-<x-frontend-layout>
-    <div class="bg-[#f0f9ff]">
+<x-frontend-layout title="Contact us | TechNova Nepal" description="Visit or message TechNova Nepal in Kathmandu. Laptops, gadgets and accessory support." :canonical="route('contact-us')">    <div class="bg-[#f0f9ff]">
         <section class="Container mx-auto pb-10">
             <!-- Hero Banner -->
             <section class="py-4 px-8">

@@ -1,4 +1,16 @@
-<x-frontend-layout class="bg-[#eef2f7]">
+@php
+    $productImage = !empty($product->thumbnails[0]) ? asset('storage/' . $product->thumbnails[0]) : asset('image/logo.png');
+    $productDesc = $product->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($product->description), 155);
+@endphp
+<x-frontend-layout
+    class="bg-[#eef2f7]"
+    :title="($product->meta_title ?: $product->name) . ' | TechNova Nepal'"
+    :description="$productDesc"
+    :keywords="$product->meta_keywords"
+    :image="$productImage"
+    :canonical="route('product.show', $product->slug)"
+    ogType="product"
+>
 <style>
     [x-cloak]{display:none!important}
     .tn-zoom{overflow:hidden;cursor:crosshair}
@@ -18,6 +30,56 @@
             <div class="rounded-xl bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm font-medium">{{ session('error') }}</div>
         </div>
     @endif
+
+            @php
+        $schemaImages = collect(is_array($product->thumbnails) ? $product->thumbnails : [])
+            ->map(fn ($img) => asset('storage/' . $img))
+            ->values()
+            ->all();
+        $schemaPrice = ($product->discount_price && $product->discount_price < $product->price)
+            ? $product->discount_price
+            : $product->price;
+        $schemaStock = (($product->variants && $product->variants->count())
+            ? $product->variants->sum('stock')
+            : $product->stock) > 0
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock';
+
+        $productSchema = [
+            '@context' => 'https://schema.org/',
+            '@type' => 'Product',
+            'name' => $product->name,
+            'image' => $schemaImages,
+            'description' => $product->meta_description ?: \Illuminate\Support\Str::limit(strip_tags($product->description), 200),
+            'sku' => (string) $product->id,
+            'brand' => [
+                '@type' => 'Brand',
+                'name' => $product->brand->name ?? 'TechNova Nepal',
+            ],
+            'offers' => [
+                '@type' => 'Offer',
+                'url' => route('product.show', $product->slug),
+                'priceCurrency' => 'NPR',
+                'price' => number_format((float) $schemaPrice, 2, '.', ''),
+                'availability' => $schemaStock,
+                'seller' => [
+                    '@type' => 'Organization',
+                    'name' => 'TechNova Nepal',
+                ],
+            ],
+        ];
+
+        if (($product->reviews_count ?? 0) > 0 && ($product->average_rating ?? 0) > 0) {
+            $productSchema['aggregateRating'] = [
+                '@type' => 'AggregateRating',
+                'ratingValue' => number_format((float) $product->average_rating, 1, '.', ''),
+                'reviewCount' => (int) $product->reviews_count,
+            ];
+        }
+    @endphp
+    <script type="application/ld+json">{!! json_encode($productSchema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}</script>
+
+
 
     <div class="Container mx-auto px-4 pb-14">
         @php
@@ -110,8 +172,7 @@
                                     <img id="mainProductImage" src="{{ asset('storage/'.$mainImage) }}" alt="{{ $product->name }}" class="max-h-[420px] md:max-h-[440px] w-auto object-contain p-6">
                                 @else
                                     <span class="text-slate-400 text-sm">No image</span>
-                                    <img id="mainProductImage" src="" alt="" class="hidden">
-                                @endif
+                                    <img id="mainProductImage" src="" alt="{{ $product->name }}" class="hidden">                                @endif
                             </div>
                         </div>
                     </div>
@@ -512,7 +573,7 @@
             thumbs.classList.remove('hidden');
             thumbs.innerHTML = list.map(function (src, i) {
                 const border = i === 0 ? 'border-[#2563EB]' : 'border-slate-200';
-                return '<button type="button" onclick="changeProductImage(\'' + src + '\', this)" class="thumb-btn flex-shrink-0 w-[60px] h-[60px] rounded-lg border-2 overflow-hidden bg-white ' + border + '"><img src="' + src + '" class="w-full h-full object-contain p-1" alt=""></button>';
+                return '<button type="button" onclick="changeProductImage(\'' + src + '\', this)" class="thumb-btn flex-shrink-0 w-[60px] h-[60px] rounded-lg border-2 overflow-hidden bg-white ' + border + '"><img src="' + src + '" alt="{{ $product->name }}" class="w-full h-full object-contain p-1></button>';
             }).join('');
         }
         function changeProductImage(src, btn) {

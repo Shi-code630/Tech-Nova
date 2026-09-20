@@ -1,5 +1,4 @@
-<x-frontend-layout>
-
+<x-frontend-layout title="Register">
     <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
 
         <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">

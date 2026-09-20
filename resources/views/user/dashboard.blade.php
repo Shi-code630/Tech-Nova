@@ -1,8 +1,8 @@
-<x-frontend-layout>
+<x-frontend-layout title="Dashboard">
     <section class="bg-slate-100 min-h-screen py-8">
         <div class="Container mx-auto">
 
-          
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
                 <!-- Sidebar -->

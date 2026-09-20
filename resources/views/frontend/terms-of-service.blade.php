@@ -1,5 +1,4 @@
-<x-frontend-layout>
-    <div class="bg-[#ebf4fa] full py-2">
+<x-frontend-layout title="Terms of service | TechNova Nepal" description="Terms for buying laptops and gadgets from TechNova Nepal." :canonical="route('terms-of-service')">    <div class="bg-[#ebf4fa] full py-2">
         <section class="Container mx-auto px-4 pb-10">
         <!-- Hero Banner -->
         <section class="py-4 px-4">
