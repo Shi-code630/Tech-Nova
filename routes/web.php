@@ -17,6 +17,7 @@ use App\Http\Controllers\ReturnRequestController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -28,6 +29,48 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/search', [PageController::class, 'search'])->name('search');
+
+  //SEO SITEMAP//
+
+Route::get('/sitemap.xml', function () {
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+
+    if (class_exists(\Barryvdh\Debugbar\Facade::class)) {
+        \Barryvdh\Debugbar\Facade::disable();
+    }
+
+    $item = function ($loc, $lastmod, $freq, $priority) {
+        $last = $lastmod ? $lastmod->toAtomString() : now()->toAtomString();
+        return '<url><loc>' . htmlspecialchars($loc, ENT_XML1)
+            . '</loc><lastmod>' . $last
+            . '</lastmod><changefreq>' . $freq
+            . '</changefreq><priority>' . $priority
+            . '</priority></url>';
+    };
+
+    $body = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        . $item(route('home'), now(), 'daily', '1.0')
+        . $item(route('blogs.index'), now(), 'weekly', '0.6');
+
+    foreach (\App\Models\Category::where('status', true)->get(['slug', 'updated_at']) as $category) {
+        $body .= $item(route('category.show', $category->slug), $category->updated_at, 'weekly', '0.8');
+    }
+    foreach (\App\Models\Brand::where('status', true)->get(['slug', 'updated_at']) as $brand) {
+        $body .= $item(url('/brand/' . $brand->slug), $brand->updated_at, 'weekly', '0.7');
+    }
+    foreach (\App\Models\Product::where('status', 'active')->get(['slug', 'updated_at']) as $product) {
+        $body .= $item(route('product.show', $product->slug), $product->updated_at, 'weekly', '0.9');
+    }
+    foreach (\App\Models\Blog::where('is_published', true)->get(['slug', 'updated_at']) as $blog) {
+        $body .= $item(route('blogs.view', $blog->slug), $blog->updated_at, 'monthly', '0.5');
+    }
+    $body .= '</urlset>';
+
+    return response($body, 200)
+        ->header('Content-Type', 'application/xml; charset=UTF-8');
+})->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------
@@ -191,6 +234,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/coins', [UserDashboardController::class, 'coins'])->name('user.coins');
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])->name('user.coins.live');
+
+
+
+
+});
+
 
     Route::post('/careers/apply', [\App\Http\Controllers\JobApplicationController::class, 'store'])
         ->middleware('throttle:5,1')

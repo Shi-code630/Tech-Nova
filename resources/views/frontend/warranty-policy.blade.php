@@ -1,4 +1,5 @@
-<x-frontend-layout>
+<x-frontend-layout 
+title="Warranty policy | TechNova Nepal" description="Brand warranty and support for products sold by TechNova Nepal." :canonical="route('warranty-policy')">
     <div class="bg-[#ebf4fa] w-full py-2">
 
         <section class="Container mx-auto px-3 sm:px-4 pb-8 sm:pb-10">

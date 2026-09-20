@@ -1,4 +1,4 @@
-<x-frontend-layout>
+<x-frontend-layout title="Contact us | TechNova Nepal" description="Visit or message TechNova Nepal in Kathmandu. Laptops, gadgets and accessory support." :canonical="route('contact-us')">
     <div class="bg-[#f0f9ff]">
         <section class="container mx-auto pb-8 sm:pb-10 px-3 sm:px-4 lg:px-6">
 
