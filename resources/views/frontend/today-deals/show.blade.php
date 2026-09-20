@@ -159,15 +159,11 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <nav
-<<<<<<< HEAD
-            class="container mx-auto px-3 sm:px-4 flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-5 sm:mb-6 mt-4 sm:mt-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
-=======
             class="flex items-center gap-2 text-[12px] overflow-x-auto whitespace-nowrap">
 
             <a
                 href="{{ route('home') }}"
                 class="text-slate-500 hover:text-blue-600 transition-colors duration-200">
->>>>>>> ebdb1d66c9fb6f911185c6305092628a1b3a8d5c
 
                 Home
 
