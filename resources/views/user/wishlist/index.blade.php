@@ -1,43 +1,51 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-100 min-h-screen py-8">
+    <div class="bg-gray-100 w-full min-h-screen py-6 sm:py-8">
 
-        <div class="Container mx-auto px-4">
+        <div class="Container mx-auto px-3 sm:px-4">
 
-            <div class="flex gap-6">
+            <div class="flex flex-col lg:flex-row gap-4 sm:gap-6">
 
                 {{-- =====================================================
                     SIDEBAR
                 ====================================================== --}}
-                <x-user-dashboard.sidebar />
+                <aside class="w-full lg:w-64 flex-shrink-0">
+                    <x-user-dashboard.sidebar />
+                </aside>
 
 
                 {{-- =====================================================
                     MAIN CONTENT
                 ====================================================== --}}
-                <main class="flex-1 min-w-0">
+                <main class="flex-1 min-w-0 w-full">
 
-                    {{-- PAGE HEADER --}}
-                    <div class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+                    {{-- =====================================================
+                        PAGE HEADER
+                    ====================================================== --}}
+                    <div class="bg-white rounded-2xl shadow-sm
+                                p-4 sm:p-6 mb-4 sm:mb-6">
 
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-between gap-3">
 
-                            <div>
-                                <h1 class="text-2xl font-bold text-slate-900">
+                            <div class="min-w-0">
+
+                                <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900">
                                     My Wishlist
                                 </h1>
 
-                                <p class="text-sm text-slate-500 mt-1">
+                                <p class="text-xs sm:text-sm text-slate-500 mt-1">
                                     Products you have saved for later
                                 </p>
+
                             </div>
+
 
                             <div
                                 class="flex items-center justify-center
-                                       min-w-[45px] h-[45px]
-                                       rounded-full
-                                       bg-blue-50
-                                       text-blue-600">
+                                        w-10 h-10 sm:min-w-[45px] sm:h-[45px]
+                                        rounded-full
+                                        bg-blue-50 text-blue-600
+                                        flex-shrink-0">
 
                                 <svg
                                     class="w-6 h-6"
@@ -67,16 +75,18 @@
                             {{-- HEADER --}}
                             <div class="flex items-center justify-between mb-5">
 
-                                <div>
-                                    <h2 class="text-lg font-bold text-slate-900">
+                                <div class="min-w-0">
+
+                                    <h2 class="text-base sm:text-lg font-bold text-slate-900">
                                         Wishlist Products
                                     </h2>
 
-                                    <p class="text-sm text-slate-500 mt-1">
+                                    <p class="text-xs sm:text-sm text-slate-500 mt-1">
                                         {{ $wishlist->count() }}
                                         {{ $wishlist->count() == 1 ? 'product' : 'products' }}
                                         saved
                                     </p>
+
                                 </div>
 
                             </div>
@@ -93,9 +103,7 @@
                                        gap-3">
 
                                 @foreach ($wishlist as $item)
-
                                     @php
-
                                         $product = $item->product;
 
                                         if (!$product) {
@@ -269,7 +277,6 @@
                                                     -{{ $discountPercent }}%
 
                                                 </span>
-
                                             @endif
 
 
@@ -390,7 +397,6 @@
                                                     {{ $product->brand->name }}
 
                                                 </p>
-
                                             @endif
 
 
@@ -482,9 +488,7 @@
                                                         Save Rs.{{ number_format($discountAmount, 0) }}
 
                                                     </span>
-
                                                 @else
-
                                                     <span
                                                         class="text-[13px]
                                                                font-bold
@@ -493,7 +497,6 @@
                                                         Rs.{{ number_format($price, 0) }}
 
                                                     </span>
-
                                                 @endif
 
                                             </div>
@@ -527,8 +530,8 @@
                                                         </p>
 
                                                     </div>
-
                                                 @else
+                                                    <div class="mt-1.5 sm:mt-2">
 
                                                     <div
                                                         class="flex
@@ -549,13 +552,10 @@
                                                                    text-red-500">
 
                                                             Out of Stock
-
                                                         </p>
 
                                                     </div>
-
                                                 @endif
-
                                             @endif
 
 
@@ -585,28 +585,17 @@
                                                         Out of Stock
 
                                                     </button>
-
                                                 @else
-
-                                                    <form
-                                                        method="POST"
+                                                    <form method="POST"
                                                         action="{{ route('cart.add', ['product' => $product->id]) }}"
-                                                        onclick="event.stopPropagation();"
-                                                        class="w-full">
+                                                        onclick="event.stopPropagation();" class="w-full">
 
                                                         @csrf
 
-                                                        <input
-                                                            type="hidden"
-                                                            name="quantity"
-                                                            value="1">
+                                                        <input type="hidden" name="quantity" value="1">
 
-                                                        <button
-                                                            type="submit"
-                                                            onclick="event.stopPropagation();"
-                                                            class="w-full
-                                                                   bg-blue-600
-                                                                   hover:bg-blue-700
+                                                        <button type="submit" onclick="event.stopPropagation();"
+                                                            class="w-full bg-blue-600 hover:bg-blue-700
                                                                    text-white
                                                                    py-2
                                                                    px-3
@@ -627,7 +616,6 @@
                                                         </button>
 
                                                     </form>
-
                                                 @endif
 
                                             </div>
@@ -635,7 +623,6 @@
                                         </div>
 
                                     </article>
-
                                 @endforeach
 
                             </div>
@@ -644,28 +631,15 @@
 
 
                     @else
-
                         {{-- =================================================
                             EMPTY WISHLIST
                         ================================================== --}}
-                        <div
-                            class="bg-white
-                                   rounded-2xl
-                                   shadow-sm
-                                   p-12
-                                   text-center">
+                        <div class="bg-white rounded-2xl shadow-sm p-6 sm:p-12 text-center">
 
                             <div
-                                class="w-20
-                                       h-20
-                                       mx-auto
-                                       rounded-full
-                                       bg-blue-50
-                                       text-blue-600
-                                       flex
-                                       items-center
-                                       justify-center
-                                       mb-5">
+                                class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full
+                                        bg-blue-50 text-blue-600
+                                        flex items-center justify-center mb-4 sm:mb-5">
 
                                 <svg
                                     class="w-10 h-10"
@@ -679,39 +653,21 @@
 
                             </div>
 
-                            <h2
-                                class="text-xl
-                                       font-bold
-                                       text-slate-900">
-
+                            <h2 class="text-lg sm:text-xl font-bold text-slate-900">
                                 Your Wishlist is Empty
-
                             </h2>
 
-                            <p
-                                class="text-sm
-                                       text-slate-500
-                                       mt-2
-                                       mb-6">
-
+                            <p class="text-xs sm:text-sm text-slate-500 mt-2 mb-4 sm:mb-6">
                                 You haven't added any products to your wishlist yet.
-
                             </p>
 
-                            <a
-                                href="{{ route('home') }}"
-                                class="inline-flex
-                                       items-center
-                                       justify-center
-                                       gap-2
-                                       bg-blue-600
-                                       hover:bg-blue-700
+                            <a href="{{ route('home') }}"
+                                class="inline-flex items-center justify-center gap-2
+                                       bg-blue-600 hover:bg-blue-700
                                        text-white
-                                       px-6
-                                       py-3
-                                       rounded-lg
-                                       font-semibold
-                                       transition">
+                                       px-5 sm:px-6 py-2.5 sm:py-3
+                                       rounded-lg font-semibold
+                                       text-xs sm:text-sm transition">
 
                                 <span>🛍️</span>
 
@@ -733,10 +689,9 @@
 
 
     {{-- =============================================================
-        JAVASCRIPT
+        JAVASCRIPT (unchanged)
     ============================================================== --}}
     <script>
-
         function removeWishlistItem(event, productId, button) {
 
             event.preventDefault();
@@ -748,37 +703,26 @@
 
             button.disabled = true;
 
-            const tokenElement =
-                document.querySelector('meta[name="csrf-token"]');
+            const tokenElement = document.querySelector('meta[name="csrf-token"]');
 
             if (!tokenElement) {
-
-                alert(
-                    'Security token not found. Please refresh the page.'
-                );
-
+                alert('Security token not found. Please refresh the page.');
                 button.disabled = false;
-
                 return;
             }
 
-            const token =
-                tokenElement.getAttribute('content');
+            const token = tokenElement.getAttribute('content');
 
-
-            fetch(
-                "{{ url('/wishlist') }}/" + productId,
-                {
+            fetch("{{ url('/wishlist') }}/" + productId, {
                     method: "DELETE",
-
                     headers: {
                         "X-CSRF-TOKEN": token,
                         "Accept": "application/json",
                         "X-Requested-With": "XMLHttpRequest"
                     }
-                }
-            )
-            .then(async response => {
+                })
+                .then(async response => {
+                    const data = await response.json();
 
                 const contentType =
                     response.headers.get("content-type") || "";
@@ -835,8 +779,14 @@
 
             });
 
-        }
-
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Wishlist Remove Error:', error);
+                    alert(error.message || 'Unable to remove product from wishlist.');
+                    button.disabled = false;
+                });
+        
     </script>
 
 </x-frontend-layout>

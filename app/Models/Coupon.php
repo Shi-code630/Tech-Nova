@@ -41,14 +41,14 @@ class Coupon extends Model
         'usage_percentage'
     ];
 
-    // RELATIONSHIPS
+    // ============ RELATIONSHIPS ============
 
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    // ACCESSORS
+    // ============ ACCESSORS ============
 
     public function getIsValidAttribute()
     {
@@ -64,7 +64,6 @@ class Coupon extends Model
         if ($this->type === 'percentage') {
             return $this->amount . '%';
         }
-        // FIXED: changed 'amounts' to 'amount'
         return 'Rs. ' . number_format($this->amount, 2);
     }
 
@@ -86,18 +85,12 @@ class Coupon extends Model
 
     public function getIsExpiredAttribute()
     {
-        if ($this->expire_date && $this->expire_date->isPast()) {
-            return true;
-        }
-        return false;
+        return $this->expire_date && $this->expire_date->isPast();
     }
 
     public function getIsUpcomingAttribute()
     {
-        if ($this->start_date && $this->start_date->isFuture()) {
-            return true;
-        }
-        return false;
+        return $this->start_date && $this->start_date->isFuture();
     }
 
     public function getStatusBadgeAttribute()
@@ -191,42 +184,6 @@ class Coupon extends Model
         return $this->is_valid;
     }
 
-    public function apply($subtotal)
-    {
-        if (!$this->isValid()) {
-            return [
-                'valid' => false,
-                'message' => 'Coupon is not valid'
-            ];
-        }
-
-        if ($this->minimum_amount && $subtotal < $this->minimum_amount) {
-            return [
-                'valid' => false,
-                'message' => 'Minimum order amount of Rs. ' . number_format($this->minimum_amount, 2) . ' required'
-            ];
-        }
-
-        $discount = 0;
-
-        if ($this->type === 'percentage') {
-            $discount = ($subtotal * $this->amount) / 100;
-            if ($this->maximum_discount && $discount > $this->maximum_discount) {
-                $discount = $this->maximum_discount;
-            }
-        } else {
-            $discount = $this->amount;
-        }
-
-        $discount = min($discount, $subtotal);
-
-        return [
-            'valid' => true,
-            'discount' => $discount,
-            'message' => 'Coupon applied successfully'
-        ];
-    }
-
     public function incrementUsage()
     {
         $this->used += 1;
@@ -259,11 +216,6 @@ class Coupon extends Model
 
     // ============ STATIC METHODS ============
 
-    public static function findByCode($code)
-    {
-        return self::where('code', strtoupper($code))->first();
-    }
-
     public static function getValidCoupon($code, $subtotal = 0)
     {
         $coupon = self::byCode($code)->first();
@@ -281,5 +233,67 @@ class Coupon extends Model
         } while (self::where('code', $code)->exists());
 
         return $code;
+    }
+
+    /**
+     * ✅ FIXED: findByCode() — database columns अनुसार
+     */
+    public static function findByCode(string $code): ?self
+    {
+        return static::where('code', strtoupper(trim($code)))
+            ->where('status', true)
+            ->where(function ($q) {
+                $q->whereNull('start_date')
+                  ->orWhere('start_date', '<=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('expire_date')
+                  ->orWhere('expire_date', '>=', now());
+            })
+            ->where(function ($q) {
+                $q->whereNull('usage_limit')
+                  ->orWhereRaw('used < usage_limit');
+            })
+            ->first();
+    }
+
+    /**
+     * ✅ FIXED: apply() — database columns अनुसार
+     */
+    public function apply(float $subtotal): array
+    {
+        if (!$this->isValid()) {
+            return [
+                'valid' => false,
+                'message' => 'Coupon is not valid or has expired.',
+            ];
+        }
+
+        if ($this->minimum_amount && $subtotal < $this->minimum_amount) {
+            return [
+                'valid' => false,
+                'message' => 'Minimum order amount is Rs. ' . number_format($this->minimum_amount, 2),
+            ];
+        }
+
+        $discount = 0;
+
+        if ($this->type === 'percentage') {
+            $discount = ($subtotal * $this->amount) / 100;
+
+            if ($this->maximum_discount && $discount > $this->maximum_discount) {
+                $discount = $this->maximum_discount;
+            }
+        } else {
+            $discount = $this->amount;
+        }
+
+        $discount = min($discount, $subtotal);
+
+        return [
+            'valid' => true,
+            'discount' => round($discount, 2),
+            'message' => 'Coupon applied successfully.',
+        ];
     }
 }

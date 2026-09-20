@@ -1,19 +1,19 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-100 py-8">
+    <div class="bg-gray-100 w-full py-6 sm:py-8">
 
-        <div class="Container mx-auto px-4">
+        <div class="Container mx-auto px-3 sm:px-4">
 
             {{-- =========================================================
                 HEADER
             ========================================================== --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
 
-                <h1 class="text-2xl font-bold text-gray-900">
+                <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
                     Review Your Order
                 </h1>
 
-                <p class="text-sm text-gray-500 mt-1">
+                <p class="text-xs sm:text-sm text-gray-500 mt-1">
                     Order #{{ $order->order_number }}
                 </p>
 
@@ -59,7 +59,7 @@
 
                 <div class="mb-6 rounded-xl bg-red-50 border border-red-200 p-4">
 
-                    <ul class="list-disc list-inside text-sm text-red-600 space-y-1">
+                    <ul class="list-disc list-inside text-xs sm:text-sm text-red-600 space-y-1">
 
                         @foreach ($errors->all() as $error)
 
@@ -91,7 +91,7 @@
 
 
                         {{-- PRODUCT IMAGE --}}
-             
+
 {{-- PRODUCT IMAGE --}}
 @php
     $productImage = null;

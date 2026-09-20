@@ -3,47 +3,43 @@
     {{-- =========================================================
         SEARCH RESULTS PAGE
     ========================================================== --}}
-    <div class="bg-[#ebf4fa] py-8 md:py-8">
+    <div class="bg-[#ebf4fa] w-full py-6 sm:py-8 md:py-8">
 
-        <div class="Container mx-auto px-4 ">
+        <div class="Container mx-auto px-3 sm:px-4">
 
             {{-- =================================================
                 PAGE HEADER
             ================================================== --}}
-            <div class="mb-8">
+            <div class="mb-5 sm:mb-8">
 
                 <div
                     class="bg-white rounded-2xl border border-blue-100
-                            shadow-sm px-5 py-5 md:px-7 md:py-6">
+                            shadow-sm px-4 sm:px-5 md:px-7 py-4 sm:py-5 md:py-6">
 
-                    <div
-                        class="flex flex-col md:flex-row
-                                md:items-center
-                                md:justify-between
-                                gap-4">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
 
                         {{-- Heading --}}
-                        <div>
+                        <div class="min-w-0">
 
                             <div class="flex items-center gap-2 mb-1">
 
-                                <span class="w-1 h-7 bg-blue-600 rounded-full"></span>
+                                <span class="w-1 h-6 sm:h-7 bg-blue-600 rounded-full"></span>
 
-                                <h1 class="text-2xl md:text-3xl font-bold text-gray-800">
+                                <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 break-words">
                                     Search Results
                                 </h1>
 
                             </div>
 
                             @if (!empty($query))
-                                <p class="text-sm md:text-base text-gray-500 ml-3">
+                                <p class="text-xs sm:text-sm md:text-base text-gray-500 ml-3 break-words">
                                     Showing results for
                                     <span class="font-semibold text-blue-600">
-                                        “{{ $query }}”
+                                        "{{ $query }}"
                                     </span>
                                 </p>
                             @else
-                                <p class="text-sm md:text-base text-gray-500 ml-3">
+                                <p class="text-xs sm:text-sm md:text-base text-gray-500 ml-3">
                                     Explore our latest products
                                 </p>
                             @endif
@@ -55,14 +51,12 @@
                         @if ($products->total() > 0)
                             <div
                                 class="flex items-center gap-2
-                                        bg-[#ebf4fa]
-                                        border border-blue-100
-                                        px-4 py-2
-                                        rounded-full
-                                        w-fit">
+                                        bg-[#ebf4fa] border border-blue-100
+                                        px-3 sm:px-4 py-1.5 sm:py-2
+                                        rounded-full w-fit">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600 flex-shrink-0"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
 
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7
                                            m16 0l-8 5-8-5
@@ -70,7 +64,7 @@
 
                                 </svg>
 
-                                <span class="text-sm font-semibold text-gray-700">
+                                <span class="text-xs sm:text-sm font-semibold text-gray-700 whitespace-nowrap">
                                     {{ $products->total() }} Products
                                 </span>
 
@@ -90,20 +84,11 @@
             @if ($products->count() > 0)
 
                 <div
-                    class="grid grid-cols-2
-                            sm:grid-cols-3
-                            md:grid-cols-4
-                            lg:grid-cols-5
-                            gap-3 mb-10">
+                    class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5
+                            gap-2 sm:gap-3 mb-8 sm:mb-10">
 
                     @foreach ($products as $product)
                         @php
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | PRICE
-                            |--------------------------------------------------------------------------
-                            */
 
                             $originalPrice = (float) ($product->price ?? 0);
 
@@ -117,29 +102,10 @@
 
                             $discountPercent = $hasDiscount ? round(($discountAmount / $originalPrice) * 100) : 0;
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | WISHLIST
-                            |--------------------------------------------------------------------------
-                            */
-
                             $isWishlisted = in_array($product->id, $wishlistProductIds ?? []);
 
-                            /*
-                            |--------------------------------------------------------------------------
-                            | RATING
-                            |--------------------------------------------------------------------------
-                            */
-
                             $rating = $product->rating ?? 0;
-
                             $reviewCount = $product->reviews_count ?? 0;
-
-                            /*
-                            |--------------------------------------------------------------------------
-                            | PRODUCT IMAGE
-                            |--------------------------------------------------------------------------
-                            */
 
                             $image = null;
 
@@ -167,43 +133,23 @@
                         ================================================== --}}
                         <article
                             onclick="window.location.href='{{ route('product.show', ['slug' => $product->slug]) }}'"
-                            class="product-card group
-                                   bg-white
-                                   rounded-xl
-                                   border border-slate-200
-                                   overflow-hidden
-                                   shadow-sm
-                                   hover:shadow-md
-                                   hover:border-blue-200
-                                   transition duration-300
-                                   cursor-pointer
-                                   flex flex-col">
+                            class="product-card group bg-white rounded-xl border border-slate-200
+                                   overflow-hidden shadow-sm hover:shadow-md hover:border-blue-200
+                                   transition duration-300 cursor-pointer flex flex-col min-w-0">
 
 
                             {{-- =================================================
                                 PRODUCT IMAGE
                             ================================================== --}}
-                            <div
-                                class="relative
-                                        bg-slate-50
-                                        h-36
-                                        overflow-hidden">
-
+                            <div class="relative bg-slate-50 h-28 sm:h-32 md:h-36 overflow-hidden">
 
                                 {{-- NEW BADGE --}}
                                 @if ($product->created_at && $product->created_at->gt(now()->subDays(14)))
                                     <span
                                         class="absolute top-1.5 left-1.5 z-10
-                                               px-1.5 py-0.5
-                                               rounded
-                                               bg-blue-600
-                                               text-white
-                                               text-[9px]
-                                               font-bold
-                                               shadow-sm">
-
+                                                 px-1.5 py-0.5 rounded bg-blue-600 text-white
+                                                 text-[8px] sm:text-[9px] font-bold shadow-sm">
                                         NEW
-
                                     </span>
                                 @endif
 
@@ -212,46 +158,25 @@
                                 @if ($hasDiscount)
                                     <span
                                         class="absolute top-1.5 right-1.5 z-10
-                                               px-1.5 py-0.5
-                                               rounded
-                                               bg-slate-900
-                                               text-white
-                                               text-[9px]
-                                               font-bold">
-
+                                                 px-1.5 py-0.5 rounded bg-slate-900 text-white
+                                                 text-[8px] sm:text-[9px] font-bold">
                                         -{{ $discountPercent }}%
-
                                     </span>
                                 @endif
 
 
-                                {{-- =================================================
-                                    WISHLIST BUTTON
-                                ================================================== --}}
+                                {{-- WISHLIST BUTTON --}}
                                 <button type="button" onclick="toggleWishlist(event, this, {{ $product->id }})"
                                     data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
                                     aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
-                                    class="wishlist-button
-                                           absolute
-                                           right-1.5
-                                           bottom-1.5
-                                           z-20
-                                           w-7
-                                           h-7
-                                           rounded-full
-                                           bg-white
-                                           border
-                                           shadow-sm
-                                           flex
-                                           items-center
-                                           justify-center
-                                           transition
-                                           duration-200
+                                    class="wishlist-button absolute right-1.5 bottom-1.5 z-20
+                                           w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white border shadow-sm
+                                           flex items-center justify-center transition duration-200
                                            {{ $isWishlisted
                                                ? 'text-blue-600 border-blue-300'
                                                : 'text-slate-400 border-slate-200 hover:text-blue-600 hover:border-blue-300' }}">
 
-                                    <svg class="wishlist-icon w-3.5 h-3.5" viewBox="0 0 24 24"
+                                    <svg class="wishlist-icon w-3 h-3 sm:w-3.5 sm:h-3.5" viewBox="0 0 24 24"
                                         fill="{{ $isWishlisted ? 'currentColor' : 'none' }}" stroke="currentColor"
                                         stroke-width="2">
 
@@ -263,27 +188,17 @@
                                 </button>
 
 
-                                {{-- =================================================
-                                    PRODUCT IMAGE
-                                ================================================== --}}
+                                {{-- PRODUCT IMAGE --}}
                                 @if ($image)
                                     <img src="{{ asset('storage/' . ltrim($image, '/')) }}" alt="{{ $product->name }}"
                                         loading="lazy"
-                                        class="w-full
-                                               h-full
-                                               object-contain
-                                               p-2
-                                               group-hover:scale-105
-                                               transition
-                                               duration-500">
+                                        class="w-full h-full object-contain p-1.5 sm:p-2
+                                               group-hover:scale-105 transition duration-500">
                                 @else
-                                    <div
-                                        class="w-full h-full
-                                                flex items-center
-                                                justify-center">
+                                    <div class="w-full h-full flex items-center justify-center">
 
-                                        <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor"
-                                            viewBox="0 0 24 24">
+                                        <svg class="w-8 h-8 sm:w-10 sm:h-10 text-slate-300" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
 
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
                                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -299,60 +214,38 @@
                             {{-- =================================================
                                 PRODUCT INFORMATION
                             ================================================== --}}
-                            <div class="p-2.5 flex flex-col flex-1">
-
+                            <div class="p-2 sm:p-2.5 flex flex-col flex-1 min-w-0">
 
                                 {{-- BRAND --}}
                                 @if ($product->brand)
                                     <p
-                                        class="text-[10px]
-                                              font-semibold
-                                              uppercase
-                                              tracking-wide
-                                              text-blue-600
-                                              mb-0.5
-                                              truncate">
-
+                                        class="text-[9px] sm:text-[10px] font-semibold uppercase
+                                              tracking-wide text-blue-600 mb-0.5 truncate">
                                         {{ $product->brand->name }}
-
                                     </p>
                                 @elseif ($product->category)
                                     <p
-                                        class="text-[10px]
-                                              font-semibold
-                                              uppercase
-                                              tracking-wide
-                                              text-blue-600
-                                              mb-0.5
-                                              truncate">
-
+                                        class="text-[9px] sm:text-[10px] font-semibold uppercase
+                                              tracking-wide text-blue-600 mb-0.5 truncate">
                                         {{ $product->category->name }}
-
                                     </p>
                                 @endif
 
 
                                 {{-- PRODUCT NAME --}}
                                 <h3
-                                    class="font-semibold
-                                           text-slate-900
-                                           text-[12px]
-                                           leading-4
-                                           line-clamp-2
-                                           min-h-[32px]">
-
+                                    class="font-semibold text-slate-900
+                                           text-[11px] sm:text-[12px] leading-4
+                                           line-clamp-2 min-h-[30px] sm:min-h-[32px]">
                                     {{ $product->name }}
-
                                 </h3>
 
 
-                                {{-- =================================================
-                                    RATING
-                                ================================================== --}}
-                                <div class="flex items-center gap-0.5 mt-1">
+                                {{-- RATING --}}
+                                <div class="flex items-center gap-0.5 mt-1 min-w-0">
 
                                     @for ($i = 1; $i <= 5; $i++)
-                                        <svg class="w-3 h-3
+                                        <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0
                                             {{ $i <= round($rating) ? 'text-yellow-400' : 'text-slate-300' }}"
                                             fill="currentColor" viewBox="0 0 20 20">
 
@@ -362,131 +255,68 @@
                                         </svg>
                                     @endfor
 
-                                    <span class="text-[9px] text-slate-500 ml-0.5">
+                                    <span class="text-[8px] sm:text-[9px] text-slate-500 ml-0.5">
                                         ({{ $reviewCount }})
                                     </span>
 
                                 </div>
 
 
-                                {{-- =================================================
-                                    PRICE
-                                ================================================== --}}
-                                <div
-                                    class="mt-1.5
-                                            flex
-                                            items-center
-                                            gap-1
-                                            flex-wrap">
+                                {{-- PRICE --}}
+                                <div class="mt-1.5 flex items-center gap-1 flex-wrap min-w-0">
 
                                     @if ($hasDiscount)
-                                        <span
-                                            class="text-[13px]
-                                                   font-bold
-                                                   text-blue-600">
-
+                                        <span class="text-[12px] sm:text-[13px] font-bold text-blue-600">
                                             Rs.{{ number_format($discountPrice, 0) }}
-
                                         </span>
 
-                                        <span
-                                            class="text-[10px]
-                                                   text-slate-400
-                                                   line-through">
-
+                                        <span class="text-[9px] sm:text-[10px] text-slate-400 line-through">
                                             Rs.{{ number_format($originalPrice, 0) }}
-
                                         </span>
 
                                         <span
-                                            class="text-[9px]
-                                                   font-semibold
-                                                   text-green-600">
-
+                                            class="text-[8px] sm:text-[9px] font-semibold text-green-600 whitespace-nowrap">
                                             Save Rs.{{ number_format($discountAmount, 0) }}
-
                                         </span>
                                     @else
-                                        <span
-                                            class="text-[13px]
-                                                   font-bold
-                                                   text-slate-900">
-
+                                        <span class="text-[12px] sm:text-[13px] font-bold text-slate-900">
                                             Rs.{{ number_format($originalPrice, 0) }}
-
                                         </span>
                                     @endif
 
                                 </div>
 
 
-                                {{-- =================================================
-                                    STOCK
-                                ================================================== --}}
+                                {{-- STOCK --}}
                                 @if (isset($product->stock))
                                     @if ($product->stock > 0)
                                         <div class="flex items-center gap-1 mt-1">
-
-                                            <span
-                                                class="w-1.5 h-1.5
-                                                       rounded-full
-                                                       bg-green-500">
-                                            </span>
-
-                                            <p
-                                                class="text-[9px]
-                                                      font-medium
-                                                      text-slate-500">
-
+                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                                            <p class="text-[8px] sm:text-[9px] font-medium text-slate-500">
                                                 In Stock
-
                                             </p>
-
                                         </div>
                                     @else
                                         <div class="flex items-center gap-1 mt-1">
-
-                                            <span
-                                                class="w-1.5 h-1.5
-                                                       rounded-full
-                                                       bg-red-500">
-                                            </span>
-
-                                            <p
-                                                class="text-[9px]
-                                                      font-semibold
-                                                      text-red-500">
-
+                                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                            <p class="text-[8px] sm:text-[9px] font-semibold text-red-500">
                                                 Out of Stock
-
                                             </p>
-
                                         </div>
                                     @endif
                                 @endif
 
 
-                                {{-- =================================================
-                                    ADD TO CART
-                                ================================================== --}}
+                                {{-- ADD TO CART --}}
                                 <div class="mt-auto pt-2">
 
                                     @if (isset($product->stock) && $product->stock <= 0)
                                         <button type="button" disabled onclick="event.stopPropagation();"
-                                            class="w-full
-                                                   inline-flex
-                                                   items-center
-                                                   justify-center
-                                                   rounded-md
-                                                   bg-slate-100
-                                                   text-slate-400
-                                                   py-1.5
-                                                   text-[11px]
-                                                   font-semibold
+                                            class="w-full inline-flex items-center justify-center
+                                                   rounded-md bg-slate-100 text-slate-400
+                                                   py-1.5 text-[10px] sm:text-[11px] font-semibold
                                                    cursor-not-allowed">
-
                                             Out of Stock
-
                                         </button>
                                     @else
                                         <form method="POST"
@@ -498,24 +328,15 @@
                                             <input type="hidden" name="quantity" value="1">
 
                                             <button type="submit" onclick="event.stopPropagation();"
-                                                class="w-full
-                                                       bg-blue-600
-                                                       hover:bg-blue-700
-                                                       text-white
-                                                       py-2.5
-                                                       px-4
-                                                       rounded-lg
-                                                       font-semibold
-                                                       transition
-                                                       duration-200
-                                                       flex
-                                                       items-center
-                                                       justify-center
-                                                       gap-2">
+                                                class="w-full bg-blue-600 hover:bg-blue-700 text-white
+                                                       py-2 sm:py-2.5 px-2 sm:px-4
+                                                       rounded-lg font-semibold
+                                                       transition duration-200
+                                                       flex items-center justify-center gap-1.5 sm:gap-2
+                                                       text-[10px] sm:text-xs md:text-sm">
 
-                                                <i class="fa-solid fa-cart-shopping"></i>
-
-                                                Add to Cart
+                                                <i class="fa-solid fa-cart-shopping text-[10px] sm:text-xs"></i>
+                                                <span>Add to Cart</span>
 
                                             </button>
 
@@ -536,13 +357,10 @@
                     PAGINATION
                 ================================================== --}}
                 <div
-                    class="mt-10 mb-10
-                            bg-white
-                            rounded-2xl
-                            border border-blue-100
-                            shadow-sm
-                            px-4 py-4
-                            flex justify-center">
+                    class="mt-8 sm:mt-10 mb-8 sm:mb-10 bg-white rounded-2xl
+                            border border-blue-100 shadow-sm
+                            px-3 sm:px-4 py-3 sm:py-4 flex justify-center
+                            overflow-x-auto w-full">
 
                     {{ $products->withQueryString()->links() }}
 
@@ -551,32 +369,20 @@
                 {{-- =================================================
                     NO PRODUCTS FOUND
                 ================================================== --}}
-                <div
-                    class="min-h-[450px]
-                            flex items-center
-                            justify-center">
+                <div class="min-h-[400px] sm:min-h-[450px] flex items-center justify-center">
 
                     <div
-                        class="w-full max-w-lg
-                                bg-white
-                                rounded-3xl
-                                border border-blue-100
-                                shadow-lg
-                                px-6 py-12
-                                text-center">
-
+                        class="w-full max-w-lg bg-white rounded-3xl
+                                border border-blue-100 shadow-lg
+                                px-4 sm:px-6 py-8 sm:py-12 text-center">
 
                         {{-- Icon --}}
                         <div
-                            class="mx-auto mb-5
-                                    w-20 h-20
-                                    rounded-full
-                                    bg-[#ebf4fa]
-                                    flex items-center
-                                    justify-center">
+                            class="mx-auto mb-4 sm:mb-5 w-16 h-16 sm:w-20 sm:h-20
+                                    rounded-full bg-[#ebf4fa] flex items-center justify-center">
 
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-blue-500" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 sm:w-10 sm:h-10 text-blue-500"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
 
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-4.35-4.35
                                        m2.35-5.65
@@ -589,33 +395,19 @@
 
 
                         {{-- Title --}}
-                        <h3
-                            class="text-2xl
-                                   font-bold
-                                   text-gray-800
-                                   mb-2">
-
+                        <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-2">
                             No Products Found
-
                         </h3>
 
 
                         {{-- Description --}}
                         <p
-                            class="text-gray-500
-                                  text-sm
-                                  leading-relaxed
-                                  max-w-md
-                                  mx-auto
-                                  mb-7">
+                            class="text-xs sm:text-sm text-gray-500 leading-relaxed
+                                  max-w-md mx-auto mb-6 sm:mb-7">
 
                             @if (!empty($query))
                                 We couldn't find any products matching
-
-                                <strong class="text-gray-700">
-                                    “{{ $query }}”
-                                </strong>.
-
+                                <strong class="text-gray-700">"{{ $query }}"</strong>.
                                 Try searching with another keyword.
                             @else
                                 Please enter a keyword to search for products.
@@ -626,17 +418,12 @@
 
                         {{-- Back Home --}}
                         <a href="{{ route('home') }}"
-                            class="inline-flex items-center
-                                   gap-2
-                                   bg-blue-600
-                                   hover:bg-blue-700
-                                   text-white
-                                   font-semibold
-                                   px-6 py-3
-                                   rounded-xl
-                                   shadow-md
-                                   hover:shadow-lg
-                                   transition-all duration-200">
+                            class="inline-flex items-center gap-2
+                                   bg-blue-600 hover:bg-blue-700 text-white
+                                   font-semibold px-5 sm:px-6 py-2.5 sm:py-3
+                                   rounded-xl shadow-md hover:shadow-lg
+                                   transition-all duration-200
+                                   text-xs sm:text-sm">
 
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor">
@@ -655,7 +442,15 @@
                 </div>
 
             @endif
-            <div class="relative overflow-hidden  bg-white via-blue-50/50 to-slate-50 rounded-3xl border border-blue-100 shadow-xl shadow-blue-900/5 p-6 md:p-10  transition-all duration-300">
+
+
+            {{-- =====================================================
+                CONTACT BOX
+            ====================================================== --}}
+            <div
+                class="relative overflow-hidden bg-white via-blue-50/50 to-slate-50
+                        rounded-3xl border border-blue-100 shadow-xl shadow-blue-900/5
+                        p-5 sm:p-6 md:p-10 transition-all duration-300">
 
                 <!-- Background Soft Glow Effect -->
                 <div
@@ -666,51 +461,95 @@
                 </div>
 
                 <div
-                    class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 divide-y md:divide-y-0 md:divide-x divide-blue-100">
+                    class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6
+                            divide-y md:divide-y-0 md:divide-x divide-blue-100">
 
                     <!-- Email Item -->
                     <a href="mailto:support@technova.com.np"
-                        class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:pr-6 transition-all duration-300 hover:translate-y-[-2px]">
+                        class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:pr-6
+                               transition-all duration-300 hover:translate-y-[-2px]">
+
                         <div
-                            class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                            class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600
+                                    flex items-center justify-center mb-4
+                                    group-hover:bg-blue-600 group-hover:text-white
+                                    group-hover:shadow-lg group-hover:shadow-blue-500/30
+                                    transition-all duration-300">
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                             </svg>
+
                         </div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">Email
-                            Us</span>
+
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">
+                            Email Us
+                        </span>
+
                         <h3
-                            class="text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors break-all">
-                            support@technova.com.np</h3>
-                        <p class="text-xs text-gray-500 mt-1">24/7 Quick Online Support</p>
+                            class="text-sm sm:text-base md:text-lg font-bold text-gray-800
+                                   group-hover:text-blue-600 transition-colors break-all text-center md:text-left">
+                            support@technova.com.np
+                        </h3>
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            24/7 Quick Online Support
+                        </p>
+
                     </a>
+
 
                     <!-- Phone Item -->
                     <a href="tel:+97715551234"
-                        class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:px-6 transition-all duration-300 hover:translate-y-[-2px]">
+                        class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:px-6
+                               transition-all duration-300 hover:translate-y-[-2px]">
+
                         <div
-                            class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                            class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600
+                                    flex items-center justify-center mb-4
+                                    group-hover:bg-blue-600 group-hover:text-white
+                                    group-hover:shadow-lg group-hover:shadow-blue-500/30
+                                    transition-all duration-300">
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                             </svg>
+
                         </div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">Call
-                            Us</span>
+
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">
+                            Call Us
+                        </span>
+
                         <h3
-                            class="text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-                            +977 1-555-1234</h3>
-                        <p class="text-xs text-gray-500 mt-1">Sun-Fri 9AM-7PM, Sat Closed</p>
+                            class="text-sm sm:text-base md:text-lg font-bold text-gray-800
+                                   group-hover:text-blue-600 transition-colors text-center md:text-left">
+                            +977 1-555-1234
+                        </h3>
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            Sun-Fri 9AM-7PM, Sat Closed
+                        </p>
+
                     </a>
+
 
                     <!-- Address Item -->
                     <a href="https://maps.google.com/?q=Kathmandu,Nepal" target="_blank" rel="noopener noreferrer"
-                        class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:pl-6 transition-all duration-300 hover:translate-y-[-2px]">
+                        class="group flex flex-col items-center md:items-start pt-6 md:pt-0 md:pl-6
+                               transition-all duration-300 hover:translate-y-[-2px]">
+
                         <div
-                            class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                            class="w-12 h-12 rounded-2xl bg-blue-100/80 text-blue-600
+                                    flex items-center justify-center mb-4
+                                    group-hover:bg-blue-600 group-hover:text-white
+                                    group-hover:shadow-lg group-hover:shadow-blue-500/30
+                                    transition-all duration-300">
+
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -718,16 +557,27 @@
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
+
                         </div>
-                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">Our
-                            Location</span>
+
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">
+                            Our Location
+                        </span>
+
                         <h3
-                            class="text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors">
-                            Kathmandu, Nepal</h3>
-                        <p class="text-xs text-gray-500 mt-1">Click to view on Google Maps</p>
+                            class="text-sm sm:text-base md:text-lg font-bold text-gray-800
+                                   group-hover:text-blue-600 transition-colors text-center md:text-left">
+                            Kathmandu, Nepal
+                        </h3>
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            Click to view on Google Maps
+                        </p>
+
                     </a>
 
                 </div>
+
             </div>
         </div>
 
@@ -782,12 +632,6 @@
                 }
 
                 if (data.success) {
-
-                    /*
-                    |--------------------------------------------------------------------------
-                    | Same behavior as Category page
-                    |--------------------------------------------------------------------------
-                    */
 
                     window.location.reload();
 

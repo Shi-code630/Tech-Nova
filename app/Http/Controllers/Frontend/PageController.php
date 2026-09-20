@@ -114,7 +114,36 @@ class PageController extends Controller
                 ->get();
         }
 
+/*
+|--------------------------------------------------------------------------
+| HOME PAGE - 5 PRODUCTS
+|--------------------------------------------------------------------------
+| Today's Deals ke products yahan bhi show nahi honge.
+*/
 
+$homeProducts = Product::query()
+    ->where('status', true)
+
+    ->when(!empty($todayDealsCategoryIds), function ($query) use ($todayDealsCategoryIds) {
+        $query->whereNotIn(
+            'category_id',
+            $todayDealsCategoryIds
+        );
+    })
+
+    ->with([
+        'category',
+        'brand',
+        'images',
+    ])
+
+    ->withCount('reviews')
+
+    ->latest('created_at')
+    ->latest('id')
+
+    ->take(5)
+    ->get();
         /*
         |--------------------------------------------------------------------------
         | WISHLIST PRODUCTS
@@ -133,15 +162,16 @@ class PageController extends Controller
 
 
         return view(
-            'frontend.home',
-            compact(
-                'banners',
-                'brands',
-                'blogs',
-                'parentCategories',
-                'wishlistProductIds'
-            )
-        );
+    'frontend.home',
+    compact(
+        'banners',
+        'brands',
+        'blogs',
+        'parentCategories',
+        'wishlistProductIds',
+        'homeProducts'
+    )
+);
     }
 
 
@@ -218,41 +248,46 @@ class PageController extends Controller
      * Search Products
      */
     public function search(Request $request)
-    {
-        $query = $request->input('q');
+{
+    // Header search box se "search" value receive hogi
+    $query = trim($request->input('search', ''));
 
-        $products = Product::query()
-            ->where('status', true)
+    $products = Product::query()
+        ->where('status', true)
 
-            ->when($query, function ($q) use ($query) {
+        ->when($query !== '', function ($q) use ($query) {
 
-                $q->where(function ($search) use ($query) {
+            $q->where(function ($search) use ($query) {
 
-                    $search->where('name', 'like', "%{$query}%")
-                        ->orWhere('description', 'like', "%{$query}%");
-                });
-            })
+                $search->where('name', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%");
 
-            ->with([
-                'category',
-                'brand',
-                'images',
-            ])
+            });
 
-            ->withCount('reviews')
+        })
 
-            ->latest('created_at')
-            ->paginate(12)
-            ->withQueryString();
+        ->with([
+            'category',
+            'brand',
+            'images',
+        ])
 
-        return view(
-            'frontend.search',
-            compact(
-                'products',
-                'query'
-            )
-        );
-    }
+        ->withCount('reviews')
+
+        ->latest('created_at')
+
+        ->paginate(12)
+
+        ->withQueryString();
+
+    return view(
+        'frontend.search',
+        compact(
+            'products',
+            'query'
+        )
+    );
+}
 
 
     /**
