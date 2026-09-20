@@ -57,47 +57,52 @@
             </div>
 
 
+           
             {{-- ================================================= --}}
             {{-- LIMITED TIME OFFER - BANNER + PRODUCTS            --}}
             {{-- ================================================= --}}
-            <div class="py-5 bg-[#f0f9ff]">
-                <div class="mb-6">
+            <div class="py-4 sm:py-5 bg-[#f0f9ff]">
+                <div class="mb-4 sm:mb-6">
 
                     {{-- Banner --}}
                     <div onclick="window.location.href='{{ route('limited-time') }}'"
                         class="group relative overflow-hidden cursor-pointer
                                bg-gradient-to-r from-red-600 via-red-500 to-orange-500
-                               rounded-2xl px-4 py-3
+                               rounded-xl sm:rounded-2xl px-3 sm:px-4 py-2.5 sm:py-3
                                shadow-md hover:shadow-lg
-                               transition-all duration-300 mb-4">
+                               transition-all duration-300 mb-3 sm:mb-4">
 
                         {{-- Decorative Circle --}}
-                        <div class="absolute -right-8 -top-10 w-28 h-35 rounded-full bg-white/10"></div>
-                        <div class="absolute -left-8 -bottom-12 w-24 h-24 rounded-full bg-black/10"></div>
+                        <div class="absolute -right-8 -top-10 w-24 sm:w-28 h-28 sm:h-35 rounded-full bg-white/10"></div>
+                        <div class="absolute -left-8 -bottom-12 w-20 sm:w-24 h-20 sm:h-24 rounded-full bg-black/10">
+                        </div>
 
-                        <div class="relative flex items-center justify-between gap-3">
+                        <div class="relative flex items-center justify-between gap-2 sm:gap-3">
 
                             {{-- Left Content --}}
-                            <div class="flex items-center gap-3 min-w-0">
+                            <div class="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-1">
 
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-1 sm:gap-2 flex-shrink-0">
 
-                                    <span class="text-[9px] font-bold uppercase tracking-widest text-yellow-200">
-                                        Limited Time Offer
+                                    <span
+                                        class="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest text-yellow-200 whitespace-nowrap">
+                                        <span class="hidden xs:inline">Limited Time Offer</span>
+                                        <span class="xs:hidden">Limited Offer</span>
                                     </span>
 
                                     <span
-                                        class="px-1.5 py-0.5 rounded-full bg-white text-red-600 text-[8px] font-black">
+                                        class="px-1 sm:px-1.5 py-0.5 rounded-full bg-white text-red-600 text-[7px] sm:text-[8px] font-black">
                                         HOT
                                     </span>
 
                                 </div>
 
-                                <h3 class="text-sm sm:text-base font-black text-white leading-tight truncate">
+                                <h3
+                                    class="text-xs sm:text-sm md:text-base font-black text-white leading-tight truncate">
                                     Flash Deals Are Live!
                                 </h3>
 
-                                <p class="text-[9px] sm:text-[10px] text-white/80 hidden sm:block">
+                                <p class="text-[9px] sm:text-[10px] text-white/80 hidden md:block">
                                     Grab amazing deals before time runs out.
                                 </p>
 
@@ -107,15 +112,16 @@
                             <div
                                 class="flex-shrink-0
                                         bg-white text-red-600
-                                        px-3 py-2
-                                        rounded-lg
-                                        text-[9px] sm:text-[10px]
+                                        px-2 sm:px-3 py-1.5 sm:py-2
+                                        rounded-md sm:rounded-lg
+                                        text-[8px] sm:text-[9px] md:text-[10px]
                                         font-extrabold
                                         flex items-center gap-1
                                         group-hover:bg-yellow-300
                                         transition-colors duration-300">
 
-                                Shop Now
+                                <span class="hidden xs:inline">Shop Now</span>
+                                <span class="xs:hidden">Shop</span>
 
                                 <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24">
@@ -132,72 +138,83 @@
 
                     {{-- Limited Time Products --}}
                     <div
-                        class="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto pb-5 sm:pb-6 snap-x snap-mandatory scrollbar-hide">
+                        class="flex gap-2 xs:gap-3 sm:gap-4 lg:gap-5 overflow-x-auto pb-3 sm:pb-5 snap-x snap-mandatory scrollbar-hide -mx-1 px-1">
 
                         @for ($i = 1; $i <= 5; $i++)
                             <div
-                                class="product-card min-w-[180px] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[250px]
-                                        bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md
-                                        hover:shadow-xl transition-all duration-300 hover:-translate-y-1
-                                        snap-start flex flex-col">
+                                class="product-card
+                                       min-w-[155px] xs:min-w-[180px] sm:min-w-[200px] md:min-w-[220px] lg:min-w-[240px] xl:min-w-[250px]
+                                       bg-white rounded-xl sm:rounded-2xl overflow-hidden
+                                       border border-gray-200 shadow-md
+                                       hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+                                       snap-start flex flex-col">
 
-                                <div class="relative bg-gray-100 p-2 sm:p-3">
-                                    <div class="overflow-hidden rounded-lg sm:rounded-xl">
+                                <div class="relative bg-gray-100 p-1.5 xs:p-2 sm:p-3">
+                                    <div class="overflow-hidden rounded-md xs:rounded-lg sm:rounded-xl">
                                         <img src="https://picsum.photos/id/{{ $i % 2 == 0 ? '201' : '1015' }}/500/350"
                                             alt="Lenovo Legion"
-                                            class="w-full h-28 sm:h-32 md:h-36 object-cover rounded-lg sm:rounded-xl
+                                            class="w-full h-24 xs:h-28 sm:h-32 md:h-36 object-cover
+                                                   rounded-md xs:rounded-lg sm:rounded-xl
                                                    hover:scale-105 transition duration-500">
                                     </div>
 
                                     <span
-                                        class="absolute top-2 sm:top-3 left-2 sm:left-3
-                                                 bg-red-500 text-white text-[9px] sm:text-[10px] font-bold
-                                                 px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                        class="absolute top-1.5 xs:top-2 sm:top-3 left-1.5 xs:left-2 sm:left-3
+                                                 bg-red-500 text-white
+                                                 text-[8px] xs:text-[9px] sm:text-[10px] font-bold
+                                                 px-1 xs:px-1.5 sm:px-2.5 py-0.5 rounded-full">
                                         -9%
                                     </span>
 
                                     <span
-                                        class="absolute top-2 sm:top-3 right-2 sm:right-3
-                                                 bg-green-500 text-white text-[9px] sm:text-[10px] font-bold
-                                                 px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                        class="absolute top-1.5 xs:top-2 sm:top-3 right-1.5 xs:right-2 sm:right-3
+                                                 bg-green-500 text-white
+                                                 text-[8px] xs:text-[9px] sm:text-[10px] font-bold
+                                                 px-1 xs:px-1.5 sm:px-2.5 py-0.5 rounded-full">
                                         NEW
                                     </span>
                                 </div>
 
-                                <div class="p-2.5 sm:p-3 md:p-4 flex flex-col flex-1 min-w-0">
+                                <div class="p-2 xs:p-2.5 sm:p-3 md:p-4 flex flex-col flex-1 min-w-0">
 
-                                    <p class="text-blue-600 text-[10px] sm:text-xs font-semibold mb-1">
+                                    <p
+                                        class="text-blue-600 text-[9px] xs:text-[10px] sm:text-xs font-semibold mb-0.5 xs:mb-1">
                                         Gaming Laptop
                                     </p>
 
                                     <h3
-                                        class="text-[11px] sm:text-sm font-bold text-gray-800 leading-tight
-                                               mb-2 line-clamp-2 min-h-[32px] sm:min-h-[40px]">
+                                        class="text-[10px] xs:text-[11px] sm:text-sm font-bold text-gray-800 leading-tight
+                                               mb-1.5 xs:mb-2 line-clamp-2
+                                               min-h-[28px] xs:min-h-[32px] sm:min-h-[40px]">
                                         Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
                                     </h3>
 
-                                    <div class="flex items-center gap-1 mb-2">
-                                        <span class="text-yellow-400 text-[10px] sm:text-xs">★★★★★</span>
-                                        <span class="text-gray-500 text-[9px] sm:text-xs">(4.9)</span>
+                                    <div class="flex items-center gap-1 mb-1.5 xs:mb-2">
+                                        <span class="text-yellow-400 text-[9px] xs:text-[10px] sm:text-xs">★★★★★</span>
+                                        <span class="text-gray-500 text-[8px] xs:text-[9px] sm:text-xs">(4.9)</span>
                                     </div>
 
-                                    <div class="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap min-w-0">
+                                    <div
+                                        class="flex items-center gap-1 xs:gap-1.5 sm:gap-2 mb-1.5 xs:mb-2 sm:mb-3 flex-wrap min-w-0">
                                         <span
-                                            class="text-sm sm:text-base md:text-lg font-bold text-gray-900 whitespace-nowrap">
+                                            class="text-xs xs:text-sm sm:text-base md:text-lg font-bold text-gray-900 whitespace-nowrap">
                                             Rs. 319,999
                                         </span>
                                         <span
-                                            class="text-gray-400 line-through text-[10px] sm:text-xs whitespace-nowrap">
+                                            class="text-gray-400 line-through text-[9px] xs:text-[10px] sm:text-xs whitespace-nowrap">
                                             Rs. 350,000
                                         </span>
                                     </div>
 
                                     <div
-                                        class="flex items-center justify-between gap-1.5 sm:gap-2
-                                                bg-orange-50 rounded-lg p-1.5 sm:p-2
-                                                mb-3 sm:mb-4 text-[10px] sm:text-xs">
+                                        class="flex items-center justify-between gap-1 xs:gap-1.5 sm:gap-2
+                                                bg-orange-50 rounded-md sm:rounded-lg
+                                                px-1.5 py-1 xs:px-2 xs:py-1.5 sm:p-2
+                                                mb-2 xs:mb-3 sm:mb-4
+                                                text-[9px] xs:text-[10px] sm:text-xs">
                                         <div class="flex items-center gap-1 sm:gap-1.5 text-orange-600 min-w-0">
-                                            <i class="fa-solid fa-clock flex-shrink-0 text-[9px] sm:text-xs"></i>
+                                            <i
+                                                class="fa-solid fa-clock flex-shrink-0 text-[8px] xs:text-[9px] sm:text-xs"></i>
                                             <span class="font-medium truncate">Ends In</span>
                                         </div>
                                         <span id="timer-{{ $i }}"
@@ -206,23 +223,28 @@
                                         </span>
                                     </div>
 
-                                    <div class="flex gap-1.5 sm:gap-2 mt-auto">
+                                    <div class="flex gap-1 xs:gap-1.5 sm:gap-2 mt-auto">
                                         <button onclick="addToCart(this)"
                                             class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white
-                                                   rounded-lg sm:rounded-xl py-2 sm:py-2.5 px-1.5 sm:px-2
-                                                   font-semibold transition text-[10px] sm:text-xs md:text-sm
+                                                   rounded-md sm:rounded-xl
+                                                   py-1.5 xs:py-2 sm:py-2.5
+                                                   px-1 xs:px-1.5 sm:px-2
+                                                   font-semibold transition
+                                                   text-[9px] xs:text-[10px] sm:text-xs md:text-sm
                                                    flex items-center justify-center gap-1 sm:gap-2">
-                                            <i class="fa-solid fa-cart-plus text-[9px] sm:text-xs"></i>
-                                            <span>Add to Cart</span>
+                                            <i class="fa-solid fa-cart-plus text-[8px] xs:text-[9px] sm:text-xs"></i>
+                                            <span class="hidden xs:inline">Add to Cart</span>
+                                            <span class="xs:hidden">Add</span>
                                         </button>
 
                                         <button onclick="toggleWishlist(this)"
-                                            class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex-shrink-0
-                                                   rounded-lg sm:rounded-xl border border-gray-200
+                                            class="w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex-shrink-0
+                                                   rounded-md sm:rounded-xl border border-gray-200
                                                    hover:bg-red-500 hover:border-red-500 hover:text-white
                                                    text-gray-500 transition
                                                    flex items-center justify-center">
-                                            <i class="fa-regular fa-heart text-[10px] sm:text-xs md:text-sm"></i>
+                                            <i
+                                                class="fa-regular fa-heart text-[9px] xs:text-[10px] sm:text-xs md:text-sm"></i>
                                         </button>
                                     </div>
 
@@ -235,7 +257,6 @@
 
                 </div>
             </div>
-
 
             {{-- ================================================= --}}
             {{-- PARENT CATEGORIES - PRODUCTS                      --}}
