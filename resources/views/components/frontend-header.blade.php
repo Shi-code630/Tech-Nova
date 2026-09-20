@@ -312,9 +312,9 @@
                 @endauth
 
 
-                {{-- 🍔 HAMBURGER (Drawer Toggle) --}}
+                {{-- 🍔 HAMBURGER (Drawer Toggle) — mobile/tablet only --}}
                 <button type="button" onclick="openDrawer()" aria-label="Open menu"
-                    class="flex flex-col justify-center items-center gap-[5px]
+                    class="flex md:hidden flex-col justify-center items-center gap-[5px]
                            w-9 h-9 rounded-lg
                            text-[#1e293b] hover:text-orange-500
                            hover:bg-orange-50
@@ -373,7 +373,7 @@
                         @if ($parent->children->count())
                             <div
                                 class="absolute left-0 top-full hidden group-hover:block
-                                        w-60 sm:w-70 bg-white rounded-xl shadow-2xl
+                                        w-60 sm:w-72 bg-white rounded-xl shadow-2xl
                                         border border-gray-100 z-[9999] overflow-hidden">
                                 <div class="px-4 sm:px-5 py-3 bg-gray-50 border-b">
                                     <a href="{{ $parent->slug === 'today-deals' ? route('today-deals') : route('category.show', ['slug' => $parent->slug]) }}"

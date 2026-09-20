@@ -87,282 +87,502 @@
                     </div>
 
                     <div
-                        class="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto pb-5 sm:pb-6 snap-x snap-mandatory scrollbar-hide">
+                        class="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto pb-5 sm:pb-6 snap-x snap-mandatory scrollbar-hide">
 
                         <!-- Card 1 -->
                         <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
+                            class="product-card min-w-[180px] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[250px]
+                bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md
+                hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+                snap-start flex flex-col">
+
+                            <div class="relative bg-gray-100 p-2 sm:p-3">
+                                <div class="overflow-hidden rounded-lg sm:rounded-xl">
                                     <img src="https://picsum.photos/id/1015/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
+                                        class="w-full h-28 sm:h-32 md:h-36 object-cover rounded-lg sm:rounded-xl
+                           hover:scale-105 transition duration-500">
                                 </div>
+
                                 <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
+                                    class="absolute top-2 sm:top-3 left-2 sm:left-3
+                         bg-red-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    -9%
+                                </span>
+
                                 <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
+                                    class="absolute top-2 sm:top-3 right-2 sm:right-3
+                         bg-green-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    NEW
+                                </span>
                             </div>
 
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
+                            <div class="p-2.5 sm:p-3 md:p-4 flex flex-col flex-1 min-w-0">
 
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
+                                <p class="text-blue-600 text-[10px] sm:text-xs font-semibold mb-1">
+                                    Gaming Laptop
+                                </p>
+
+                                <h3
+                                    class="text-[11px] sm:text-sm font-bold text-gray-800 leading-tight
+                       mb-2 line-clamp-2 min-h-[32px] sm:min-h-[40px]">
                                     Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
                                 </h3>
 
                                 <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
+                                    <span class="text-yellow-400 text-[10px] sm:text-xs">★★★★★</span>
+                                    <span class="text-gray-500 text-[9px] sm:text-xs">(4.9)</span>
                                 </div>
 
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
+                                <div class="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap min-w-0">
+                                    <span
+                                        class="text-sm sm:text-base md:text-lg font-bold text-gray-900 whitespace-nowrap">
+                                        Rs. 319,999
+                                    </span>
+                                    <span class="text-gray-400 line-through text-[10px] sm:text-xs whitespace-nowrap">
+                                        Rs. 350,000
+                                    </span>
                                 </div>
 
                                 <!-- Timer -->
                                 <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600 min-w-0">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
+                                    class="flex items-center justify-between gap-1.5 sm:gap-2
+                        bg-orange-50 rounded-lg p-1.5 sm:p-2
+                        mb-3 sm:mb-4 text-[10px] sm:text-xs">
+
+                                    <div class="flex items-center gap-1 sm:gap-1.5 text-orange-600 min-w-0">
+                                        <i class="fa-solid fa-clock flex-shrink-0 text-[9px] sm:text-xs"></i>
+                                        <span class="font-medium truncate">Ends In</span>
                                     </div>
-                                    <span id="timer1"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
+
+                                    <span id="timer-1" class="font-bold text-orange-700 timer whitespace-nowrap">
+                                        03:07:31
+                                    </span>
                                 </div>
 
-                                <div class="flex gap-2">
+                                <div class="flex gap-1.5 sm:gap-2 mt-auto">
                                     <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
+                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white
+                           rounded-lg sm:rounded-xl py-2 sm:py-2.5 px-1.5 sm:px-2
+                           font-semibold transition text-[10px] sm:text-xs md:text-sm
+                           flex items-center justify-center gap-1 sm:gap-2">
+
+                                        <i class="fa-solid fa-cart-plus text-[9px] sm:text-xs"></i>
                                         <span>Add to Cart</span>
+
                                     </button>
+
                                     <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
+                                        class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex-shrink-0
+                           rounded-lg sm:rounded-xl border border-gray-200
+                           hover:bg-red-500 hover:border-red-500 hover:text-white
+                           text-gray-500 transition
+                           flex items-center justify-center">
+
+                                        <i class="fa-regular fa-heart text-[10px] sm:text-xs md:text-sm"></i>
+
                                     </button>
                                 </div>
+
                             </div>
+
                         </div>
 
                         <!-- Card 2 -->
                         <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
+                            class="product-card min-w-[180px] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[250px]
+                bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md
+                hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+                snap-start flex flex-col">
+
+                            <div class="relative bg-gray-100 p-2 sm:p-3">
+                                <div class="overflow-hidden rounded-lg sm:rounded-xl">
                                     <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
+                                        class="w-full h-28 sm:h-32 md:h-36 object-cover rounded-lg sm:rounded-xl
+                           hover:scale-105 transition duration-500">
                                 </div>
+
                                 <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
+                                    class="absolute top-2 sm:top-3 left-2 sm:left-3
+                         bg-red-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    -9%
+                                </span>
+
                                 <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
+                                    class="absolute top-2 sm:top-3 right-2 sm:right-3
+                         bg-green-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    NEW
+                                </span>
                             </div>
 
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
+                            <div class="p-2.5 sm:p-3 md:p-4 flex flex-col flex-1 min-w-0">
 
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
+                                <p class="text-blue-600 text-[10px] sm:text-xs font-semibold mb-1">
+                                    Gaming Laptop
+                                </p>
+
+                                <h3
+                                    class="text-[11px] sm:text-sm font-bold text-gray-800 leading-tight
+                       mb-2 line-clamp-2 min-h-[32px] sm:min-h-[40px]">
                                     Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
                                 </h3>
 
                                 <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
+                                    <span class="text-yellow-400 text-[10px] sm:text-xs">★★★★★</span>
+                                    <span class="text-gray-500 text-[9px] sm:text-xs">(4.9)</span>
                                 </div>
 
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
+                                <div class="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap min-w-0">
+                                    <span
+                                        class="text-sm sm:text-base md:text-lg font-bold text-gray-900 whitespace-nowrap">
+                                        Rs. 319,999
+                                    </span>
+                                    <span class="text-gray-400 line-through text-[10px] sm:text-xs whitespace-nowrap">
+                                        Rs. 350,000
+                                    </span>
                                 </div>
 
                                 <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
+                                    class="flex items-center justify-between gap-1.5 sm:gap-2
+                        bg-orange-50 rounded-lg p-1.5 sm:p-2
+                        mb-3 sm:mb-4 text-[10px] sm:text-xs">
+
+                                    <div class="flex items-center gap-1 sm:gap-1.5 text-orange-600 min-w-0">
+                                        <i class="fa-solid fa-clock flex-shrink-0 text-[9px] sm:text-xs"></i>
+                                        <span class="font-medium truncate">Ends In</span>
                                     </div>
-                                    <span id="timer2"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
+
+                                    <span id="timer-2" class="font-bold text-orange-700 timer whitespace-nowrap">
+                                        03:07:31
+                                    </span>
                                 </div>
 
-                                <div class="flex gap-2">
+                                <div class="flex gap-1.5 sm:gap-2 mt-auto">
                                     <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
+                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white
+                           rounded-lg sm:rounded-xl py-2 sm:py-2.5 px-1.5 sm:px-2
+                           font-semibold transition text-[10px] sm:text-xs md:text-sm
+                           flex items-center justify-center gap-1 sm:gap-2">
+
+                                        <i class="fa-solid fa-cart-plus text-[9px] sm:text-xs"></i>
                                         <span>Add to Cart</span>
+
                                     </button>
+
                                     <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
+                                        class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex-shrink-0
+                           rounded-lg sm:rounded-xl border border-gray-200
+                           hover:bg-red-500 hover:border-red-500 hover:text-white
+                           text-gray-500 transition
+                           flex items-center justify-center">
+
+                                        <i class="fa-regular fa-heart text-[10px] sm:text-xs md:text-sm"></i>
+
                                     </button>
                                 </div>
+
                             </div>
+
                         </div>
 
                         <!-- Card 3 -->
                         <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
+                            class="product-card min-w-[180px] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[250px]
+                bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md
+                hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+                snap-start flex flex-col">
+
+                            <div class="relative bg-gray-100 p-2 sm:p-3">
+                                <div class="overflow-hidden rounded-lg sm:rounded-xl">
                                     <img src="https://picsum.photos/id/1015/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
+                                        class="w-full h-28 sm:h-32 md:h-36 object-cover rounded-lg sm:rounded-xl
+                           hover:scale-105 transition duration-500">
                                 </div>
+
                                 <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
+                                    class="absolute top-2 sm:top-3 left-2 sm:left-3
+                         bg-red-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    -9%
+                                </span>
+
                                 <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
+                                    class="absolute top-2 sm:top-3 right-2 sm:right-3
+                         bg-green-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    NEW
+                                </span>
                             </div>
 
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
+                            <div class="p-2.5 sm:p-3 md:p-4 flex flex-col flex-1 min-w-0">
 
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
+                                <p class="text-blue-600 text-[10px] sm:text-xs font-semibold mb-1">
+                                    Gaming Laptop
+                                </p>
+
+                                <h3
+                                    class="text-[11px] sm:text-sm font-bold text-gray-800 leading-tight
+                       mb-2 line-clamp-2 min-h-[32px] sm:min-h-[40px]">
                                     Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
                                 </h3>
 
                                 <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
+                                    <span class="text-yellow-400 text-[10px] sm:text-xs">★★★★★</span>
+                                    <span class="text-gray-500 text-[9px] sm:text-xs">(4.9)</span>
                                 </div>
 
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
+                                <div class="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap min-w-0">
+                                    <span
+                                        class="text-sm sm:text-base md:text-lg font-bold text-gray-900 whitespace-nowrap">
+                                        Rs. 319,999
+                                    </span>
+                                    <span class="text-gray-400 line-through text-[10px] sm:text-xs whitespace-nowrap">
+                                        Rs. 350,000
+                                    </span>
                                 </div>
 
                                 <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
+                                    class="flex items-center justify-between gap-1.5 sm:gap-2
+                        bg-orange-50 rounded-lg p-1.5 sm:p-2
+                        mb-3 sm:mb-4 text-[10px] sm:text-xs">
+
+                                    <div class="flex items-center gap-1 sm:gap-1.5 text-orange-600 min-w-0">
+                                        <i class="fa-solid fa-clock flex-shrink-0 text-[9px] sm:text-xs"></i>
+                                        <span class="font-medium truncate">Ends In</span>
                                     </div>
-                                    <span id="timer1"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
+
+                                    <span id="timer-3" class="font-bold text-orange-700 timer whitespace-nowrap">
+                                        03:07:31
+                                    </span>
                                 </div>
 
-                                <div class="flex gap-2">
+                                <div class="flex gap-1.5 sm:gap-2 mt-auto">
                                     <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
+                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white
+                           rounded-lg sm:rounded-xl py-2 sm:py-2.5 px-1.5 sm:px-2
+                           font-semibold transition text-[10px] sm:text-xs md:text-sm
+                           flex items-center justify-center gap-1 sm:gap-2">
+
+                                        <i class="fa-solid fa-cart-plus text-[9px] sm:text-xs"></i>
                                         <span>Add to Cart</span>
+
                                     </button>
+
                                     <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
+                                        class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex-shrink-0
+                           rounded-lg sm:rounded-xl border border-gray-200
+                           hover:bg-red-500 hover:border-red-500 hover:text-white
+                           text-gray-500 transition
+                           flex items-center justify-center">
+
+                                        <i class="fa-regular fa-heart text-[10px] sm:text-xs md:text-sm"></i>
+
                                     </button>
                                 </div>
+
                             </div>
+
                         </div>
 
                         <!-- Card 4 -->
                         <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
+                            class="product-card min-w-[180px] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[250px]
+                bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md
+                hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+                snap-start flex flex-col">
+
+                            <div class="relative bg-gray-100 p-2 sm:p-3">
+                                <div class="overflow-hidden rounded-lg sm:rounded-xl">
                                     <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
+                                        class="w-full h-28 sm:h-32 md:h-36 object-cover rounded-lg sm:rounded-xl
+                           hover:scale-105 transition duration-500">
                                 </div>
+
                                 <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
+                                    class="absolute top-2 sm:top-3 left-2 sm:left-3
+                         bg-red-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    -9%
+                                </span>
+
                                 <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
+                                    class="absolute top-2 sm:top-3 right-2 sm:right-3
+                         bg-green-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    NEW
+                                </span>
                             </div>
 
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
+                            <div class="p-2.5 sm:p-3 md:p-4 flex flex-col flex-1 min-w-0">
 
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
+                                <p class="text-blue-600 text-[10px] sm:text-xs font-semibold mb-1">
+                                    Gaming Laptop
+                                </p>
+
+                                <h3
+                                    class="text-[11px] sm:text-sm font-bold text-gray-800 leading-tight
+                       mb-2 line-clamp-2 min-h-[32px] sm:min-h-[40px]">
                                     Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
                                 </h3>
 
                                 <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
+                                    <span class="text-yellow-400 text-[10px] sm:text-xs">★★★★★</span>
+                                    <span class="text-gray-500 text-[9px] sm:text-xs">(4.9)</span>
                                 </div>
 
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
+                                <div class="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap min-w-0">
+                                    <span
+                                        class="text-sm sm:text-base md:text-lg font-bold text-gray-900 whitespace-nowrap">
+                                        Rs. 319,999
+                                    </span>
+                                    <span class="text-gray-400 line-through text-[10px] sm:text-xs whitespace-nowrap">
+                                        Rs. 350,000
+                                    </span>
                                 </div>
 
                                 <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
+                                    class="flex items-center justify-between gap-1.5 sm:gap-2
+                        bg-orange-50 rounded-lg p-1.5 sm:p-2
+                        mb-3 sm:mb-4 text-[10px] sm:text-xs">
+
+                                    <div class="flex items-center gap-1 sm:gap-1.5 text-orange-600 min-w-0">
+                                        <i class="fa-solid fa-clock flex-shrink-0 text-[9px] sm:text-xs"></i>
+                                        <span class="font-medium truncate">Ends In</span>
                                     </div>
-                                    <span id="timer2"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
+
+                                    <span id="timer-4" class="font-bold text-orange-700 timer whitespace-nowrap">
+                                        03:07:31
+                                    </span>
                                 </div>
 
-                                <div class="flex gap-2">
+                                <div class="flex gap-1.5 sm:gap-2 mt-auto">
                                     <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
+                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white
+                           rounded-lg sm:rounded-xl py-2 sm:py-2.5 px-1.5 sm:px-2
+                           font-semibold transition text-[10px] sm:text-xs md:text-sm
+                           flex items-center justify-center gap-1 sm:gap-2">
+
+                                        <i class="fa-solid fa-cart-plus text-[9px] sm:text-xs"></i>
                                         <span>Add to Cart</span>
+
                                     </button>
+
                                     <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
+                                        class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex-shrink-0
+                           rounded-lg sm:rounded-xl border border-gray-200
+                           hover:bg-red-500 hover:border-red-500 hover:text-white
+                           text-gray-500 transition
+                           flex items-center justify-center">
+
+                                        <i class="fa-regular fa-heart text-[10px] sm:text-xs md:text-sm"></i>
+
                                     </button>
                                 </div>
+
                             </div>
+
                         </div>
 
                         <!-- Card 5 -->
                         <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
+                            class="product-card min-w-[180px] sm:min-w-[220px] md:min-w-[240px] lg:min-w-[250px]
+                bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md
+                hover:shadow-xl transition-all duration-300 hover:-translate-y-1
+                snap-start flex flex-col">
+
+                            <div class="relative bg-gray-100 p-2 sm:p-3">
+                                <div class="overflow-hidden rounded-lg sm:rounded-xl">
                                     <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
+                                        class="w-full h-28 sm:h-32 md:h-36 object-cover rounded-lg sm:rounded-xl
+                           hover:scale-105 transition duration-500">
                                 </div>
+
                                 <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
+                                    class="absolute top-2 sm:top-3 left-2 sm:left-3
+                         bg-red-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    -9%
+                                </span>
+
                                 <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
+                                    class="absolute top-2 sm:top-3 right-2 sm:right-3
+                         bg-green-500 text-white text-[9px] sm:text-[10px] font-bold
+                         px-1.5 sm:px-2.5 py-0.5 rounded-full">
+                                    NEW
+                                </span>
                             </div>
 
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
+                            <div class="p-2.5 sm:p-3 md:p-4 flex flex-col flex-1 min-w-0">
 
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
+                                <p class="text-blue-600 text-[10px] sm:text-xs font-semibold mb-1">
+                                    Gaming Laptop
+                                </p>
+
+                                <h3
+                                    class="text-[11px] sm:text-sm font-bold text-gray-800 leading-tight
+                       mb-2 line-clamp-2 min-h-[32px] sm:min-h-[40px]">
                                     Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
                                 </h3>
 
                                 <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
+                                    <span class="text-yellow-400 text-[10px] sm:text-xs">★★★★★</span>
+                                    <span class="text-gray-500 text-[9px] sm:text-xs">(4.9)</span>
                                 </div>
 
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
+                                <div class="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap min-w-0">
+                                    <span
+                                        class="text-sm sm:text-base md:text-lg font-bold text-gray-900 whitespace-nowrap">
+                                        Rs. 319,999
+                                    </span>
+                                    <span class="text-gray-400 line-through text-[10px] sm:text-xs whitespace-nowrap">
+                                        Rs. 350,000
+                                    </span>
                                 </div>
 
                                 <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
+                                    class="flex items-center justify-between gap-1.5 sm:gap-2
+                        bg-orange-50 rounded-lg p-1.5 sm:p-2
+                        mb-3 sm:mb-4 text-[10px] sm:text-xs">
+
+                                    <div class="flex items-center gap-1 sm:gap-1.5 text-orange-600 min-w-0">
+                                        <i class="fa-solid fa-clock flex-shrink-0 text-[9px] sm:text-xs"></i>
+                                        <span class="font-medium truncate">Ends In</span>
                                     </div>
-                                    <span id="timer2"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
+
+                                    <span id="timer-5" class="font-bold text-orange-700 timer whitespace-nowrap">
+                                        03:07:31
+                                    </span>
                                 </div>
 
-                                <div class="flex gap-2">
+                                <div class="flex gap-1.5 sm:gap-2 mt-auto">
                                     <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
+                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white
+                           rounded-lg sm:rounded-xl py-2 sm:py-2.5 px-1.5 sm:px-2
+                           font-semibold transition text-[10px] sm:text-xs md:text-sm
+                           flex items-center justify-center gap-1 sm:gap-2">
+
+                                        <i class="fa-solid fa-cart-plus text-[9px] sm:text-xs"></i>
                                         <span>Add to Cart</span>
+
                                     </button>
+
                                     <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
+                                        class="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex-shrink-0
+                           rounded-lg sm:rounded-xl border border-gray-200
+                           hover:bg-red-500 hover:border-red-500 hover:text-white
+                           text-gray-500 transition
+                           flex items-center justify-center">
+
+                                        <i class="fa-regular fa-heart text-[10px] sm:text-xs md:text-sm"></i>
+
                                     </button>
                                 </div>
+
                             </div>
+
                         </div>
 
                     </div>
@@ -856,7 +1076,7 @@
 
 
                     <div
-                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 pt-4 sm:pt-5 gap-4 sm:gap-6 pb-8 sm:pb-10">
+                        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 pt-4 sm:pt-5 gap-4 sm:gap-6 pb-8 sm:pb-10">
 
                         @foreach ($blogs as $blog)
                             <article
@@ -899,7 +1119,7 @@
 
 
                                     {{-- Date + Read More --}}
-                                    <div class="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2">
+                                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
 
                                         {{-- Date - Left --}}
                                         <span class="text-xs sm:text-sm text-gray-500">

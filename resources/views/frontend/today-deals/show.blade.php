@@ -3,7 +3,7 @@
 
         {{-- Breadcrumb --}}
         <nav
-            class="Container mx-auto px-3 sm:px-4 flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-5 sm:mb-6 mt-4 sm:mt-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
+            class="container mx-auto px-3 sm:px-4 flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-5 sm:mb-6 mt-4 sm:mt-6 overflow-x-auto whitespace-nowrap scrollbar-hide">
 
             <a href="{{ route('home') }}" class="hover:text-blue-600 transition flex-shrink-0">
                 Home
