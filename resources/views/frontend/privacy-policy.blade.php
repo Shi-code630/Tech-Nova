@@ -1,5 +1,4 @@
-<x-frontend-layout>
-    <!-- Hero Banner -->
+<x-frontend-layout title="Privacy policy | TechNova Nepal" description="How TechNova Nepal collects and uses your data when you shop with us." :canonical="route('privacy-policy')">    <!-- Hero Banner -->
     <div class="bg-[#f0f9ff]">
         <section class="Container mx-auto pb-10">
 

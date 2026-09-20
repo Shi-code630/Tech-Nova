@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 <x-frontend-layout>
+=======
+<x-frontend-layout title="Today's deals | TechNova Nepal" description="Limited-time laptop and gadget deals at TechNova Nepal, Kathmandu." :canonical="route('today-deals')" class="bg-[#eef2f7]">
+    <style>
+        [x-cloak] {
+            display: none !important
+        }
+>>>>>>> 77f1e800e643ad4d3b87ea1b09e8abaf6d31380b
 
     {{-- =========================================================
         PAGE BACKGROUND

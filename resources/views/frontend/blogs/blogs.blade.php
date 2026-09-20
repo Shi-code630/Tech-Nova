@@ -1,4 +1,7 @@
-<x-frontend-layout>
+<x-frontend-layout
+title="Tech blogs | TechNova Nepal"
+    description="Guides and news on laptops, gadgets and accessories from TechNova Nepal."
+    :canonical="route('blogs.index')">
 
     <div class="bg-[#ebf4fa] min-h-screen">
 

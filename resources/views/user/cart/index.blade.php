@@ -1,4 +1,4 @@
-<x-frontend-layout>
+<x-frontend-layout title="Cart">
 
     <div class="bg-gray-50 w-full py-6 sm:py-8">
 

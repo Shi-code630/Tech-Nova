@@ -1,4 +1,4 @@
-<x-frontend-layout>
+<x-frontend-layout title="Login">
 
     <div class="min-h-screen flex items-center justify-center bg-gray-50 py-8 sm:py-12 px-4">
 

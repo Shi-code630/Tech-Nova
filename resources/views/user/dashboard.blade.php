@@ -1,4 +1,4 @@
-<x-frontend-layout>
+<x-frontend-layout title="Dashboard">
 
     <section class="bg-slate-100 w-full min-h-screen py-6 sm:py-8">
 

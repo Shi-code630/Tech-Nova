@@ -1,4 +1,8 @@
-<x-frontend-layout>
+<x-frontend-layout
+:title="($brand->meta_title ?: $brand->name) . ' | TechNova Nepal'"
+    :description="$brand->meta_description ?: ('Buy ' . $brand->name . ' products in Nepal at TechNova Nepal.')"
+    :keywords="$brand->meta_keywords"
+    :canonical="url('/brand/' . $brand->slug)">
 
     <div class="bg-gray-100 py-5">
 
