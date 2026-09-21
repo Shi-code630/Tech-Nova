@@ -136,7 +136,6 @@ class Product extends Model
     // =========================
     // ACCESSORS
     // =========================
-
     public function getFinalPriceAttribute()
     {
         return $this->discount_price ?? $this->price;
@@ -144,16 +143,38 @@ class Product extends Model
 
     public function getAverageRatingAttribute()
     {
-        return $this->reviews()
-            ->where('status', true)
-            ->avg('rating') ?? 0;
+        if (array_key_exists('reviews_avg_rating', $this->attributes)) {
+            return round((float) ($this->attributes['reviews_avg_rating'] ?? 0), 1);
+        }
+
+        if ($this->relationLoaded('reviews')) {
+            return round((float) ($this->reviews->where('status', true)->avg('rating') ?? 0), 1);
+        }
+
+        return round((float) ($this->reviews()->where('status', true)->avg('rating') ?? 0), 1);
+    }
+
+    public function getRatingAttribute()
+    {
+        return $this->average_rating;
     }
 
     public function getReviewCountAttribute()
     {
-        return $this->reviews()
-            ->where('status', true)
-            ->count();
+        return $this->reviews_count;
+    }
+
+    public function getReviewsCountAttribute($value)
+    {
+        if ($value !== null) {
+            return (int) $value;
+        }
+
+        if ($this->relationLoaded('reviews')) {
+            return (int) $this->reviews->where('status', true)->count();
+        }
+
+        return (int) $this->reviews()->where('status', true)->count();
     }
 
     public function getIsInStockAttribute()
@@ -332,6 +353,18 @@ class Product extends Model
 
         return $this->stock;
     }
+
+        public function scopeWithReviewStats($query)
+    {
+        return $query
+            ->withCount(['reviews as reviews_count' => function ($q) {
+                $q->where('status', true);
+            }])
+            ->withAvg(['reviews as reviews_avg_rating' => function ($q) {
+                $q->where('status', true);
+            }], 'rating');
+    }
+
 
     // =========================
     // RELATED PRODUCTS

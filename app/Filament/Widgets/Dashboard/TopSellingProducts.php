@@ -29,31 +29,18 @@ class TopSellingProducts extends BaseWidget
             ->query(
                 function (): Builder {
                     return Product::query()
-                        ->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
-                        ->select(
-                            'products.*',
-                            DB::raw('COALESCE(SUM(order_items.quantity), 0) as sold'),
-                            DB::raw('COALESCE(SUM(order_items.total), 0) as revenue')
+                        ->select('products.*')
+                        ->selectSub(
+                            DB::table('order_items')
+                                ->whereColumn('order_items.product_id', 'products.id')
+                                ->selectRaw('COALESCE(SUM(order_items.quantity), 0)'),
+                            'sold'
                         )
-                        ->groupBy(
-                            'products.id',
-                            'products.name',
-                            'products.thumbnails',
-                            'products.category_id',
-                            'products.brand_id',
-                            'products.slug',
-                            'products.description',
-                            'products.price',
-                            'products.discount_price',
-                            'products.stock',
-                            'products.status',
-                            'products.featured',
-                            'products.meta_title',
-                            'products.meta_description',
-                            'products.meta_keywords',
-                            'products.limited_time_activated_at',
-                            'products.created_at',
-                            'products.updated_at'
+                        ->selectSub(
+                            DB::table('order_items')
+                                ->whereColumn('order_items.product_id', 'products.id')
+                                ->selectRaw('COALESCE(SUM(order_items.total), 0)'),
+                            'revenue'
                         )
                         ->orderByDesc('sold')
                         ->limit(5);
@@ -65,10 +52,8 @@ class TopSellingProducts extends BaseWidget
                     ->circular()
                     ->size(36)
                     ->getStateUsing(function ($record) {
-                        // Get the first thumbnail from the array
                         if (is_array($record->thumbnails) && !empty($record->thumbnails)) {
                             $firstThumbnail = $record->thumbnails[0];
-                            // If it's a storage path, add 'storage/' prefix
                             if (!str_starts_with($firstThumbnail, 'http')) {
                                 return asset('storage/' . $firstThumbnail);
                             }
