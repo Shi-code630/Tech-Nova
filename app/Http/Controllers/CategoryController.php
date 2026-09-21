@@ -140,7 +140,8 @@ class CategoryController extends Controller
             ->with([
                 'brand',
                 'category',
-            ]);
+            ])
+            ->withReviewStats();
 
         /*
         |--------------------------------------------------------------------------
@@ -344,6 +345,7 @@ class CategoryController extends Controller
                         'brand',
                         'category',
                     ])
+                    ->withReviewStats()
                     ->latest()
                     ->take(5)
                     ->get();
@@ -483,6 +485,7 @@ class CategoryController extends Controller
                     'brand',
                     'category',
                 ])
+                ->withReviewStats()
                 ->latest()
                 ->take(5)
                 ->get();
@@ -528,112 +531,103 @@ class CategoryController extends Controller
         );
     }
 
-/*
-|--------------------------------------------------------------------------
-| Festive Offers
-|--------------------------------------------------------------------------
-*/
-public function festive($slug, Request $request)
-{
-    $category = Category::with([
-        'children' => function ($query) {
-            $query->where('status', true)
-                ->orderBy('name');
-        },
-        'parent',
-    ])
-        ->where('slug', $slug)
-        ->where('status', true)
-        ->firstOrFail();
-
-    $categoryIds = $this->getAllCategoryIds($category);
-
-    $query = Product::whereIn('category_id', $categoryIds)
-        ->where('status', 'active')
-        ->with(['brand', 'category']);
-
     /*
     |--------------------------------------------------------------------------
-    | CHILD CATEGORY FILTER
+    | Festive Offers
     |--------------------------------------------------------------------------
     */
-    if ($request->filled('child')) {
-
-        $childCategory = Category::where('slug', $request->child)
+    public function festive($slug, Request $request)
+    {
+        $category = Category::with([
+            'children' => function ($query) {
+                $query->where('status', true)
+                    ->orderBy('name');
+            },
+            'parent',
+        ])
+            ->where('slug', $slug)
             ->where('status', true)
-            ->first();
+            ->firstOrFail();
 
-        if ($childCategory) {
+        $categoryIds = $this->getAllCategoryIds($category);
 
-            $childIds = $this->getAllCategoryIds($childCategory);
+        $query = Product::whereIn('category_id', $categoryIds)
+            ->where('status', 'active')
+            ->with(['brand', 'category'])
+            ->withReviewStats();
 
-            $query->whereIn('category_id', $childIds);
+        /*
+        |--------------------------------------------------------------------------
+        | CHILD CATEGORY FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('child')) {
+
+            $childCategory = Category::where('slug', $request->child)
+                ->where('status', true)
+                ->first();
+
+            if ($childCategory) {
+
+                $childIds = $this->getAllCategoryIds($childCategory);
+
+                $query->whereIn('category_id', $childIds);
+            }
         }
-    }
 
-    /*
-    |--------------------------------------------------------------------------
-    | BRAND FILTER
-    |--------------------------------------------------------------------------
-    */
-    if ($request->filled('brand')) {
+        /*
+        |--------------------------------------------------------------------------
+        | BRAND FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('brand')) {
 
-        $query->whereIn(
-            'brand_id',
-            (array) $request->brand
-        );
-    }
+            $query->whereIn(
+                'brand_id',
+                (array) $request->brand
+            );
+        }
 
-    /*
-    |--------------------------------------------------------------------------
-    | PRICE FILTER
-    |--------------------------------------------------------------------------
-    */
-    if ($request->filled('min_price')) {
+        /*
+        |--------------------------------------------------------------------------
+        | PRICE FILTER
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('min_price')) {
 
-        $query->where(
-            'price',
-            '>=',
-            $request->min_price
-        );
-    }
+            $query->where(
+                'price',
+                '>=',
+                $request->min_price
+            );
+        }
 
-    if ($request->filled('max_price')) {
+        if ($request->filled('max_price')) {
 
-        $query->where(
-            'price',
-            '<=',
-            $request->max_price
-        );
-    }
+            $query->where(
+                'price',
+                '<=',
+                $request->max_price
+            );
+        }
 
-    /*
-    |--------------------------------------------------------------------------
-    | PRODUCTS
-    |--------------------------------------------------------------------------
-    */
-    $products = $query
-        ->latest()
-        ->paginate(self::PER_PAGE)
-        ->withQueryString();
+        /*
+        |--------------------------------------------------------------------------
+        | PRODUCTS
+        |--------------------------------------------------------------------------
+        */
+        $products = $query
+            ->latest()
+            ->paginate(self::PER_PAGE)
+            ->withQueryString();
 
-    /*
-    |--------------------------------------------------------------------------
-    | BRANDS
-    |--------------------------------------------------------------------------
-    */
-    $brands = Brand::where('status', true)
-        ->whereHas('products', function ($q) use ($categoryIds) {
-
-            $q->whereIn(
-                'category_id',
-                $categoryIds
-            )
-            ->where('status', 'active');
-
-        })
-        ->withCount([
-            'products' => function ($q) use ($categoryIds) {
+        /*
+        |--------------------------------------------------------------------------
+        | BRANDS
+        |--------------------------------------------------------------------------
+        */
+        $brands = Brand::where('status', true)
+            ->whereHas('products', function ($q) use ($categoryIds) {
 
                 $q->whereIn(
                     'category_id',
@@ -641,65 +635,76 @@ public function festive($slug, Request $request)
                 )
                 ->where('status', 'active');
 
-            },
-        ])
-        ->orderBy('name')
-        ->get();
+            })
+            ->withCount([
+                'products' => function ($q) use ($categoryIds) {
 
-    /*
-    |--------------------------------------------------------------------------
-    | BREADCRUMBS
-    |--------------------------------------------------------------------------
-    */
-    $breadcrumbs = [];
+                    $q->whereIn(
+                        'category_id',
+                        $categoryIds
+                    )
+                    ->where('status', 'active');
 
-    $current = $category;
+                },
+            ])
+            ->orderBy('name')
+            ->get();
 
-    while ($current) {
+        /*
+        |--------------------------------------------------------------------------
+        | BREADCRUMBS
+        |--------------------------------------------------------------------------
+        */
+        $breadcrumbs = [];
 
-        array_unshift(
-            $breadcrumbs,
-            $current
-        );
+        $current = $category;
 
-        if ($current->parent_id) {
+        while ($current) {
 
-            $current = Category::find(
-                $current->parent_id
+            array_unshift(
+                $breadcrumbs,
+                $current
             );
 
-        } else {
+            if ($current->parent_id) {
 
-            $current = null;
+                $current = Category::find(
+                    $current->parent_id
+                );
+
+            } else {
+
+                $current = null;
+            }
         }
+
+        /*
+        |--------------------------------------------------------------------------
+        | WISHLIST
+        |--------------------------------------------------------------------------
+        */
+        $wishlistProductIds = [];
+
+        if (Auth::check()) {
+
+            $wishlistProductIds = Auth::user()
+                ->wishlists()
+                ->pluck('product_id')
+                ->toArray();
+        }
+
+        return view(
+            'frontend.today-deals.festive',
+            compact(
+                'category',
+                'products',
+                'brands',
+                'breadcrumbs',
+                'wishlistProductIds'
+            )
+        );
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | WISHLIST
-    |--------------------------------------------------------------------------
-    */
-    $wishlistProductIds = [];
-
-    if (Auth::check()) {
-
-        $wishlistProductIds = Auth::user()
-            ->wishlists()
-            ->pluck('product_id')
-            ->toArray();
-    }
-
-    return view(
-        'frontend.today-deals.festive',
-        compact(
-            'category',
-            'products',
-            'brands',
-            'breadcrumbs',
-            'wishlistProductIds'
-        )
-    );
-}
     /*
     |--------------------------------------------------------------------------
     | Limited Time Offer
@@ -775,7 +780,8 @@ public function festive($slug, Request $request)
             ->with([
                 'brand',
                 'category',
-            ]);
+            ])
+            ->withReviewStats();
 
         /*
         |--------------------------------------------------------------------------

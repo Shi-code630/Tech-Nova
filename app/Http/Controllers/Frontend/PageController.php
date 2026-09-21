@@ -112,8 +112,7 @@ class PageController extends Controller
                     'brand',
                 ])
 
-                ->withCount('reviews')
-
+->withReviewStats()
                 ->orderByDesc('created_at')
                 ->orderByDesc('id')
 
@@ -145,7 +144,7 @@ class PageController extends Controller
                 'images',
             ])
 
-            ->withCount('reviews')
+            ->withReviewStats()
 
             ->latest('created_at')
             ->latest('id')
@@ -295,7 +294,7 @@ class PageController extends Controller
             'images',
         ])
 
-        ->withCount('reviews')
+        ->withReviewStats()
 
         ->latest('created_at')
 
@@ -356,7 +355,7 @@ class PageController extends Controller
                 'brand',
                 'images',
             ])
-            ->withCount('reviews')
+            ->withReviewStats()
             ->latest('created_at')
             ->paginate(20)
             ->withQueryString();

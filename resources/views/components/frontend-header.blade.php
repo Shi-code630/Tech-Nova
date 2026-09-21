@@ -338,16 +338,10 @@
                         </button>
 
                     </div>
-                    <span
-                        class="absolute -bottom-7 left-1/2 -translate-x-1/2 opacity-0
-                                 group-hover:opacity-100 transition-opacity text-[10px]
-                                 bg-[#111827] text-white px-2 py-1 rounded whitespace-nowrap
-                                 pointer-events-none">
-                        Cart
-                    </span>
-                    </a>
+                </form>
+                {{-- </form> MUST close here. If it stays open, login POSTs to /search. --}}
 
-                    {{-- WISHLIST --}}
+                    {{-- WISHLIST (mobile row under search) --}}
                     <a href="{{ route('user.wishlist') }}" class="relative group">
                         <div
                             class="bg-[#0959e8] hover:bg-[#074dcc] transition-all duration-300
@@ -696,4 +690,3 @@
         });
     </script>
 </header>
-

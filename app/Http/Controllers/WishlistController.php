@@ -13,7 +13,9 @@ class WishlistController extends Controller
      */
     public function index()
     {
-        $wishlist = Wishlist::with('product')
+                $wishlist = Wishlist::with(['product' => function ($q) {
+                $q->withReviewStats();
+            }])
             ->where('user_id', Auth::id())
             ->latest()
             ->get();

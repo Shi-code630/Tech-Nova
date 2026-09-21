@@ -12,12 +12,11 @@
     ogType="product"
 >
 <style>
+    <style>
     [x-cloak]{display:none!important}
-    .tn-zoom{overflow:hidden;cursor:crosshair}
-    .tn-zoom img{transition:transform .12s ease;will-change:transform}
-    @media (hover:hover){.tn-zoom:hover img{transform:scale(1.55)}}
     .finish-on span{box-shadow:0 0 0 2px #fff,0 0 0 4px #2563EB}
     .cfg-on{border-color:#2563EB!important;background:#eff6ff!important;color:#1d4ed8!important}
+</style>
 </style>
 <div>
     @if (session('success'))
@@ -176,19 +175,15 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                 </svg>
                             </button>
-                            <div class="tn-zoom min-h-[340px] md:min-h-[460px] flex items-center justify-center" onmousemove="zoomMove(event)" onmouseleave="zoomLeave(event)">
+                            <div class="h-[340px] md:h-[460px] w-full overflow-hidden flex items-center justify-center p-6">
                                 @if ($mainImage)
-                                    <img id="mainProductImage" src="{{ asset('storage/' . $mainImage) }}" alt="{{ $product->name }}" class="max-h-[420px] md:max-h-[440px] w-auto object-contain p-6">
+                                    <img id="mainProductImage" src="{{ asset('storage/' . $mainImage) }}" alt="{{ $product->name }}" class="max-h-full max-w-full w-auto h-auto object-contain">
                                 @else
                                     <span class="text-slate-400 text-sm">No image</span>
-                                    <img id="mainProductImage" src="" alt="{{ $product->name }}" class="hidden">
+                                    <img id="mainProductImage" src="" alt="{{ $product->name }}" class="hidden max-h-full max-w-full w-auto h-auto object-contain">
                                 @endif
                             </div>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-between px-4 py-2.5 bg-slate-900 text-slate-300 text-[11px] tracking-wide">
-                        <span>TECHNOVA NEPAL · GENUINE HARDWARE</span>
-                        <span class="hidden sm:inline">Hover image to inspect</span>
                     </div>
                 </div>
             </div>
@@ -635,16 +630,6 @@
             }).catch(function () {
                 window.location.href = '{{ route('login') }}';
             });
-        }
-        function zoomMove(e) {
-            var img = e.currentTarget.querySelector('img');
-            if (!img) return;
-            var r = e.currentTarget.getBoundingClientRect();
-            img.style.transformOrigin = ((e.clientX - r.left) / r.width * 100) + '% ' + ((e.clientY - r.top) / r.height * 100) + '%';
-        }
-        function zoomLeave(e) {
-            var img = e.currentTarget.querySelector('img');
-            if (img) img.style.transformOrigin = 'center center';
         }
 
         refreshAvailability();
