@@ -114,36 +114,36 @@ class PageController extends Controller
                 ->get();
         }
 
-/*
+        /*
 |--------------------------------------------------------------------------
 | HOME PAGE - 5 PRODUCTS
 |--------------------------------------------------------------------------
 | Today's Deals ke products yahan bhi show nahi honge.
 */
 
-$homeProducts = Product::query()
-    ->where('status', true)
+        $homeProducts = Product::query()
+            ->where('status', true)
 
-    ->when(!empty($todayDealsCategoryIds), function ($query) use ($todayDealsCategoryIds) {
-        $query->whereNotIn(
-            'category_id',
-            $todayDealsCategoryIds
-        );
-    })
+            ->when(!empty($todayDealsCategoryIds), function ($query) use ($todayDealsCategoryIds) {
+                $query->whereNotIn(
+                    'category_id',
+                    $todayDealsCategoryIds
+                );
+            })
 
-    ->with([
-        'category',
-        'brand',
-        'images',
-    ])
+            ->with([
+                'category',
+                'brand',
+                'images',
+            ])
 
-    ->withCount('reviews')
+            ->withCount('reviews')
 
-    ->latest('created_at')
-    ->latest('id')
+            ->latest('created_at')
+            ->latest('id')
 
-    ->take(5)
-    ->get();
+            ->take(5)
+            ->get();
         /*
         |--------------------------------------------------------------------------
         | WISHLIST PRODUCTS
@@ -154,24 +154,26 @@ $homeProducts = Product::query()
 
         if (Auth::check()) {
 
-            $wishlistProductIds = Auth::user()
-                ->wishlists( )
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+
+            $wishlistProductIds = $user
+                ->wishlists()
                 ->pluck('product_id')
                 ->toArray();
         }
 
-
         return view(
-    'frontend.home',
-    compact(
-        'banners',
-        'brands',
-        'blogs',
-        'parentCategories',
-        'wishlistProductIds',
-        'homeProducts'
-    )
-);
+            'frontend.home',
+            compact(
+                'banners',
+                'brands',
+                'blogs',
+                'parentCategories',
+                'wishlistProductIds',
+                'homeProducts'
+            )
+        );
     }
 
 
@@ -248,46 +250,44 @@ $homeProducts = Product::query()
      * Search Products
      */
     public function search(Request $request)
-{
-    // Header search box se "search" value receive hogi
-    $query = trim($request->input('search', ''));
+    {
+        // Header search box se "search" value receive hogi
+        $query = trim($request->input('search', ''));
 
-    $products = Product::query()
-        ->where('status', true)
+        $products = Product::query()
+            ->where('status', true)
 
-        ->when($query !== '', function ($q) use ($query) {
+            ->when($query !== '', function ($q) use ($query) {
 
-            $q->where(function ($search) use ($query) {
+                $q->where(function ($search) use ($query) {
 
-                $search->where('name', 'like', "%{$query}%")
-                    ->orWhere('description', 'like', "%{$query}%");
+                    $search->where('name', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%");
+                });
+            })
 
-            });
+            ->with([
+                'category',
+                'brand',
+                'images',
+            ])
 
-        })
+            ->withCount('reviews')
 
-        ->with([
-            'category',
-            'brand',
-            'images',
-        ])
+            ->latest('created_at')
 
-        ->withCount('reviews')
+            ->paginate(12)
 
-        ->latest('created_at')
+            ->withQueryString();
 
-        ->paginate(12)
-
-        ->withQueryString();
-
-    return view(
-        'frontend.search',
-        compact(
-            'products',
-            'query'
-        )
-    );
-}
+        return view(
+            'frontend.search',
+            compact(
+                'products',
+                'query'
+            )
+        );
+    }
 
 
     /**
