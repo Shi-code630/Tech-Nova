@@ -48,9 +48,9 @@
                     class="w-auto h-8 sm:h-10 lg:h-11 drop-shadow-sm">
             </a>
 
-            {{-- SEARCH --}}
+            {{-- SEARCH — desktop only (≥1024px), tablet uses drawer search --}}
             <form action="{{ route('search') }}" method="GET"
-                class="hidden md:flex flex-1 max-w-xl mx-4 lg:mx-8 relative">
+                class="hidden lg:flex flex-1 max-w-xl mx-4 lg:mx-8 relative">
                 <input type="text" name="q" placeholder="Search products..." value="{{ request('q') }}"
                     class="w-full h-9 rounded-full outline-none
                            pl-5 pr-14 text-sm
@@ -163,9 +163,9 @@
                     </span>
                 </a>
 
-                {{-- ACCOUNT (Logged In) — Desktop only --}}
+                {{-- ACCOUNT (Logged In) — Desktop only (≥1024px) --}}
                 @auth
-                    <div class="relative group hidden md:block">
+                    <div class="relative group hidden lg:block">
                         <a href="{{ route('user.dashboard') }}"
                             class="flex items-center gap-1.5 sm:gap-2
                                    bg-[#0959e8] hover:bg-[#074dcc]
@@ -220,7 +220,7 @@
                                                 stroke="currentColor" class="w-5 h-5">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                                     d="M15 7a3 3 0 11-6 0 3 3 0 016 0z
-                                                           M4.5 20a7.5 7.5 0 0115 0" />
+                                                               M4.5 20a7.5 7.5 0 0115 0" />
                                             </svg>
                                         @endif
                                     </div>
@@ -251,9 +251,9 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2 M7 13h10l4-8H5.4 M7 13L5.4 5
-                                               M7 13l-2.293 2.293 c-.63.63-.184 1.707.707 1.707H17
-                                               m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2
-                                               a2 2 0 11-4 0 2 2 0 014 0z" />
+                                                   M7 13l-2.293 2.293 c-.63.63-.184 1.707.707 1.707H17
+                                                   m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2
+                                                   a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                                 My Orders
                             </a>
@@ -263,8 +263,8 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318 a4.5 4.5 0 016.364 0L12 7.636
-                                               l1.318-1.318 a4.5 4.5 0 116.364 6.364L12 20.364
-                                               4.318 12.682 a4.5 4.5 0 010-6.364z" />
+                                                   l1.318-1.318 a4.5 4.5 0 116.364 6.364L12 20.364
+                                                   4.318 12.682 a4.5 4.5 0 010-6.364z" />
                                 </svg>
                                 Wishlist
                             </a>
@@ -278,9 +278,9 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4 m4 4H7
-                                                       m6 4v1a3 3 0 01-3 3H6
-                                                       a3 3 0 01-3-3V7 a3 3 0 013-3h4
-                                                       a3 3 0 013 3v1" />
+                                                           m6 4v1a3 3 0 01-3 3H6
+                                                           a3 3 0 01-3-3V7 a3 3 0 013-3h4
+                                                           a3 3 0 013 3v1" />
                                         </svg>
                                         Logout
                                     </button>
@@ -289,9 +289,9 @@
                         </div>
                     </div>
                 @else
-                    {{-- GUEST — Desktop only --}}
+                    {{-- GUEST — Desktop only (≥1024px) --}}
                     <a href="{{ route('login') }}"
-                        class="hidden md:flex items-center gap-1.5 sm:gap-2
+                        class="hidden lg:flex items-center gap-1.5 sm:gap-2
                                bg-[#0959e8] hover:bg-[#074dcc]
                                transition-all duration-300 rounded-full
                                pl-1 pr-1.5 sm:pr-3 py-1 shadow-md hover:scale-105">
@@ -312,9 +312,9 @@
                 @endauth
 
 
-                {{-- 🍔 HAMBURGER (Drawer Toggle) --}}
+                {{-- 🍔 HAMBURGER (Drawer Toggle) — mobile + tablet only (<1024px) --}}
                 <button type="button" onclick="openDrawer()" aria-label="Open menu"
-                    class="flex flex-col justify-center items-center gap-[5px]
+                    class="flex lg:hidden flex-col justify-center items-center gap-[5px]
                            w-9 h-9 rounded-lg
                            text-[#1e293b] hover:text-orange-500
                            hover:bg-orange-50
@@ -331,7 +331,7 @@
 
 
     {{-- =========================================================
-        CATEGORY NAVIGATION (Desktop only — mobile ma drawer ma)
+        CATEGORY NAVIGATION (Desktop only ≥1024px — mobile/tablet ma drawer ma)
     ========================================================== --}}
     @php
         $parentCategories = \App\Models\Category::whereNull('parent_id')
@@ -345,7 +345,7 @@
             ->get();
     @endphp
 
-    <div class="bg-[#f3f8fe] shadow-md shadow-inner hidden md:block">
+    <div class="bg-[#f3f8fe] shadow-md shadow-inner hidden lg:block">
         <div class="Container mx-auto px-2">
             <ul
                 class="flex items-center gap-1 sm:gap-2 lg:gap-3
@@ -373,7 +373,7 @@
                         @if ($parent->children->count())
                             <div
                                 class="absolute left-0 top-full hidden group-hover:block
-                                        w-60 sm:w-70 bg-white rounded-xl shadow-2xl
+                                        w-60 sm:w-72 bg-white rounded-xl shadow-2xl
                                         border border-gray-100 z-[9999] overflow-hidden">
                                 <div class="px-4 sm:px-5 py-3 bg-gray-50 border-b">
                                     <a href="{{ $parent->slug === 'today-deals' ? route('today-deals') : route('category.show', ['slug' => $parent->slug]) }}"
@@ -408,25 +408,25 @@
 
 
 {{-- =========================================================
-     🎯 MOBILE DRAWER (Left Side)
+     🎯 MOBILE + TABLET DRAWER (Left Side)
 ========================================================== --}}
 
-{{-- OVERLAY --}}
+{{-- OVERLAY — shows below lg (1024px) --}}
 <div id="drawerOverlay" onclick="closeDrawer()"
     class="fixed inset-0 bg-black/50 z-[9998]
            opacity-0 invisible
            transition-opacity duration-300
-           md:hidden">
+           lg:hidden">
 </div>
 
 
-{{-- DRAWER PANEL --}}
+{{-- DRAWER PANEL — shows below lg (1024px) --}}
 <aside id="mobileDrawer"
     class="fixed top-0 left-0 h-full w-[85%] max-w-[340px]
            bg-white z-[9999]
            -translate-x-full
            transition-transform duration-300 ease-out
-           md:hidden
+           lg:hidden
            flex flex-col shadow-2xl">
 
     {{-- ===== DRAWER HEADER ===== --}}
@@ -515,7 +515,7 @@
         @endauth
 
 
-        {{-- ===== SEARCH (Mobile) ===== --}}
+        {{-- ===== SEARCH (Mobile + Tablet) ===== --}}
         <div class="px-4 py-3 border-b border-gray-100">
             <form action="{{ route('search') }}" method="GET" class="relative">
                 <input type="text" name="q" placeholder="Search products..." value="{{ request('q') }}"
