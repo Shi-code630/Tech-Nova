@@ -47,7 +47,7 @@ class TopSellingProducts extends BaseWidget
                 }
             )
             ->columns([
-               Tables\Columns\ImageColumn::make('thumbnails')
+                Tables\Columns\ImageColumn::make('thumbnails')
                     ->label('')
                     ->circular()
                     ->size(36)
@@ -67,20 +67,20 @@ class TopSellingProducts extends BaseWidget
                     ->label('Product')
                     ->weight('semibold')
                     ->limit(30)
-                    ->tooltip(fn ($record) => $record->name),
+                    ->tooltip(fn($record) => $record->name),
 
                 Tables\Columns\TextColumn::make('sold')
                     ->label('Sold')
-                    ->formatStateUsing(fn ($state) => number_format($state ?? 0))
+                    ->formatStateUsing(fn($state) => number_format($state ?? 0))
                     ->alignCenter()
                     ->badge()
-                    ->color(fn ($state) => $state > 0 ? 'success' : 'gray'),
+                    ->color(fn($state) => $state > 0 ? 'success' : 'gray'),
 
                 Tables\Columns\TextColumn::make('revenue')
                     ->label('Revenue')
-                    ->formatStateUsing(fn ($state) => 'Rs. ' . number_format($state ?? 0, 2))
+                    ->formatStateUsing(fn($state) => 'Rs. ' . number_format($state ?? 0, 2))
                     ->alignRight()
-                    ->color(fn ($state) => $state > 0 ? 'success' : 'gray'),
+                    ->color(fn($state) => $state > 0 ? 'success' : 'gray'),
             ])
             ->paginated(false)
             ->defaultSort('sold', 'desc')
