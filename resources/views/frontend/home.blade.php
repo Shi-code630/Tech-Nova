@@ -1,12 +1,9 @@
-
 @php $setting = \App\Models\Setting::query()->first(); @endphp
-<x-frontend-layout 
-:title="$setting->meta_title ?: ($setting->site_name ?: 'TechNova Nepal')"
-    :description="$setting->meta_description ?: 'Buy genuine laptops, gadgets and accessories in Nepal. TechNova Nepal — Kathmandu.'"
-    :keywords="$setting->meta_keywords"
-    :canonical="route('home')">
+<x-frontend-layout :title="$setting->meta_title ?: ($setting->site_name ?: 'TechNova Nepal')" :description="$setting->meta_description ?:
+    'Buy genuine laptops, gadgets and accessories in Nepal. TechNova Nepal — Kathmandu.'" :keywords="$setting->meta_keywords" :canonical="route('home')">
     <Section class="bg-[#f0f9ff]">
         <div class="Container mx-auto px-3 sm:px-4 md:px-6 lg:px-4">
+
             <div class="mt-2 sm:mt-[10px]">
                 <div
                     class="relative max-w-[1500px] mx-auto h-[220px] sm:h-[280px] md:h-[320px] lg:h-[350px] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl">
@@ -15,13 +12,13 @@
                     <div id="slider"
                         class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
 
-                        @foreach ($banners as $banner)
-                            <!-- Full Banner Clickable -->
+                        @foreach ($mainBanners as $banner)
                             <div class="relative w-full h-full flex-shrink-0">
 
                                 <a href="{{ $banner->button_link ?? '#' }}" class="block w-full h-full">
 
-                                    <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->alt_text }}"
+                                    <img src="{{ asset('storage/' . $banner->image) }}"
+                                        alt="{{ $banner->alt_text ?? $banner->title }}"
                                         class="w-full h-full object-cover">
 
                                 </a>
@@ -30,7 +27,6 @@
                         @endforeach
 
                     </div>
-
 
                     <!-- Left Arrow -->
                     <button onclick="moveSlide(-1)"
@@ -41,7 +37,6 @@
                         ❮
                     </button>
 
-
                     <!-- Right Arrow -->
                     <button onclick="moveSlide(1)"
                         class="absolute top-1/2 right-2 sm:right-4 -translate-y-1/2
@@ -51,16 +46,15 @@
                         ❯
                     </button>
 
-
                     <!-- Dots -->
                     <div
                         class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2
-                    flex gap-1.5 sm:gap-2 z-10">
+                   flex gap-1.5 sm:gap-2 z-10">
 
-                        @foreach ($banners as $index => $banner)
+                        @foreach ($mainBanners as $index => $banner)
                             <span
                                 class="dot w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full
-                             bg-white/50 cursor-pointer"
+                           bg-white/50 cursor-pointer"
                                 data-index="{{ $index }}">
                             </span>
                         @endforeach
@@ -70,633 +64,1086 @@
                 </div>
             </div>
 
-            <div class="py-3 sm:py-4 bg-[#f0f9ff]">
-                <div class="mb-5 sm:mb-6">
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
 
-                        <!-- Left Side: Limited Time Offer -->
-                        <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                            <div class="text-black text-base sm:text-lg font-semibold px-2 sm:px-5 py-2 rounded-lg">
-                                Limited Time Offer
-                            </div>
-                            <div class="h-px w-8 sm:w-12 flex-shrink-0 bg-gradient-to-r from-purple-600 to-transparent">
-                            </div>
+            <div class="py-5 bg-[#f0f9ff]">
+                <div class="mb-6">
+
+
+                    <div onclick="window.location.href='{{ route('limited-time') }}'"
+                        class="group relative overflow-hidden cursor-pointer
+           bg-gradient-to-r from-red-600 via-red-500 to-orange-500
+           rounded-2xl px-4 py-3
+           shadow-md hover:shadow-lg
+           transition-all duration-300">
+
+                        {{-- Decorative Circle --}}
+                        <div class="absolute -right-8 -top-10 w-28 h-35
+                rounded-full bg-white/10"></div>
+
+                        <div class="absolute -left-8 -bottom-12 w-24 h-24
+                rounded-full bg-black/10">
                         </div>
 
-                        <!-- Right Side: View More -->
-                        <a href=""
-                            class="flex items-center gap-2 text-purple-600 hover:text-purple-700 font-medium transition-colors group text-sm sm:text-base whitespace-nowrap self-start sm:self-auto">
-                            View More
-                            <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
-                        </a>
+                        <div class="relative flex items-center justify-between gap-3">
+
+                            {{-- Left Content --}}
+                            <div class="flex items-center gap-3 min-w-0">
+
+                                {{-- Icon --}}
+                                <div
+                                    class="flex-shrink-0 w-10 h-10
+                       rounded-xl bg-white/20
+                       backdrop-blur-sm
+                       flex items-center justify-center
+                       text-xl">
+
+                                    ⚡
+
+                                </div>
+
+                                {{-- Text --}}
+                                <div class="min-w-0">
+
+                                    <div class="flex items-center gap-2">
+
+                                        <span
+                                            class="text-[9px] font-bold uppercase
+                               tracking-widest
+                               text-yellow-200">
+
+                                            Limited Time Offer
+
+                                        </span>
+
+                                        <span
+                                            class="px-1.5 py-0.5 rounded-full
+                               bg-white text-red-600
+                               text-[8px] font-black">
+
+                                            HOT
+
+                                        </span>
+
+                                    </div>
+
+                                    <h3
+                                        class="text-sm sm:text-base
+                           font-black text-white
+                           leading-tight">
+
+                                        Flash Deals Are Live!
+
+                                    </h3>
+
+                                    <p
+                                        class="text-[9px] sm:text-[10px]
+                           text-white/80 mt-0.5">
+
+                                        Grab amazing deals before time runs out.
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            {{-- Right Button --}}
+                            <div
+                                class="flex-shrink-0
+                   bg-white text-red-600
+                   px-3 py-2
+                   rounded-lg
+                   text-[9px] sm:text-[10px]
+                   font-extrabold
+                   flex items-center gap-1
+                   group-hover:bg-yellow-300
+                   transition-colors duration-300">
+
+                                Shop Now
+
+                                <svg class="w-3 h-3 group-hover:translate-x-0.5 transition-transform" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+
+                                </svg>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                    <div
-                        class="flex gap-4 sm:gap-5 lg:gap-6 overflow-x-auto pb-5 sm:pb-6 snap-x snap-mandatory scrollbar-hide">
 
-                        <!-- Card 1 -->
-                        <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/1015/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
+                    {{-- =========================================================
+    HOME PRODUCTS - 5 PRODUCTS
+========================================================= --}}
+
+                    <section class="py-5">
+
+                        <div class="">
+
+                            {{-- Section Header --}}
+                            <div class="flex items-center justify-between mb-3">
+
+                                <div>
+                                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">
+                                        Featured Products
+                                    </h2>
+
+                                    <p class="text-sm text-slate-500 mt-1">
+                                        Explore our latest products
+                                    </p>
                                 </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
+
                             </div>
 
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
 
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
+                            @if ($homeProducts->count())
 
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
+                                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
 
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
-                                </div>
+                                    @foreach ($homeProducts as $product)
+                                        @php
 
-                                <!-- Timer -->
-                                <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600 min-w-0">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer1"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
-                                </div>
+                                            /*
+                        |--------------------------------------------------------------------------
+                        | DISCOUNT
+                        |--------------------------------------------------------------------------
+                        */
 
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                        <span>Add to Cart</span>
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                                            $hasDiscount =
+                                                isset($product->discount_price) &&
+                                                $product->discount_price &&
+                                                $product->price > $product->discount_price;
 
-                        <!-- Card 2 -->
-                        <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
+                                            $discountAmount = $hasDiscount
+                                                ? $product->price - $product->discount_price
+                                                : 0;
 
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
-                                </div>
-
-                                <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer2"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                        <span>Add to Cart</span>
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 3 -->
-                        <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/1015/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
-
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
-                                </div>
-
-                                <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer1"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                        <span>Add to Cart</span>
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 4 -->
-                        <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
-
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
-                                </div>
-
-                                <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer2"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                        <span>Add to Cart</span>
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 5 -->
-                        <div
-                            class="product-card min-w-[240px] sm:min-w-[250px] bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 snap-start">
-                            <div class="relative bg-gray-100 p-3">
-                                <div class="overflow-hidden rounded-xl">
-                                    <img src="https://picsum.photos/id/201/500/350" alt="Lenovo Legion"
-                                        class="w-full h-36 sm:h-40 object-cover rounded-xl hover:scale-105 transition duration-500">
-                                </div>
-                                <span
-                                    class="absolute top-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">-9%</span>
-                                <span
-                                    class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">NEW</span>
-                            </div>
-
-                            <div class="p-3 sm:p-4">
-                                <p class="text-blue-600 text-xs font-semibold mb-1">Gaming Laptop</p>
-
-                                <h3 class="text-sm font-bold text-gray-800 leading-tight mb-2 line-clamp-2">
-                                    Lenovo Legion 7i Intel Ultra 7 255HX Series 2 | 32GB RAM
-                                </h3>
-
-                                <div class="flex items-center gap-1 mb-2">
-                                    <span class="text-yellow-400">★★★★★</span>
-                                    <span class="text-gray-500 text-xs">(4.9)</span>
-                                </div>
-
-                                <div class="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
-                                    <span class="text-lg sm:text-xl font-bold text-gray-900">Rs. 319,999</span>
-                                    <span class="text-gray-400 line-through text-xs sm:text-sm">Rs. 350,000</span>
-                                </div>
-
-                                <div
-                                    class="flex items-center justify-between gap-2 bg-orange-50 rounded-lg p-2 mb-4 text-xs">
-                                    <div class="flex items-center gap-1.5 text-orange-600">
-                                        <i class="fa-solid fa-clock flex-shrink-0"></i>
-                                        <span class="font-medium">Ends In</span>
-                                    </div>
-                                    <span id="timer2"
-                                        class="font-bold text-orange-700 timer whitespace-nowrap">03:07:31</span>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <button onclick="addToCart(this)"
-                                        class="flex-1 min-w-0 bg-blue-600 hover:bg-blue-700 text-white rounded-xl py-2.5 px-2 font-semibold transition text-sm flex items-center justify-center gap-2">
-                                        <i class="fa-solid fa-cart-plus"></i>
-                                        <span>Add to Cart</span>
-                                    </button>
-                                    <button onclick="toggleWishlist(this)"
-                                        class="w-10 h-10 flex-shrink-0 rounded-xl border border-gray-200 hover:bg-red-500 hover:border-red-500 hover:text-white text-gray-500 transition">
-                                        <i class="fa-regular fa-heart"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="py-3 sm:py-4 bg-[#f0f9ff]">
-                    <div>
-
-                        @foreach ($parentCategories as $category)
-
-                            @php
-                                $categoryProducts = $category->homeProducts;
-                            @endphp
-
-                            @if ($categoryProducts->count())
-                                <div class="mb-8 sm:mb-10">
-
-                                    {{-- CATEGORY HEADER --}}
-                                    <div
-                                        class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-4">
-
-                                        <div class="min-w-0">
-                                            <h2 class="text-xl sm:text-2xl font-bold text-slate-900">
-                                                {{ $category->name }}
-                                            </h2>
-
-                                            <p class="text-xs sm:text-sm text-slate-500 mt-1">
-                                                Latest products in {{ $category->name }}
-                                            </p>
-                                        </div>
-
-                                        <a href="{{ route('category.show', ['slug' => $category->slug]) }}"
-                                            class="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 transition self-start sm:self-auto whitespace-nowrap">
-
-                                            View All
-
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M9 5l7 7-7 7" />
-
-                                            </svg>
-
-                                        </a>
-
-                                    </div>
-
-
-                                    {{-- PRODUCTS --}}
-                                    <div
-                                        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5 sm:gap-3">
-
-                                        @foreach ($categoryProducts as $index => $product)
-                                            @php
-                                                $hasDiscount =
-                                                    isset($product->discount_price) &&
-                                                    $product->discount_price &&
-                                                    $product->price > $product->discount_price;
-
-                                                $discountAmount = $hasDiscount
-                                                    ? $product->price - $product->discount_price
-                                                    : 0;
-
-                                                $discountPercent = $hasDiscount
+                                            $discountPercent =
+                                                $hasDiscount && $product->price > 0
                                                     ? round(($discountAmount / $product->price) * 100)
                                                     : 0;
 
-                                                $isWishlisted = in_array($product->id, $wishlistProductIds ?? []);
+                                            /*
+                        |--------------------------------------------------------------------------
+                        | WISHLIST
+                        |--------------------------------------------------------------------------
+                        */
 
-                                                $rating = $product->rating ?? 0;
-                                                $reviewCount = $product->reviews_count ?? 0;
+                                            $isWishlisted = in_array($product->id, $wishlistProductIds ?? []);
 
-                                                $image = null;
+                                            /*
+                        |--------------------------------------------------------------------------
+                        | RATING
+                        |--------------------------------------------------------------------------
+                        */
 
-                                                if (
-                                                    isset($product->thumbnails) &&
-                                                    is_array($product->thumbnails) &&
-                                                    count($product->thumbnails)
-                                                ) {
-                                                    $image = $product->thumbnails[0];
-                                                }
+                                            $rating = $product->rating ?? 0;
 
-                                                if (!$image && isset($product->image)) {
-                                                    $image = $product->image;
-                                                }
+                                            $reviewCount = $product->reviews_count ?? 0;
 
-                                                if (is_array($image)) {
-                                                    $image = $image[0] ?? null;
-                                                }
-                                            @endphp
+                                            /*
+                        |--------------------------------------------------------------------------
+                        | PRODUCT IMAGE
+                        |--------------------------------------------------------------------------
+                        */
+
+                                            $image = null;
+
+                                            if (
+                                                isset($product->thumbnails) &&
+                                                is_array($product->thumbnails) &&
+                                                count($product->thumbnails)
+                                            ) {
+                                                $image = $product->thumbnails[0];
+                                            }
+
+                                            if (!$image && isset($product->image)) {
+                                                $image = $product->image;
+                                            }
+
+                                            if (is_array($image)) {
+                                                $image = $image[0] ?? null;
+                                            }
+
+                                        @endphp
 
 
-                                            {{-- PRODUCT CARD --}}
-                                            <article
-                                                onclick="window.location.href='{{ route('product.show', ['slug' => $product->slug]) }}'"
-                                                class="product-card group bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md hover:border-blue-200 transition duration-300 cursor-pointer flex flex-col min-w-0">
+                                        {{-- =================================================
+                        PRODUCT CARD
+                    ================================================== --}}
+
+                                        <article
+                                            onclick="window.location.href='{{ route('product.show', ['slug' => $product->slug]) }}'"
+                                            class="product-card group
+                               bg-white
+                               rounded-xl
+                               border border-slate-200
+                               overflow-hidden
+                               shadow-sm
+                               hover:shadow-md
+                               hover:border-blue-200
+                               transition duration-300
+                               cursor-pointer
+                               flex flex-col
+                               min-w-0">
+
+
+                                            {{-- =================================================
+                            IMAGE
+                        ================================================== --}}
+
+                                            <div class="relative bg-slate-50 h-36 overflow-hidden">
+
+
+                                                {{-- NEW --}}
+                                                @if ($product->created_at && $product->created_at->gt(now()->subDays(14)))
+                                                    <span
+                                                        class="absolute top-1.5 left-1.5 z-10
+                                           px-1.5 py-0.5
+                                           rounded
+                                           bg-blue-600
+                                           text-white
+                                           text-[9px]
+                                           font-bold
+                                           shadow-sm">
+
+                                                        NEW
+
+                                                    </span>
+                                                @endif
+
+
+                                                {{-- DISCOUNT --}}
+                                                @if ($hasDiscount)
+                                                    <span
+                                                        class="absolute top-1.5 right-1.5 z-10
+                                           px-1.5 py-0.5
+                                           rounded
+                                           bg-slate-900
+                                           text-white
+                                           text-[9px]
+                                           font-bold">
+
+                                                        -{{ $discountPercent }}%
+
+                                                    </span>
+                                                @endif
+
+
+                                                {{-- WISHLIST --}}
+                                                <button type="button"
+                                                    onclick="toggleWishlist(event, this, {{ $product->id }})"
+                                                    data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
+                                                    aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
+                                                    class="wishlist-button
+                                       absolute
+                                       right-1.5
+                                       bottom-1.5
+                                       z-20
+                                       w-7
+                                       h-7
+                                       rounded-full
+                                       bg-white
+                                       border
+                                       shadow-sm
+                                       flex
+                                       items-center
+                                       justify-center
+                                       transition
+                                       duration-200
+                                       {{ $isWishlisted
+                                           ? 'text-blue-600 border-blue-300'
+                                           : 'text-slate-400 border-slate-200 hover:text-blue-600 hover:border-blue-300' }}">
+
+
+                                                    <svg class="wishlist-icon w-3.5 h-3.5" viewBox="0 0 24 24"
+                                                        fill="{{ $isWishlisted ? 'currentColor' : 'none' }}"
+                                                        stroke="currentColor" stroke-width="2">
+
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+
+                                                    </svg>
+
+                                                </button>
+
 
                                                 {{-- PRODUCT IMAGE --}}
-                                                <div class="relative bg-slate-50 h-28 sm:h-32 md:h-36 overflow-hidden">
+                                                @if ($image)
+                                                    <img src="{{ asset('storage/' . ltrim($image, '/')) }}"
+                                                        alt="{{ $product->name }}" loading="lazy"
+                                                        class="w-full
+                                           h-full
+                                           object-contain
+                                           p-2
+                                           group-hover:scale-105
+                                           transition
+                                           duration-500">
+                                                @else
+                                                    <div class="w-full h-full flex items-center justify-center">
 
-                                                    {{-- NEW BADGE --}}
-                                                    @if ($product->created_at && $product->created_at->gt(now()->subDays(14)))
-                                                        <span
-                                                            class="absolute top-1.5 left-1.5 z-10 px-1.5 py-0.5 rounded bg-blue-600 text-white text-[8px] sm:text-[9px] font-bold shadow-sm">
-                                                            NEW
-                                                        </span>
-                                                    @endif
-
-
-                                                    {{-- DISCOUNT --}}
-                                                    @if ($hasDiscount)
-                                                        <span
-                                                            class="absolute top-1.5 right-1.5 z-10 px-1.5 py-0.5 rounded bg-slate-900 text-white text-[8px] sm:text-[9px] font-bold">
-                                                            -{{ $discountPercent }}%
-                                                        </span>
-                                                    @endif
-
-
-                                                    {{-- WISHLIST --}}
-                                                    <button type="button"
-                                                        onclick="toggleWishlist(event, this, {{ $product->id }})"
-                                                        data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
-                                                        aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
-                                                        class="wishlist-button absolute right-1.5 bottom-1.5 z-20 w-7 h-7 rounded-full bg-white border shadow-sm flex items-center justify-center transition duration-200 {{ $isWishlisted ? 'text-blue-600 border-blue-300' : 'text-slate-400 border-slate-200 hover:text-blue-600 hover:border-blue-300' }}">
-
-                                                        <svg class="wishlist-icon w-3.5 h-3.5" viewBox="0 0 24 24"
-                                                            fill="{{ $isWishlisted ? 'currentColor' : 'none' }}"
-                                                            stroke="currentColor" stroke-width="2">
+                                                        <svg class="w-10 h-10 text-slate-300" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
 
                                                             <path stroke-linecap="round" stroke-linejoin="round"
-                                                                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+                                                                stroke-width="1.5"
+                                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 
                                                         </svg>
 
-                                                    </button>
+                                                    </div>
+                                                @endif
+
+                                            </div>
 
 
-                                                    {{-- IMAGE --}}
-                                                    @if ($image)
-                                                        <img src="{{ asset('storage/' . ltrim($image, '/')) }}"
-                                                            alt="{{ $product->name }}" loading="lazy"
-                                                            class="w-full h-full object-contain p-2 group-hover:scale-105 transition duration-500">
+                                            {{-- =================================================
+                            PRODUCT INFORMATION
+                        ================================================== --}}
+
+                                            <div class="p-2.5 flex flex-col flex-1 min-w-0">
+
+
+                                                {{-- BRAND --}}
+                                                @if ($product->brand)
+                                                    <p
+                                                        class="text-[10px]
+                                           font-semibold
+                                           uppercase
+                                           tracking-wide
+                                           text-blue-600
+                                           mb-0.5
+                                           truncate">
+
+                                                        {{ $product->brand->name }}
+
+                                                    </p>
+                                                @endif
+
+
+                                                {{-- PRODUCT NAME --}}
+                                                <h3
+                                                    class="font-semibold
+                                       text-slate-900
+                                       text-[12px]
+                                       leading-4
+                                       line-clamp-2
+                                       min-h-[32px]">
+
+                                                    {{ $product->name }}
+
+                                                </h3>
+
+
+                                                {{-- RATING --}}
+                                                <div class="flex items-center gap-0.5 mt-1">
+
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <svg class="w-3 h-3 {{ $i <= round($rating) ? 'text-yellow-400' : 'text-slate-300' }}"
+                                                            fill="currentColor" viewBox="0 0 20 20">
+
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+
+                                                        </svg>
+                                                    @endfor
+
+                                                    <span class="text-[9px] text-slate-500 ml-0.5">
+
+                                                        ({{ $reviewCount }})
+                                                    </span>
+
+                                                </div>
+
+
+                                                {{-- PRICE --}}
+                                                <div
+                                                    class="mt-1.5
+                                       flex
+                                       items-center
+                                       gap-1
+                                       flex-wrap
+                                       min-w-0">
+
+                                                    @if ($hasDiscount)
+                                                        <span
+                                                            class="text-[13px]
+                                               font-bold
+                                               text-blue-600">
+
+                                                            Rs.{{ number_format($product->discount_price, 0) }}
+
+                                                        </span>
+
+                                                        <span
+                                                            class="text-[10px]
+                                               text-slate-400
+                                               line-through">
+
+                                                            Rs.{{ number_format($product->price, 0) }}
+
+                                                        </span>
+
+                                                        <span
+                                                            class="text-[9px]
+                                               font-semibold
+                                               text-green-600">
+
+                                                            Save
+                                                            Rs.{{ number_format($discountAmount, 0) }}
+
+                                                        </span>
                                                     @else
-                                                        <div class="w-full h-full flex items-center justify-center">
+                                                        <span
+                                                            class="text-[13px]
+                                               font-bold
+                                               text-slate-900">
 
-                                                            <svg class="w-8 h-8 sm:w-10 sm:h-10 text-slate-300"
-                                                                fill="none" stroke="currentColor"
-                                                                viewBox="0 0 24 24">
+                                                            Rs.{{ number_format($product->price, 0) }}
 
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    stroke-width="1.5"
-                                                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                        </span>
+                                                    @endif
 
-                                                            </svg>
+                                                </div>
+
+
+                                                {{-- STOCK --}}
+                                                @if (isset($product->stock))
+                                                    @if ($product->stock > 0)
+                                                        <div
+                                                            class="flex
+                                               items-center
+                                               gap-1
+                                               mt-1">
+
+                                                            <span
+                                                                class="w-1.5
+                                                   h-1.5
+                                                   rounded-full
+                                                   bg-green-500">
+                                                            </span>
+
+                                                            <p
+                                                                class="text-[9px]
+                                                   font-medium
+                                                   text-slate-500">
+
+                                                                In Stock
+
+                                                            </p>
+
+                                                        </div>
+                                                    @else
+                                                        <div
+                                                            class="flex
+                                               items-center
+                                               gap-1
+                                               mt-1">
+
+                                                            <span
+                                                                class="w-1.5
+                                                   h-1.5
+                                                   rounded-full
+                                                   bg-red-500">
+                                                            </span>
+
+                                                            <p
+                                                                class="text-[9px]
+                                                   font-semibold
+                                                   text-red-500">
+
+                                                                Out of Stock
+
+                                                            </p>
 
                                                         </div>
                                                     @endif
-
-                                                </div>
-
-
-                                                {{-- PRODUCT INFORMATION --}}
-                                                <div class="p-2 sm:p-2.5 flex flex-col flex-1 min-w-0">
-
-                                                    {{-- BRAND --}}
-                                                    @if ($product->brand)
-                                                        <p
-                                                            class="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide text-blue-600 mb-0.5 truncate">
-                                                            {{ $product->brand->name }}
-                                                        </p>
-                                                    @endif
+                                                @endif
 
 
-                                                    {{-- NAME --}}
-                                                    <h3
-                                                        class="font-semibold text-slate-900 text-[11px] sm:text-[12px] leading-4 line-clamp-2 min-h-[32px]">
-                                                        {{ $product->name }}
-                                                    </h3>
+                                                {{-- ADD TO CART --}}
+                                                <div class="mt-auto pt-2">
 
+                                                    @if (isset($product->stock) && $product->stock <= 0)
+                                                        <button type="button" disabled
+                                                            onclick="event.stopPropagation();"
+                                                            class="w-full
+                                               inline-flex
+                                               items-center
+                                               justify-center
+                                               rounded-md
+                                               bg-slate-100
+                                               text-slate-400
+                                               py-1.5
+                                               text-[11px]
+                                               font-semibold
+                                               cursor-not-allowed">
 
-                                                    {{-- RATING --}}
-                                                    <div class="flex items-center gap-0.5 mt-1">
+                                                            Out of Stock
 
-                                                        @for ($i = 1; $i <= 5; $i++)
-                                                            <svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 {{ $i <= round($rating) ? 'text-yellow-400' : 'text-slate-300' }}"
-                                                                fill="currentColor" viewBox="0 0 20 20">
+                                                        </button>
+                                                    @else
+                                                        <form method="POST"
+                                                            action="{{ route('cart.add', ['product' => $product->id]) }}"
+                                                            onclick="event.stopPropagation();" class="w-full">
 
-                                                                <path
-                                                                    d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                                                            @csrf
 
-                                                            </svg>
-                                                        @endfor
+                                                            <input type="hidden" name="quantity" value="1">
 
-                                                        <span class="text-[8px] sm:text-[9px] text-slate-500 ml-0.5">
-                                                            ({{ $reviewCount }})
-                                                        </span>
+                                                            <button type="submit" onclick="event.stopPropagation();"
+                                                                class="w-full
+                                                   bg-blue-600
+                                                   hover:bg-blue-700
+                                                   text-white
+                                                   py-2.5
+                                                   px-4
+                                                   rounded-lg
+                                                   font-semibold
+                                                   transition
+                                                   duration-200
+                                                   flex
+                                                   items-center
+                                                   justify-center
+                                                   gap-2">
 
-                                                    </div>
+                                                                <i class="fa-solid fa-cart-shopping"></i>
 
+                                                                Add to Cart
 
-                                                    {{-- PRICE --}}
-                                                    <div class="mt-1.5 flex items-center gap-1 flex-wrap min-w-0">
-
-                                                        @if ($hasDiscount)
-                                                            <span
-                                                                class="text-[12px] sm:text-[13px] font-bold text-blue-600">
-                                                                Rs.{{ number_format($product->discount_price, 0) }}
-                                                            </span>
-
-                                                            <span
-                                                                class="text-[9px] sm:text-[10px] text-slate-400 line-through">
-                                                                Rs.{{ number_format($product->price, 0) }}
-                                                            </span>
-
-                                                            <span
-                                                                class="text-[8px] sm:text-[9px] font-semibold text-green-600 break-words">
-                                                                Save Rs.{{ number_format($discountAmount, 0) }}
-                                                            </span>
-                                                        @else
-                                                            <span
-                                                                class="text-[12px] sm:text-[13px] font-bold text-slate-900">
-                                                                Rs.{{ number_format($product->price, 0) }}
-                                                            </span>
-                                                        @endif
-
-                                                    </div>
-
-
-                                                    {{-- STOCK --}}
-                                                    @if (isset($product->stock))
-                                                        @if ($product->stock > 0)
-                                                            <div class="flex items-center gap-1 mt-1">
-
-                                                                <span class="w-1.5 h-1.5 rounded-full bg-green-500">
-                                                                </span>
-
-                                                                <p
-                                                                    class="text-[8px] sm:text-[9px] font-medium text-slate-500">
-                                                                    In Stock
-                                                                </p>
-
-                                                            </div>
-                                                        @else
-                                                            <div class="flex items-center gap-1 mt-1">
-
-                                                                <span class="w-1.5 h-1.5 rounded-full bg-red-500">
-                                                                </span>
-
-                                                                <p
-                                                                    class="text-[8px] sm:text-[9px] font-semibold text-red-500">
-                                                                    Out of Stock
-                                                                </p>
-
-                                                            </div>
-                                                        @endif
-                                                    @endif
-
-
-                                                    {{-- ADD TO CART --}}
-                                                    <div class="mt-auto pt-2">
-
-                                                        @if (isset($product->stock) && $product->stock <= 0)
-                                                            <button type="button" disabled
-                                                                onclick="event.stopPropagation();"
-                                                                class="w-full inline-flex items-center justify-center rounded-md bg-slate-100 text-slate-400 py-1.5 px-1 text-[10px] sm:text-[11px] font-semibold cursor-not-allowed">
-                                                                Out of Stock
                                                             </button>
-                                                        @else
-                                                            <form method="POST"
-                                                                action="{{ route('cart.add', ['product' => $product->id]) }}"
-                                                                onclick="event.stopPropagation();" class="w-full">
 
-                                                                @csrf
-
-                                                                <input type="hidden" name="quantity" value="1">
-
-                                                                <button type="submit"
-                                                                    onclick="event.stopPropagation();"
-                                                                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 sm:py-2.5 px-2 sm:px-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm">
-
-                                                                    <i class="fa-solid fa-cart-shopping"></i>
-
-                                                                    <span>Add to Cart</span>
-
-                                                                </button>
-
-                                                            </form>
-                                                        @endif
-
-                                                    </div>
+                                                        </form>
+                                                    @endif
 
                                                 </div>
 
-                                            </article>
-                                        @endforeach
+                                            </div>
 
-                                    </div>
+                                        </article>
+                                    @endforeach
 
                                 </div>
+                            @else
+                                <div
+                                    class="bg-white
+                       rounded-xl
+                       border
+                       border-slate-200
+                       p-8
+                       text-center">
+
+                                    <p class="text-slate-500">
+                                        No products available.
+                                    </p>
+
+                                </div>
+
                             @endif
 
-                        @endforeach
+                        </div>
+                        @if ($smallBanners->count())
+                            <div class="mt-8">
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                                    @foreach ($smallBanners as $banner)
+                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
+
+                                            <a href="{{ $banner->button_link ?? '#' }}" class="block w-full">
+
+                                                <img src="{{ asset('storage/' . $banner->image) }}"
+                                                    alt="{{ $banner->alt_text ?? $banner->title }}"
+                                                    class="w-full h-[180px] object-cover
+           transition-transform duration-500
+           group-hover:scale-105">
+
+                                            </a>
+
+                                        </div>
+                                    @endforeach
+
+                                </div>
+
+                            </div>
+                        @endif
+                    </section>
+                    <div class="py-2 bg-[#f0f9ff]">
+                        <div class="">
+
+                            @foreach ($parentCategories as $category)
+
+                                @php
+                                    // Is parent category ke latest 5 products
+                                    $categoryProducts = $category->homeProducts;
+                                @endphp
+
+                                @if ($categoryProducts->count())
+                                    <div class="mb-10">
+
+                                        {{-- CATEGORY HEADER --}}
+                                        <div class="flex items-center justify-between mb-4">
+
+                                            <div>
+                                                <h2 class="text-xl md:text-2xl font-bold text-slate-900">
+                                                    {{ $category->name }}
+                                                </h2>
+
+                                                <p class="text-sm text-slate-500 mt-1">
+                                                    Latest products in {{ $category->name }}
+                                                </p>
+                                            </div>
+
+                                            <a href="{{ route('category.show', ['slug' => $category->slug]) }}"
+                                                class="inline-flex items-center gap-1
+                          text-sm font-semibold
+                          text-blue-600
+                          hover:text-blue-700
+                          transition">
+
+                                                View All
+
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2" d="M9 5l7 7-7 7" />
+
+                                                </svg>
+
+                                            </a>
+
+                                        </div>
+
+
+                                        {{-- PRODUCTS --}}
+                                        <div
+                                            class="grid grid-cols-2
+                        sm:grid-cols-3
+                        md:grid-cols-4
+                        lg:grid-cols-5
+                        gap-3">
+
+                                            @foreach ($categoryProducts as $index => $product)
+                                                @php
+                                                    $hasDiscount =
+                                                        isset($product->discount_price) &&
+                                                        $product->discount_price &&
+                                                        $product->price > $product->discount_price;
+
+                                                    $discountAmount = $hasDiscount
+                                                        ? $product->price - $product->discount_price
+                                                        : 0;
+
+                                                    $discountPercent = $hasDiscount
+                                                        ? round(($discountAmount / $product->price) * 100)
+                                                        : 0;
+
+                                                    $isWishlisted = in_array($product->id, $wishlistProductIds ?? []);
+
+                                                    $rating = $product->rating ?? 0;
+                                                    $reviewCount = $product->reviews_count ?? 0;
+
+                                                    // PRODUCT IMAGE
+                                                    $image = null;
+
+                                                    if (
+                                                        isset($product->thumbnails) &&
+                                                        is_array($product->thumbnails) &&
+                                                        count($product->thumbnails)
+                                                    ) {
+                                                        $image = $product->thumbnails[0];
+                                                    }
+
+                                                    if (!$image && isset($product->image)) {
+                                                        $image = $product->image;
+                                                    }
+
+                                                    if (is_array($image)) {
+                                                        $image = $image[0] ?? null;
+                                                    }
+                                                @endphp
+
+
+                                                {{-- PRODUCT CARD --}}
+                                                <article
+                                                    onclick="window.location.href='{{ route('product.show', ['slug' => $product->slug]) }}'"
+                                                    class="product-card group
+                                                            bg-white
+                                                            rounded-xl
+                                                            border border-slate-200
+                                                            overflow-hidden
+                                                            shadow-sm
+                                                            hover:shadow-md
+                                                            hover:border-blue-200
+                                                            transition duration-300
+                                                            cursor-pointer
+                                                            flex flex-col">
+
+                                                    {{-- PRODUCT IMAGE --}}
+                                                    <div
+                                                        class="relative
+                                                        bg-slate-50
+                                                        h-36
+                                                        overflow-hidden">
+
+                                                        {{-- NEW BADGE --}}
+                                                        @if ($product->created_at && $product->created_at->gt(now()->subDays(14)))
+                                                            <span
+                                                                class="absolute top-1.5 left-1.5 z-10
+                                                            px-1.5 py-0.5
+                                                            rounded
+                                                            bg-blue-600
+                                                            text-white
+                                                            text-[9px]
+                                                            font-bold
+                                                            shadow-sm">
+
+                                                                NEW
+
+                                                            </span>
+                                                        @endif
+
+
+                                                        {{-- DISCOUNT --}}
+                                                        @if ($hasDiscount)
+                                                            <span
+                                                                class="absolute top-1.5 right-1.5 z-10
+                                                                px-1.5 py-0.5
+                                                                rounded
+                                                                bg-slate-900
+                                                                text-white
+                                                                text-[9px]
+                                                                font-bold">
+
+                                                                -{{ $discountPercent }}%
+
+                                                            </span>
+                                                        @endif
+
+
+                                                        {{-- WISHLIST --}}
+                                                        {{-- WISHLIST --}}
+                                                        <button type="button"
+                                                            onclick="toggleWishlist(event, this, {{ $product->id }})"
+                                                            data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
+                                                            aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
+                                                            class="wishlist-button
+                                                            absolute
+                                                            right-1.5
+                                                            bottom-1.5
+                                                            z-20
+                                                            w-7
+                                                            h-7
+                                                            rounded-full
+                                                            bg-white
+                                                            border
+                                                            shadow-sm
+                                                            flex
+                                                            items-center
+                                                            justify-center
+                                                            transition
+                                                            duration-200
+                                                            {{ $isWishlisted
+                                                                ? 'text-blue-600 border-blue-300'
+                                                                : 'text-slate-400 border-slate-200 hover:text-blue-600 hover:border-blue-300' }}">
+
+                                                            <svg class="wishlist-icon w-3.5 h-3.5" viewBox="0 0 24 24"
+                                                                fill="{{ $isWishlisted ? 'currentColor' : 'none' }}"
+                                                                stroke="currentColor" stroke-width="2">
+
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+
+                                                            </svg>
+
+                                                        </button>
+
+
+                                                        {{-- IMAGE --}}
+                                                        @if ($image)
+                                                            <img src="{{ asset('storage/' . ltrim($image, '/')) }}"
+                                                                alt="{{ $product->name }}" loading="lazy"
+                                                                class="w-full
+                                                                h-full
+                                                                object-contain
+                                                                p-2
+                                                                group-hover:scale-105
+                                                                transition
+                                                                duration-500">
+                                                        @else
+                                                            <div
+                                                                class="w-full h-full
+                                                                    flex items-center
+                                                                    justify-center">
+
+                                                                <svg class="w-10 h-10 text-slate-300" fill="none"
+                                                                    stroke="currentColor" viewBox="0 0 24 24">
+
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="1.5"
+                                                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+
+                                                                </svg>
+
+                                                            </div>
+                                                        @endif
+
+                                                    </div>
+
+
+                                                    {{-- PRODUCT INFORMATION --}}
+                                                    <div class="p-2.5 flex flex-col flex-1">
+
+                                                        {{-- BRAND --}}
+                                                        @if ($product->brand)
+                                                            <p
+                                                                class="text-[10px]
+                                                                font-semibold
+                                                                uppercase
+                                                                tracking-wide
+                                                                text-blue-600
+                                                                mb-0.5
+                                                                truncate">
+
+                                                                {{ $product->brand->name }}
+
+                                                            </p>
+                                                        @endif
+
+
+                                                        {{-- NAME --}}
+                                                        <h3
+                                                            class="font-semibold
+                                                            text-slate-900
+                                                            text-[12px]
+                                                            leading-4
+                                                            line-clamp-2
+                                                            min-h-[32px]">
+
+                                                            {{ $product->name }}
+
+                                                        </h3>
+
+
+                                                        {{-- RATING --}}
+                                                        <div class="flex items-center gap-0.5 mt-1">
+
+                                                            @for ($i = 1; $i <= 5; $i++)
+                                                                <svg class="w-3 h-3
+                                                {{ $i <= round($rating) ? 'text-yellow-400' : 'text-slate-300' }}"
+                                                                    fill="currentColor" viewBox="0 0 20 20">
+
+                                                                    <path
+                                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+
+                                                                </svg>
+                                                            @endfor
+
+                                                            <span class="text-[9px] text-slate-500 ml-0.5">
+                                                                ({{ $reviewCount }})
+                                                            </span>
+
+                                                        </div>
+
+
+                                                        {{-- PRICE --}}
+                                                        <div
+                                                            class="mt-1.5
+                                                            flex
+                                                            items-center
+                                                            gap-1
+                                                            flex-wrap">
+
+                                                            @if ($hasDiscount)
+                                                                <span
+                                                                    class="text-[13px]
+                                                                        font-bold
+                                                                        text-blue-600">
+
+                                                                    Rs.{{ number_format($product->discount_price, 0) }}
+
+                                                                </span>
+
+                                                                <span
+                                                                    class="text-[10px]
+                                                                        text-slate-400
+                                                                        line-through">
+
+                                                                    Rs.{{ number_format($product->price, 0) }}
+
+                                                                </span>
+
+                                                                <span
+                                                                    class="text-[9px]
+                                                                    font-semibold
+                                                                    text-green-600">
+
+                                                                    Save Rs.{{ number_format($discountAmount, 0) }}
+
+                                                                </span>
+                                                            @else
+                                                                <span
+                                                                    class="text-[13px]
+                                                                        font-bold
+                                                                        text-slate-900">
+
+                                                                    Rs.{{ number_format($product->price, 0) }}
+
+                                                                </span>
+                                                            @endif
+
+                                                        </div>
+
+
+                                                        {{-- STOCK --}}
+                                                        @if (isset($product->stock))
+                                                            @if ($product->stock > 0)
+                                                                <div class="flex items-center gap-1 mt-1">
+
+                                                                    <span
+                                                                        class="w-1.5 h-1.5
+                                                                        rounded-full
+                                                                        bg-green-500">
+                                                                    </span>
+
+                                                                    <p
+                                                                        class="text-[9px]
+                                                                    font-medium
+                                                                    text-slate-500">
+
+                                                                        In Stock
+
+                                                                    </p>
+
+                                                                </div>
+                                                            @else
+                                                                <div class="flex items-center gap-1 mt-1">
+
+                                                                    <span
+                                                                        class="w-1.5 h-1.5
+                                                                    rounded-full
+                                                                    bg-red-500">
+                                                                    </span>
+
+                                                                    <p
+                                                                        class="text-[9px]
+                                                                    font-semibold
+                                                                    text-red-500">
+
+                                                                        Out of Stock
+
+                                                                    </p>
+
+                                                                </div>
+                                                            @endif
+                                                        @endif
+
+
+                                                        {{-- ADD TO CART --}}
+                                                        <div class="mt-auto pt-2">
+
+                                                            @if (isset($product->stock) && $product->stock <= 0)
+                                                                <button type="button" disabled
+                                                                    onclick="event.stopPropagation();"
+                                                                    class="w-full
+                                                                    inline-flex
+                                                                    items-center
+                                                                    justify-center
+                                                                    rounded-md
+                                                                    bg-slate-100
+                                                                    text-slate-400
+                                                                    py-1.5
+                                                                    text-[11px]
+                                                                    font-semibold
+                                                                    cursor-not-allowed">
+
+                                                                    Out of Stock
+
+                                                                </button>
+                                                            @else
+                                                                <form method="POST"
+                                                                    action="{{ route('cart.add', ['product' => $product->id]) }}"
+                                                                    onclick="event.stopPropagation();" class="w-full">
+
+                                                                    @csrf
+
+                                                                    <input type="hidden" name="quantity"
+                                                                        value="1">
+
+                                                                    <button type="submit"
+                                                                        onclick="event.stopPropagation();"
+                                                                        class="w-full
+                                                                        bg-blue-600
+                                                                        hover:bg-blue-700
+                                                                        text-white
+                                                                        py-2.5
+                                                                        px-4
+                                                                        rounded-lg
+                                                                        font-semibold
+                                                                        transition
+                                                                        duration-200
+                                                                        flex
+                                                                        items-center
+                                                                        justify-center
+                                                                        gap-2">
+
+                                                                        <i class="fa-solid fa-cart-shopping"></i>
+
+                                                                        Add to Cart
+
+                                                                    </button>
+
+                                                                </form>
+                                                            @endif
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </article>
+                                            @endforeach
+
+                                        </div>
+
+                                    </div>
+                                @endif
+
+                            @endforeach
+                        </div>
                     </div>
-                </div>
 
+                    {{-- =========================================================
+    BRANDS HEADER
+========================================================= --}}
 
-                <div class="py-3 pb-8 sm:pb-10">
+                    <div class="flex items-center justify-between  ">
 
-                    <!-- Header -->
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 sm:mb-6">
+                        {{-- Left Side --}}
+                        <div class="flex items-center gap-3 ">
 
-                        <!-- Left Side -->
-                        <div class="flex items-center gap-2 sm:gap-3">
-                            <div class="text-black text-base sm:text-lg font-semibold py-2 rounded-lg">
+                            <div class="text-black text-lg font-semibold py-2 rounded-lg">
                                 Shop By Brands
                             </div>
 
-                            <div class="h-px w-8 sm:w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+                            <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+
                         </div>
 
 
-                        <!-- Right Side -->
-                        <a href="#"
-                            class="flex items-center gap-2 text-black-600 hover:text-black-700 font-medium transition-colors group text-sm sm:text-base">
-                            <span>Explore products from trusted global brands.</span>
-                            <i
-                                class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1 flex-shrink-0"></i>
+                        {{-- Right Side --}}
+                        <a href="{{ route('brands.all') }}"
+                            class="flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium transition-colors group text-sm">
+
+
+                            View All Brand
+
+                            <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
                         </a>
 
                     </div>
@@ -711,28 +1158,49 @@
 
                         <div class="relative overflow-hidden">
 
-                            <!-- Slider Track -->
-                            <div class="flex gap-3 sm:gap-4 md:gap-6 animate-scroll hover:pause">
+                            {{-- =================================================
+            SLIDER TRACK
+        ================================================== --}}
+
+                            <div class="flex gap-6 animate-scroll hover:pause">
 
 
-                                {{-- ========================= --}}
-                                {{-- FIRST SET OF BRANDS --}}
-                                {{-- ========================= --}}
+                                {{-- =========================
+                FIRST SET OF BRANDS
+            ========================== --}}
 
                                 @foreach ($activeBrands as $brand)
                                     <a href="{{ route('brand.show', $brand->slug) }}"
-                                        class="flex-shrink-0 w-[105px] sm:w-[120px] h-[105px] sm:h-[110px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-3 sm:p-4 cursor-pointer group">
+                                        class="flex-shrink-0
+                           w-[120px] h-[110px]
+                           bg-white rounded-2xl
+                           shadow-md hover:shadow-xl
+                           border border-gray-200
+                           hover:border-blue-600
+                           transition-all duration-300
+                           hover:-translate-y-1
+                           flex flex-col items-center
+                           justify-center p-4
+                           cursor-pointer group">
 
-                                        <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+                                        <div class="w-20 h-20 flex items-center justify-center">
 
                                             @if ($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
                                                 <img src="{{ asset('storage/' . $brand->logo) }}"
                                                     alt="{{ $brand->name }}"
-                                                    class="w-12 h-12 sm:w-[60px] sm:h-[60px] object-contain group-hover:scale-105 transition-transform duration-300"
+                                                    class="w-[60px] h-[60px]
+                                       object-contain
+                                       group-hover:scale-105
+                                       transition-transform duration-300"
                                                     loading="lazy">
                                             @else
                                                 <div
-                                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-lg font-bold">
+                                                    class="w-20 h-20
+                                       rounded-full
+                                       bg-blue-100
+                                       flex items-center justify-center
+                                       text-blue-700
+                                       text-1xl font-bold">
 
                                                     {{ strtoupper(substr($brand->name, 0, 1)) }}
 
@@ -743,7 +1211,12 @@
 
 
                                         <span
-                                            class="mt-2 sm:mt-3 text-xs sm:text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center line-clamp-1">
+                                            class="mt-3
+                               text-sm font-medium
+                               text-gray-700
+                               group-hover:text-blue-600
+                               transition-colors duration-300
+                               text-center">
 
                                             {{ $brand->name }}
 
@@ -753,25 +1226,42 @@
                                 @endforeach
 
 
-
-                                {{-- ========================= --}}
-                                {{-- DUPLICATE FOR SEAMLESS LOOP --}}
-                                {{-- ========================= --}}
+                                {{-- =========================
+                DUPLICATE FOR LOOP
+            ========================== --}}
 
                                 @foreach ($activeBrands as $brand)
                                     <a href="{{ route('brand.show', $brand->slug) }}"
-                                        class="flex-shrink-0 w-[105px] sm:w-[120px] h-[105px] sm:h-[110px] bg-white rounded-2xl shadow-md hover:shadow-xl border border-gray-200 hover:border-blue-600 transition-all duration-300 hover:-translate-y-1 flex flex-col items-center justify-center p-3 sm:p-4 cursor-pointer group">
+                                        class="flex-shrink-0
+                           w-[120px] h-[110px]
+                           bg-white rounded-2xl
+                           shadow-md hover:shadow-xl
+                           border border-gray-200
+                           hover:border-blue-600
+                           transition-all duration-300
+                           hover:-translate-y-1
+                           flex flex-col items-center
+                           justify-center p-4
+                           cursor-pointer group">
 
-                                        <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+                                        <div class="w-20 h-20 flex items-center justify-center">
 
                                             @if ($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
                                                 <img src="{{ asset('storage/' . $brand->logo) }}"
                                                     alt="{{ $brand->name }}"
-                                                    class="w-12 h-12 sm:w-[60px] sm:h-[60px] object-contain group-hover:scale-105 transition-transform duration-300"
+                                                    class="w-[60px] h-[60px]
+                                       object-contain
+                                       group-hover:scale-105
+                                       transition-transform duration-300"
                                                     loading="lazy">
                                             @else
                                                 <div
-                                                    class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-lg font-bold">
+                                                    class="w-20 h-20
+                                       rounded-full
+                                       bg-blue-100
+                                       flex items-center justify-center
+                                       text-blue-700
+                                       text-1xl font-bold">
 
                                                     {{ strtoupper(substr($brand->name, 0, 1)) }}
 
@@ -782,7 +1272,12 @@
 
 
                                         <span
-                                            class="mt-2 sm:mt-3 text-xs sm:text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors duration-300 text-center line-clamp-1">
+                                            class="mt-3
+                               text-sm font-medium
+                               text-gray-700
+                               group-hover:text-blue-600
+                               transition-colors duration-300
+                               text-center">
 
                                             {{ $brand->name }}
 
@@ -794,14 +1289,25 @@
                             </div>
 
 
-                            <!-- Gradient masks to fade edges -->
+                            {{-- =================================================
+            LEFT FADE
+        ================================================== --}}
 
                             <div
-                                class="absolute inset-y-0 left-0 w-10 sm:w-16 bg-gradient-to-r from-white to-transparent pointer-events-none">
+                                class="absolute inset-y-0 left-0 w-16
+                   bg-gradient-to-r from-white to-transparent
+                   pointer-events-none">
                             </div>
 
+
+                            {{-- =================================================
+            RIGHT FADE
+        ================================================== --}}
+
                             <div
-                                class="absolute inset-y-0 right-0 w-10 sm:w-16 bg-gradient-to-l from-white to-transparent pointer-events-none">
+                                class="absolute inset-y-0 right-0 w-16
+                   bg-gradient-to-l from-white to-transparent
+                   pointer-events-none">
                             </div>
 
                         </div>
@@ -812,249 +1318,334 @@
 
                     @endif
 
-                </div>
 
+                    <style>
+                        @keyframes scroll {
 
-                <style>
-                    @keyframes scroll {
-                        0% {
-                            transform: translateX(0);
+                            0% {
+                                transform: translateX(0);
+                            }
+
+                            100% {
+                                transform: translateX(-50%);
+                            }
+
                         }
 
-                        100% {
-                            transform: translateX(-50%);
+                        .animate-scroll {
+
+                            /* Pehle 30s tha, ab thoda slow */
+                            animation: scroll 45s linear infinite;
+
+                            width: max-content;
+
                         }
-                    }
 
-                    .animate-scroll {
-                        animation: scroll 30s linear infinite;
-                        width: max-content;
-                    }
+                        .hover\:pause:hover {
 
-                    .hover\:pause:hover {
-                        animation-play-state: paused;
-                    }
-                </style>
+                            animation-play-state: paused;
 
+                        }
+                    </style>
 
-                <div class="pb-5">
-
-                    <!-- Header -->
-                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-1">
-
-                        <!-- Left Side -->
-                        <div class="flex items-center gap-2 sm:gap-3">
-                            <div class="text-black text-base sm:text-lg font-semibold py-2 rounded-lg">
-                                Blogs & Articles
+                    <div class="">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between pt-10 ">
+                            <!-- Left Side -->
+                            <div class="flex items-center gap-3">
+                                <div class="text-black text-lg font-semibold  py-2 rounded-lg">
+                                    Blogs & Articles
+                                </div>
+                                <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
                             </div>
 
-                            <div class="h-px w-8 sm:w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+                            <!-- Right Side -->
+                            <a href="{{ route('blogs.index') }}"
+                                class="flex items-center gap-2 text-[#155dfc] hover:text-blue-700 font-medium transition-colors group">
+                                Read more articles.
+                                <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                            </a>
                         </div>
 
-                        <!-- Right Side -->
-                        <a href="{{ route('blogs.index') }}"
-                            class="flex items-center gap-2 text-[#155dfc] hover:text-blue-700 font-medium transition-colors group text-sm sm:text-base">
-                            <span>Read more articles.</span>
-                            <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
-                        </a>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 pt-5 gap-3 pb-8 ">
 
-                    </div>
+                            @foreach ($blogs as $blog)
+                                <article
+                                    class="bg-white rounded-xl overflow-hidden border border-gray-100
+                   shadow-sm hover:shadow-lg transition duration-300">
 
+                                    {{-- Blog Image --}}
+                                    <div class="h-36 overflow-hidden">
 
-                    <div
-                        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 pt-4 sm:pt-5 gap-4 sm:gap-6 pb-8 sm:pb-10">
-
-                        @foreach ($blogs as $blog)
-                            <article
-                                class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition duration-300 min-w-0">
-
-                                {{-- Blog Image --}}
-                                <div class="h-44 sm:h-52 overflow-hidden">
-
-                                    <img src="{{ $blog->featured_image
-                                        ? asset('storage/' . $blog->featured_image)
-                                        : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80' }}"
-                                        alt="{{ $blog->title }}"
-                                        class="w-full h-full object-cover hover:scale-105 transition duration-500">
-
-                                </div>
-
-
-                                <div class="p-3 sm:p-4">
-
-                                    {{-- Category + Date --}}
-                                    <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-3">
-
-                                        <span class="text-blue-600 font-medium line-clamp-1">
-                                            {{ $blog->category->name ?? 'Blog' }}
-                                        </span>
+                                        <img src="{{ $blog->featured_image
+                                            ? asset('storage/' . $blog->featured_image)
+                                            : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80' }}"
+                                            alt="{{ $blog->title }}"
+                                            class="w-full h-full object-cover
+                           hover:scale-105 transition duration-500">
 
                                     </div>
 
 
-                                    {{-- Title --}}
-                                    <h3 class="text-base sm:text-lg font-bold text-gray-900 mb-3 line-clamp-2">
-                                        {{ $blog->title }}
+                                    {{-- Blog Content --}}
+                                    <div class="p-3">
+
+                                        {{-- Category --}}
+                                        <div class="flex items-center mb-1.5">
+
+                                            <span
+                                                class="text-[10px] font-semibold text-blue-600
+                                 line-clamp-1">
+                                                {{ $blog->category->name ?? 'Blog' }}
+                                            </span>
+
+                                        </div>
+
+
+                                        {{-- Title --}}
+                                        <h3
+                                            class="text-sm font-bold text-gray-900
+                           leading-5 mb-1.5 line-clamp-2">
+                                            {{ $blog->title }}
+                                        </h3>
+
+
+                                        {{-- Excerpt --}}
+                                        <p
+                                            class="text-[11px] text-gray-600
+                           leading-4 mb-3 line-clamp-2">
+                                            {{ $blog->excerpt }}
+                                        </p>
+
+
+                                        {{-- Date + Read More --}}
+                                        <div class="flex items-center justify-between gap-2">
+
+                                            {{-- Date --}}
+                                            <span class="text-[10px] text-gray-500 whitespace-nowrap">
+                                                📅
+                                                {{ $blog->published_at ? $blog->published_at->format('d M Y') : $blog->created_at->format('d M Y') }}
+                                            </span>
+
+
+                                            {{-- Read More --}}
+                                            <a href="{{ route('blogs.view', $blog->slug) }}"
+                                                class="text-[10px] font-semibold
+                               text-blue-600 hover:text-blue-800
+                               inline-flex items-center whitespace-nowrap">
+
+                                                Read More
+
+                                                <span class="ml-1">→</span>
+
+                                            </a>
+
+                                        </div>
+
+                                    </div>
+
+                                </article>
+                            @endforeach
+
+                        </div>
+                    </div>
+                    <!-- Modern & User-Friendly Professional Contact Box -->
+                    <div
+                        class="relative overflow-hidden bg-white rounded-2xl
+           border border-blue-100
+           shadow-md shadow-blue-900/5
+           p-4 md:p-5
+           transition-all duration-300">
+
+                        {{-- Background Soft Glow --}}
+                        <div
+                            class="absolute -top-5 -right-10 w-28 h-28
+               bg-blue-400/10 rounded-full blur-2xl
+               pointer-events-none">
+                        </div>
+
+                        <div
+                            class="absolute -bottom-5 -left-10 w-28 h-28
+               bg-indigo-400/10 rounded-full blur-2xl
+               pointer-events-none">
+                        </div>
+
+
+                        <div
+                            class="relative z-10 grid grid-cols-1 md:grid-cols-3
+               gap-3 md:gap-0
+               divide-y md:divide-y-0 md:divide-x
+               divide-blue-100">
+
+
+                            {{-- Email --}}
+                            <a href="mailto:support@technova.com.np"
+                                class="group flex items-center md:items-center
+                   gap-3
+                   py-3 md:py-1 md:pr-5
+                   transition-all duration-300
+                   hover:translate-y-[-1px]">
+
+                                <div
+                                    class="flex-shrink-0
+                       w-9 h-9
+                       rounded-xl
+                       bg-blue-100/80
+                       text-blue-600
+                       flex items-center justify-center
+                       group-hover:bg-blue-600
+                       group-hover:text-white
+                       transition-all duration-300">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+
+                                <div class="min-w-0">
+
+                                    <span
+                                        class="block text-[9px] font-bold uppercase
+                           tracking-wider text-blue-600/80">
+                                        Email Us
+                                    </span>
+
+                                    <h3
+                                        class="text-xs md:text-sm font-bold
+                           text-gray-800
+                           group-hover:text-blue-600
+                           transition-colors truncate">
+                                        support@technova.com.np
                                     </h3>
 
-
-                                    {{-- Excerpt - Maximum 3 Lines --}}
-                                    <p class="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
-                                        {{ $blog->excerpt }}
+                                    <p class="text-[9px] text-gray-500 mt-0.5">
+                                        24/7 Quick Online Support
                                     </p>
 
-
-                                    {{-- Date + Read More --}}
-                                    <div class="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-2">
-
-                                        {{-- Date - Left --}}
-                                        <span class="text-xs sm:text-sm text-gray-500">
-                                            📅
-                                            {{ $blog->published_at ? $blog->published_at->format('d M Y') : $blog->created_at->format('d M Y') }}
-                                        </span>
-
-                                        {{-- Read More - Right --}}
-                                        <a href="{{ route('blogs.view', $blog->slug) }}"
-                                            class="text-xs sm:text-sm text-blue-600 hover:text-blue-800 inline-flex items-center">
-                                            Read More
-                                            <span class="ml-2">→</span>
-                                        </a>
-
-                                    </div>
                                 </div>
 
-                            </article>
-                        @endforeach
-
-                    </div>
-                </div>
+                            </a>
 
 
-                <!-- Modern & User-Friendly Professional Contact Box -->
-                <div
-                    class="relative overflow-hidden bg-white via-blue-50/50 to-slate-50 rounded-2xl sm:rounded-3xl border border-blue-100 shadow-xl shadow-blue-900/5 p-4 sm:p-6 md:p-10 transition-all duration-300">
+                            {{-- Phone --}}
+                            <a href="tel:+97715551234"
+                                class="group flex items-center
+                   gap-3
+                   py-3 md:py-1 md:px-5
+                   transition-all duration-300
+                   hover:translate-y-[-1px]">
 
-                    <!-- Background Soft Glow Effect -->
-                    <div
-                        class="absolute -top-12 -right-12 w-32 sm:w-40 h-32 sm:h-40 bg-blue-400/10 rounded-full blur-3xl pointer-events-none">
-                    </div>
+                                <div
+                                    class="flex-shrink-0
+                       w-9 h-9
+                       rounded-xl
+                       bg-blue-100/80
+                       text-blue-600
+                       flex items-center justify-center
+                       group-hover:bg-blue-600
+                       group-hover:text-white
+                       transition-all duration-300">
 
-                    <div
-                        class="absolute -bottom-12 -left-12 w-32 sm:w-40 h-32 sm:h-40 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none">
-                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
-                    <div
-                        class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-6 divide-y md:divide-y-0 md:divide-x divide-blue-100">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
 
-                        <!-- Email Item -->
-                        <a href="mailto:support@technova.com.np"
-                            class="group flex flex-col items-center md:items-start py-5 md:py-0 md:pr-6 transition-all duration-300 hover:translate-y-[-2px]">
+                                </div>
 
-                            <div
-                                class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                                <div class="min-w-0">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <span
+                                        class="block text-[9px] font-bold uppercase
+                           tracking-wider text-blue-600/80">
+                                        Call Us
+                                    </span>
 
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    <h3
+                                        class="text-xs md:text-sm font-bold
+                           text-gray-800
+                           group-hover:text-blue-600
+                           transition-colors">
+                                        +977 1-555-1234
+                                    </h3>
 
-                                </svg>
+                                    <p class="text-[9px] text-gray-500 mt-0.5">
+                                        Sun-Fri 9AM-7PM, Sat Closed
+                                    </p>
 
-                            </div>
+                                </div>
 
-                            <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">
-                                Email Us
-                            </span>
-
-                            <h3
-                                class="text-sm sm:text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors break-all text-center md:text-left">
-                                support@technova.com.np
-                            </h3>
-
-                            <p class="text-xs text-gray-500 mt-1 text-center md:text-left">
-                                24/7 Quick Online Support
-                            </p>
-
-                        </a>
-
-
-                        <!-- Phone Item -->
-                        <a href="tel:+97715551234"
-                            class="group flex flex-col items-center md:items-start py-5 md:py-0 md:px-6 transition-all duration-300 hover:translate-y-[-2px]">
-
-                            <div
-                                class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
-
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-
-                                </svg>
-
-                            </div>
-
-                            <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">
-                                Call Us
-                            </span>
-
-                            <h3
-                                class="text-sm sm:text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors text-center md:text-left">
-                                +977 1-555-1234
-                            </h3>
-
-                            <p class="text-xs text-gray-500 mt-1 text-center md:text-left">
-                                Sun-Fri 9AM-7PM, Sat Closed
-                            </p>
-
-                        </a>
+                            </a>
 
 
-                        <!-- Address Item -->
-                        <a href="https://maps.google.com/?q=Kathmandu,Nepal" target="_blank"
-                            rel="noopener noreferrer"
-                            class="group flex flex-col items-center md:items-start py-5 md:py-0 md:pl-6 transition-all duration-300 hover:translate-y-[-2px]">
+                            {{-- Address --}}
+                            <a href="https://maps.google.com/?q=Kathmandu,Nepal" target="_blank"
+                                rel="noopener noreferrer"
+                                class="group flex items-center
+                   gap-3
+                   py-3 md:py-1 md:pl-5
+                   transition-all duration-300
+                   hover:translate-y-[-1px]">
 
-                            <div
-                                class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-blue-100/80 text-blue-600 flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white group-hover:shadow-lg group-hover:shadow-blue-500/30 transition-all duration-300">
+                                <div
+                                    class="flex-shrink-0
+                       w-9 h-9
+                       rounded-xl
+                       bg-blue-100/80
+                       text-blue-600
+                       flex items-center justify-center
+                       group-hover:bg-blue-600
+                       group-hover:text-white
+                       transition-all duration-300">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6" fill="none"
-                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
 
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
 
-                                </svg>
+                                </div>
 
-                            </div>
+                                <div class="min-w-0">
 
-                            <span class="text-xs font-bold uppercase tracking-wider text-blue-600/80 mb-1">
-                                Our Location
-                            </span>
+                                    <span
+                                        class="block text-[9px] font-bold uppercase
+                           tracking-wider text-blue-600/80">
+                                        Our Location
+                                    </span>
 
-                            <h3
-                                class="text-sm sm:text-base md:text-lg font-bold text-gray-800 group-hover:text-blue-600 transition-colors text-center md:text-left">
-                                Kathmandu, Nepal
-                            </h3>
+                                    <h3
+                                        class="text-xs md:text-sm font-bold
+                           text-gray-800
+                           group-hover:text-blue-600
+                           transition-colors">
+                                        Kathmandu, Nepal
+                                    </h3>
 
-                            <p class="text-xs text-gray-500 mt-1 text-center md:text-left">
-                                Click to view on Google Maps
-                            </p>
+                                    <p class="text-[9px] text-gray-500 mt-0.5">
+                                        Click to view on Google Maps
+                                    </p>
 
-                        </a>
+                                </div>
 
+                            </a>
+
+                        </div>
                     </div>
                 </div>
 
             </div>
         </div>
     </Section>
-
     <script>
         async function toggleWishlist(event, button, productId) {
             event.preventDefault();
@@ -1109,5 +1700,4 @@
             }
         }
     </script>
-
 </x-frontend-layout>

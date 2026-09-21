@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/search', [PageController::class, 'search'])->name('search');
 
+//SEO SITEMAP//
+
 Route::get('/sitemap.xml', function () {
     while (ob_get_level() > 0) {
         ob_end_clean();
@@ -75,9 +77,22 @@ Route::post('/contact', [ContactMessageController::class, 'store'])->name('conta
 Route::get('/blogs', [BlogController::class, 'index'])->name('blogs.index');
 Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blogs.view');
 
-Route::get('/brand/{slug}', [BrandController::class, 'show'])->name('brand.show');
+/*
+|--------------------------------------------------------------------------
+| Products & Categories
+|--------------------------------------------------------------------------
+*/
+Route::get('/brand/{slug}', [PageController::class, 'show'])->name('brand.show');
+Route::get('/brands', [BrandController::class, 'index'])
+    ->name('brands.all');
 Route::get('/today-deals', [CategoryController::class, 'todayDeals'])->name('today-deals');
+
+Route::get('/today-deals/festive/{slug}', [CategoryController::class, 'festive'])
+    ->name('frontend.today-deals.festive');
+
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
+
+Route::get('/limited-time', [CategoryController::class, 'limitedTime']) ->name('limited-time');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
 Route::get('/privacy-policy', [PageController::class, 'privacypolicy'])->name('privacy-policy');
@@ -135,6 +150,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index'])->name('user.wishlist');
     Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('user.wishlist.toggle');
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'destroy'])->name('user.wishlist.remove');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])
+        ->name('wishlist.toggle');
 
     Route::get('/reviews', [UserDashboardController::class, 'reviews'])->name('user.reviews');
     Route::get('/coupons', [CouponController::class, 'index'])->name('user.coupons');
@@ -142,3 +159,26 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/coins', [UserDashboardController::class, 'coins'])->name('user.coins');
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])->name('user.coins.live');
 });
+
+
+Route::post('/careers/apply', [\App\Http\Controllers\JobApplicationController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('careers.apply');
+
+
+Route::get('/settings', [UserDashboardController::class, 'settings'])
+    ->name('user.settings');
+
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('user.wishlist.toggle');
+
+Route::get('/today-deals', [CategoryController::class, 'todayDeals'])
+    ->name('today-deals');
+
+Route::get('/today-deals/festive/{slug}', [CategoryController::class, 'festive'])
+    ->name('frontend.today-deals.festive');
+
+Route::get('/limited-time', [CategoryController::class, 'limitedTime'])
+    ->name('limited-time');
+
+Route::get('/category/{slug}', [CategoryController::class, 'show'])
+    ->name('category.show');

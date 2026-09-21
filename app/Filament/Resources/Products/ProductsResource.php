@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Filament\Resources\Products;
-
+use App\Filament\Resources\Products\Schemas\ProductForm;
 use App\Filament\Resources\Products\Pages\CreateProducts;
 use App\Filament\Resources\Products\Pages\EditProducts;
 use App\Filament\Resources\Products\Pages\ListProducts;
 use App\Filament\Resources\Products\RelationManagers\VariantsRelationManager;
-use App\Filament\Resources\Products\Schemas\ProductForm;
+
 use App\Filament\Resources\Products\Tables\ProductsTable;
 use App\Models\Product;
 use App\Models\Category;

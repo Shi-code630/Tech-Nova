@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\RewardHelper;
 use App\Models\Review;
-
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -57,23 +57,39 @@ class UserDashboardController extends Controller
         // ==================== CART ====================
         $cartCount = $user->carts()->sum('quantity');
 
+// ==================== RECENTLY VIEWED ====================
+$recentlyViewedIds = session()->get('recently_viewed', []);
+
+$recentlyViewedProducts = Product::query()
+    ->with(['images', 'brand'])
+    ->whereIn('id', $recentlyViewedIds)
+    ->where('status', 'active')
+    ->get()
+    ->sortBy(function ($product) use ($recentlyViewedIds) {
+        return array_search($product->id, $recentlyViewedIds);
+    })
+    ->values();
+    
         // ==================== COINS ====================
         $coinSummary = RewardHelper::getUserCoinsSummary($user);
         $recentTransactions = RewardHelper::getRecentTransactions($user, 5);
 
         return view('user.dashboard', compact(
-            'user',
-            'totalOrders',
-            'inProgress',
-            'orderCounts',
-            'wishlistCount',
-            'totalSpent',
-            'recentOrders',
-            'addresses',
-            'cartCount',
-            'coinSummary',
-            'recentTransactions'
-        ));
+    'user',
+    'totalOrders',
+    'inProgress',
+    'orderCounts',
+    'wishlistCount',
+    'totalSpent',
+    'recentOrders',
+    'addresses',
+    'cartCount',
+    'coinSummary',
+    'recentTransactions',
+    'recentlyViewedProducts'
+));
+
+
     }
 public function settings()
 {

@@ -21,7 +21,7 @@
 
             <div class="h-44 bg-gray-100 flex items-center justify-center">
 
-                {{-- <img src="{{ asset('image/products/laptop.png') }}" --}}
+                <img src="{{ asset('image/products/laptop.png') }}"
                     class="w-36 h-36 object-contain group-hover:scale-110 transition duration-300">
 
             </div>

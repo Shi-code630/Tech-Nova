@@ -4,13 +4,18 @@
 
         <div class="Container mx-auto px-3 sm:px-4 flex flex-col lg:flex-row gap-4 sm:gap-6 items-start">
 
-            {{-- Dashboard Sidebar --}}
+            {{-- =====================================================
+        DASHBOARD SIDEBAR
+    ====================================================== --}}
             <aside class="w-full lg:w-64 flex-shrink-0">
-                <x-user-dashboard.sidebar />
+                <div class="lg:sticky lg:top-24">
+                    <x-user-dashboard.sidebar />
+                </div>
             </aside>
 
-
-            {{-- Main Content --}}
+            {{-- =====================================================
+        MAIN CONTENT
+    ====================================================== --}}
             <main class="flex-1 min-w-0 w-full">
 
                 <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm p-4 sm:p-6">

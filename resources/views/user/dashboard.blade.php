@@ -40,9 +40,11 @@
                     {{-- Recently Viewed + Recommended --}}
                     <div class="grid grid-cols-1 gap-4 sm:gap-6">
 
-                        <x-user-dashboard.recently-viewed />
+                       <x-user-dashboard.recently-viewed
+    :recently-viewed-products="$recentlyViewedProducts"
+/>
 
-                        <x-user-dashboard.recommended-products />
+                      
 
                     </div>
 

@@ -58,7 +58,7 @@
     </div>
 
     <!-- Main Footer -->
-    <div class="relative z-10 container mx-auto px-5 py-8">
+    <div class="relative z-10 Container mx-auto px-5 py-8">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-8 sm:gap-5">
 

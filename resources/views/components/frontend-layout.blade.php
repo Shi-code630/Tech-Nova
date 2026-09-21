@@ -9,7 +9,9 @@
 ])
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -49,11 +51,11 @@
         .Container {
             width: 97%;
             height: 100%;
-            margin-left: auto;
-            margin-right: auto;
+           margin-left: auto;
+    margin-right: auto;
         }
 
-       
+
         @media (max-width: 640px) {
             .Container {
                 width: 94%;
@@ -68,6 +70,7 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col bg-white text-[#111827] overflow-x-hidden antialiased">
 
     <x-frontend-header />
@@ -79,4 +82,5 @@
     <x-frontend-footer />
 
 </body>
+
 </html>

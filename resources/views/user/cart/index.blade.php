@@ -2,12 +2,12 @@
 
     <div class="bg-gray-50 w-full py-6 sm:py-8">
 
-        <div class="Container mx-auto px-3 sm:px-4">
+        <div class="Container mx-auto px-4">
 
             <div class="flex flex-col lg:flex-row gap-4 sm:gap-6">
 
                 {{-- Sidebar --}}
-                <aside class="lg:col-span-3">
+                <aside class="">
                     <x-user-dashboard.sidebar />
                 </aside>
                 {{-- Main Content --}}
