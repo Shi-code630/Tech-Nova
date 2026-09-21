@@ -1,11 +1,9 @@
 @php $setting = \App\Models\Setting::query()->first(); @endphp
-<x-frontend-layout
-:title="$setting->meta_title ?: ($setting->site_name ?: 'TechNova Nepal')"
-    :description="$setting->meta_description ?: 'Buy genuine laptops, gadgets and accessories in Nepal. TechNova Nepal — Kathmandu.'"
-    :keywords="$setting->meta_keywords"
-    :canonical="route('home')">
+<x-frontend-layout :title="$setting->meta_title ?: ($setting->site_name ?: 'TechNova Nepal')" :description="$setting->meta_description ?:
+    'Buy genuine laptops, gadgets and accessories in Nepal. TechNova Nepal — Kathmandu.'" :keywords="$setting->meta_keywords" :canonical="route('home')">
     <Section class="bg-[#f0f9ff]">
         <div class="Container mx-auto px-3 sm:px-4 md:px-6 lg:px-4">
+
             <div class="mt-2 sm:mt-[10px]">
                 <div
                     class="relative max-w-[1500px] mx-auto h-[220px] sm:h-[280px] md:h-[320px] lg:h-[350px] overflow-hidden rounded-xl sm:rounded-2xl shadow-2xl">
@@ -14,13 +12,13 @@
                     <div id="slider"
                         class="flex h-full transition-transform duration-500 ease-in-out will-change-transform">
 
-                        @foreach ($banners as $banner)
-                            <!-- Full Banner Clickable -->
+                        @foreach ($mainBanners as $banner)
                             <div class="relative w-full h-full flex-shrink-0">
 
                                 <a href="{{ $banner->button_link ?? '#' }}" class="block w-full h-full">
 
-                                    <img src="{{ asset('storage/' . $banner->image) }}" alt="{{ $banner->alt_text }}"
+                                    <img src="{{ asset('storage/' . $banner->image) }}"
+                                        alt="{{ $banner->alt_text ?? $banner->title }}"
                                         class="w-full h-full object-cover">
 
                                 </a>
@@ -29,7 +27,6 @@
                         @endforeach
 
                     </div>
-
 
                     <!-- Left Arrow -->
                     <button onclick="moveSlide(-1)"
@@ -40,7 +37,6 @@
                         ❮
                     </button>
 
-
                     <!-- Right Arrow -->
                     <button onclick="moveSlide(1)"
                         class="absolute top-1/2 right-2 sm:right-4 -translate-y-1/2
@@ -50,16 +46,15 @@
                         ❯
                     </button>
 
-
                     <!-- Dots -->
                     <div
                         class="absolute bottom-2 sm:bottom-4 left-1/2 -translate-x-1/2
-                    flex gap-1.5 sm:gap-2 z-10">
+                   flex gap-1.5 sm:gap-2 z-10">
 
-                        @foreach ($banners as $index => $banner)
+                        @foreach ($mainBanners as $index => $banner)
                             <span
                                 class="dot w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full
-                             bg-white/50 cursor-pointer"
+                           bg-white/50 cursor-pointer"
                                 data-index="{{ $index }}">
                             </span>
                         @endforeach
@@ -68,6 +63,7 @@
 
                 </div>
             </div>
+
 
             <div class="py-5 bg-[#f0f9ff]">
                 <div class="mb-6">
@@ -180,121 +176,110 @@
 
                     </div>
 
-{{-- =========================================================
+
+                    {{-- =========================================================
     HOME PRODUCTS - 5 PRODUCTS
 ========================================================= --}}
 
-<section class="py-5">
+                    <section class="py-5">
 
-    <div class="">
+                        <div class="">
 
-        {{-- Section Header --}}
-        <div class="flex items-center justify-between mb-5">
+                            {{-- Section Header --}}
+                            <div class="flex items-center justify-between mb-3">
 
-            <div>
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">
-                    Featured Products
-                </h2>
+                                <div>
+                                    <h2 class="text-xl sm:text-2xl font-bold text-slate-900">
+                                        Featured Products
+                                    </h2>
 
-                <p class="text-sm text-slate-500 mt-1">
-                    Explore our latest products
-                </p>
-            </div>
+                                    <p class="text-sm text-slate-500 mt-1">
+                                        Explore our latest products
+                                    </p>
+                                </div>
 
-        </div>
+                            </div>
 
 
-        @if ($homeProducts->count())
+                            @if ($homeProducts->count())
 
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
 
-                @foreach ($homeProducts as $product)
+                                    @foreach ($homeProducts as $product)
+                                        @php
 
-                    @php
-
-                        /*
+                                            /*
                         |--------------------------------------------------------------------------
                         | DISCOUNT
                         |--------------------------------------------------------------------------
                         */
 
-                        $hasDiscount =
-                            isset($product->discount_price) &&
-                            $product->discount_price &&
-                            $product->price > $product->discount_price;
+                                            $hasDiscount =
+                                                isset($product->discount_price) &&
+                                                $product->discount_price &&
+                                                $product->price > $product->discount_price;
 
-                        $discountAmount = $hasDiscount
-                            ? $product->price - $product->discount_price
-                            : 0;
+                                            $discountAmount = $hasDiscount
+                                                ? $product->price - $product->discount_price
+                                                : 0;
 
-                        $discountPercent = $hasDiscount && $product->price > 0
-                            ? round(($discountAmount / $product->price) * 100)
-                            : 0;
+                                            $discountPercent =
+                                                $hasDiscount && $product->price > 0
+                                                    ? round(($discountAmount / $product->price) * 100)
+                                                    : 0;
 
-
-                        /*
+                                            /*
                         |--------------------------------------------------------------------------
                         | WISHLIST
                         |--------------------------------------------------------------------------
                         */
 
-                        $isWishlisted = in_array(
-                            $product->id,
-                            $wishlistProductIds ?? []
-                        );
+                                            $isWishlisted = in_array($product->id, $wishlistProductIds ?? []);
 
-
-                        /*
+                                            /*
                         |--------------------------------------------------------------------------
                         | RATING
                         |--------------------------------------------------------------------------
                         */
 
-                        $rating = $product->rating ?? 0;
+                                            $rating = $product->rating ?? 0;
 
-                        $reviewCount = $product->reviews_count ?? 0;
+                                            $reviewCount = $product->reviews_count ?? 0;
 
-
-                        /*
+                                            /*
                         |--------------------------------------------------------------------------
                         | PRODUCT IMAGE
                         |--------------------------------------------------------------------------
                         */
 
-                        $image = null;
+                                            $image = null;
 
-                        if (
-                            isset($product->thumbnails) &&
-                            is_array($product->thumbnails) &&
-                            count($product->thumbnails)
-                        ) {
+                                            if (
+                                                isset($product->thumbnails) &&
+                                                is_array($product->thumbnails) &&
+                                                count($product->thumbnails)
+                                            ) {
+                                                $image = $product->thumbnails[0];
+                                            }
 
-                            $image = $product->thumbnails[0];
+                                            if (!$image && isset($product->image)) {
+                                                $image = $product->image;
+                                            }
 
-                        }
+                                            if (is_array($image)) {
+                                                $image = $image[0] ?? null;
+                                            }
 
-                        if (!$image && isset($product->image)) {
-
-                            $image = $product->image;
-
-                        }
-
-                        if (is_array($image)) {
-
-                            $image = $image[0] ?? null;
-
-                        }
-
-                    @endphp
+                                        @endphp
 
 
-                    {{-- =================================================
+                                        {{-- =================================================
                         PRODUCT CARD
                     ================================================== --}}
 
-                    <article
-                        onclick="window.location.href='{{ route('product.show', ['slug' => $product->slug]) }}'"
-                        class="product-card group
+                                        <article
+                                            onclick="window.location.href='{{ route('product.show', ['slug' => $product->slug]) }}'"
+                                            class="product-card group
                                bg-white
                                rounded-xl
                                border border-slate-200
@@ -308,21 +293,17 @@
                                min-w-0">
 
 
-                        {{-- =================================================
+                                            {{-- =================================================
                             IMAGE
                         ================================================== --}}
 
-                        <div class="relative bg-slate-50 h-36 overflow-hidden">
+                                            <div class="relative bg-slate-50 h-36 overflow-hidden">
 
 
-                            {{-- NEW --}}
-                            @if (
-                                $product->created_at &&
-                                $product->created_at->gt(now()->subDays(14))
-                            )
-
-                                <span
-                                    class="absolute top-1.5 left-1.5 z-10
+                                                {{-- NEW --}}
+                                                @if ($product->created_at && $product->created_at->gt(now()->subDays(14)))
+                                                    <span
+                                                        class="absolute top-1.5 left-1.5 z-10
                                            px-1.5 py-0.5
                                            rounded
                                            bg-blue-600
@@ -331,18 +312,16 @@
                                            font-bold
                                            shadow-sm">
 
-                                    NEW
+                                                        NEW
 
-                                </span>
+                                                    </span>
+                                                @endif
 
-                            @endif
 
-
-                            {{-- DISCOUNT --}}
-                            @if ($hasDiscount)
-
-                                <span
-                                    class="absolute top-1.5 right-1.5 z-10
+                                                {{-- DISCOUNT --}}
+                                                @if ($hasDiscount)
+                                                    <span
+                                                        class="absolute top-1.5 right-1.5 z-10
                                            px-1.5 py-0.5
                                            rounded
                                            bg-slate-900
@@ -350,20 +329,18 @@
                                            text-[9px]
                                            font-bold">
 
-                                    -{{ $discountPercent }}%
+                                                        -{{ $discountPercent }}%
 
-                                </span>
+                                                    </span>
+                                                @endif
 
-                            @endif
 
-
-                            {{-- WISHLIST --}}
-                            <button
-                                type="button"
-                                onclick="toggleWishlist(event, this, {{ $product->id }})"
-                                data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
-                                aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
-                                class="wishlist-button
+                                                {{-- WISHLIST --}}
+                                                <button type="button"
+                                                    onclick="toggleWishlist(event, this, {{ $product->id }})"
+                                                    data-wishlisted="{{ $isWishlisted ? 'true' : 'false' }}"
+                                                    aria-label="{{ $isWishlisted ? 'Remove from wishlist' : 'Add to wishlist' }}"
+                                                    class="wishlist-button
                                        absolute
                                        right-1.5
                                        bottom-1.5
@@ -384,76 +361,58 @@
                                            : 'text-slate-400 border-slate-200 hover:text-blue-600 hover:border-blue-300' }}">
 
 
-                                <svg
-                                    class="wishlist-icon w-3.5 h-3.5"
-                                    viewBox="0 0 24 24"
-                                    fill="{{ $isWishlisted ? 'currentColor' : 'none' }}"
-                                    stroke="currentColor"
-                                    stroke-width="2">
+                                                    <svg class="wishlist-icon w-3.5 h-3.5" viewBox="0 0 24 24"
+                                                        fill="{{ $isWishlisted ? 'currentColor' : 'none' }}"
+                                                        stroke="currentColor" stroke-width="2">
 
-                                    <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
 
-                                </svg>
+                                                    </svg>
 
-                            </button>
+                                                </button>
 
 
-                            {{-- PRODUCT IMAGE --}}
-                            @if ($image)
-
-                                <img
-                                    src="{{ asset('storage/' . ltrim($image, '/')) }}"
-                                    alt="{{ $product->name }}"
-                                    loading="lazy"
-                                    class="w-full
+                                                {{-- PRODUCT IMAGE --}}
+                                                @if ($image)
+                                                    <img src="{{ asset('storage/' . ltrim($image, '/')) }}"
+                                                        alt="{{ $product->name }}" loading="lazy"
+                                                        class="w-full
                                            h-full
                                            object-contain
                                            p-2
                                            group-hover:scale-105
                                            transition
                                            duration-500">
+                                                @else
+                                                    <div class="w-full h-full flex items-center justify-center">
 
-                            @else
+                                                        <svg class="w-10 h-10 text-slate-300" fill="none"
+                                                            stroke="currentColor" viewBox="0 0 24 24">
 
-                                <div
-                                    class="w-full h-full flex items-center justify-center">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="1.5"
+                                                                d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 
-                                    <svg
-                                        class="w-10 h-10 text-slate-300"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24">
+                                                        </svg>
 
-                                        <path
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="1.5"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                    </div>
+                                                @endif
 
-                                    </svg>
-
-                                </div>
-
-                            @endif
-
-                        </div>
+                                            </div>
 
 
-                        {{-- =================================================
+                                            {{-- =================================================
                             PRODUCT INFORMATION
                         ================================================== --}}
 
-                        <div class="p-2.5 flex flex-col flex-1 min-w-0">
+                                            <div class="p-2.5 flex flex-col flex-1 min-w-0">
 
 
-                            {{-- BRAND --}}
-                            @if ($product->brand)
-
-                                <p
-                                    class="text-[10px]
+                                                {{-- BRAND --}}
+                                                @if ($product->brand)
+                                                    <p
+                                                        class="text-[10px]
                                            font-semibold
                                            uppercase
                                            tracking-wide
@@ -461,179 +420,159 @@
                                            mb-0.5
                                            truncate">
 
-                                    {{ $product->brand->name }}
+                                                        {{ $product->brand->name }}
 
-                                </p>
+                                                    </p>
+                                                @endif
 
-                            @endif
 
-
-                            {{-- PRODUCT NAME --}}
-                            <h3
-                                class="font-semibold
+                                                {{-- PRODUCT NAME --}}
+                                                <h3
+                                                    class="font-semibold
                                        text-slate-900
                                        text-[12px]
                                        leading-4
                                        line-clamp-2
                                        min-h-[32px]">
 
-                                {{ $product->name }}
+                                                    {{ $product->name }}
 
-                            </h3>
-
-
-                            {{-- RATING --}}
-                            <div class="flex items-center gap-0.5 mt-1">
-
-                                @for ($i = 1; $i <= 5; $i++)
-
-                                    <svg
-                                        class="w-3 h-3 {{ $i <= round($rating) ? 'text-yellow-400' : 'text-slate-300' }}"
-                                        fill="currentColor"
-                                        viewBox="0 0 20 20">
-
-                                        <path
-                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-
-                                    </svg>
-
-                                @endfor
-
-                                <span
-                                    class="text-[9px] text-slate-500 ml-0.5">
-
-                                    ({{ $reviewCount }})
-
-                                </span>
-
-                            </div>
+                                                </h3>
 
 
-                            {{-- PRICE --}}
-                            <div
-                                class="mt-1.5
+                                                {{-- RATING --}}
+                                                <div class="flex items-center gap-0.5 mt-1">
+
+                                                    @for ($i = 1; $i <= 5; $i++)
+                                                        <svg class="w-3 h-3 {{ $i <= round($rating) ? 'text-yellow-400' : 'text-slate-300' }}"
+                                                            fill="currentColor" viewBox="0 0 20 20">
+
+                                                            <path
+                                                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+
+                                                        </svg>
+                                                    @endfor
+
+                                                    <span class="text-[9px] text-slate-500 ml-0.5">
+
+                                                        ({{ $reviewCount }})
+                                                    </span>
+
+                                                </div>
+
+
+                                                {{-- PRICE --}}
+                                                <div
+                                                    class="mt-1.5
                                        flex
                                        items-center
                                        gap-1
                                        flex-wrap
                                        min-w-0">
 
-                                @if ($hasDiscount)
-
-                                    <span
-                                        class="text-[13px]
+                                                    @if ($hasDiscount)
+                                                        <span
+                                                            class="text-[13px]
                                                font-bold
                                                text-blue-600">
 
-                                        Rs.{{ number_format($product->discount_price, 0) }}
+                                                            Rs.{{ number_format($product->discount_price, 0) }}
 
-                                    </span>
+                                                        </span>
 
-                                    <span
-                                        class="text-[10px]
+                                                        <span
+                                                            class="text-[10px]
                                                text-slate-400
                                                line-through">
 
-                                        Rs.{{ number_format($product->price, 0) }}
+                                                            Rs.{{ number_format($product->price, 0) }}
 
-                                    </span>
+                                                        </span>
 
-                                    <span
-                                        class="text-[9px]
+                                                        <span
+                                                            class="text-[9px]
                                                font-semibold
                                                text-green-600">
 
-                                        Save
-                                        Rs.{{ number_format($discountAmount, 0) }}
+                                                            Save
+                                                            Rs.{{ number_format($discountAmount, 0) }}
 
-                                    </span>
-
-                                @else
-
-                                    <span
-                                        class="text-[13px]
+                                                        </span>
+                                                    @else
+                                                        <span
+                                                            class="text-[13px]
                                                font-bold
                                                text-slate-900">
 
-                                        Rs.{{ number_format($product->price, 0) }}
+                                                            Rs.{{ number_format($product->price, 0) }}
 
-                                    </span>
+                                                        </span>
+                                                    @endif
 
-                                @endif
-
-                            </div>
+                                                </div>
 
 
-                            {{-- STOCK --}}
-                            @if (isset($product->stock))
-
-                                @if ($product->stock > 0)
-
-                                    <div
-                                        class="flex
+                                                {{-- STOCK --}}
+                                                @if (isset($product->stock))
+                                                    @if ($product->stock > 0)
+                                                        <div
+                                                            class="flex
                                                items-center
                                                gap-1
                                                mt-1">
 
-                                        <span
-                                            class="w-1.5
+                                                            <span
+                                                                class="w-1.5
                                                    h-1.5
                                                    rounded-full
                                                    bg-green-500">
-                                        </span>
+                                                            </span>
 
-                                        <p
-                                            class="text-[9px]
+                                                            <p
+                                                                class="text-[9px]
                                                    font-medium
                                                    text-slate-500">
 
-                                            In Stock
+                                                                In Stock
 
-                                        </p>
+                                                            </p>
 
-                                    </div>
-
-                                @else
-
-                                    <div
-                                        class="flex
+                                                        </div>
+                                                    @else
+                                                        <div
+                                                            class="flex
                                                items-center
                                                gap-1
                                                mt-1">
 
-                                        <span
-                                            class="w-1.5
+                                                            <span
+                                                                class="w-1.5
                                                    h-1.5
                                                    rounded-full
                                                    bg-red-500">
-                                        </span>
+                                                            </span>
 
-                                        <p
-                                            class="text-[9px]
+                                                            <p
+                                                                class="text-[9px]
                                                    font-semibold
                                                    text-red-500">
 
-                                            Out of Stock
+                                                                Out of Stock
 
-                                        </p>
+                                                            </p>
 
-                                    </div>
-
-                                @endif
-
-                            @endif
+                                                        </div>
+                                                    @endif
+                                                @endif
 
 
-                            {{-- ADD TO CART --}}
-                            <div class="mt-auto pt-2">
+                                                {{-- ADD TO CART --}}
+                                                <div class="mt-auto pt-2">
 
-                                @if (isset($product->stock) && $product->stock <= 0)
-
-                                    <button
-                                        type="button"
-                                        disabled
-                                        onclick="event.stopPropagation();"
-                                        class="w-full
+                                                    @if (isset($product->stock) && $product->stock <= 0)
+                                                        <button type="button" disabled
+                                                            onclick="event.stopPropagation();"
+                                                            class="w-full
                                                inline-flex
                                                items-center
                                                justify-center
@@ -645,29 +584,20 @@
                                                font-semibold
                                                cursor-not-allowed">
 
-                                        Out of Stock
+                                                            Out of Stock
 
-                                    </button>
+                                                        </button>
+                                                    @else
+                                                        <form method="POST"
+                                                            action="{{ route('cart.add', ['product' => $product->id]) }}"
+                                                            onclick="event.stopPropagation();" class="w-full">
 
-                                @else
+                                                            @csrf
 
-                                    <form
-                                        method="POST"
-                                        action="{{ route('cart.add', ['product' => $product->id]) }}"
-                                        onclick="event.stopPropagation();"
-                                        class="w-full">
+                                                            <input type="hidden" name="quantity" value="1">
 
-                                        @csrf
-
-                                        <input
-                                            type="hidden"
-                                            name="quantity"
-                                            value="1">
-
-                                        <button
-                                            type="submit"
-                                            onclick="event.stopPropagation();"
-                                            class="w-full
+                                                            <button type="submit" onclick="event.stopPropagation();"
+                                                                class="w-full
                                                    bg-blue-600
                                                    hover:bg-blue-700
                                                    text-white
@@ -682,48 +612,68 @@
                                                    justify-center
                                                    gap-2">
 
-                                            <i class="fa-solid fa-cart-shopping"></i>
+                                                                <i class="fa-solid fa-cart-shopping"></i>
 
-                                            Add to Cart
+                                                                Add to Cart
 
-                                        </button>
+                                                            </button>
 
-                                    </form>
+                                                        </form>
+                                                    @endif
 
-                                @endif
+                                                </div>
 
-                            </div>
+                                            </div>
 
-                        </div>
+                                        </article>
+                                    @endforeach
 
-                    </article>
-
-                @endforeach
-
-            </div>
-
-        @else
-
-            <div
-                class="bg-white
+                                </div>
+                            @else
+                                <div
+                                    class="bg-white
                        rounded-xl
                        border
                        border-slate-200
                        p-8
                        text-center">
 
-                <p class="text-slate-500">
-                    No products available.
-                </p>
+                                    <p class="text-slate-500">
+                                        No products available.
+                                    </p>
 
-            </div>
+                                </div>
 
-        @endif
+                            @endif
 
-    </div>
+                        </div>
+                        @if ($smallBanners->count())
+                            <div class="mt-8">
 
-</section>
-                    <div class="py-4 bg-[#f0f9ff]">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                                    @foreach ($smallBanners as $banner)
+                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
+
+                                            <a href="{{ $banner->button_link ?? '#' }}" class="block w-full">
+
+                                                <img src="{{ asset('storage/' . $banner->image) }}"
+                                                    alt="{{ $banner->alt_text ?? $banner->title }}"
+                                                    class="w-full h-[180px] object-cover
+           transition-transform duration-500
+           group-hover:scale-105">
+
+                                            </a>
+
+                                        </div>
+                                    @endforeach
+
+                                </div>
+
+                            </div>
+                        @endif
+                    </section>
+                    <div class="py-2 bg-[#f0f9ff]">
                         <div class="">
 
                             @foreach ($parentCategories as $category)
@@ -935,8 +885,8 @@
                                                                 <svg class="w-10 h-10 text-slate-300" fill="none"
                                                                     stroke="currentColor" viewBox="0 0 24 24">
 
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                        stroke-width="1.5"
+                                                                    <path stroke-linecap="round"
+                                                                        stroke-linejoin="round" stroke-width="1.5"
                                                                         d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
 
                                                                 </svg>
@@ -1172,58 +1122,56 @@
     BRANDS HEADER
 ========================================================= --}}
 
-<div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center justify-between  ">
 
-    {{-- Left Side --}}
-    <div class="flex items-center gap-3">
+                        {{-- Left Side --}}
+                        <div class="flex items-center gap-3 ">
 
-        <div class="text-black text-lg font-semibold py-2 rounded-lg">
-            Shop By Brands
-        </div>
+                            <div class="text-black text-lg font-semibold py-2 rounded-lg">
+                                Shop By Brands
+                            </div>
 
-        <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
+                            <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
 
-    </div>
-
-
-    {{-- Right Side --}}
-    <a href="{{ route('brands.all') }}"
-   class="flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium transition-colors group text-sm">
+                        </div>
 
 
-        View All Brand
-
-        <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
-</a>
-
-</div>
+                        {{-- Right Side --}}
+                        <a href="{{ route('brands.all') }}"
+                            class="flex items-center gap-2 text-gray-700 hover:text-blue-600 font-medium transition-colors group text-sm">
 
 
-@if ($brands->where('status', true)->count() > 0)
+                            View All Brand
 
-    @php
-        $activeBrands = $brands->where('status', true)->values();
-    @endphp
+                            <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
+                        </a>
+
+                    </div>
 
 
-    <div class="relative overflow-hidden">
+                    @if ($brands->where('status', true)->count() > 0)
 
-        {{-- =================================================
+                        @php
+                            $activeBrands = $brands->where('status', true)->values();
+                        @endphp
+
+
+                        <div class="relative overflow-hidden">
+
+                            {{-- =================================================
             SLIDER TRACK
         ================================================== --}}
 
-        <div class="flex gap-6 animate-scroll hover:pause">
+                            <div class="flex gap-6 animate-scroll hover:pause">
 
 
-            {{-- =========================
+                                {{-- =========================
                 FIRST SET OF BRANDS
             ========================== --}}
 
-            @foreach ($activeBrands as $brand)
-
-                <a
-                    href="{{ route('brand.show', $brand->slug) }}"
-                    class="flex-shrink-0
+                                @foreach ($activeBrands as $brand)
+                                    <a href="{{ route('brand.show', $brand->slug) }}"
+                                        class="flex-shrink-0
                            w-[120px] h-[110px]
                            bg-white rounded-2xl
                            shadow-md hover:shadow-xl
@@ -1235,64 +1183,56 @@
                            justify-center p-4
                            cursor-pointer group">
 
-                    <div class="w-20 h-20 flex items-center justify-center">
+                                        <div class="w-20 h-20 flex items-center justify-center">
 
-                        @if ($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
-
-                            <img
-                                src="{{ asset('storage/' . $brand->logo) }}"
-                                alt="{{ $brand->name }}"
-                                class="w-[60px] h-[60px]
+                                            @if ($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+                                                <img src="{{ asset('storage/' . $brand->logo) }}"
+                                                    alt="{{ $brand->name }}"
+                                                    class="w-[60px] h-[60px]
                                        object-contain
                                        group-hover:scale-105
                                        transition-transform duration-300"
-                                loading="lazy">
-
-                        @else
-
-                            <div
-                                class="w-20 h-20
+                                                    loading="lazy">
+                                            @else
+                                                <div
+                                                    class="w-20 h-20
                                        rounded-full
                                        bg-blue-100
                                        flex items-center justify-center
                                        text-blue-700
                                        text-1xl font-bold">
 
-                                {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
 
-                            </div>
+                                                </div>
+                                            @endif
 
-                        @endif
-
-                    </div>
+                                        </div>
 
 
-                    <span
-                        class="mt-3
+                                        <span
+                                            class="mt-3
                                text-sm font-medium
                                text-gray-700
                                group-hover:text-blue-600
                                transition-colors duration-300
                                text-center">
 
-                        {{ $brand->name }}
+                                            {{ $brand->name }}
 
-                    </span>
+                                        </span>
 
-                </a>
+                                    </a>
+                                @endforeach
 
-            @endforeach
 
-
-            {{-- =========================
+                                {{-- =========================
                 DUPLICATE FOR LOOP
             ========================== --}}
 
-            @foreach ($activeBrands as $brand)
-
-                <a
-                    href="{{ route('brand.show', $brand->slug) }}"
-                    class="flex-shrink-0
+                                @foreach ($activeBrands as $brand)
+                                    <a href="{{ route('brand.show', $brand->slug) }}"
+                                        class="flex-shrink-0
                            w-[120px] h-[110px]
                            bg-white rounded-2xl
                            shadow-md hover:shadow-xl
@@ -1304,121 +1244,113 @@
                            justify-center p-4
                            cursor-pointer group">
 
-                    <div class="w-20 h-20 flex items-center justify-center">
+                                        <div class="w-20 h-20 flex items-center justify-center">
 
-                        @if ($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
-
-                            <img
-                                src="{{ asset('storage/' . $brand->logo) }}"
-                                alt="{{ $brand->name }}"
-                                class="w-[60px] h-[60px]
+                                            @if ($brand->logo && file_exists(public_path('storage/' . $brand->logo)))
+                                                <img src="{{ asset('storage/' . $brand->logo) }}"
+                                                    alt="{{ $brand->name }}"
+                                                    class="w-[60px] h-[60px]
                                        object-contain
                                        group-hover:scale-105
                                        transition-transform duration-300"
-                                loading="lazy">
-
-                        @else
-
-                            <div
-                                class="w-20 h-20
+                                                    loading="lazy">
+                                            @else
+                                                <div
+                                                    class="w-20 h-20
                                        rounded-full
                                        bg-blue-100
                                        flex items-center justify-center
                                        text-blue-700
                                        text-1xl font-bold">
 
-                                {{ strtoupper(substr($brand->name, 0, 1)) }}
+                                                    {{ strtoupper(substr($brand->name, 0, 1)) }}
 
-                            </div>
+                                                </div>
+                                            @endif
 
-                        @endif
-
-                    </div>
+                                        </div>
 
 
-                    <span
-                        class="mt-3
+                                        <span
+                                            class="mt-3
                                text-sm font-medium
                                text-gray-700
                                group-hover:text-blue-600
                                transition-colors duration-300
                                text-center">
 
-                        {{ $brand->name }}
+                                            {{ $brand->name }}
 
-                    </span>
+                                        </span>
 
-                </a>
+                                    </a>
+                                @endforeach
 
-            @endforeach
-
-        </div>
+                            </div>
 
 
-        {{-- =================================================
+                            {{-- =================================================
             LEFT FADE
         ================================================== --}}
 
-        <div
-            class="absolute inset-y-0 left-0 w-16
+                            <div
+                                class="absolute inset-y-0 left-0 w-16
                    bg-gradient-to-r from-white to-transparent
                    pointer-events-none">
-        </div>
+                            </div>
 
 
-        {{-- =================================================
+                            {{-- =================================================
             RIGHT FADE
         ================================================== --}}
 
-        <div
-            class="absolute inset-y-0 right-0 w-16
+                            <div
+                                class="absolute inset-y-0 right-0 w-16
                    bg-gradient-to-l from-white to-transparent
                    pointer-events-none">
-        </div>
+                            </div>
 
-    </div>
+                        </div>
+                    @else
+                        <p class="text-center text-gray-500">
+                            No brands available at the moment.
+                        </p>
 
-@else
-
-    <p class="text-center text-gray-500">
-        No brands available at the moment.
-    </p>
-
-@endif
+                    @endif
 
 
-<style>
-    @keyframes scroll {
+                    <style>
+                        @keyframes scroll {
 
-        0% {
-            transform: translateX(0);
-        }
+                            0% {
+                                transform: translateX(0);
+                            }
 
-        100% {
-            transform: translateX(-50%);
-        }
+                            100% {
+                                transform: translateX(-50%);
+                            }
 
-    }
+                        }
 
-    .animate-scroll {
+                        .animate-scroll {
 
-        /* Pehle 30s tha, ab thoda slow */
-        animation: scroll 45s linear infinite;
+                            /* Pehle 30s tha, ab thoda slow */
+                            animation: scroll 45s linear infinite;
 
-        width: max-content;
+                            width: max-content;
 
-    }
+                        }
 
-    .hover\:pause:hover {
+                        .hover\:pause:hover {
 
-        animation-play-state: paused;
+                            animation-play-state: paused;
 
-    }
-</style>
+                        }
+                    </style>
 
-                    <div class="pb-5">
+                    <div class="">
                         <!-- Header -->
-                        <div class="flex items-center justify-between ">
+                        <div class="flex items-center justify-between pt-10 ">
                             <!-- Left Side -->
                             <div class="flex items-center gap-3">
                                 <div class="text-black text-lg font-semibold  py-2 rounded-lg">
@@ -1435,7 +1367,7 @@
                             </a>
                         </div>
 
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 pt-4 gap-3 pb-8">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 pt-5 gap-3 pb-8 ">
 
                             @foreach ($blogs as $blog)
                                 <article

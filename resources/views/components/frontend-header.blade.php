@@ -22,7 +22,7 @@
                     Track Order
                 </a>
                 <span class="h-4 w-px bg-white/40"></span>
-                <a href="#" class="text-[#dbeafe] text-[10px] sm:text-[10px] hover:text-white transition">
+                <a href="{{ route('contact-us') }}" class="text-[#dbeafe] text-[10px] sm:text-[10px] hover:text-white transition">
                     Help
                 </a>
                 <span class="hidden sm:block h-4 w-px bg-white/40"></span>
@@ -49,29 +49,44 @@
 
             {{-- SEARCH — desktop only (≥1024px), tablet uses drawer search --}}
             <form action="{{ route('search') }}" method="GET"
-                class="hidden lg:flex flex-1 max-w-xl mx-4 lg:mx-8 relative">
-                <input type="text" name="q" placeholder="Search products..." value="{{ request('q') }}"
-                    class="w-full h-9 rounded-full outline-none
-                           pl-5 pr-14 text-sm
-                           border-2 border-gray-200 bg-white
-                           focus:border-[#2563EB]
-                           transition-all duration-300
-                           shadow-inner text-[#111827]">
-                <button type="submit"
-                    class="absolute right-1 top-1/2 -translate-y-1/2
-                           w-8 h-8 rounded-full
-                           bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]
-                           flex items-center justify-center
-                           hover:scale-105
-                           hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]
-                           transition-all duration-200 shadow-md">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                            d="M21 21l-5.2-5.2m2.2-5.3a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                </button>
-            </form>
+    class="hidden lg:flex flex-1 max-w-xl mx-4 lg:mx-8 relative">
+
+    <input
+        type="text"
+        name="q"
+        placeholder="Search products..."
+        value="{{ request('q') }}"
+        class="w-full h-9 rounded-full outline-none
+               pl-5 pr-14 text-sm
+               border-2 border-gray-200 bg-white
+               focus:border-[#2563EB]
+               transition-all duration-300
+               shadow-inner text-[#111827]">
+
+    <button type="submit"
+        class="absolute right-1 top-1/2 -translate-y-1/2
+               w-8 h-8 rounded-full
+               bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]
+               flex items-center justify-center
+               hover:scale-105
+               hover:shadow-[0_0_15px_rgba(37,99,235,0.4)]
+               transition-all duration-200 shadow-md">
+
+        <svg xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+
+            <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+                d="M21 21l-5.2-5.2m2.2-5.3a7 7 0 11-14 0 7 7 0 0114 0z" />
+
+        </svg>
+    </button>
+</form>
 
             {{-- RIGHT SIDE --}}
             <div class="flex items-center gap-1.5 sm:gap-3 lg:gap-5">

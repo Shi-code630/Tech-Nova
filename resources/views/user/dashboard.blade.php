@@ -44,7 +44,7 @@
     :recently-viewed-products="$recentlyViewedProducts"
 />
 
-                        <x-user-dashboard.recommended-products />
+                      
 
                     </div>
 

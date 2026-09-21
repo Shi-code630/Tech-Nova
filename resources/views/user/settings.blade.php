@@ -40,7 +40,7 @@
                         {{-- =============================================
                             PROFILE INFORMATION
                         ============================================== --}}
-                        <a href="#"
+                        <a href="{{ route('user.profile') }}"
                             class="group block bg-white rounded-2xl border border-gray-200
                                    shadow-sm hover:shadow-md hover:border-blue-200
                                    transition-all duration-200">
@@ -156,7 +156,7 @@
                         {{-- =============================================
                             ADDRESS MANAGEMENT
                         ============================================== --}}
-                        <a href="#"
+                        <a href="{{ route('checkout.addresses') }}"
                             class="group block bg-white rounded-2xl border border-gray-200
                                    shadow-sm hover:shadow-md hover:border-blue-200
                                    transition-all duration-200">
@@ -284,7 +284,7 @@
                         {{-- =============================================
                             PRIVACY & SECURITY
                         ============================================== --}}
-                        <a href="#"
+                        <a href="{{ route('privacy-policy') }}"
                             class="group block bg-white rounded-2xl border border-gray-200
                                    shadow-sm hover:shadow-md hover:border-blue-200
                                    transition-all duration-200">
@@ -312,7 +312,7 @@
                                         class="font-semibold text-sm sm:text-base text-[#111827]
                                                group-hover:text-[#2563EB] transition-colors">
 
-                                        Privacy & Security
+                                        Privacy Policy
 
                                     </h2>
 
