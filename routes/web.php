@@ -156,6 +156,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reviews', [UserDashboardController::class, 'reviews'])->name('user.reviews');
     Route::get('/coupons', [CouponController::class, 'index'])->name('user.coupons');
     Route::get('/settings', [UserDashboardController::class, 'settings'])->name('user.settings');
+    Route::put('/settings/password', [AuthController::class, 'updatePassword'])->name('user.password.update');
     Route::get('/coins', [UserDashboardController::class, 'coins'])->name('user.coins');
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])->name('user.coins.live');
 });

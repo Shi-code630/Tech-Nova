@@ -144,6 +144,27 @@ class AuthController extends Controller
             ->with('success', 'Profile updated successfully.');
     }
 
+
+        public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', 'min:8', 'different:current_password'],
+        ], [
+            'current_password.current_password' => 'Your current password is incorrect.',
+            'password.different' => 'New password must be different from the current password.',
+        ]);
+
+        $user = $request->user();
+        $user->password = $request->password;
+        $user->save();
+
+        $request->session()->regenerate();
+
+        return back()->with('success', 'Password updated. Use the new password next time you log in.');
+    }
+
+
     /**
      * Logout the authenticated user.
      */
