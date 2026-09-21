@@ -65,19 +65,20 @@ class BannerForm
                                     ->placeholder('e.g. /products or https://example.com')
                                     ->helperText('Enter the URL where users will be redirected when clicking the button. Leave empty if no button is needed.'),
 
-                                // Image field with proper banner dimensions
                                 FileUpload::make('image')
                                     ->label('Banner Image')
                                     ->image()
+                                    ->disk('public')
                                     ->directory('banners')
-                                    ->maxSize(5120) // 5MB
+                                    ->visibility('public')
+                                    ->maxSize(5120)
                                     ->imageResizeMode('cover')
-                                    ->imageCropAspectRatio('16:5') // For full-width banner
+                                    ->imageCropAspectRatio('16:5')
                                     ->imageResizeTargetWidth('1920')
                                     ->imageResizeTargetHeight('600')
                                     ->imageResizeUpscale(false)
                                     ->required()
-                                    ->helperText('Main banner: 1920 x 600px (16:5). Small banner: upload at roughly 800 x 400px (2:1) instead — this field does not auto-crop differently per type, so just size the source image accordingly. Max 5MB. Supports JPG, PNG, WEBP.'),
+                                    ->helperText('Main banner: 1920 x 600px (16:5). Small banner: roughly 800 x 400px. Max 5MB.'),
                             ]),
                     ]),
 
@@ -90,7 +91,7 @@ class BannerForm
                                     ->numeric()
                                     ->default(0)
                                     ->minValue(0)
-                                    ->helperText('Lower numbers appear first, within the same banner type'),
+                                    ->helperText('Lower numbers appear first'),
 
                                 Toggle::make('status')
                                     ->label('Active')

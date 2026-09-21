@@ -528,7 +528,178 @@ class CategoryController extends Controller
         );
     }
 
+/*
+|--------------------------------------------------------------------------
+| Festive Offers
+|--------------------------------------------------------------------------
+*/
+public function festive($slug, Request $request)
+{
+    $category = Category::with([
+        'children' => function ($query) {
+            $query->where('status', true)
+                ->orderBy('name');
+        },
+        'parent',
+    ])
+        ->where('slug', $slug)
+        ->where('status', true)
+        ->firstOrFail();
 
+    $categoryIds = $this->getAllCategoryIds($category);
+
+    $query = Product::whereIn('category_id', $categoryIds)
+        ->where('status', 'active')
+        ->with(['brand', 'category']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHILD CATEGORY FILTER
+    |--------------------------------------------------------------------------
+    */
+    if ($request->filled('child')) {
+
+        $childCategory = Category::where('slug', $request->child)
+            ->where('status', true)
+            ->first();
+
+        if ($childCategory) {
+
+            $childIds = $this->getAllCategoryIds($childCategory);
+
+            $query->whereIn('category_id', $childIds);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | BRAND FILTER
+    |--------------------------------------------------------------------------
+    */
+    if ($request->filled('brand')) {
+
+        $query->whereIn(
+            'brand_id',
+            (array) $request->brand
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRICE FILTER
+    |--------------------------------------------------------------------------
+    */
+    if ($request->filled('min_price')) {
+
+        $query->where(
+            'price',
+            '>=',
+            $request->min_price
+        );
+    }
+
+    if ($request->filled('max_price')) {
+
+        $query->where(
+            'price',
+            '<=',
+            $request->max_price
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | PRODUCTS
+    |--------------------------------------------------------------------------
+    */
+    $products = $query
+        ->latest()
+        ->paginate(self::PER_PAGE)
+        ->withQueryString();
+
+    /*
+    |--------------------------------------------------------------------------
+    | BRANDS
+    |--------------------------------------------------------------------------
+    */
+    $brands = Brand::where('status', true)
+        ->whereHas('products', function ($q) use ($categoryIds) {
+
+            $q->whereIn(
+                'category_id',
+                $categoryIds
+            )
+            ->where('status', 'active');
+
+        })
+        ->withCount([
+            'products' => function ($q) use ($categoryIds) {
+
+                $q->whereIn(
+                    'category_id',
+                    $categoryIds
+                )
+                ->where('status', 'active');
+
+            },
+        ])
+        ->orderBy('name')
+        ->get();
+
+    /*
+    |--------------------------------------------------------------------------
+    | BREADCRUMBS
+    |--------------------------------------------------------------------------
+    */
+    $breadcrumbs = [];
+
+    $current = $category;
+
+    while ($current) {
+
+        array_unshift(
+            $breadcrumbs,
+            $current
+        );
+
+        if ($current->parent_id) {
+
+            $current = Category::find(
+                $current->parent_id
+            );
+
+        } else {
+
+            $current = null;
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | WISHLIST
+    |--------------------------------------------------------------------------
+    */
+    $wishlistProductIds = [];
+
+    if (Auth::check()) {
+
+        $wishlistProductIds = Auth::user()
+            ->wishlists()
+            ->pluck('product_id')
+            ->toArray();
+    }
+
+    return view(
+        'frontend.today-deals.festive',
+        compact(
+            'category',
+            'products',
+            'brands',
+            'breadcrumbs',
+            'wishlistProductIds'
+        )
+    );
+}
     /*
     |--------------------------------------------------------------------------
     | Limited Time Offer
