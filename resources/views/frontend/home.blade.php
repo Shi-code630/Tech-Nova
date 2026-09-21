@@ -1,6 +1,5 @@
-
 @php $setting = \App\Models\Setting::query()->first(); @endphp
-<x-frontend-layout 
+<x-frontend-layout
 :title="$setting->meta_title ?: ($setting->site_name ?: 'TechNova Nepal')"
     :description="$setting->meta_description ?: 'Buy genuine laptops, gadgets and accessories in Nepal. TechNova Nepal — Kathmandu.'"
     :keywords="$setting->meta_keywords"

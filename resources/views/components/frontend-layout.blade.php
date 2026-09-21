@@ -9,6 +9,7 @@
 ])
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="UTF-8">
@@ -69,6 +70,7 @@
         }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col bg-white text-[#111827] overflow-x-hidden antialiased">
 
     <x-frontend-header />
@@ -80,4 +82,5 @@
     <x-frontend-footer />
 
 </body>
+
 </html>
