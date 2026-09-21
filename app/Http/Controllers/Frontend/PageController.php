@@ -155,7 +155,7 @@ $homeProducts = Product::query()
         if (Auth::check()) {
 
             $wishlistProductIds = Auth::user()
-                ->wishlists()
+                ->wishlists( )
                 ->pluck('product_id')
                 ->toArray();
         }
