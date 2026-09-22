@@ -50,7 +50,8 @@ class TopSellingProducts extends BaseWidget
                 Tables\Columns\ImageColumn::make('thumbnails')
                     ->label('')
                     ->circular()
-                    ->size(36)
+                    ->size(30)
+
                     ->getStateUsing(function ($record) {
                         if (is_array($record->thumbnails) && !empty($record->thumbnails)) {
                             $firstThumbnail = $record->thumbnails[0];
@@ -66,7 +67,7 @@ class TopSellingProducts extends BaseWidget
                 Tables\Columns\TextColumn::make('name')
                     ->label('Product')
                     ->weight('semibold')
-                    ->limit(30)
+                    ->limit(4)
                     ->tooltip(fn($record) => $record->name),
 
                 Tables\Columns\TextColumn::make('sold')

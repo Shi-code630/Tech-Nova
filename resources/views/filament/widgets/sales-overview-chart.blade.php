@@ -1,7 +1,5 @@
-
-
-<div class="filament-widgets-chart-widget relative">
-    <div class="bg-slate-900 rounded-xl border border-slate-800 p-6 hover:border-slate-700 transition-all duration-300 shadow-xl">
+<div class="filament-widgets-chart-widget relative h-[460px] flex">
+    <div class="h-full w-full flex flex-col bg-slate-900 rounded-xl border border-slate-800 p-6 hover:border-slate-700 transition-all duration-300 shadow-xl">
 
         <!-- Header with Dynamic Metrics -->
         <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-6 gap-4">
@@ -54,9 +52,9 @@
             </div>
         </div>
 
-        <!-- Chart -->
-        <div class="relative">
-            <div class="h-[250px] w-full">
+        <!-- Chart (fills remaining space so card height matches OrdersByStatusChart) -->
+        <div class="relative flex-1 min-h-0">
+            <div class="h-full w-full">
                 <canvas
                     x-ref="canvas"
                     x-data="{

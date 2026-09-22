@@ -28,6 +28,7 @@ class LowStockAlert extends TableWidget
                 fn(): Builder => Product::query()
                     ->where('stock', '<=', 5)
                     ->orderBy('stock', 'asc')
+                    ->limit(5)
             )
             ->columns([
                 TextColumn::make('name')

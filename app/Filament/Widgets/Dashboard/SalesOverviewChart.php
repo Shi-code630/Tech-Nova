@@ -10,7 +10,7 @@ class SalesOverviewChart extends ChartWidget
 {
     protected ?string $heading = 'Sales Overview';
     protected static ?int $sort = 1;
-    protected  ?string $maxHeight = '320px';
+    protected ?string $maxHeight = '320px';
 
     protected int|string|array $columnSpan = [
         'default' => 1,

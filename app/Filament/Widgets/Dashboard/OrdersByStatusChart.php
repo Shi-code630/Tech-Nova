@@ -9,7 +9,7 @@ class OrdersByStatusChart extends ChartWidget
 {
     protected ?string $heading = 'Orders by Status';
     protected static ?int $sort = 2;
-
+    protected ?string $maxHeight = '320px';
 
     protected int|string|array $columnSpan = [
         'default' => 1,

@@ -6,7 +6,7 @@
 
 <x-filament-widgets::widget>
     <div
-        class="rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10"
+        class="h-[460px] flex flex-col rounded-2xl bg-white dark:bg-gray-900 p-6 shadow-sm ring-1 ring-gray-950/5 dark:ring-white/10"
         x-data="ordersByStatusChart({{ Illuminate\Support\Js::from($statuses) }}, {{ $total }})"
         x-init="init()"
     >
@@ -41,9 +41,9 @@
             </div>
         </div>
 
-        {{-- Body: chart + legend --}}
-        <div class="flex items-center justify-between gap-6">
-            {{-- Donut chart with centered total --}}
+        {{-- Body: chart + legend (fills remaining space so card height matches SalesOverviewChart) --}}
+        <div class="flex-1 flex items-center justify-between gap-6">
+           
             <div class="relative w-40 h-40 shrink-0">
                 <canvas x-ref="canvas"></canvas>
                 <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
