@@ -24,7 +24,7 @@ class SalesByCategory extends Widget
 
     protected string $view = 'filament.widgets.product.sales-by-category';
 
-   
+
     public function getCategoryData(): Collection
     {
 
@@ -44,7 +44,7 @@ class SalesByCategory extends Widget
                 'revenue'
             )
             ->orderByDesc('revenue')
-            ->limit(10)
+            ->limit(5)
             ->get();
 
         $total = $data->sum('revenue');

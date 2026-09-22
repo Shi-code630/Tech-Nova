@@ -50,6 +50,7 @@ class ProductsTable
                 TextColumn::make('name')
                     ->label('Product Name')
                     ->searchable()
+                    ->Limit(50)
                     ->sortable(),
 
                 TextColumn::make('category.name')

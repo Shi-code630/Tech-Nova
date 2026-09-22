@@ -18,7 +18,7 @@ class TopSellingProducts extends BaseWidget
     protected int|string|array $columnSpan = [
         'default' => 1,
         'md' => 2,
-        'xl' => 5,
+        'xl' => 12,
     ];
 
     protected static ?string $heading = 'Top Selling Products';

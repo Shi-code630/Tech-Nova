@@ -26,6 +26,9 @@ class CustomersByLocation extends Widget
 
     public ?array $filters = [];
 
+
+    protected int $locationLimit = 5;
+
     public function getLocationData(): Collection
     {
         [$start, $end] = $this->getDateRange();
@@ -43,9 +46,10 @@ class CustomersByLocation extends Widget
             })
             ->groupBy('addresses.city')
             ->orderByDesc('total')
-            ->limit(10)
             ->get();
 
+        // True total across ALL cities (not just the ones displayed),
+        // so percentages stay accurate.
         $total = $data->sum('total');
 
         $colors = [
@@ -61,14 +65,31 @@ class CustomersByLocation extends Widget
             'from-cyan-500 to-cyan-600',
         ];
 
-        return $data->values()->map(function ($item, $index) use ($total, $colors) {
+        // ---- Limit to top N cities, group the rest into "Others" ----
+        $limited = $data->take($this->locationLimit);
+        $remaining = $data->slice($this->locationLimit);
+
+        if ($remaining->isNotEmpty()) {
+            $othersRow = (object) [
+                'city' => 'Others',
+                'total' => $remaining->sum('total'),
+            ];
+
+            $displayData = $limited->push($othersRow);
+        } else {
+            $displayData = $limited;
+        }
+        // ---------------------------------------------------------
+
+        return $displayData->values()->map(function ($item, $index) use ($total, $colors) {
             $percentage = $total > 0 ? round(($item->total / $total) * 100, 1) : 0;
+            $isOthers = $item->city === 'Others';
 
             return (object) [
-                'location' => ucfirst($item->city),
+                'location' => $isOthers ? 'Others' : ucfirst($item->city),
                 'total' => $item->total,
                 'percentage' => $percentage,
-                'color' => $colors[$index % count($colors)],
+                'color' => $isOthers ? 'from-gray-400 to-gray-500' : $colors[$index % count($colors)],
             ];
         });
     }

@@ -28,7 +28,7 @@ class LowStockProducts extends BaseWidget
                     ->where('stock', '<=', 10)
                     ->with('category')
                     ->orderBy('stock', 'asc')
-                    ->limit(10)
+                    ->limit(5)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')

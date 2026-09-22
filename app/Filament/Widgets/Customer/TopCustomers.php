@@ -25,6 +25,9 @@ class TopCustomers extends Widget
 
     protected string $view = 'filament.widgets.customer.top-customers';
 
+    // Maximum number of top customers to display.
+    protected int $customerLimit = 5;
+
     public function getViewAllUrl(): ?string
     {
         $params = [];
@@ -52,7 +55,7 @@ class TopCustomers extends Widget
                 return route('users.index', $params);
             }
         } catch (\Exception $e) {
-           
+
             return null;
         }
 
@@ -76,7 +79,7 @@ class TopCustomers extends Widget
             }], 'grand_total')
             ->having('orders_count', '>', 0)
             ->orderByDesc('total_spent')
-            ->limit(5)
+            ->limit($this->customerLimit)
             ->get()
             ->map(function ($user) {
                 $name = $user->name ?? 'Guest';

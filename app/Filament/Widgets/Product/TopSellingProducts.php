@@ -61,16 +61,16 @@ class TopSellingProducts extends BaseWidget
                             ->selectRaw('COALESCE(AVG(rating), 0)'),
                         'avg_rating'
                     )
-                  
+
                     ->orderByDesc('sold')
-                    ->limit(10)
+                    ->limit(5)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->label('Product')
                     ->weight('semibold')
                     ->url(fn($record) => ProductsResource::getUrl('edit', ['record' => $record->id]))
-                    ->limit(10),
+                    ->limit(5),
 
 
                 Tables\Columns\TextColumn::make('category.name')

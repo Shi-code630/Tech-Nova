@@ -15,12 +15,12 @@ class SalesByCategory extends Widget
     use InteractsWithPageFilters;
 
     protected static ?int $sort = 3;
-    protected int|string|array $columnSpan = 'full';
     protected static ?string $heading = 'Sales by Category';
 
     protected string $view = 'filament.widgets.sales.sales-by-category';
     public ?string $filter = 'month';
 
+       protected int $categoryLimit = 5;
     protected function getFilters(): ?array
     {
         return [
@@ -35,7 +35,6 @@ class SalesByCategory extends Widget
     public function getCategorySalesData(): array
     {
         [$start, $end] = $this->getDateRange();
-
 
         $categorySales = Category::query()
             ->select(
@@ -53,18 +52,43 @@ class SalesByCategory extends Widget
                 if ($start && $end) {
                     $query->whereBetween('orders.created_at', [$start, $end]);
                 }
-               
             })
             ->groupBy('categories.id', 'categories.name', 'categories.slug')
             ->orderByDesc('total_sales')
             ->get();
 
-
         $totalSales = $categorySales->sum('total_sales');
 
+        if ($categorySales->isEmpty()) {
+            return [
+                'labels' => ['No Data'],
+                'data' => [0],
+                'colors' => ['#e5e7eb'],
+                'categories' => [],
+                'total_sales' => 0,
+            ];
+        }
 
-        $labels = [];
-        $data = [];
+        // ---- Limit to top N categories, group the rest into "Others" ----
+        $limited = $categorySales->take($this->categoryLimit);
+        $remaining = $categorySales->slice($this->categoryLimit);
+
+        if ($remaining->isNotEmpty()) {
+            $othersRow = (object) [
+                'id' => 0,
+                'name' => 'Others',
+                'slug' => 'others',
+                'total_sales' => $remaining->sum('total_sales'),
+                'order_count' => $remaining->sum('order_count'),
+                'total_items_sold' => $remaining->sum('total_items_sold'),
+            ];
+
+            $displaySales = $limited->push($othersRow);
+        } else {
+            $displaySales = $limited;
+        }
+        // -------------------------------------------------------------
+
         $colors = [
             '#6366f1',
             '#8b5cf6',
@@ -81,7 +105,7 @@ class SalesByCategory extends Widget
         $formattedData = [];
         $index = 0;
 
-        foreach ($categorySales as $category) {
+        foreach ($displaySales as $category) {
             $percentage = $totalSales > 0 ? round(($category->total_sales / $totalSales) * 100, 1) : 0;
 
             $formattedData[] = [
@@ -92,27 +116,16 @@ class SalesByCategory extends Widget
                 'order_count' => $category->order_count,
                 'total_items_sold' => $category->total_items_sold,
                 'percentage' => $percentage,
-                'color' => $colors[$index % count($colors)],
+                'color' => $category->slug === 'others' ? '#9ca3af' : $colors[$index % count($colors)],
                 'formatted_sales' => 'Rs. ' . number_format($category->total_sales, 2),
             ];
             $index++;
         }
 
-
-        if ($categorySales->isEmpty()) {
-            return [
-                'labels' => ['No Data'],
-                'data' => [0],
-                'colors' => ['#e5e7eb'],
-                'categories' => [],
-                'total_sales' => 0,
-            ];
-        }
-
         return [
-            'labels' => $categorySales->pluck('name')->toArray(),
-            'data' => $categorySales->pluck('total_sales')->toArray(),
-            'colors' => array_slice($colors, 0, $categorySales->count()),
+            'labels' => $displaySales->pluck('name')->toArray(),
+            'data' => $displaySales->pluck('total_sales')->toArray(),
+            'colors' => array_column($formattedData, 'color'),
             'categories' => $formattedData,
             'total_sales' => $totalSales,
         ];
@@ -133,13 +146,12 @@ class SalesByCategory extends Widget
             'Home Appliances' => 'heroicon-o-home-modern',
             'Smart Home' => 'heroicon-o-cpu-chip',
             'Electrical' => 'heroicon-o-bolt',
+            'Others' => 'heroicon-o-ellipsis-horizontal-circle',
         ];
-
 
         if (isset($icons[$categoryName])) {
             return $icons[$categoryName];
         }
-
 
         foreach ($icons as $key => $icon) {
             if (str_contains($categoryName, $key) || str_contains($key, $categoryName)) {
