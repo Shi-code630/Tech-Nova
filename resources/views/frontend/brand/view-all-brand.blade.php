@@ -17,7 +17,7 @@
                        class="hover:text-blue-600 transition-colors">
                         Home
                     </a>
-
+<span>/</span>
                     <i class="fa-solid fa-chevron-right text-[8px] text-gray-400"></i>
 
                     <span class="text-gray-800 font-medium">

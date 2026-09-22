@@ -783,60 +783,38 @@
                             </div>
 
 
-                            {{-- View All --}}
-                            <a
-                                href="{{ route('category.show', ['slug' => $child->slug]) }}"
-                                class="group
-                                       inline-flex
-                                       items-center
-                                       gap-1.5
-                                       shrink-0
-                                       text-[10px]
-                                       sm:text-xs
-                                       font-bold
-                                       text-blue-600
-                                       hover:text-blue-700
-                                       transition-colors
-                                       duration-200">
+                        @php
+    if ($child->slug === 'limited-time-offer') {
+        $childUrl = route('limited-time');
+    } elseif (in_array($child->slug, ['dasara-offer', 'diwali-offer'])) {
+        $childUrl = route('frontend.today-deals.festive', [
+            'slug' => $child->slug,
+        ]);
+    } else {
+        $childUrl = route('category.show', [
+            'slug' => $child->slug,
+        ]);
+    }
+@endphp
 
-                                <span>
-                                    View All {{ $child->name }}
-                                </span>
+<a href="{{ $childUrl }}"
+    class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-semibold">
 
+    <span>View All {{ $child->name }}</span>
 
-                                <span
-                                    class="w-6
-                                           h-6
-                                           rounded-md
-                                           bg-blue-50
-                                           group-hover:bg-blue-600
-                                           text-blue-600
-                                           group-hover:text-white
-                                           flex
-                                           items-center
-                                           justify-center
-                                           transition-all
-                                           duration-200
-                                           group-hover:translate-x-1">
+    <svg class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24">
 
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="w-3 h-3">
+        <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7" />
 
-                                        <path d="M5 12h14"></path>
-                                        <path d="m13 6 6 6-6 6"></path>
-
-                                    </svg>
-
-                                </span>
-
-                            </a>
+    </svg>
+</a>
 
                         </div>
 

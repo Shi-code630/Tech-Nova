@@ -1,34 +1,40 @@
 <x-frontend-layout>
 
-    <div class="bg-gray-100 w-full py-6 sm:py-8">
+    <div class="bg-gray-50 w-full py-6 sm:py-8">
 
-        <div class="Container mx-auto px-3 sm:px-4 flex flex-col lg:flex-row gap-4 sm:gap-6 items-start">
+        <div class="Container mx-auto px-3 sm:px-4">
 
-            {{-- Dashboard Sidebar --}}
-            <aside class="w-full lg:w-64 flex-shrink-0">
-                <x-user-dashboard.sidebar />
-            </aside>
+            <div class="flex flex-col lg:flex-row gap-4 sm:gap-6">
+
+                {{-- =====================================================
+                     SIDEBAR
+                ====================================================== --}}
+                <aside class="w-full lg:w-64 flex-shrink-0">
+                    <x-user-dashboard.sidebar />
+                </aside>
 
 
-            {{-- Main Content --}}
-            <main class="flex-1 min-w-0 w-full">
+                {{-- =====================================================
+                     MAIN CONTENT
+                ====================================================== --}}
+                <main class="flex-1 min-w-0 w-full">
 
-                <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm p-4 sm:p-6">
+                    <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm p-4 sm:p-6">
 
-                    {{-- =====================================================
-                        PAGE HEADER
-                    ====================================================== --}}
-                    <div class="mb-4 sm:mb-6">
+                        {{-- =====================================================
+                             PAGE HEADER
+                        ====================================================== --}}
+                        <div class="mb-4 sm:mb-6">
 
-                        <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-[#111827]">
-                            My Orders
-                        </h1>
+                            <h1 class="text-lg sm:text-xl md:text-2xl font-bold text-[#111827]">
+                                My Orders
+                            </h1>
 
-                        <p class="text-xs sm:text-sm text-gray-500 mt-1">
-                            View and manage your orders
-                        </p>
+                            <p class="text-xs sm:text-sm text-gray-500 mt-1">
+                                View and manage your orders
+                            </p>
 
-                    </div>
+                        </div>
 
 
                     @if ($orders->count())
@@ -601,9 +607,11 @@
 
                     @endif
 
-                </div>
+                  </div>
 
-            </main>
+                </main>
+
+            </div>
 
         </div>
 

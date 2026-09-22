@@ -675,34 +675,60 @@
                                 {{-- EMPTY STATE --}}
                                 <div class="py-12 sm:py-16 text-center">
 
-                                    <div
-                                        class="w-14 h-14 sm:w-16 sm:h-16 mx-auto
-                                                rounded-full bg-red-50
-                                                flex items-center justify-center mb-4">
-                                        <i class="fa-solid fa-clock text-xl sm:text-2xl text-red-500"></i>
-                                    </div>
+    <div
+        class="w-16 h-16 mx-auto
+        rounded-full
+        bg-red-50
+        flex items-center
+        justify-center
+        mb-4">
 
-                                    <h3 class="text-base sm:text-lg font-bold text-gray-800">
-                                        No Limited-Time Deals
-                                    </h3>
+        <span class="fa-solid fa-clock text-2xl text-red-500">🛒</span>
 
-                                    <p
-                                        class="text-[11px] sm:text-xs text-gray-400 mt-2
-                                              max-w-md mx-auto px-4">
-                                        There are no flash deals available in this category right now.
-                                        Please check back soon for new offers.
-                                    </p>
+    </div>
 
-                                    <a href="{{ route('limited-time') }}"
-                                        class="inline-flex items-center gap-2 mt-5
-                                               px-4 py-2 bg-red-600 text-white
-                                               text-[11px] sm:text-xs font-semibold
-                                               rounded-lg hover:bg-red-700 transition">
-                                        <i class="fa-solid fa-bolt"></i>
-                                        Browse All Deals
-                                    </a>
+    <h3
+        class="text-lg
+        font-bold
+        text-gray-800">
 
-                                </div>
+        No Limited-Time Deals
+
+    </h3>
+
+    <p
+        class="text-xs
+        text-gray-400
+        mt-2
+        max-w-md
+        mx-auto">
+
+        There are no flash deals available in this category right now.
+        Please check back soon for new offers.
+
+    </p>
+
+    <a href="{{ route('limited-time') }}"
+        class="inline-flex
+        items-center
+        gap-2
+        mt-5
+        px-4 py-2
+        bg-red-600
+        text-white
+        text-xs
+        font-semibold
+        rounded-lg
+        hover:bg-red-700
+        transition">
+
+        <i class="fa-solid fa-bolt"></i>
+
+        Browse All Deals
+
+    </a>
+
+</div>
 
                             @endif
 

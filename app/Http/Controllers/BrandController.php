@@ -35,6 +35,7 @@ class BrandController extends Controller
         $products = Product::query()
             ->where('brand_id', $brand->id)
             ->where('status', true)
+            ->withReviewStats()
             ->latest()
             ->paginate(24)
             ->withQueryString();

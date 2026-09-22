@@ -19,9 +19,17 @@ class PageController extends Controller
      */
     public function home()
     {
-        $banners = Banner::where('status', true)
-            ->orderBy('sort_order', 'asc')
+        $mainBanners = Banner::where('status', true)
+            ->where('type', 'main')
+            ->orderBy('sort_order')
             ->get();
+
+        $smallBanners = Banner::where('status', true)
+            ->where('type', 'small')
+            ->orderBy('sort_order')
+            ->get();
+
+
 
         $brands = Brand::where('status', true)
             ->orderBy('name')
@@ -29,7 +37,7 @@ class PageController extends Controller
 
         $blogs = Blog::with('category')
             ->latest('created_at')
-            ->take(4)
+            ->take(5)
             ->get();
 
 
@@ -104,8 +112,7 @@ class PageController extends Controller
                     'brand',
                 ])
 
-                ->withCount('reviews')
-
+->withReviewStats()
                 ->orderByDesc('created_at')
                 ->orderByDesc('id')
 
@@ -137,7 +144,7 @@ class PageController extends Controller
                 'images',
             ])
 
-            ->withCount('reviews')
+            ->withReviewStats()
 
             ->latest('created_at')
             ->latest('id')
@@ -163,17 +170,18 @@ class PageController extends Controller
                 ->toArray();
         }
 
-        return view(
-            'frontend.home',
-            compact(
-                'banners',
-                'brands',
-                'blogs',
-                'parentCategories',
-                'wishlistProductIds',
-                'homeProducts'
-            )
-        );
+       return view(
+    'frontend.home',
+    compact(
+        'mainBanners',
+        'smallBanners',
+        'brands',
+        'blogs',
+        'parentCategories',
+        'wishlistProductIds',
+        'homeProducts'
+    )
+);
     }
 
 
@@ -250,44 +258,55 @@ class PageController extends Controller
      * Search Products
      */
     public function search(Request $request)
-    {
-        // Header search box se "search" value receive hogi
-        $query = trim($request->input('search', ''));
+{
+    $query = trim($request->input('q', ''));
 
-        $products = Product::query()
-            ->where('status', true)
+    $products = Product::query()
+        ->where('status', true)
 
-            ->when($query !== '', function ($q) use ($query) {
+        ->when($query !== '', function ($q) use ($query) {
 
-                $q->where(function ($search) use ($query) {
+            $q->where(function ($search) use ($query) {
 
-                    $search->where('name', 'like', "%{$query}%")
-                        ->orWhere('description', 'like', "%{$query}%");
-                });
-            })
+                // Product name
+                $search->where('name', 'like', "%{$query}%")
 
-            ->with([
-                'category',
-                'brand',
-                'images',
-            ])
+                    // Product description
+                    ->orWhere('description', 'like', "%{$query}%")
 
-            ->withCount('reviews')
+                    // Brand name
+                    ->orWhereHas('brand', function ($brand) use ($query) {
+                        $brand->where('name', 'like', "%{$query}%");
+                    })
 
-            ->latest('created_at')
+                    // Category name
+                    ->orWhereHas('category', function ($category) use ($query) {
+                        $category->where('name', 'like', "%{$query}%");
+                    });
 
-            ->paginate(12)
+            });
 
-            ->withQueryString();
+        })
 
-        return view(
-            'frontend.search',
-            compact(
-                'products',
-                'query'
-            )
-        );
-    }
+        ->with([
+            'category',
+            'brand',
+            'images',
+        ])
+
+        ->withReviewStats()
+
+        ->latest('created_at')
+
+        ->paginate(12)
+
+        ->withQueryString();
+
+    return view(
+        'frontend.search',
+        compact('products', 'query')
+    );
+}
 
 
     /**
@@ -336,7 +355,7 @@ class PageController extends Controller
                 'brand',
                 'images',
             ])
-            ->withCount('reviews')
+            ->withReviewStats()
             ->latest('created_at')
             ->paginate(20)
             ->withQueryString();

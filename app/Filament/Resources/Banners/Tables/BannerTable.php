@@ -22,6 +22,7 @@ class BannerTable
             ->columns([
                 ImageColumn::make('image')
                     ->label('Image')
+                    ->disk('public')
                     ->square()
                     ->size(60)
                     ->defaultImageUrl(fn($record) => $record->image ? asset('storage/' . $record->image) : null),

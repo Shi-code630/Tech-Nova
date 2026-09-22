@@ -62,6 +62,7 @@ $recentlyViewedIds = session()->get('recently_viewed', []);
 
 $recentlyViewedProducts = Product::query()
     ->with(['images', 'brand'])
+    ->withReviewStats()
     ->whereIn('id', $recentlyViewedIds)
     ->where('status', 'active')
     ->get()
@@ -69,7 +70,7 @@ $recentlyViewedProducts = Product::query()
         return array_search($product->id, $recentlyViewedIds);
     })
     ->values();
-    
+
         // ==================== COINS ====================
         $coinSummary = RewardHelper::getUserCoinsSummary($user);
         $recentTransactions = RewardHelper::getRecentTransactions($user, 5);

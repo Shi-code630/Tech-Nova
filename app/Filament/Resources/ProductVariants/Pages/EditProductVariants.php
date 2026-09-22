@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\ProductVariantsResource\Pages;
+namespace App\Filament\Resources\ProductVariants\Pages;
 
 use App\Filament\Resources\ProductVariants\ProductVariantsResource;
 use Filament\Actions\DeleteAction;

@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\ProductVariants;
 
+use App\Filament\Resources\ProductVariants\Pages\CreateProductVariants;
+use App\Filament\Resources\ProductVariants\Pages\EditProductVariants;
+use App\Filament\Resources\ProductVariants\Pages\ListProductVariants;
+use App\Filament\Resources\ProductVariants\Schemas\ProductVariantsForm;
 use App\Filament\Resources\ProductVariants\Tables\ProductVariantsTable;
-use App\Filament\Resources\ProductVariantsResource\Pages\CreateProductVariants;
-use App\Filament\Resources\ProductVariantsResource\Pages\EditProductVariants;
-use App\Filament\Resources\ProductVariantsResource\Pages\ListProductVariants;
-use App\Filament\Resources\ProductVariantsResource\Schemas\ProductVariantsForm;
 use App\Models\ProductVariant;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -16,18 +16,19 @@ use Filament\Tables\Table;
 class ProductVariantsResource extends Resource
 {
     protected static ?string $model = ProductVariant::class;
+
     protected static bool $shouldRegisterNavigation = false;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-cube';
+
+    protected static ?string $navigationLabel = 'Product Variants';
+
+    protected static ?int $navigationSort = 3;
 
     public static function getNavigationGroup(): ?string
     {
         return 'Product Management';
     }
-
-    protected static ?string $navigationLabel = 'Product Variants';
-
-    protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {
