@@ -3,6 +3,7 @@
 namespace App\Filament\Widgets\Dashboard;
 
 use App\Models\Order;
+use Carbon\Carbon;
 use Filament\Widgets\ChartWidget;
 
 class OrdersByStatusChart extends ChartWidget
@@ -16,7 +17,8 @@ class OrdersByStatusChart extends ChartWidget
         'md' => 2,
         'xl' => 6,
     ];
-     protected function getFilters(): ?array
+
+    protected function getFilters(): ?array
     {
         return [
             'today'      => 'Today',
@@ -25,84 +27,83 @@ class OrdersByStatusChart extends ChartWidget
             'last_month' => 'Last Month',
             'year'       => 'This Year',
         ];
-
     }
-    public ?string $dateRange = 'month';
 
     public ?string $filter = 'month';
+
     protected function getData(): array
     {
-        try {
+        [$start, $end] = $this->resolveRange($this->filter ?? 'month');
 
-            $delivered = Order::delivered()->count();
-            $processing = Order::processing()->count();
-            $pending = Order::pending()->count();
-            $cancelled = Order::cancelled()->count();
+        $delivered = Order::delivered()
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
 
-            // Also get shipped orders if needed
-            $shipped = Order::where('order_status', 'shipped')->count();
+        $processing = Order::processing()
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
 
-            // Combine processing and shipped if you want
-            $processing = $processing + $shipped;
+        $pending = Order::pending()
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
 
-            $total = $delivered + $processing + $pending + $cancelled;
+        $cancelled = Order::cancelled()
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
 
-            // If no data exists, use sample data
-            if ($total == 0) {
-                $delivered = 562;
-                $processing = 312;
-                $pending = 250;
-                $cancelled = 124;
-                $total = 1248;
-            }
+        // Shipped orders are grouped in with "Processing" for this chart.
+        $shipped = Order::where('order_status', 'shipped')
+            ->whereBetween('created_at', [$start, $end])
+            ->count();
 
-            $data = [$delivered, $processing, $pending, $cancelled];
-            $labels = [
-                "Delivered: " . round(($delivered / $total) * 100) . "% ($delivered)",
-                "Processing: " . round(($processing / $total) * 100) . "% ($processing)",
-                "Pending: " . round(($pending / $total) * 100) . "% ($pending)",
-                "Cancelled: " . round(($cancelled / $total) * 100) . "% ($cancelled)"
-            ];
+        $processing += $shipped;
 
+        $total = $delivered + $processing + $pending + $cancelled;
+
+        if ($total === 0) {
             return [
                 'datasets' => [
                     [
-                        'data' => $data,
-                        'backgroundColor' => ['#6366f1', '#3b82f6', '#f59e0b', '#ef4444'],
-                        'borderColor' => ['#ffffff', '#ffffff', '#ffffff', '#ffffff'],
+                        'data' => [1],
+                        'backgroundColor' => ['#e5e7eb'],
+                        'borderColor' => ['#ffffff'],
                         'borderWidth' => 2,
                     ],
                 ],
-                'labels' => $labels,
-            ];
-        } catch (\Exception $e) {
-            // Fallback sample data
-            $delivered = 562;
-            $processing = 312;
-            $pending = 250;
-            $cancelled = 124;
-            $total = 1248;
-
-            $data = [$delivered, $processing, $pending, $cancelled];
-            $labels = [
-                "Delivered: 45% (562)",
-                "Processing: 25% (312)",
-                "Pending: 20% (250)",
-                "Cancelled: 10% (124)"
-            ];
-
-            return [
-                'datasets' => [
-                    [
-                        'data' => $data,
-                        'backgroundColor' => ['#6366f1', '#3b82f6', '#f59e0b', '#ef4444'],
-                        'borderColor' => ['#ffffff', '#ffffff', '#ffffff', '#ffffff'],
-                        'borderWidth' => 2,
-                    ],
-                ],
-                'labels' => $labels,
+                'labels' => ['No orders in this period'],
             ];
         }
+
+        $data = [$delivered, $processing, $pending, $cancelled];
+        $labels = [
+            "Delivered: " . round(($delivered / $total) * 100) . "% ($delivered)",
+            "Processing: " . round(($processing / $total) * 100) . "% ($processing)",
+            "Pending: " . round(($pending / $total) * 100) . "% ($pending)",
+            "Cancelled: " . round(($cancelled / $total) * 100) . "% ($cancelled)",
+        ];
+
+        return [
+            'datasets' => [
+                [
+                    'data' => $data,
+                    'backgroundColor' => ['#6366f1', '#3b82f6', '#f59e0b', '#ef4444'],
+                    'borderColor' => ['#ffffff', '#ffffff', '#ffffff', '#ffffff'],
+                    'borderWidth' => 2,
+                ],
+            ],
+            'labels' => $labels,
+        ];
+    }
+
+    protected function resolveRange(string $filter): array
+    {
+        return match ($filter) {
+            'today'      => [Carbon::today(), Carbon::today()->endOfDay()],
+            'week'       => [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()],
+            'last_month' => [Carbon::now()->subMonthNoOverflow()->startOfMonth(), Carbon::now()->subMonthNoOverflow()->endOfMonth()],
+            'year'       => [Carbon::now()->startOfYear(), Carbon::now()->endOfYear()],
+            default      => [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()],
+        };
     }
 
     protected function getType(): string
@@ -142,6 +143,12 @@ class OrdersByStatusChart extends ChartWidget
 
     public function getSubheading(): ?string
     {
-        return 'This Month';
+        return match ($this->filter ?? 'month') {
+            'today'      => 'Today',
+            'week'       => 'This Week',
+            'last_month' => 'Last Month',
+            'year'       => 'This Year',
+            default      => 'This Month',
+        };
     }
 }
