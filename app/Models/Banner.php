@@ -18,6 +18,7 @@ class Banner extends Model
         'status',
         'sort_order',
         'type',
+        'position',
         'alt_text'
     ];
 

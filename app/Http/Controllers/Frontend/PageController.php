@@ -26,8 +26,10 @@ class PageController extends Controller
 
         $smallBanners = Banner::where('status', true)
             ->where('type', 'small')
+            ->orderBy('position')
             ->orderBy('sort_order')
-            ->get();
+            ->get()
+            ->keyBy('position');
 
 
 
@@ -112,7 +114,7 @@ class PageController extends Controller
                     'brand',
                 ])
 
-->withReviewStats()
+                ->withReviewStats()
                 ->orderByDesc('created_at')
                 ->orderByDesc('id')
 
@@ -170,18 +172,18 @@ class PageController extends Controller
                 ->toArray();
         }
 
-       return view(
-    'frontend.home',
-    compact(
-        'mainBanners',
-        'smallBanners',
-        'brands',
-        'blogs',
-        'parentCategories',
-        'wishlistProductIds',
-        'homeProducts'
-    )
-);
+        return view(
+            'frontend.home',
+            compact(
+                'mainBanners',
+                'smallBanners',
+                'brands',
+                'blogs',
+                'parentCategories',
+                'wishlistProductIds',
+                'homeProducts'
+            )
+        );
     }
 
 
@@ -258,55 +260,53 @@ class PageController extends Controller
      * Search Products
      */
     public function search(Request $request)
-{
-    $query = trim($request->input('q', ''));
+    {
+        $query = trim($request->input('q', ''));
 
-    $products = Product::query()
-        ->where('status', true)
+        $products = Product::query()
+            ->where('status', true)
 
-        ->when($query !== '', function ($q) use ($query) {
+            ->when($query !== '', function ($q) use ($query) {
 
-            $q->where(function ($search) use ($query) {
+                $q->where(function ($search) use ($query) {
 
-                // Product name
-                $search->where('name', 'like', "%{$query}%")
+                    // Product name
+                    $search->where('name', 'like', "%{$query}%")
 
-                    // Product description
-                    ->orWhere('description', 'like', "%{$query}%")
+                        // Product description
+                        ->orWhere('description', 'like', "%{$query}%")
 
-                    // Brand name
-                    ->orWhereHas('brand', function ($brand) use ($query) {
-                        $brand->where('name', 'like', "%{$query}%");
-                    })
+                        // Brand name
+                        ->orWhereHas('brand', function ($brand) use ($query) {
+                            $brand->where('name', 'like', "%{$query}%");
+                        })
 
-                    // Category name
-                    ->orWhereHas('category', function ($category) use ($query) {
-                        $category->where('name', 'like', "%{$query}%");
-                    });
+                        // Category name
+                        ->orWhereHas('category', function ($category) use ($query) {
+                            $category->where('name', 'like', "%{$query}%");
+                        });
+                });
+            })
 
-            });
+            ->with([
+                'category',
+                'brand',
+                'images',
+            ])
 
-        })
+            ->withReviewStats()
 
-        ->with([
-            'category',
-            'brand',
-            'images',
-        ])
+            ->latest('created_at')
 
-        ->withReviewStats()
+            ->paginate(12)
 
-        ->latest('created_at')
+            ->withQueryString();
 
-        ->paginate(12)
-
-        ->withQueryString();
-
-    return view(
-        'frontend.search',
-        compact('products', 'query')
-    );
-}
+        return view(
+            'frontend.search',
+            compact('products', 'query')
+        );
+    }
 
 
     /**

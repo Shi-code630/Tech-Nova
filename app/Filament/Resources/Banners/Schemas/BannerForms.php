@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Banners\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -83,9 +84,21 @@ class BannerForm
                     ]),
 
                 Section::make('Display Settings')
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(2)
                             ->schema([
+                                Select::make('position')
+                                    ->label('Banner Position')
+                                    ->options([
+                                        1 => 'Left',
+                                        2 => 'Center',
+                                        3 => 'Right',
+                                    ])
+                                    ->default(1)
+                                    ->required()
+                                    ->helperText('Select the position where the banner will be displayed'),
+
                                 TextInput::make('sort_order')
                                     ->label('Sort Order')
                                     ->numeric()

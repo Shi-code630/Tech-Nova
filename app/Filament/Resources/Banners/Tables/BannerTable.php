@@ -14,7 +14,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
-class BannerTable
+class BannersTable
 {
     public static function configure(Table $table): Table
     {
@@ -25,13 +25,13 @@ class BannerTable
                     ->disk('public')
                     ->square()
                     ->size(60)
-                    ->defaultImageUrl(fn($record) => $record->image ? asset('storage/' . $record->image) : null),
+                    ->defaultImageUrl(fn ($record) => $record->image ? asset('storage/' . $record->image) : null),
 
                 TextColumn::make('type')
                     ->label('Type')
                     ->badge()
-                    ->color(fn(string $state) => $state === 'main' ? 'primary' : 'gray')
-                    ->formatStateUsing(fn(string $state) => $state === 'main' ? 'Main' : 'Small')
+                    ->color(fn (string $state) => $state === 'main' ? 'primary' : 'gray')
+                    ->formatStateUsing(fn (string $state) => $state === 'main' ? 'Main' : 'Small')
                     ->sortable(),
 
                 TextColumn::make('title')
@@ -50,6 +50,24 @@ class BannerTable
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
+                TextColumn::make('position')
+                    ->label('Position')
+                    ->badge()
+                    ->formatStateUsing(fn ($state) => match ((int) $state) {
+                        1 => 'Left',
+                        2 => 'Center',
+                        3 => 'Right',
+                        default => '—',
+                    })
+                    ->color(fn ($state) => match ((int) $state) {
+                        1 => 'info',
+                        2 => 'primary',
+                        3 => 'warning',
+                        default => 'gray',
+                    })
+                    ->sortable()
+                    ->toggleable(),
+
                 TextColumn::make('sort_order')
                     ->label('Order')
                     ->sortable()
@@ -62,7 +80,8 @@ class BannerTable
                 TextColumn::make('status_label')
                     ->label('Status')
                     ->badge()
-                    ->color(fn($record) => $record->status_badge),
+                    ->color(fn ($record) => $record->status_badge)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label('Created')
@@ -85,6 +104,14 @@ class BannerTable
                         'small' => 'Small',
                     ]),
 
+                SelectFilter::make('position')
+                    ->label('Position')
+                    ->options([
+                        1 => 'Left',
+                        2 => 'Center',
+                        3 => 'Right',
+                    ]),
+
                 TernaryFilter::make('status')
                     ->label('Active Status')
                     ->placeholder('All Banners')
@@ -94,19 +121,16 @@ class BannerTable
             ->recordActions([
                 ViewAction::make()
                     ->label('View')
-                   ->color('warning')
+                    ->color('warning')
                     ->icon('heroicon-o-eye'),
-
 
                 EditAction::make()
                     ->label('Edit')
                     ->color('warning')
                     ->icon('heroicon-o-pencil-square'),
 
-
                 DeleteAction::make()
                     ->label('Delete')
-
                     ->icon('heroicon-o-trash')
                     ->color('warning')
                     ->requiresConfirmation()

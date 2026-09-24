@@ -649,27 +649,45 @@
                         </div>
                         @if ($smallBanners->count())
                             <div class="mt-8">
-
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-                                    @foreach ($smallBanners as $banner)
+                                    {{-- Left small banner --}}
+                                    @if (isset($smallBanners[1]))
                                         <div class="relative overflow-hidden rounded-xl shadow-lg group">
-
-                                            <a href="{{ $banner->button_link ?? '#' }}" class="block w-full">
-
-                                                <img src="{{ asset('storage/' . $banner->image) }}"
-                                                    alt="{{ $banner->alt_text ?? $banner->title }}"
-                                                    class="w-full h-[180px] object-cover
-           transition-transform duration-500
-           group-hover:scale-105">
-
+                                            <a href="{{ $smallBanners[1]->button_link ?? '#' }}"
+                                                class="block w-full">
+                                                <img src="{{ Storage::url($smallBanners[1]->image) }}"
+                                                    alt="{{ $smallBanners[1]->alt_text ?? $smallBanners[1]->title }}"
+                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
                                             </a>
-
                                         </div>
-                                    @endforeach
+                                    @endif
+
+                                    {{-- Center small banner --}}
+                                    @if (isset($smallBanners[2]))
+                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                                            <a href="{{ $smallBanners[2]->button_link ?? '#' }}"
+                                                class="block w-full">
+                                                <img src="{{ Storage::url($smallBanners[2]->image) }}"
+                                                    alt="{{ $smallBanners[2]->alt_text ?? $smallBanners[2]->title }}"
+                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
+                                            </a>
+                                        </div>
+                                    @endif
+
+                                    {{-- Right small banner --}}
+                                    @if (isset($smallBanners[3]))
+                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                                            <a href="{{ $smallBanners[3]->button_link ?? '#' }}"
+                                                class="block w-full">
+                                                <img src="{{ Storage::url($smallBanners[3]->image) }}"
+                                                    alt="{{ $smallBanners[3]->alt_text ?? $smallBanners[3]->title }}"
+                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
+                                            </a>
+                                        </div>
+                                    @endif
 
                                 </div>
-
                             </div>
                         @endif
                     </section>
