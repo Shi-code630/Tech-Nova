@@ -2,11 +2,7 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\Sales\PaymentMethodChart;
-use App\Filament\Widgets\Sales\SalesByCategory;
-use App\Filament\Widgets\Sales\SalesOverviewChart;
-use App\Filament\Widgets\Sales\SalesStats;
-use App\Filament\Widgets\Sales\TopSellingProducts;
+use App\Models\Product;
 use App\Models\Order;
 use BackedEnum;
 use Carbon\Carbon;
@@ -15,6 +11,8 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SalesReport extends Page
@@ -87,26 +85,48 @@ class SalesReport extends Page
             ->whereBetween('created_at', [$start, $end])
             ->get();
 
-        $filename = 'sales-report-' . $start->format('Y-m-d') . '-to-' . $end->format('Y-m-d') . '.csv';
+        $filename = 'sales-report-' . $start->format('Y-m-d') . '-to-' . $end->format('Y-m-d') . '.xlsx';
 
-        return response()->streamDownload(function () use ($orders) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Order Number', 'Date', 'Customer', 'Payment Method', 'Payment Status', 'Order Status', 'Grand Total']);
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Sales Report');
 
-            foreach ($orders as $order) {
-                fputcsv($handle, [
-                    $order->order_number,
-                    $order->created_at->format('Y-m-d H:i'),
-                    optional($order->user)->name,
-                    $order->payment_method,
-                    $order->payment_status,
-                    $order->order_status,
-                    $order->grand_total,
-                ]);
-            }
+        // Header row
+        $headers = ['Order Number', 'Date', 'Customer', 'Payment Method', 'Payment Status', 'Order Status', 'Grand Total'];
+        $sheet->fromArray($headers, null, 'A1');
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:G1')->getFill()
+            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('E5E7EB');
 
-            fclose($handle);
-        }, $filename);
+        // Data rows
+        $row = 2;
+        foreach ($orders as $order) {
+            $sheet->setCellValue("A{$row}", $order->order_number);
+            $sheet->setCellValue("B{$row}", $order->created_at->format('Y-m-d H:i'));
+            $sheet->setCellValue("C{$row}", optional($order->user)->name);
+            $sheet->setCellValue("D{$row}", $order->payment_method);
+            $sheet->setCellValue("E{$row}", $order->payment_status);
+            $sheet->setCellValue("F{$row}", $order->order_status);
+            $sheet->setCellValueExplicit("G{$row}", $order->grand_total, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+
+            $row++;
+        }
+
+        // Money formatting for Grand Total
+        $sheet->getStyle("G2:G{$row}")->getNumberFormat()->setFormatCode('#,##0.00');
+
+        // Auto-size columns so content isn't cut off
+        foreach (range('A', 'G') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
   protected function getHeaderWidgets(): array

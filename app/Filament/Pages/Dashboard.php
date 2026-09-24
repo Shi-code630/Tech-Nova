@@ -19,7 +19,7 @@ class Dashboard extends BaseDashboard
         return [
             \App\Filament\Widgets\Dashboard\SalesOverviewChart::class,
             \App\Filament\Widgets\Dashboard\OrdersByStatusChart::class,
-
+            \App\Filament\Widgets\Dashboard\TopSellingProducts::class,
             \App\Filament\Widgets\Dashboard\RecentOrders::class,
             \App\Filament\Widgets\Dashboard\TopSellingProducts::class,
             \App\Filament\Widgets\Dashboard\LowStockAlert::class,

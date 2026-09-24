@@ -6,7 +6,9 @@ use App\Filament\Resources\Banners\Pages\CreateBanner;
 use App\Filament\Resources\Banners\Pages\EditBanners;
 use App\Filament\Resources\Banners\Pages\ListBanners;
 use App\Filament\Resources\Banners\Schemas\BannerForm;
+use App\Filament\Resources\Banners\Schemas\BannerForms;
 use App\Filament\Resources\Banners\Tables\BannersTable;
+use App\Filament\Resources\Banners\Tables\BannerTable;
 use App\Models\Banner;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -57,12 +59,12 @@ class BannerResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return BannerForm::configure($schema);
+        return BannerForms::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return BannersTable::configure($table);
+        return BannerTable::configure($table);
     }
 
     public static function getRelations(): array

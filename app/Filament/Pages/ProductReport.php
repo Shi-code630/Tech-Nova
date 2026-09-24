@@ -16,6 +16,8 @@ use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProductReport extends Page
@@ -92,32 +94,56 @@ class ProductReport extends Page
             }])
             ->get();
 
-        $filename = 'product-report-' . $start->format('Y-m-d') . '-to-' . $end->format('Y-m-d') . '.csv';
+        $filename = 'product-report-' . $start->format('Y-m-d') . '-to-' . $end->format('Y-m-d') . '.xlsx';
 
-        return response()->streamDownload(function () use ($products) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Product Name', 'Category', 'Price', 'Stock', 'Units Sold', 'Revenue', 'Avg Rating']);
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Product Report');
 
-            foreach ($products as $product) {
-                $revenue = $product->orderItems()
-                    ->whereHas('order', function ($q) {
-                        $q->where('order_status', '!=', 'cancelled');
-                    })
-                    ->sum('total');
+        // Header row
+        $headers = ['Product Name', 'Category', 'Price', 'Stock', 'Units Sold', 'Revenue', 'Avg Rating'];
+        $sheet->fromArray($headers, null, 'A1');
+        $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:G1')->getFill()
+            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('E5E7EB');
 
-                fputcsv($handle, [
-                    $product->name,
-                    $product->category->name ?? 'N/A',
-                    $product->price,
-                    $product->stock,
-                    $product->sold ?? 0,
-                    $revenue ?? 0,
-                    $product->average_rating ?? 0,
-                ]);
-            }
+        // Data rows
+        $row = 2;
+        foreach ($products as $product) {
+            $revenue = $product->orderItems()
+                ->whereHas('order', function ($q) {
+                    $q->where('order_status', '!=', 'cancelled');
+                })
+                ->sum('total');
 
-            fclose($handle);
-        }, $filename);
+            $sheet->setCellValue("A{$row}", $product->name);
+            $sheet->setCellValue("B{$row}", $product->category->name ?? 'N/A');
+            $sheet->setCellValueExplicit("C{$row}", $product->price, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+            $sheet->setCellValueExplicit("D{$row}", $product->stock, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+            $sheet->setCellValueExplicit("E{$row}", $product->sold ?? 0, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+            $sheet->setCellValueExplicit("F{$row}", $revenue ?? 0, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+            $sheet->setCellValueExplicit("G{$row}", $product->average_rating ?? 0, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+
+            $row++;
+        }
+
+        // Number formatting for money/decimal columns
+        $sheet->getStyle("C2:C{$row}")->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle("F2:F{$row}")->getNumberFormat()->setFormatCode('#,##0.00');
+        $sheet->getStyle("G2:G{$row}")->getNumberFormat()->setFormatCode('0.0');
+
+        // Auto-size columns so content isn't cut off
+        foreach (range('A', 'G') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
     protected function getHeaderWidgets(): array

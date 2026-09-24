@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Banners\Schemas;
 
+
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
@@ -12,7 +13,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class BannerForm
+class BannerForms
 {
     public static function configure(Schema $schema): Schema
     {

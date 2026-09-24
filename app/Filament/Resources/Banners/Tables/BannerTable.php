@@ -14,7 +14,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
-class BannersTable
+class BannerTable
 {
     public static function configure(Table $table): Table
     {

@@ -2,10 +2,6 @@
 
 namespace App\Filament\Pages;
 
-use App\Filament\Widgets\Customer\CustomerGrowthChart;
-use App\Filament\Widgets\Customer\CustomerStats;
-use App\Filament\Widgets\Customer\CustomersByLocation;
-use App\Filament\Widgets\Customer\TopCustomers;
 use App\Models\User;
 use BackedEnum;
 use Carbon\Carbon;
@@ -14,6 +10,8 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Pages\Page;
 use Filament\Schemas\Schema;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class CustomerReport extends Page
@@ -76,24 +74,46 @@ class CustomerReport extends Page
             ->withSum(['orders' => fn ($q) => $q->where('order_status', '!=', 'cancelled')->whereBetween('created_at', [$start, $end])], 'grand_total')
             ->get();
 
-        $filename = 'customer-report-' . $start->format('Y-m-d') . '-to-' . $end->format('Y-m-d') . '.csv';
+        $filename = 'customer-report-' . $start->format('Y-m-d') . '-to-' . $end->format('Y-m-d') . '.xlsx';
 
-        return response()->streamDownload(function () use ($customers) {
-            $handle = fopen('php://output', 'w');
-            fputcsv($handle, ['Name', 'Email', 'Joined', 'Orders', 'Total Spent']);
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Customer Report');
 
-            foreach ($customers as $customer) {
-                fputcsv($handle, [
-                    $customer->name,
-                    $customer->email,
-                    $customer->created_at->format('Y-m-d'),
-                    $customer->orders_count,
-                    $customer->orders_sum_grand_total ?? 0,
-                ]);
-            }
+        // Header row
+        $headers = ['Name', 'Email', 'Joined', 'Orders', 'Total Spent'];
+        $sheet->fromArray($headers, null, 'A1');
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
+        $sheet->getStyle('A1:E1')->getFill()
+            ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('E5E7EB');
 
-            fclose($handle);
-        }, $filename);
+        // Data rows
+        $row = 2;
+        foreach ($customers as $customer) {
+            $sheet->setCellValue("A{$row}", $customer->name);
+            $sheet->setCellValue("B{$row}", $customer->email);
+            $sheet->setCellValue("C{$row}", $customer->created_at->format('Y-m-d'));
+            $sheet->setCellValue("D{$row}", $customer->orders_count);
+            $sheet->setCellValueExplicit(
+                "E{$row}",
+                $customer->orders_sum_grand_total ?? 0,
+                \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC
+            );
+            $row++;
+        }
+
+        // Auto-size columns so content isn't cut off
+        foreach (range('A', 'E') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        return response()->streamDownload(function () use ($spreadsheet) {
+            $writer = new Xlsx($spreadsheet);
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
     protected function getHeaderWidgets(): array
