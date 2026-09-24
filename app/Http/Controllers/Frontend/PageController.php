@@ -24,13 +24,12 @@ class PageController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        $smallBanners = Banner::where('status', true)
-            ->where('type', 'small')
-            ->orderBy('position')
-            ->orderBy('sort_order')
-            ->get()
-            ->keyBy('position');
-
+    $smallBanners = Banner::where('status', true)
+    ->where('type', 'small')
+    ->orderBy('position')
+    ->orderBy('sort_order')
+    ->get()
+    ->keyBy('position');
 
 
         $brands = Brand::where('status', true)

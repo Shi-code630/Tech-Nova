@@ -41,8 +41,8 @@
                     <div class="grid grid-cols-1 gap-4 sm:gap-6">
 
                        <x-user-dashboard.recently-viewed
-    :recently-viewed-products="$recentlyViewedProducts"
-/>
+                            :recently-viewed-products="$recentlyViewedProducts"
+                        />
 
                       
 

@@ -342,266 +342,94 @@
 
                     </div>
 
-
-                    {{-- =================================================
-                         SAVED ADDRESSES
-                    ================================================== --}}
-                    <div
-                        class="bg-white rounded-2xl shadow-sm border border-gray-100
-                                overflow-hidden mt-4 sm:mt-6">
-
-
-                        {{-- =============================================
-                             ADDRESS HEADER
-                        ============================================== --}}
-                        <div
-                            class="flex flex-col sm:flex-row sm:items-center sm:justify-between
-                                    gap-3 sm:gap-4
-                                    px-4 sm:px-6 py-4 sm:py-5
-                                    border-b border-gray-100
-                                    bg-gradient-to-r from-white to-blue-50/40">
-
-                            <div class="min-w-0">
-
-                                <h2 class="text-base sm:text-lg font-bold text-[#111827]">
-                                    Saved Addresses
-                                </h2>
-
-                                <p class="text-xs sm:text-sm text-gray-500 mt-1">
-                                    Manage your delivery addresses.
-                                </p>
-
+                    <div class="pt-5">
+                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                        <button type="button" id="passwordToggle" onclick="togglePasswordPanel()"
+                            class="w-full flex items-center gap-3 sm:gap-4 p-4 sm:p-6 text-left hover:bg-slate-50 transition">
+                            <div
+                                class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-50 text-[#F59E0B] flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.8" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M16.5 10.5V7.125a4.125 4.125 0 0 0-8.25 0V10.5m-.75 0h9.75A1.5 1.5 0 0 1 19 12v7.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5V12a1.5 1.5 0 0 1 1.5-1.5Z" />
+                                </svg>
                             </div>
+                            <div class="flex-1 min-w-0">
+                                <h2 class="font-semibold text-sm sm:text-base text-[#111827]">Change Password</h2>
+                                <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Update your password and keep your
+                                    account secure.</p>
+                            </div>
+                            <svg id="passwordChevron" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                class="w-4 h-4 text-gray-400 transition-transform {{ $errors->hasAny(['current_password', 'password', 'password_confirmation']) ? 'rotate-90' : '' }}">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
 
+                        <div id="passwordPanel"
+                            class="border-t border-gray-100 px-4 sm:px-6 pb-6 {{ $errors->hasAny(['current_password', 'password', 'password_confirmation']) ? '' : 'hidden' }}">
+                            <form method="POST" action="{{ route('user.password.update') }}"
+                                class="max-w-md space-y-4 pt-5">
+                                @csrf
+                                @method('PUT')
 
-                            {{-- Add Address --}}
-                            <a href="{{ route('checkout.address.create') }}"
-                                class="inline-flex items-center justify-center gap-1.5
-                                       px-3 sm:px-4 py-2 sm:py-2.5
-                                       rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]
-                                       text-white text-xs sm:text-sm font-semibold
-                                       shadow-sm hover:shadow-md transition
-                                       whitespace-nowrap w-full sm:w-auto">
-
-                                <span class="text-sm sm:text-base">+</span>
-                                Add Address
-
-                            </a>
-
-                        </div>
-
-
-                        {{-- =============================================
-                             ADDRESS CONTENT
-                        ============================================== --}}
-                        <div class="p-4 sm:p-6">
-
-                            @php
-                                $addresses = auth()->user()->addresses ?? collect();
-                            @endphp
-
-
-                            @forelse($addresses as $address)
-                                {{-- Address Card --}}
-                                <div
-                                    class="{{ $loop->first ? '' : 'mt-3 sm:mt-4' }}
-                                            group border border-gray-200 rounded-2xl
-                                            p-4 sm:p-5 bg-white
-                                            hover:border-blue-300 hover:shadow-md
-                                            transition-all duration-200">
-
-
-                                    {{-- Top Section --}}
-                                    <div
-                                        class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
-
-
-                                        {{-- User / Address Name --}}
-                                        <div class="flex items-start gap-2 sm:gap-3 min-w-0">
-
-                                            <div
-                                                class="w-9 h-9 sm:w-11 sm:h-11 flex-shrink-0
-                                                        rounded-xl bg-blue-50
-                                                        flex items-center justify-center text-[#2563EB]">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 sm:w-5 sm:h-5"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                    stroke-width="2">
-
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M12 21s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
-
-                                                    <circle cx="12" cy="11" r="2.5" />
-
-                                                </svg>
-
-                                            </div>
-
-
-                                            <div class="min-w-0">
-
-                                                <h3
-                                                    class="font-semibold text-[#111827] text-sm sm:text-base break-words">
-                                                    {{ $address->full_name }}
-                                                </h3>
-
-                                                <p class="text-xs sm:text-sm text-gray-500 mt-1">
-                                                    📞 {{ $address->phone }}
-                                                </p>
-
-                                            </div>
-
-                                        </div>
-
-
-                                        {{-- Right Side --}}
-                                        <div class="flex items-center gap-2 flex-wrap sm:justify-end">
-
-                                            {{-- Default Badge --}}
-                                            @if ($address->is_default)
-                                                <span
-                                                    class="px-2.5 sm:px-3 py-1
-                                                             rounded-full text-[10px] sm:text-xs font-semibold
-                                                             bg-blue-50 text-[#2563EB] border border-blue-100">
-                                                    Default
-                                                </span>
-                                            @endif
-
-
-                                            {{-- Edit Button --}}
-                                            <a href="{{ route('checkout.address.edit', $address->id) }}"
-                                                class="inline-flex items-center gap-1 sm:gap-1.5
-                                                       px-2.5 sm:px-3 py-1 sm:py-1.5
-                                                       rounded-lg text-[10px] sm:text-xs font-semibold
-                                                       text-[#2563EB] bg-blue-50 hover:bg-blue-100 transition">
-
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 sm:w-4 sm:h-4"
-                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                                    stroke-width="2">
-
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5" />
-
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
-
-                                                </svg>
-
-                                                Edit
-
-                                            </a>
-
-                                        </div>
-
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Current
+                                        password</label>
+                                    <div class="relative">
+                                        <input id="current_password" type="password" name="current_password" required
+                                            class="w-full h-11 rounded-xl border {{ $errors->has('current_password') ? 'border-red-400' : 'border-gray-300' }} px-3 pr-10 text-sm focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
+                                        <button type="button"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500"
+                                            onclick="toggleEye('current_password', this)">Show</button>
                                     </div>
-
-
-                                    {{-- Divider --}}
-                                    <div class="border-t border-gray-100 my-3 sm:my-4"></div>
-
-
-                                    {{-- Address Details --}}
-                                    <div class="flex items-start gap-2 sm:gap-3">
-
-                                        <div
-                                            class="mt-0.5 w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0
-                                                    rounded-lg bg-gray-100
-                                                    flex items-center justify-center">
-
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="M17.657 16.657L13.414 21a2 2 0 01-2.828 0l-4.243-4.343a8 8 0 1111.314 0z" />
-
-                                                <circle cx="12" cy="11" r="3" />
-
-                                            </svg>
-
-                                        </div>
-
-
-                                        <div class="min-w-0">
-
-                                            <p
-                                                class="text-xs sm:text-sm font-medium text-gray-700 leading-6 break-words">
-                                                {{ $address->address }}
-                                            </p>
-
-
-                                            <p class="text-xs sm:text-sm text-gray-500 leading-6 break-words">
-
-                                                {{ $address->city }},
-                                                {{ $address->district }},
-                                                {{ $address->province }}
-
-                                                @if ($address->postal_code)
-                                                    - {{ $address->postal_code }}
-                                                @endif
-
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
+                                    @error('current_password')
+                                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
 
-
-                            @empty
-
-
-                                {{-- Empty Address --}}
-                                <div class="text-center py-8 sm:py-12">
-
-                                    <div
-                                        class="w-14 h-14 sm:w-16 sm:h-16 mx-auto
-                                                rounded-2xl bg-blue-50
-                                                flex items-center justify-center">
-
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            class="w-7 h-7 sm:w-8 sm:h-8 text-[#2563EB]" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M12 21s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
-
-                                            <circle cx="12" cy="11" r="2.5" />
-
-                                        </svg>
-
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">New password</label>
+                                    <div class="relative">
+                                        <input id="password" type="password" name="password" required
+                                            minlength="8"
+                                            class="w-full h-11 rounded-xl border {{ $errors->has('password') ? 'border-red-400' : 'border-gray-300' }} px-3 pr-10 text-sm focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]"
+                                            oninput="checkPasswordMatch()">
+                                        <button type="button"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500"
+                                            onclick="toggleEye('password', this)">Show</button>
                                     </div>
-
-
-                                    <h3 class="font-bold text-base sm:text-lg text-[#111827] mt-4 sm:mt-5">
-                                        No Saved Addresses
-                                    </h3>
-
-
-                                    <p class="text-xs sm:text-sm text-gray-500 mt-2 max-w-sm mx-auto">
-                                        Add your delivery address to make checkout faster and easier.
-                                    </p>
-
-
-                                    <a href="{{ route('checkout.address.create') }}"
-                                        class="inline-flex items-center gap-1.5 sm:gap-2
-                                               mt-4 sm:mt-5 px-4 sm:px-5 py-2.5 sm:py-3
-                                               rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8]
-                                               text-white text-xs sm:text-sm font-semibold
-                                               shadow-sm hover:shadow-md transition">
-
-                                        <span class="text-base sm:text-lg">+</span>
-                                        Add New Address
-
-                                    </a>
-
+                                    <p class="text-[11px] text-slate-400 mt-1">At least 8 characters.</p>
+                                    @error('password')
+                                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
+                                    @enderror
                                 </div>
-                            @endforelse
 
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 mb-1">Confirm new
+                                        password</label>
+                                    <div class="relative">
+                                        <input id="password_confirmation" type="password"
+                                            name="password_confirmation" required minlength="8"
+                                            class="w-full h-11 rounded-xl border border-gray-300 px-3 pr-10 text-sm focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]"
+                                            oninput="checkPasswordMatch()">
+                                        <button type="button"
+                                            class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500"
+                                            onclick="toggleEye('password_confirmation', this)">Show</button>
+                                    </div>
+                                    <p id="matchHint" class="text-xs mt-1"></p>
+                                </div>
+
+                                <button type="submit"
+                                    class="h-11 px-5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-sm font-semibold">
+                                    Save new password
+                                </button>
+                            </form>
                         </div>
-
                     </div>
+                    </div>
+        
+
 
                 </main>
 
@@ -610,5 +438,36 @@
         </div>
 
     </div>
+    <script>
+        function togglePasswordPanel() {
+            var panel = document.getElementById('passwordPanel');
+            var chev = document.getElementById('passwordChevron');
+            panel.classList.toggle('hidden');
+            chev.classList.toggle('rotate-90');
+        }
 
+        function toggleEye(id, btn) {
+            var input = document.getElementById(id);
+            var hide = input.type === 'password';
+            input.type = hide ? 'text' : 'password';
+            btn.textContent = hide ? 'Hide' : 'Show';
+        }
+
+        function checkPasswordMatch() {
+            var a = document.getElementById('password').value;
+            var b = document.getElementById('password_confirmation').value;
+            var hint = document.getElementById('matchHint');
+            if (!b) {
+                hint.textContent = '';
+                return;
+            }
+            if (a === b) {
+                hint.textContent = 'Passwords match';
+                hint.className = 'text-xs mt-1 text-emerald-600';
+            } else {
+                hint.textContent = 'Passwords do not match';
+                hint.className = 'text-xs mt-1 text-red-600';
+            }
+        }
+    </script>
 </x-frontend-layout>
