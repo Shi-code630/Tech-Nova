@@ -62,7 +62,7 @@ class OrderObserver
 
         if ($order->wasChanged('order_status') &&
             $order->order_status === 'delivered' &&
-            !$order->points_given) {
+            !$order->reward_points_given) {
             $this->handleCoinsEarning($order);
         }
     }
@@ -183,8 +183,8 @@ class OrderObserver
             );
 
             $order->updateQuietly([
-                'points_earned' => $points,
-                'points_given' => true,
+                'reward_points_earned' => $points,
+                'reward_points_given' => true,
             ]);
 
             Log::info("🪙 Coins earned: {$points} for order {$order->order_number}");

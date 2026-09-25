@@ -84,14 +84,21 @@ class ShoppingCartsTable
 
                 SelectFilter::make('variant_id')
                     ->label('Variant')
-                    ->relationship('variant', 'color')
+                    ->relationship(
+                        name: 'variant',
+                        titleAttribute: 'color',
+                        modifyQueryUsing: fn($query) => $query->whereNotNull('color')->where('color', '!=', '')
+                    )
+                    ->getOptionLabelFromRecordUsing(
+                        fn($record) => trim(($record->color ?? '') . ' ' . ($record->size ?? '')) ?: 'Variant #' . $record->id
+                    )
                     ->searchable()
                     ->preload(),
             ])
             ->recordActions([
                 ViewAction::make()
                     ->label('View')
-                  ->color('warning')
+                    ->color('warning')
                     ->icon('heroicon-o-eye'),
 
 
@@ -103,7 +110,7 @@ class ShoppingCartsTable
 
                 DeleteAction::make()
                     ->label('Delete')
-                  ->color('warning')
+                    ->color('warning')
                     ->icon('heroicon-o-trash')
 
                     ->requiresConfirmation()

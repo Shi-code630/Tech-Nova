@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Frontend\KhaltiPaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
@@ -92,7 +93,7 @@ Route::get('/today-deals/festive/{slug}', [CategoryController::class, 'festive']
 
 Route::get('/category/{slug}', [CategoryController::class, 'show'])->name('category.show');
 
-Route::get('/limited-time', [CategoryController::class, 'limitedTime']) ->name('limited-time');
+Route::get('/limited-time', [CategoryController::class, 'limitedTime'])->name('limited-time');
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
 Route::get('/privacy-policy', [PageController::class, 'privacypolicy'])->name('privacy-policy');
@@ -137,8 +138,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/checkout/continue', [CheckoutController::class, 'continueCheckout'])->name('checkout.continue');
     Route::get('/checkout/confirm', [CheckoutController::class, 'confirm'])->name('checkout.confirm');
     Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
-    Route::post('/checkout/coupon', [CouponController::class, 'apply'])->name('checkout.coupon.apply');
-    Route::delete('/checkout/coupon', [CouponController::class, 'remove'])->name('checkout.coupon.remove');
+
+    Route::post('/checkout/coupon/apply', [CheckoutController::class, 'applyCoupon'])->name('checkout.coupon.apply');
+    Route::delete('/checkout/coupon/remove', [CheckoutController::class, 'removeCoupon'])->name('checkout.coupon.remove');
 
     Route::get('/my-addresses', [CheckoutController::class, 'addresses'])->name('checkout.addresses');
     Route::delete('/my-addresses/{id}', [CheckoutController::class, 'deleteAddress'])->name('checkout.address.delete');
@@ -159,6 +161,13 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/settings/password', [AuthController::class, 'updatePassword'])->name('user.password.update');
     Route::get('/coins', [UserDashboardController::class, 'coins'])->name('user.coins');
     Route::get('/user/coins/live', [UserDashboardController::class, 'liveCoins'])->name('user.coins.live');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::match(['get', 'post'], '/khalti/initiate', [KhaltiPaymentController::class, 'initiate'])
+        ->name('khalti.initiate');
+    Route::get('/khalti/callback', [KhaltiPaymentController::class, 'callback'])
+        ->name('khalti.callback');
 });
 
 

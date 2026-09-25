@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class LowStockAlert extends TableWidget
 {
+    protected static bool $isLazy = true;
     protected static ?string $heading = 'Low Stock Alert';
     protected static ?int $sort = 5;
     protected int|string|array $columnSpan = [

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class RecentOrders extends BaseWidget
 {
+    protected static bool $isLazy = true;
     protected static ?string $heading = 'Recent Orders';
 
     protected static ?int $sort = 4;
@@ -28,7 +29,7 @@ class RecentOrders extends BaseWidget
     {
         return $table
             ->query(
-                fn (): Builder => Order::query()
+                fn(): Builder => Order::query()
                     ->with('user')
                     ->latest()
                     ->limit(5)
@@ -38,8 +39,8 @@ class RecentOrders extends BaseWidget
                     ->label('Order ID')
                     ->weight('bold')
                     ->color('primary')
-                    ->formatStateUsing(fn ($state) => '#' . $state)
-                    ->url(fn (Order $record) => OrderResource::getUrl('edit', ['record' => $record])),
+                    ->formatStateUsing(fn($state) => '#' . $state)
+                    ->url(fn(Order $record) => OrderResource::getUrl('edit', ['record' => $record])),
 
                 TextColumn::make('user.name')
                     ->label('Customer')
@@ -47,35 +48,35 @@ class RecentOrders extends BaseWidget
 
                 TextColumn::make('created_at')
                     ->label('Date')
-                    ->formatStateUsing(fn ($state) => \Carbon\Carbon::parse($state)->format('d M, Y')),
+                    ->formatStateUsing(fn($state) => \Carbon\Carbon::parse($state)->format('d M, Y')),
 
                 TextColumn::make('grand_total')
                     ->label('Total')
                     ->weight('bold')
-                    ->formatStateUsing(fn ($state) => 'Rs. ' . number_format($state, 0)),
+                    ->formatStateUsing(fn($state) => 'Rs. ' . number_format($state, 0)),
 
                 TextColumn::make('order_status')
                     ->label('Status')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'delivered' => 'success',
                         'processing', 'shipped' => 'info',
                         'pending' => 'warning',
                         'cancelled' => 'danger',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
 
                 TextColumn::make('payment_status')
                     ->label('Payment')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'paid' => 'success',
                         'failed' => 'danger',
                         'refunded' => 'gray',
                         default => 'warning',
                     })
-                    ->formatStateUsing(fn (string $state): string => ucfirst($state)),
+                    ->formatStateUsing(fn(string $state): string => ucfirst($state)),
             ])
             ->headerActions([
                 ActionGroup::make([
@@ -104,12 +105,12 @@ class RecentOrders extends BaseWidget
                                 ->send();
                         }),
                 ])
-                ->label('View All Orders')
-                ->icon('heroicon-m-chevron-down')
-                ->iconPosition('after')
-                ->color('gray')
-                ->outlined()
-                ->button(),
+                    ->label('View All Orders')
+                    ->icon('heroicon-m-chevron-down')
+                    ->iconPosition('after')
+                    ->color('gray')
+                    ->outlined()
+                    ->button(),
             ])
             ->paginated(false)
             ->defaultSort('created_at', 'desc')

@@ -19,9 +19,6 @@ use App\Models\Coupon;
 
 class CheckoutController extends Controller
 {
-    /**
-     * Display checkout page.
-     */
     public function index(Request $request)
     {
         $user = $request->user();
@@ -64,26 +61,17 @@ class CheckoutController extends Controller
         ));
     }
 
-    /**
-     * Display user addresses.
-     */
     public function addresses(Request $request)
     {
         $addresses = $request->user()->addresses()->latest()->get();
         return view('user.addresses.index', compact('addresses'));
     }
 
-    /**
-     * Show create address form.
-     */
     public function createAddress()
     {
         return view('checkout.address');
     }
 
-    /**
-     * Store new address.
-     */
     public function storeAddress(Request $request)
     {
         $validated = $request->validate([
@@ -114,19 +102,12 @@ class CheckoutController extends Controller
         return redirect()->route($route)->with('success', 'Address added successfully.');
     }
 
-    /**
-     * Show edit address form.
-     */
     public function editAddress(Request $request, $id)
     {
         $address = $request->user()->addresses()->where('id', $id)->firstOrFail();
         return view('checkout.address-edit', compact('address'));
     }
 
-
-    /**
-     * Update address.
-     */
     public function updateAddress(Request $request, $id)
     {
         $address = $request->user()->addresses()->where('id', $id)->firstOrFail();
@@ -146,9 +127,6 @@ class CheckoutController extends Controller
         return redirect()->route('checkout.addresses')->with('success', 'Address updated successfully.');
     }
 
-    /**
-     * Delete address.
-     */
     public function deleteAddress(Request $request, $id)
     {
         $address = $request->user()->addresses()->where('id', $id)->firstOrFail();
@@ -167,7 +145,7 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Continue to checkout confirmation.
+     * ✅ Continue Checkout - COD र Khalti दुवैको लागि काम गर्छ
      */
     public function continueCheckout(Request $request)
     {
@@ -176,6 +154,7 @@ class CheckoutController extends Controller
             'payment_method' => 'required|in:cod,online',
             'redeem_points' => 'nullable|integer|min:0',
             'coupon_code' => 'nullable|string|max:50',
+            'initiate_khalti' => 'nullable|in:1',
         ]);
 
         $user = $request->user();
@@ -218,6 +197,7 @@ class CheckoutController extends Controller
 
         $grandTotal = round($subtotal - $discount + $deliveryCharge + $tax, 2);
 
+        // ✅ Session save
         session()->put('checkout_confirmation', [
             'address_id' => $address->id,
             'payment_method' => $validated['payment_method'],
@@ -233,12 +213,13 @@ class CheckoutController extends Controller
             'grand_total' => $grandTotal,
         ]);
 
+        if (!empty($validated['initiate_khalti']) && $validated['payment_method'] === 'online') {
+            return $this->initiateKhaltiPayment($user, $grandTotal);
+        }
+
         return redirect()->route('checkout.confirm');
     }
 
-    /**
-     * Show order confirmation page.
-     */
     public function confirm(Request $request)
     {
         $checkout = session('checkout_confirmation');
@@ -253,7 +234,6 @@ class CheckoutController extends Controller
             session()->forget('checkout_confirmation');
             return redirect()->route('checkout')->with('error', 'Your selected delivery address is no longer available.');
         }
-
 
         $appliedCoupon = session('applied_coupon');
         $subtotal = $checkout['subtotal'];
@@ -288,28 +268,27 @@ class CheckoutController extends Controller
     }
 
     /**
-     * Place order - COMPLETE WITH STOCK REDUCTION + COUPON + VALLEY DELIVERY
+     * ✅ Place Order - COD को लागि मात्र
+     * (Online payment सधैं continueCheckout → Khalti बाट हुन्छ)
      */
     public function placeOrder(Request $request)
     {
         $validated = $request->validate([
             'address_id' => 'required|exists:addresses,id',
             'payment_method' => 'required|in:cod,online',
-            'transaction_id' => ['nullable', 'string', 'max:100', 'required_if:payment_method,online'],
-            'payment_screenshot' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120', 'required_if:payment_method,online'],
             'coupon_code' => 'nullable|string|max:50',
             'redeem_points' => 'nullable|integer|min:0',
         ]);
+
+        
+        if ($validated['payment_method'] === 'online') {
+            return redirect()->route('khalti.initiate');
+        }
 
         $user = $request->user();
         $checkout = session('checkout_confirmation', []);
         $redeemPoints = (int) ($validated['redeem_points'] ?? $checkout['redeem_points'] ?? 0);
         $couponCode = $validated['coupon_code'] ?? $checkout['coupon_code'] ?? session('applied_coupon.code');
-
-        $paymentScreenshotPath = null;
-        if ($validated['payment_method'] === 'online' && $request->hasFile('payment_screenshot')) {
-            $paymentScreenshotPath = $request->file('payment_screenshot')->store('payment-screenshots', 'public');
-        }
 
         $address = $user->addresses()->where('id', $validated['address_id'])->firstOrFail();
         $cartItems = $user->carts()->with(['product', 'variant'])->lockForUpdate()->get();
@@ -321,16 +300,10 @@ class CheckoutController extends Controller
         DB::beginTransaction();
 
         try {
-            // Validate stock and calculate subtotal
             $subtotal = $this->validateStockAndCalculateSubtotal($cartItems);
-
-            // Coupon (re-validated inside transaction)
             [$coupon, $couponDiscount] = $this->resolveCouponOrFail($user, $couponCode, $subtotal);
-
-            // Coin redemption (re-validated)
             $pointsDiscount = $this->validateAndRedeemCoins($user, $redeemPoints, $subtotal);
 
-            // Valley-based delivery charge
             $isInsideValley = $this->isInsideKathmanduValley($address);
             $deliveryCharge = $this->calculateDeliveryCharge($subtotal, $isInsideValley);
             $tax = $subtotal * 0.13;
@@ -341,7 +314,6 @@ class CheckoutController extends Controller
             }
             $grandTotal = round($subtotal - $discount + $deliveryCharge + $tax, 2);
 
-            // Create order
             $order = $this->createOrder($user, $address, $validated, [
                 'subtotal' => $subtotal,
                 'discount' => $discount,
@@ -349,14 +321,14 @@ class CheckoutController extends Controller
                 'tax' => $tax,
                 'grandTotal' => $grandTotal,
                 'redeemPoints' => $redeemPoints,
-                'paymentScreenshotPath' => $paymentScreenshotPath,
+                'paymentScreenshotPath' => null,
                 'coupon' => $coupon,
+                'transactionId' => null,
+                'paymentStatus' => 'pending',
+                'orderStatus' => 'pending',
             ]);
 
-            // Create payment record
-            $this->createPayment($order, $validated, $grandTotal);
-
-            // Create order items and REDUCE STOCK
+            $this->createPayment($order, $validated, $grandTotal, null);
             $this->createOrderItemsAndReduceStock($cartItems, $order);
 
             if ($coupon) {
@@ -371,7 +343,6 @@ class CheckoutController extends Controller
 
             DB::commit();
 
-            // Send email
             $this->sendOrderConfirmationEmail($order);
 
             session()->forget('checkout_confirmation');
@@ -382,19 +353,113 @@ class CheckoutController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             Log::error('Order placement error: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
             return back()->withInput()->with('error', $e->getMessage());
         }
     }
 
     /**
-     * Check if user's address is inside Kathmandu Valley.
+     * ✅ Khalti payment पछि order place गर्ने
      */
+    public function placeOrderAfterKhalti($user, array $khaltiData)
+    {
+        $checkout = session('checkout_confirmation');
+
+        if (!$checkout) {
+            throw new \Exception('Checkout session expired.');
+        }
+
+        $address = $user->addresses()->find($checkout['address_id']);
+
+        if (!$address) {
+            throw new \Exception('Delivery address not found.');
+        }
+
+        $cartItems = $user->carts()->with(['product', 'variant'])->lockForUpdate()->get();
+
+        if ($cartItems->isEmpty()) {
+            throw new \Exception('Your cart is empty.');
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $subtotal = $this->validateStockAndCalculateSubtotal($cartItems);
+
+            $coupon = null;
+            $couponDiscount = 0;
+
+            if (!empty($checkout['coupon_id'])) {
+                $coupon = Coupon::find($checkout['coupon_id']);
+                $couponDiscount = $checkout['coupon_discount'] ?? 0;
+            }
+
+            $redeemPoints = $checkout['redeem_points'] ?? 0;
+            $pointsDiscount = $checkout['points_discount'] ?? 0;
+
+            $isInsideValley = $this->isInsideKathmanduValley($address);
+            $deliveryCharge = $this->calculateDeliveryCharge($subtotal, $isInsideValley);
+            $tax = $subtotal * 0.13;
+
+            $discount = round($couponDiscount + $pointsDiscount, 2);
+            if ($discount > $subtotal) {
+                $discount = $subtotal;
+            }
+            $grandTotal = round($subtotal - $discount + $deliveryCharge + $tax, 2);
+
+            $order = $this->createOrder($user, $address, [
+                'payment_method' => 'online',
+                'transaction_id' => $khaltiData['transaction_id'] ?? null,
+            ], [
+                'subtotal' => $subtotal,
+                'discount' => $discount,
+                'deliveryCharge' => $deliveryCharge,
+                'tax' => $tax,
+                'grandTotal' => $grandTotal,
+                'redeemPoints' => $redeemPoints,
+                'paymentScreenshotPath' => null,
+                'coupon' => $coupon,
+                'transactionId' => $khaltiData['transaction_id'] ?? null,
+                'paymentStatus' => 'paid',
+                'orderStatus' => 'confirmed',
+            ]);
+
+            Payment::create([
+                'order_id' => $order->id,
+                'payment_method' => 'khalti',
+                'transaction_id' => $khaltiData['transaction_id'] ?? null,
+                'amount' => $grandTotal,
+                'status' => 'completed',
+                'gateway_response' => json_encode($khaltiData),
+            ]);
+
+            $this->createOrderItemsAndReduceStock($cartItems, $order);
+
+            if ($coupon) {
+                $coupon->incrementUsage();
+            }
+
+            if ($redeemPoints > 0) {
+                $this->redeemUserCoins($user, $redeemPoints, $order, $pointsDiscount);
+            }
+
+            $user->carts()->delete();
+
+            DB::commit();
+
+            $this->sendOrderConfirmationEmail($order);
+
+            session()->forget(['checkout_confirmation', 'applied_coupon', 'khalti_pidx', 'khalti_purchase_order_id']);
+
+            return $order;
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
     private function isInsideKathmanduValley($address): bool
     {
-        if (!$address) {
-            return false;
-        }
+        if (!$address) return false;
 
         $valleyDistricts = ['kathmandu', 'lalitpur', 'bhaktapur'];
         $valleyCities = ['kathmandu', 'lalitpur', 'bhaktapur', 'patan', 'kirtipur', 'madhyapur thimi'];
@@ -402,24 +467,16 @@ class CheckoutController extends Controller
         $district = strtolower($address->district ?? '');
         $city = strtolower($address->city ?? '');
 
-        foreach ($valleyDistricts as $valleyDistrict) {
-            if (str_contains($district, $valleyDistrict)) {
-                return true;
-            }
+        foreach ($valleyDistricts as $vd) {
+            if (str_contains($district, $vd)) return true;
         }
-
-        foreach ($valleyCities as $valleyCity) {
-            if (str_contains($city, $valleyCity)) {
-                return true;
-            }
+        foreach ($valleyCities as $vc) {
+            if (str_contains($city, $vc)) return true;
         }
 
         return false;
     }
 
-    /**
-     * Calculate delivery charge based on order value and location.
-     */
     private function calculateDeliveryCharge(float $subtotal, bool $isInsideValley): float
     {
         $tiers = $isInsideValley ? [
@@ -437,17 +494,12 @@ class CheckoutController extends Controller
         ];
 
         foreach ($tiers as $threshold => $charge) {
-            if ($subtotal >= $threshold) {
-                return $charge;
-            }
+            if ($subtotal >= $threshold) return $charge;
         }
 
         return end($tiers);
     }
 
-    /**
-     * Validate stock and calculate subtotal.
-     */
     private function validateStockAndCalculateSubtotal($cartItems): float
     {
         $subtotal = 0;
@@ -476,14 +528,9 @@ class CheckoutController extends Controller
         return $subtotal;
     }
 
-    /**
-     * Validate and redeem coins.
-     */
     private function validateAndRedeemCoins($user, int $redeemPoints, float $subtotal): float
     {
-        if ($redeemPoints <= 0) {
-            return 0;
-        }
+        if ($redeemPoints <= 0) return 0;
 
         $maxPoints = RewardHelper::getMaxRedeemCoins($user, $subtotal);
 
@@ -498,12 +545,8 @@ class CheckoutController extends Controller
         return RewardHelper::calculateDiscount($redeemPoints);
     }
 
-    /**
-     * Create order.
-     */
     private function createOrder($user, $address, $validated, array $data)
     {
-        // Generate unique order number
         do {
             $orderNumber = 'TN-' . strtoupper(Str::random(10));
         } while (Order::where('order_number', $orderNumber)->exists());
@@ -520,39 +563,32 @@ class CheckoutController extends Controller
             'tax_percentage' => 13,
             'grand_total' => $data['grandTotal'],
             'payment_method' => $validated['payment_method'],
-            'payment_status' => 'pending',
-            'order_status' => 'pending',
-            'transaction_id' => $validated['transaction_id'] ?? null,
+            'payment_status' => $data['paymentStatus'] ?? 'pending',
+            'order_status' => $data['orderStatus'] ?? 'pending',
+            'transaction_id' => $data['transactionId'] ?? ($validated['transaction_id'] ?? null),
             'payment_screenshot' => $data['paymentScreenshotPath'],
             'notes' => null,
-            'current_location' => 'Order placed',
+            'current_location' => $data['orderStatus'] === 'confirmed' ? 'Payment received' : 'Order placed',
             'points_redeemed' => $data['redeemPoints'],
             'points_earned' => 0,
         ]);
     }
 
-    /**
-     * Create payment record.
-     */
-    private function createPayment($order, $validated, float $grandTotal): void
+    private function createPayment($order, $validated, float $grandTotal, $transactionId): void
     {
         Payment::create([
             'order_id' => $order->id,
-            'payment_method' => $validated['payment_method'] === 'online' ? 'esewa' : 'Cash on Delivery',
-            'transaction_id' => $validated['transaction_id'] ?? null,
+            'payment_method' => $validated['payment_method'] === 'online' ? 'khalti' : 'Cash on Delivery',
+            'transaction_id' => $transactionId ?? ($validated['transaction_id'] ?? null),
             'amount' => $grandTotal,
             'status' => 'pending',
             'gateway_response' => null,
         ]);
     }
 
-    /**
-     * Create order items and REDUCE STOCK.
-     */
     private function createOrderItemsAndReduceStock($cartItems, $order): void
     {
         foreach ($cartItems as $item) {
-            // Create order item
             OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item->product_id,
@@ -562,33 +598,15 @@ class CheckoutController extends Controller
                 'total' => round($item->price * $item->quantity, 2),
             ]);
 
-            // REDUCE STOCK
             if ($item->variant_id) {
                 $item->variant->decrement('stock', $item->quantity);
-                Log::info('Stock reduced for variant', [
-                    'variant_id' => $item->variant_id,
-                    'quantity' => $item->quantity,
-                    'remaining_stock' => $item->variant->stock
-                ]);
             } else {
                 $product = Product::find($item->product_id);
-                $oldStock = $product->stock;
                 $product->decrement('stock', $item->quantity);
-
-                Log::info('Stock reduced for product', [
-                    'product_id' => $item->product_id,
-                    'product_name' => $product->name,
-                    'old_stock' => $oldStock,
-                    'new_stock' => $product->stock,
-                    'quantity_reduced' => $item->quantity
-                ]);
             }
         }
     }
 
-    /**
-     * Redeem user coins.
-     */
     private function redeemUserCoins($user, int $redeemPoints, $order, float $pointsDiscount): void
     {
         $user->redeemCoins(
@@ -598,9 +616,6 @@ class CheckoutController extends Controller
         );
     }
 
-    /**
-     * Send order confirmation email.
-     */
     private function sendOrderConfirmationEmail($order): void
     {
         try {
@@ -612,9 +627,6 @@ class CheckoutController extends Controller
         }
     }
 
-    /**
-     * Coupon helpers (from remote branch)
-     */
     private function rememberCoupon($user, string $code, float $subtotal): void
     {
         try {
@@ -638,9 +650,7 @@ class CheckoutController extends Controller
     {
         $applied = session('applied_coupon');
 
-        if (!$applied) {
-            return [null, 0];
-        }
+        if (!$applied) return [null, 0];
 
         try {
             [$coupon, $discount] = $this->resolveCouponOrFail($user, $applied['code'] ?? null, $subtotal);
@@ -656,11 +666,69 @@ class CheckoutController extends Controller
         return [null, 0];
     }
 
+    /**
+     * ✅ AJAX: Coupon apply गर्ने
+     */
+    public function applyCoupon(Request $request)
+    {
+        $request->validate([
+            'code' => 'required|string|max:50',
+        ]);
+
+        $user = $request->user();
+        $cartItems = $user->carts()->get();
+
+        if ($cartItems->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your cart is empty.',
+            ], 400);
+        }
+
+        $subtotal = $cartItems->sum(fn($item) => $item->price * $item->quantity);
+
+        try {
+            [$coupon, $discount] = $this->resolveCouponOrFail($user, $request->code, $subtotal);
+
+            session()->put('applied_coupon', [
+                'id' => $coupon->id,
+                'code' => $coupon->code,
+                'type' => $coupon->type,
+                'discount' => $discount,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'code' => $coupon->code,
+                'discount' => $discount,
+                'message' => 'Coupon applied successfully.',
+            ]);
+        } catch (\Throwable $e) {
+            session()->forget('applied_coupon');
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 422);
+        }
+    }
+
+    /**
+     * ✅ AJAX: Coupon remove गर्ने
+     */
+    public function removeCoupon(Request $request)
+    {
+        session()->forget('applied_coupon');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Coupon removed.',
+        ]);
+    }
+
     private function resolveCouponOrFail($user, ?string $code, float $subtotal): array
     {
-        if (!$code) {
-            return [null, 0];
-        }
+        if (!$code) return [null, 0];
 
         $coupon = Coupon::findByCode($code);
 
@@ -684,5 +752,55 @@ class CheckoutController extends Controller
         }
 
         return [$coupon, round($result['discount'], 2)];
+    }
+
+    /**
+     * ✅ Khalti payment initiate - direct API call
+     */
+    private function initiateKhaltiPayment($user, float $grandTotal)
+    {
+        if ($grandTotal < 10) {
+            return redirect()->route('checkout')
+                ->with('error', 'Amount must be at least Rs. 10 for Khalti payment.');
+        }
+
+        $purchaseOrderId = 'TN-' . strtoupper(Str::random(10));
+        session()->put('khalti_purchase_order_id', $purchaseOrderId);
+
+        $payload = [
+            'return_url' => route('khalti.callback'),
+            'website_url' => config('app.url'),
+            'amount' => (int) round($grandTotal * 100),
+            'purchase_order_id' => $purchaseOrderId,
+            'purchase_order_name' => 'Order ' . $purchaseOrderId,
+            'customer_info' => [
+                'name' => $user->name ?? 'Customer',
+                'email' => $user->email ?? 'customer@example.com',
+                'phone' => $user->phone ?? '9800000000',
+            ],
+        ];
+
+        try {
+            $response = \Illuminate\Support\Facades\Http::withHeaders([
+                'Authorization' => 'Key ' . config('services.khalti.secret_key'),
+                'Content-Type' => 'application/json',
+            ])->post(config('services.khalti.base_url') . '/epayment/initiate/', $payload);
+
+            if (!$response->successful()) {
+                \Illuminate\Support\Facades\Log::error('Khalti initiate failed', ['body' => $response->body()]);
+                return redirect()->route('checkout')
+                    ->with('error', 'Payment initialization failed. Please try again.');
+            }
+
+            $data = $response->json();
+            session()->put('khalti_pidx', $data['pidx']);
+
+            return redirect($data['payment_url']);
+
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('Khalti initiate exception: ' . $e->getMessage());
+            return redirect()->route('checkout')
+                ->with('error', 'Payment gateway error. Please try again.');
+        }
     }
 }

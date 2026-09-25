@@ -12,6 +12,7 @@ use Filament\Widgets\Widget;
 
 class QuickActions extends Widget
 {
+     protected static bool $isLazy = true; 
     protected static ?string $heading = 'Quick Actions';
     protected string $view = 'filament.widgets.quick-actions';
     protected static ?int $sort = 6;

@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->authGuard('admin')
             ->login()
-            ->registration()
+            // ->registration()
             ->profile()
             ->brandName('Tech Nova Admin')
             ->colors([
@@ -74,6 +74,10 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
+            ->renderHook(
+                'panels::head.end',
+                fn() => view('filament.partials.chartjs'),
+            )
             ->authMiddleware([
                 Authenticate::class,
             ]);

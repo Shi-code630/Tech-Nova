@@ -8,6 +8,7 @@ use Filament\Widgets\ChartWidget;
 
 class OrdersByStatusChart extends ChartWidget
 {
+     protected static bool $isLazy = true; 
     protected ?string $heading = 'Orders by Status';
     protected static ?int $sort = 2;
     protected ?string $maxHeight = '320px';

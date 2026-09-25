@@ -8,6 +8,7 @@ use Filament\Widgets\ChartWidget;
 
 class SalesOverviewChart extends ChartWidget
 {
+    protected static bool $isLazy = true;
     protected ?string $heading = 'Sales Overview';
     protected static ?int $sort = 1;
     protected ?string $maxHeight = '320px';

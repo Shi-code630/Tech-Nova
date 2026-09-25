@@ -35,12 +35,19 @@ class ShoppingCartsForm
 
                                 Select::make('variant_id')
                                     ->label('Variant')
-                                    ->relationship('variant', 'color')
+                                    ->relationship(
+                                        name: 'variant',
+                                        titleAttribute: 'color',
+                                        modifyQueryUsing: fn($query) => $query
+                                            ->whereNotNull('color')
+                                            ->where('color', '!=', '')
+                                    )
+                                    ->getOptionLabelFromRecordUsing(
+                                        fn($record) => trim(($record->color ?? '') . ' / ' . ($record->size ?? ''))
+                                            ?: 'Variant #' . $record->id
+                                    )
                                     ->searchable()
-                                    ->preload()
-                                    ->nullable()
-                                    ->helperText('Select variant (optional)'),
-
+                                    ->preload(),
                                 TextInput::make('quantity')
                                     ->label('Quantity')
                                     ->numeric()

@@ -135,28 +135,7 @@ class Order extends Model
             }
         });
 
-        static::updated(function (Order $order): void {
-            if (
-                $order->isDirty('order_status')
-                && $order->order_status === self::STATUS_DELIVERED
-                && ! $order->reward_points_given
-            ) {
-                $user = $order->user;
-
-                if ($user) {
-                    $points = floor($order->grand_total / 10);
-
-                    if ($points > 0) {
-                        $user->increment('reward_points', $points);
-
-                        $order->updateQuietly([
-                            'reward_points_given' => true,
-                            'reward_points_earned' => $points,
-                        ]);
-                    }
-                }
-            }
-        });
+        
     }
 
     // ACCESSORS

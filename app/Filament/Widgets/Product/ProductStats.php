@@ -7,9 +7,10 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Review;
 use Carbon\Carbon;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Filament\Widgets\Concerns\InteractsWithPageFilters;
+use Illuminate\Support\Str;
 
 class ProductStats extends BaseWidget
 {
@@ -40,12 +41,17 @@ class ProductStats extends BaseWidget
             ->orderByDesc('sold')
             ->first();
 
+        // ✅ Best product name safely limit गर्नुहोस्
+        $bestProductName = $bestProduct?->name ?? 'No Data';
+        $truncatedName = Str::limit($bestProductName, 22, '…');
+        $soldCount = $bestProduct->sold ?? 0;
+
         $totalSold = OrderItem::whereHas('order', function ($q) use ($start, $end) {
             $q->whereBetween('created_at', [$start, $end])
                 ->where('order_status', '!=', 'cancelled');
         })->sum('quantity');
 
-        $days = $start->diffInDays($end);
+        $days = max(1, $start->diffInDays($end));
         $prevStart = (clone $start)->subDays($days + 1);
         $prevEnd = (clone $start)->subDay();
 
@@ -76,12 +82,15 @@ class ProductStats extends BaseWidget
                 ->icon('heroicon-o-cube')
                 ->extraAttributes(['class' => $this->hoverClasses]),
 
-            Stat::make('Best Selling Product', $bestProduct?->name ?? 'No Data')
-                ->description(($bestProduct->sold ?? 0) . ' Sold')
+            // ✅ Fixed: Truncated name + tooltip
+            Stat::make('Best Selling Product', $truncatedName)
+                ->description($soldCount . ' Sold')
                 ->icon('heroicon-o-trophy')
                 ->color('warning')
-                ->extraAttributes(['class' => $this->hoverClasses]),
-
+                ->extraAttributes([
+                    'class' => $this->hoverClasses . ' cursor-help',
+                    'title' => $bestProductName,
+                ]),
 
             Stat::make('Total Units Sold', number_format($totalSold))
                 ->description($this->formatGrowth($soldGrowth))
@@ -90,7 +99,6 @@ class ProductStats extends BaseWidget
                 ->icon('heroicon-o-shopping-cart')
                 ->extraAttributes(['class' => $this->hoverClasses]),
 
-
             Stat::make('Total Revenue', 'Rs. ' . number_format($totalRevenue, 2))
                 ->description($this->formatGrowth($revenueGrowth))
                 ->descriptionIcon($revenueGrowth >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
@@ -98,14 +106,12 @@ class ProductStats extends BaseWidget
                 ->icon('heroicon-o-currency-dollar')
                 ->extraAttributes(['class' => $this->hoverClasses]),
 
-
             Stat::make('Avg. Rating', number_format($avgRating, 1) . ' / 5')
                 ->description($this->formatGrowth($ratingGrowth))
                 ->descriptionIcon($ratingGrowth >= 0 ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
                 ->color($ratingGrowth >= 0 ? 'success' : 'danger')
                 ->icon('heroicon-o-star')
                 ->extraAttributes(['class' => $this->hoverClasses]),
-
         ];
     }
 

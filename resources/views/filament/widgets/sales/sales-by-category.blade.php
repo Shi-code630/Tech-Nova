@@ -56,14 +56,94 @@
         @php
             $data = $this->getCategorySalesData();
             $hasData = !empty($data['categories']) && $data['total_sales'] > 0;
+            $chartId = 'salesByCategoryChart-' . $this->getId();
         @endphp
 
         @if($hasData)
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <!-- Chart Column -->
                 <div class="lg:col-span-3">
-                    <div class="h-[300px]">
-                        <canvas id="salesByCategoryChart" class="w-full h-full"></canvas>
+                    <div
+                        wire:ignore
+                        x-data="{
+                            chart: null,
+                            init() {
+                                this.renderChart();
+                                $wire.on('filterUpdated', () => {
+                                    this.$nextTick(() => this.renderChart());
+                                });
+                            },
+                            renderChart() {
+                                const canvas = document.getElementById('{{ $chartId }}');
+                                if (!canvas) return;
+
+                                if (this.chart) {
+                                    this.chart.destroy();
+                                    this.chart = null;
+                                }
+
+                                const ctx = canvas.getContext('2d');
+
+                                this.chart = new Chart(ctx, {
+                                    type: 'bar',
+                                    data: {
+                                        labels: @js($data['labels']),
+                                        datasets: [{
+                                            label: 'Sales by Category',
+                                            data: @js($data['data']),
+                                            backgroundColor: @js($data['colors']),
+                                            borderColor: @js($data['colors']),
+                                            borderWidth: 1,
+                                            borderRadius: 4,
+                                            barThickness: 40,
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: { display: false },
+                                            tooltip: {
+                                                callbacks: {
+                                                    label: function(context) {
+                                                        let label = context.dataset.label || '';
+                                                        let value = context.parsed.y;
+                                                        return label + ': Rs. ' + value.toLocaleString('en-IN', {
+                                                            minimumFractionDigits: 2,
+                                                            maximumFractionDigits: 2
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                ticks: {
+                                                    callback: function(value) {
+                                                        return 'Rs. ' + value.toLocaleString('en-IN');
+                                                    },
+                                                    font: { size: 10 }
+                                                },
+                                                grid: { color: 'rgba(0, 0, 0, 0.05)' }
+                                            },
+                                            x: {
+                                                grid: { display: false },
+                                                ticks: { font: { size: 10 } }
+                                            }
+                                        },
+                                        animation: {
+                                            duration: 1000,
+                                            easing: 'easeOutQuart'
+                                        }
+                                    }
+                                });
+                            }
+                        }"
+                        x-init="init()"
+                        class="h-[300px]"
+                    >
+                        <canvas id="{{ $chartId }}" class="w-full h-full"></canvas>
                     </div>
                 </div>
 
@@ -100,84 +180,20 @@
             </div>
         @endif
     </x-filament::section>
-</x-filament-widgets::widget>
 
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        @if($hasData)
-            const ctx = document.getElementById('salesByCategoryChart').getContext('2d');
-
-            const chartData = {
-                labels: @json($data['labels']),
-                datasets: [{
-                    label: 'Sales by Category',
-                    data: @json($data['data']),
-                    backgroundColor: @json($data['colors']),
-                    borderColor: @json($data['colors']),
-                    borderWidth: 1,
-                    borderRadius: 4,
-                    barThickness: 40,
-                }]
+    @script
+    <script>
+      
+        if (typeof Chart === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+            script.onload = () => {
+                window.dispatchEvent(new Event('chartjs-loaded'));
             };
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: chartData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false,
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    let value = context.parsed.y;
-                                    return label + ': Rs. ' + value.toLocaleString('en-IN', {
-                                        minimumFractionDigits: 2,
-                                        maximumFractionDigits: 2
-                                    });
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return 'Rs. ' + value.toLocaleString('en-IN');
-                                },
-                                font: {
-                                    size: 10,
-                                }
-                            },
-                            grid: {
-                                color: 'rgba(0, 0, 0, 0.05)',
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false,
-                            },
-                            ticks: {
-                                font: {
-                                    size: 10,
-                                }
-                            }
-                        }
-                    },
-                    animation: {
-                        duration: 1000,
-                        easing: 'easeOutQuart'
-                    }
-                }
-            });
-        @endif
-    });
-</script>
-@endpush
+            document.head.appendChild(script);
+        } else {
+            window.dispatchEvent(new Event('chartjs-loaded'));
+        }
+    </script>
+    @endscript
+</x-filament-widgets::widget>

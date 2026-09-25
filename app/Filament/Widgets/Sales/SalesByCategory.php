@@ -20,7 +20,7 @@ class SalesByCategory extends Widget
     protected string $view = 'filament.widgets.sales.sales-by-category';
     public ?string $filter = 'month';
 
-       protected int $categoryLimit = 5;
+    protected int $categoryLimit = 5;
     protected function getFilters(): ?array
     {
         return [
@@ -30,6 +30,10 @@ class SalesByCategory extends Widget
             'quarter' => 'This Quarter',
             'year' => 'This Year',
         ];
+    }
+    public function updatedFilter(): void
+    {
+        $this->dispatch('filterUpdated');
     }
 
     public function getCategorySalesData(): array
@@ -168,7 +172,7 @@ class SalesByCategory extends Widget
 
         $now = now();
 
-        return match($filter) {
+        return match ($filter) {
             'today' => [
                 $now->clone()->startOfDay(),
                 $now->clone()->endOfDay(),

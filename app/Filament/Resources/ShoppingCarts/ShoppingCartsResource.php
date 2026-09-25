@@ -16,6 +16,10 @@ use Filament\Tables\Table;
 
 class ShoppingCartsResource extends Resource
 {
+    public static function shouldRegisterNavigation(): bool
+    {
+        return false;
+    }
     protected static ?string $model = Cart::class;
 
     public static function getNavigationGroup(): ?string

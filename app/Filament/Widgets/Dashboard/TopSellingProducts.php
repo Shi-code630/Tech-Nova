@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class TopSellingProducts extends BaseWidget
 {
+    protected static bool $isLazy = true;
     protected static ?int $sort = 5;
 
     protected int|string|array $columnSpan = [

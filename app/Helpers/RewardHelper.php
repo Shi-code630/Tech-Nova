@@ -7,70 +7,110 @@ use App\Models\RewardSetting;
 
 class RewardHelper
 {
-   
+    /**
+     * Rs. per 1 coin earned
+     * Default: Rs.100 खर्च गर्दा 1 coin
+     */
     public static function getEarnRate(): int
     {
         return (int) RewardSetting::get('earn_rate', 100);
     }
 
+    /**
+     * Coins per Rs.1 discount
+     * Default: 20 coins = Rs.1
+     */
     public static function getRedeemRate(): int
     {
         return (int) RewardSetting::get('redeem_rate', 20);
     }
 
-    
+    /**
+     * Max % of order that can be discounted via coins
+     */
     public static function getMaxDiscountPercent(): int
     {
         return (int) RewardSetting::get('max_discount_percent', 10);
     }
 
+    /**
+     * ✅ Earn coins from order amount
+     * Rs.1000 → 10 coins (if earn_rate=100)
+     */
     public static function calculateEarnedCoins($amount): int
     {
         $rate = self::getEarnRate();
 
-        
-        if ($rate <= 0) {
+        if ($rate <= 0 || $amount <= 0) {
             return 0;
         }
 
-       
         return (int) floor($amount / $rate);
     }
 
-        public static function calculateDiscount($points): float
+    /**
+     * ✅ FIXED: Round to 2 decimals
+     * 100 coins / 20 = Rs.5.00
+     */
+    public static function calculateDiscount($points): float
     {
         $rate = self::getRedeemRate();
+        $points = (int) ($points ?? 0);
 
-        if ($rate <= 0) {
+        if ($rate <= 0 || $points <= 0) {
             return 0.0;
         }
 
-        return $points / $rate;
+        return round($points / $rate, 2);
     }
 
-  
+    /**
+     * ✅ FIXED: Null-safe max redeemable coins
+     * Returns min(available coins, max allowed by discount %)
+     */
     public static function getMaxRedeemCoins(User $user, $subtotal): int
     {
+        $available = (int) ($user->reward_points ?? 0);
+
+        if ($available <= 0 || $subtotal <= 0) {
+            return 0;
+        }
+
         $maxPercent = self::getMaxDiscountPercent();
-        $maxDiscount = $subtotal * ($maxPercent / 100);
         $redeemRate = self::getRedeemRate();
 
-       
-        $maxPoints = $redeemRate > 0 ? (int) ceil($maxDiscount * $redeemRate) : 0;
+        if ($redeemRate <= 0 || $maxPercent <= 0) {
+            return 0;
+        }
 
-       
-        return min($user->reward_points ?? 0, $maxPoints);
+        // Max discount Rs. (e.g. 10% of 1000 = Rs. 100)
+        $maxDiscountAmount = $subtotal * ($maxPercent / 100);
+
+        // Max coins needed for that discount (100 * 20 = 2000 coins)
+        // floor() use गर्नुहोस् ताकि maxPercent भन्दा बढी discount नहोस्
+        $maxCoinsByDiscount = (int) floor($maxDiscountAmount * $redeemRate);
+
+        return (int) min($available, $maxCoinsByDiscount);
     }
 
-   
+    /**
+     * ✅ FIXED: Null-safe summary
+     */
     public static function getUserCoinsSummary(User $user): array
     {
-        $totalEarned = $user->rewardTransactions()->where('type', 'earned')->sum('points');
-        $totalRedeemed = $user->rewardTransactions()->where('type', 'redeemed')->sum('points');
+        $available = (int) ($user->reward_points ?? 0);
+
+        $totalEarned = (int) ($user->rewardTransactions()
+            ->where('type', 'earned')
+            ->sum('points') ?? 0);
+
+        $totalRedeemed = (int) ($user->rewardTransactions()
+            ->where('type', 'redeemed')
+            ->sum('points') ?? 0);
 
         return [
-            'available' => $user->reward_points,
-            'value' => self::calculateDiscount($user->reward_points),
+            'available' => $available,
+            'value' => self::calculateDiscount($available),
             'total_earned' => $totalEarned,
             'total_redeemed' => $totalRedeemed,
             'earn_rate' => self::getEarnRate(),
@@ -79,7 +119,9 @@ class RewardHelper
         ];
     }
 
-   
+    /**
+     * Recent transactions
+     */
     public static function getRecentTransactions(User $user, $limit = 5)
     {
         return $user->rewardTransactions()

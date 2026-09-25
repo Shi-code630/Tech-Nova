@@ -14,7 +14,9 @@ class StatsOverview extends BaseWidget
 {
     protected static ?int $sort = 0;
     protected int|string|array $columnSpan = 'full';
-      protected string $hoverClasses = 'transition-all duration-300 hover:scale-105';
+    protected static bool $isLazy = true;
+    protected ?string $pollingInterval = null;
+    protected string $hoverClasses = 'transition-all duration-300 hover:scale-105';
     public  function getColumns(): int
     {
         return 5;
