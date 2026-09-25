@@ -46,71 +46,7 @@
                             </div>
                         </a>
 
-                        <div class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-                            <button type="button" id="passwordToggle" onclick="togglePasswordPanel()"
-                                class="w-full flex items-center gap-3 sm:gap-4 p-4 sm:p-6 text-left hover:bg-slate-50 transition">
-                                <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-amber-50 text-[#F59E0B] flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-5 h-5 sm:w-6 sm:h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V7.125a4.125 4.125 0 0 0-8.25 0V10.5m-.75 0h9.75A1.5 1.5 0 0 1 19 12v7.5a1.5 1.5 0 0 1-1.5 1.5h-11A1.5 1.5 0 0 1 5 19.5V12a1.5 1.5 0 0 1 1.5-1.5Z" />
-                                    </svg>
-                                </div>
-                                <div class="flex-1 min-w-0">
-                                    <h2 class="font-semibold text-sm sm:text-base text-[#111827]">Change Password</h2>
-                                    <p class="text-xs sm:text-sm text-gray-500 mt-0.5">Update your password and keep your account secure.</p>
-                                </div>
-                                <svg id="passwordChevron" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-gray-400 transition-transform {{ $errors->hasAny(['current_password','password','password_confirmation']) ? 'rotate-90' : '' }}">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                                </svg>
-                            </button>
 
-                            <div id="passwordPanel" class="border-t border-gray-100 px-4 sm:px-6 pb-6 {{ $errors->hasAny(['current_password','password','password_confirmation']) ? '' : 'hidden' }}">
-                                <form method="POST" action="{{ route('user.password.update') }}" class="max-w-md space-y-4 pt-5">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">Current password</label>
-                                        <div class="relative">
-                                            <input id="current_password" type="password" name="current_password" required
-                                                class="w-full h-11 rounded-xl border {{ $errors->has('current_password') ? 'border-red-400' : 'border-gray-300' }} px-3 pr-10 text-sm focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]">
-                                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500" onclick="toggleEye('current_password', this)">Show</button>
-                                        </div>
-                                        @error('current_password')
-                                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">New password</label>
-                                        <div class="relative">
-                                            <input id="password" type="password" name="password" required minlength="8"
-                                                class="w-full h-11 rounded-xl border {{ $errors->has('password') ? 'border-red-400' : 'border-gray-300' }} px-3 pr-10 text-sm focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]"
-                                                oninput="checkPasswordMatch()">
-                                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500" onclick="toggleEye('password', this)">Show</button>
-                                        </div>
-                                        <p class="text-[11px] text-slate-400 mt-1">At least 8 characters.</p>
-                                        @error('password')
-                                            <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-slate-700 mb-1">Confirm new password</label>
-                                        <div class="relative">
-                                            <input id="password_confirmation" type="password" name="password_confirmation" required minlength="8"
-                                                class="w-full h-11 rounded-xl border border-gray-300 px-3 pr-10 text-sm focus:ring-2 focus:ring-[#2563EB] focus:border-[#2563EB]"
-                                                oninput="checkPasswordMatch()">
-                                            <button type="button" class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500" onclick="toggleEye('password_confirmation', this)">Show</button>
-                                        </div>
-                                        <p id="matchHint" class="text-xs mt-1"></p>
-                                    </div>
-
-                                    <button type="submit" class="h-11 px-5 rounded-xl bg-[#2563EB] hover:bg-blue-700 text-white text-sm font-semibold">
-                                        Save new password
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
 
                         <a href="{{ route('checkout.addresses') }}"
                             class="group block bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200">
@@ -165,26 +101,5 @@
         </div>
     </div>
 
-    <script>
-        function togglePasswordPanel() {
-            var panel = document.getElementById('passwordPanel');
-            var chev = document.getElementById('passwordChevron');
-            panel.classList.toggle('hidden');
-            chev.classList.toggle('rotate-90');
-        }
-        function toggleEye(id, btn) {
-            var input = document.getElementById(id);
-            var hide = input.type === 'password';
-            input.type = hide ? 'text' : 'password';
-            btn.textContent = hide ? 'Hide' : 'Show';
-        }
-        function checkPasswordMatch() {
-            var a = document.getElementById('password').value;
-            var b = document.getElementById('password_confirmation').value;
-            var hint = document.getElementById('matchHint');
-            if (!b) { hint.textContent = ''; return; }
-            if (a === b) { hint.textContent = 'Passwords match'; hint.className = 'text-xs mt-1 text-emerald-600'; }
-            else { hint.textContent = 'Passwords do not match'; hint.className = 'text-xs mt-1 text-red-600'; }
-        }
-    </script>
+    
 </x-frontend-layout>
