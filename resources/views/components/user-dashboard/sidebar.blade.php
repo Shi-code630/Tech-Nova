@@ -2,7 +2,7 @@
     class="hidden lg:flex
            w-64
            sticky top-4
-           h-[calc(115vh-2rem)]
+           h-[calc(110vh-2rem)]
            flex-shrink-0
            bg-gradient-to-b from-[#2563EB] to-[#1E40AF]
            text-white
@@ -146,16 +146,7 @@
             <span>Coupons</span>
         </a>
 
-        <!-- Settings -->
-        <a href="{{ route('user.settings') }}"
-            class="flex items-center gap-3 px-4 py-2 rounded-xl mb-1
-                   transition-all duration-200
-                   {{ request()->routeIs('user.settings')
-                       ? 'bg-white/20 font-semibold shadow-sm'
-                       : 'text-white/90 hover:bg-white/10 hover:text-white' }}">
-            <span class="text-lg w-6 text-center">⚙️</span>
-            <span>Settings</span>
-        </a>
+        
 
         <!-- =========================
              LOGOUT

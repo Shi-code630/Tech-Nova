@@ -647,49 +647,52 @@
                             @endif
 
                         </div>
-                        @if ($smallBanners->count())
-                            <div class="mt-8">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                       @if ($smallBanners->count())
+    <div class="mt-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-                                    {{-- Left small banner --}}
-                                    @if (isset($smallBanners[1]))
-                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
-                                            <a href="{{ $smallBanners[1]->button_link ?? '#' }}"
-                                                class="block w-full">
-                                                <img src="{{ Storage::url($smallBanners[1]->image) }}"
-                                                    alt="{{ $smallBanners[1]->alt_text ?? $smallBanners[1]->title }}"
-                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
-                                            </a>
-                                        </div>
-                                    @endif
+            {{-- Left Banner --}}
+            @if ($smallBanners->has(1))
+                <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                    <a href="{{ $smallBanners[1]->button_link ?? '#' }}" class="block w-full">
+                        <img
+                            src="{{ asset('storage/' . ltrim($smallBanners[1]->image, '/')) }}"
+                            alt="{{ $smallBanners[1]->alt_text ?? $smallBanners[1]->title }}"
+                            class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105"
+                        >
+                    </a>
+                </div>
+            @endif
 
-                                    {{-- Center small banner --}}
-                                    @if (isset($smallBanners[2]))
-                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
-                                            <a href="{{ $smallBanners[2]->button_link ?? '#' }}"
-                                                class="block w-full">
-                                                <img src="{{ Storage::url($smallBanners[2]->image) }}"
-                                                    alt="{{ $smallBanners[2]->alt_text ?? $smallBanners[2]->title }}"
-                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
-                                            </a>
-                                        </div>
-                                    @endif
+            {{-- Center Banner --}}
+            @if ($smallBanners->has(2))
+                <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                    <a href="{{ $smallBanners[2]->button_link ?? '#' }}" class="block w-full">
+                        <img
+                            src="{{ asset('storage/' . ltrim($smallBanners[2]->image, '/')) }}"
+                            alt="{{ $smallBanners[2]->alt_text ?? $smallBanners[2]->title }}"
+                            class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105"
+                        >
+                    </a>
+                </div>
+            @endif
 
-                                    {{-- Right small banner --}}
-                                    @if (isset($smallBanners[3]))
-                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
-                                            <a href="{{ $smallBanners[3]->button_link ?? '#' }}"
-                                                class="block w-full">
-                                                <img src="{{ Storage::url($smallBanners[3]->image) }}"
-                                                    alt="{{ $smallBanners[3]->alt_text ?? $smallBanners[3]->title }}"
-                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
-                                            </a>
-                                        </div>
-                                    @endif
+            {{-- Right Banner --}}
+            @if ($smallBanners->has(3))
+                <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                    <a href="{{ $smallBanners[3]->button_link ?? '#' }}" class="block w-full">
+                        <img
+                            src="{{ asset('storage/' . ltrim($smallBanners[3]->image, '/')) }}"
+                            alt="{{ $smallBanners[3]->alt_text ?? $smallBanners[3]->title }}"
+                            class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105"
+                        >
+                    </a>
+                </div>
+            @endif
 
-                                </div>
-                            </div>
-                        @endif
+        </div>
+    </div>
+@endif
                     </section>
                     <div class="py-2 bg-[#f0f9ff]">
                         <div class="">
@@ -1140,7 +1143,7 @@
     BRANDS HEADER
 ========================================================= --}}
 
-                    <div class="flex items-center justify-between  ">
+                    <div class="flex items-center justify-between pb-4">
 
                         {{-- Left Side --}}
                         <div class="flex items-center gap-3 ">
@@ -1176,30 +1179,30 @@
 
                         <div class="relative overflow-hidden">
 
-                            {{-- =================================================
-            SLIDER TRACK
-        ================================================== --}}
+                                                {{-- =================================================
+                                SLIDER TRACK
+                            ================================================== --}}
 
                             <div class="flex gap-6 animate-scroll hover:pause">
 
 
-                                {{-- =========================
-                FIRST SET OF BRANDS
-            ========================== --}}
+                                                    {{-- =========================
+                                    FIRST SET OF BRANDS
+                                ========================== --}}
 
                                 @foreach ($activeBrands as $brand)
                                     <a href="{{ route('brand.show', $brand->slug) }}"
                                         class="flex-shrink-0
-                           w-[120px] h-[110px]
-                           bg-white rounded-2xl
-                           shadow-md hover:shadow-xl
-                           border border-gray-200
-                           hover:border-blue-600
-                           transition-all duration-300
-                           hover:-translate-y-1
-                           flex flex-col items-center
-                           justify-center p-4
-                           cursor-pointer group">
+                                        w-[120px] h-[110px]
+                                        bg-white rounded-2xl
+                                        shadow-md hover:shadow-xl
+                                        border border-gray-200
+                                        hover:border-blue-600
+                                        transition-all duration-300
+                                        hover:-translate-y-1
+                                        flex flex-col items-center
+                                        justify-center p-4
+                                        cursor-pointer group">
 
                                         <div class="w-20 h-20 flex items-center justify-center">
 
@@ -1244,9 +1247,9 @@
                                 @endforeach
 
 
-                                {{-- =========================
-                DUPLICATE FOR LOOP
-            ========================== --}}
+                                                {{-- =========================
+                                DUPLICATE FOR LOOP
+                            ========================== --}}
 
                                 @foreach ($activeBrands as $brand)
                                     <a href="{{ route('brand.show', $brand->slug) }}"
@@ -1366,154 +1369,54 @@
                         }
                     </style>
 
-                    <div class="">
-                        <!-- Header -->
-                        <div class="flex items-center justify-between pt-10 ">
-                            <!-- Left Side -->
-                            <div class="flex items-center gap-3">
-                                <div class="text-black text-lg font-semibold  py-2 rounded-lg">
-                                    Blogs & Articles
-                                </div>
-                                <div class="h-px w-12 bg-gradient-to-r from-blue-600 to-transparent"></div>
-                            </div>
-
-                            <!-- Right Side -->
-                            <a href="{{ route('blogs.index') }}"
-                                class="flex items-center gap-2 text-[#155dfc] hover:text-blue-700 font-medium transition-colors group">
-                                Read more articles.
-                                <i class="fa-solid fa-arrow-right transition-transform group-hover:translate-x-1"></i>
-                            </a>
-                        </div>
-
-                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 pt-5 gap-3 pb-8 ">
-
-                            @foreach ($blogs as $blog)
-                                <article
-                                    class="bg-white rounded-xl overflow-hidden border border-gray-100
-                   shadow-sm hover:shadow-lg transition duration-300">
-
-                                    {{-- Blog Image --}}
-                                    <div class="h-36 overflow-hidden">
-
-                                        <img src="{{ $blog->featured_image
-                                            ? asset('storage/' . $blog->featured_image)
-                                            : 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=80' }}"
-                                            alt="{{ $blog->title }}"
-                                            class="w-full h-full object-cover
-                           hover:scale-105 transition duration-500">
-
-                                    </div>
-
-
-                                    {{-- Blog Content --}}
-                                    <div class="p-3">
-
-                                        {{-- Category --}}
-                                        <div class="flex items-center mb-1.5">
-
-                                            <span
-                                                class="text-[10px] font-semibold text-blue-600
-                                 line-clamp-1">
-                                                {{ $blog->category->name ?? 'Blog' }}
-                                            </span>
-
-                                        </div>
-
-
-                                        {{-- Title --}}
-                                        <h3
-                                            class="text-sm font-bold text-gray-900
-                           leading-5 mb-1.5 line-clamp-2">
-                                            {{ $blog->title }}
-                                        </h3>
-
-
-                                        {{-- Excerpt --}}
-                                        <p
-                                            class="text-[11px] text-gray-600
-                           leading-4 mb-3 line-clamp-2">
-                                            {{ $blog->excerpt }}
-                                        </p>
-
-
-                                        {{-- Date + Read More --}}
-                                        <div class="flex items-center justify-between gap-2">
-
-                                            {{-- Date --}}
-                                            <span class="text-[10px] text-gray-500 whitespace-nowrap">
-                                                📅
-                                                {{ $blog->published_at ? $blog->published_at->format('d M Y') : $blog->created_at->format('d M Y') }}
-                                            </span>
-
-
-                                            {{-- Read More --}}
-                                            <a href="{{ route('blogs.view', $blog->slug) }}"
-                                                class="text-[10px] font-semibold
-                               text-blue-600 hover:text-blue-800
-                               inline-flex items-center whitespace-nowrap">
-
-                                                Read More
-
-                                                <span class="ml-1">→</span>
-
-                                            </a>
-
-                                        </div>
-
-                                    </div>
-
-                                </article>
-                            @endforeach
-
-                        </div>
-                    </div>
                     <!-- Modern & User-Friendly Professional Contact Box -->
-                    <div
+                    <div class="pt-10">
+                        <div
                         class="relative overflow-hidden bg-white rounded-2xl
-           border border-blue-100
-           shadow-md shadow-blue-900/5
-           p-4 md:p-5
-           transition-all duration-300">
+                        border border-blue-100
+                        shadow-md shadow-blue-900/5
+                        p-4 md:p-5
+                        transition-all duration-300">
 
                         {{-- Background Soft Glow --}}
                         <div
-                            class="absolute -top-5 -right-10 w-28 h-28
-               bg-blue-400/10 rounded-full blur-2xl
-               pointer-events-none">
+                                                class="absolute -top-5 -right-10 w-28 h-28
+                                bg-blue-400/10 rounded-full blur-2xl
+                                pointer-events-none">
                         </div>
 
                         <div
-                            class="absolute -bottom-5 -left-10 w-28 h-28
-               bg-indigo-400/10 rounded-full blur-2xl
-               pointer-events-none">
-                        </div>
+                                            class="absolute -bottom-5 -left-10 w-28 h-28
+                            bg-indigo-400/10 rounded-full blur-2xl
+                            pointer-events-none">
+                                        </div>
 
 
                         <div
-                            class="relative z-10 grid grid-cols-1 md:grid-cols-3
-               gap-3 md:gap-0
-               divide-y md:divide-y-0 md:divide-x
-               divide-blue-100">
+                                                class="relative z-10 grid grid-cols-1 md:grid-cols-3
+                                gap-3 md:gap-0
+                                divide-y md:divide-y-0 md:divide-x
+                                divide-blue-100">
 
 
                             {{-- Email --}}
                             <a href="mailto:support@technova.com.np"
-                                class="group flex items-center md:items-center
-                   gap-3
-                   py-3 md:py-1 md:pr-5
-                   transition-all duration-300
-                   hover:translate-y-[-1px]">
+                                                class="group flex items-center md:items-center
+                                gap-3
+                                py-3 md:py-1 md:pr-5
+                                transition-all duration-300
+                                hover:translate-y-[-1px]">
 
                                 <div
                                     class="flex-shrink-0
-                       w-9 h-9
-                       rounded-xl
-                       bg-blue-100/80
-                       text-blue-600
-                       flex items-center justify-center
-                       group-hover:bg-blue-600
-                       group-hover:text-white
-                       transition-all duration-300">
+                                    w-9 h-9
+                                    rounded-xl
+                                    bg-blue-100/80
+                                    text-blue-600
+                                    flex items-center justify-center
+                                    group-hover:bg-blue-600
+                                    group-hover:text-white
+                                    transition-all duration-300">
 
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -1658,6 +1561,7 @@
                             </a>
 
                         </div>
+                    </div>
                     </div>
                 </div>
 
