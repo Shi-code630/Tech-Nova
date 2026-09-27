@@ -20,23 +20,18 @@ class RewardHelper
      * Coins per Rs.1 discount
      * Default: 20 coins = Rs.1
      */
+    
     public static function getRedeemRate(): int
     {
         return (int) RewardSetting::get('redeem_rate', 20);
     }
 
-    /**
-     * Max % of order that can be discounted via coins
-     */
+
     public static function getMaxDiscountPercent(): int
     {
         return (int) RewardSetting::get('max_discount_percent', 10);
     }
 
-    /**
-     * ✅ Earn coins from order amount
-     * Rs.1000 → 10 coins (if earn_rate=100)
-     */
     public static function calculateEarnedCoins($amount): int
     {
         $rate = self::getEarnRate();
@@ -48,10 +43,6 @@ class RewardHelper
         return (int) floor($amount / $rate);
     }
 
-    /**
-     * ✅ FIXED: Round to 2 decimals
-     * 100 coins / 20 = Rs.5.00
-     */
     public static function calculateDiscount($points): float
     {
         $rate = self::getRedeemRate();
@@ -64,10 +55,7 @@ class RewardHelper
         return round($points / $rate, 2);
     }
 
-    /**
-     * ✅ FIXED: Null-safe max redeemable coins
-     * Returns min(available coins, max allowed by discount %)
-     */
+
     public static function getMaxRedeemCoins(User $user, $subtotal): int
     {
         $available = (int) ($user->reward_points ?? 0);
@@ -94,7 +82,7 @@ class RewardHelper
     }
 
     /**
-     * ✅ FIXED: Null-safe summary
+
      */
     public static function getUserCoinsSummary(User $user): array
     {
