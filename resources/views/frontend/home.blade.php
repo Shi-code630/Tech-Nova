@@ -647,52 +647,49 @@
                             @endif
 
                         </div>
-                       @if ($smallBanners->count())
-    <div class="mt-8">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        @if ($smallBanners->count())
+                            <div class="mt-8">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            {{-- Left Banner --}}
-            @if ($smallBanners->has(1))
-                <div class="relative overflow-hidden rounded-xl shadow-lg group">
-                    <a href="{{ $smallBanners[1]->button_link ?? '#' }}" class="block w-full">
-                        <img
-                            src="{{ asset('storage/' . ltrim($smallBanners[1]->image, '/')) }}"
-                            alt="{{ $smallBanners[1]->alt_text ?? $smallBanners[1]->title }}"
-                            class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105"
-                        >
-                    </a>
-                </div>
-            @endif
+                                    {{-- Left Banner --}}
+                                    @if ($smallBanners->has(1))
+                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                                            <a href="{{ $smallBanners[1]->button_link ?? '#' }}"
+                                                class="block w-full">
+                                                <img src="{{ asset('storage/' . ltrim($smallBanners[1]->image, '/')) }}"
+                                                    alt="{{ $smallBanners[1]->alt_text ?? $smallBanners[1]->title }}"
+                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
+                                            </a>
+                                        </div>
+                                    @endif
 
-            {{-- Center Banner --}}
-            @if ($smallBanners->has(2))
-                <div class="relative overflow-hidden rounded-xl shadow-lg group">
-                    <a href="{{ $smallBanners[2]->button_link ?? '#' }}" class="block w-full">
-                        <img
-                            src="{{ asset('storage/' . ltrim($smallBanners[2]->image, '/')) }}"
-                            alt="{{ $smallBanners[2]->alt_text ?? $smallBanners[2]->title }}"
-                            class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105"
-                        >
-                    </a>
-                </div>
-            @endif
+                                    {{-- Center Banner --}}
+                                    @if ($smallBanners->has(2))
+                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                                            <a href="{{ $smallBanners[2]->button_link ?? '#' }}"
+                                                class="block w-full">
+                                                <img src="{{ asset('storage/' . ltrim($smallBanners[2]->image, '/')) }}"
+                                                    alt="{{ $smallBanners[2]->alt_text ?? $smallBanners[2]->title }}"
+                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
+                                            </a>
+                                        </div>
+                                    @endif
 
-            {{-- Right Banner --}}
-            @if ($smallBanners->has(3))
-                <div class="relative overflow-hidden rounded-xl shadow-lg group">
-                    <a href="{{ $smallBanners[3]->button_link ?? '#' }}" class="block w-full">
-                        <img
-                            src="{{ asset('storage/' . ltrim($smallBanners[3]->image, '/')) }}"
-                            alt="{{ $smallBanners[3]->alt_text ?? $smallBanners[3]->title }}"
-                            class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105"
-                        >
-                    </a>
-                </div>
-            @endif
+                                    {{-- Right Banner --}}
+                                    @if ($smallBanners->has(3))
+                                        <div class="relative overflow-hidden rounded-xl shadow-lg group">
+                                            <a href="{{ $smallBanners[3]->button_link ?? '#' }}"
+                                                class="block w-full">
+                                                <img src="{{ asset('storage/' . ltrim($smallBanners[3]->image, '/')) }}"
+                                                    alt="{{ $smallBanners[3]->alt_text ?? $smallBanners[3]->title }}"
+                                                    class="w-full h-[180px] object-cover transition-transform duration-500 group-hover:scale-105">
+                                            </a>
+                                        </div>
+                                    @endif
 
-        </div>
-    </div>
-@endif
+                                </div>
+                            </div>
+                        @endif
                     </section>
                     <div class="py-2 bg-[#f0f9ff]">
                         <div class="">
@@ -1179,14 +1176,14 @@
 
                         <div class="relative overflow-hidden">
 
-                                                {{-- =================================================
+                            {{-- =================================================
                                 SLIDER TRACK
                             ================================================== --}}
 
                             <div class="flex gap-6 animate-scroll hover:pause">
 
 
-                                                    {{-- =========================
+                                {{-- =========================
                                     FIRST SET OF BRANDS
                                 ========================== --}}
 
@@ -1247,7 +1244,7 @@
                                 @endforeach
 
 
-                                                {{-- =========================
+                                {{-- =========================
                                 DUPLICATE FOR LOOP
                             ========================== --}}
 
@@ -1372,43 +1369,43 @@
                     <!-- Modern & User-Friendly Professional Contact Box -->
                     <div class="pt-10">
                         <div
-                        class="relative overflow-hidden bg-white rounded-2xl
+                            class="relative overflow-hidden bg-white rounded-2xl
                         border border-blue-100
                         shadow-md shadow-blue-900/5
                         p-4 md:p-5
                         transition-all duration-300">
 
-                        {{-- Background Soft Glow --}}
-                        <div
-                                                class="absolute -top-5 -right-10 w-28 h-28
+                            {{-- Background Soft Glow --}}
+                            <div
+                                class="absolute -top-5 -right-10 w-28 h-28
                                 bg-blue-400/10 rounded-full blur-2xl
                                 pointer-events-none">
-                        </div>
+                            </div>
 
-                        <div
-                                            class="absolute -bottom-5 -left-10 w-28 h-28
+                            <div
+                                class="absolute -bottom-5 -left-10 w-28 h-28
                             bg-indigo-400/10 rounded-full blur-2xl
                             pointer-events-none">
-                                        </div>
+                            </div>
 
 
-                        <div
-                                                class="relative z-10 grid grid-cols-1 md:grid-cols-3
+                            <div
+                                class="relative z-10 grid grid-cols-1 md:grid-cols-3
                                 gap-3 md:gap-0
                                 divide-y md:divide-y-0 md:divide-x
                                 divide-blue-100">
 
 
-                            {{-- Email --}}
-                            <a href="mailto:support@technova.com.np"
-                                                class="group flex items-center md:items-center
+                                {{-- Email --}}
+                                <a href="mailto:support@technova.com.np"
+                                    class="group flex items-center md:items-center
                                 gap-3
                                 py-3 md:py-1 md:pr-5
                                 transition-all duration-300
                                 hover:translate-y-[-1px]">
 
-                                <div
-                                    class="flex-shrink-0
+                                    <div
+                                        class="flex-shrink-0
                                     w-9 h-9
                                     rounded-xl
                                     bg-blue-100/80
@@ -1418,49 +1415,49 @@
                                     group-hover:text-white
                                     transition-all duration-300">
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
 
-                                <div class="min-w-0">
+                                    <div class="min-w-0">
 
-                                    <span
-                                        class="block text-[9px] font-bold uppercase
+                                        <span
+                                            class="block text-[9px] font-bold uppercase
                            tracking-wider text-blue-600/80">
-                                        Email Us
-                                    </span>
+                                            Email Us
+                                        </span>
 
-                                    <h3
-                                        class="text-xs md:text-sm font-bold
+                                        <h3
+                                            class="text-xs md:text-sm font-bold
                            text-gray-800
                            group-hover:text-blue-600
                            transition-colors truncate">
-                                        support@technova.com.np
-                                    </h3>
+                                            support@technova.com.np
+                                        </h3>
 
-                                    <p class="text-[9px] text-gray-500 mt-0.5">
-                                        24/7 Quick Online Support
-                                    </p>
+                                        <p class="text-[9px] text-gray-500 mt-0.5">
+                                            24/7 Quick Online Support
+                                        </p>
 
-                                </div>
+                                    </div>
 
-                            </a>
+                                </a>
 
 
-                            {{-- Phone --}}
-                            <a href="tel:+97715551234"
-                                class="group flex items-center
+                                {{-- Phone --}}
+                                <a href="tel:+97715551234"
+                                    class="group flex items-center
                    gap-3
                    py-3 md:py-1 md:px-5
                    transition-all duration-300
                    hover:translate-y-[-1px]">
 
-                                <div
-                                    class="flex-shrink-0
+                                    <div
+                                        class="flex-shrink-0
                        w-9 h-9
                        rounded-xl
                        bg-blue-100/80
@@ -1470,51 +1467,51 @@
                        group-hover:text-white
                        transition-all duration-300">
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                    </svg>
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                        </svg>
 
-                                </div>
+                                    </div>
 
-                                <div class="min-w-0">
+                                    <div class="min-w-0">
 
-                                    <span
-                                        class="block text-[9px] font-bold uppercase
+                                        <span
+                                            class="block text-[9px] font-bold uppercase
                            tracking-wider text-blue-600/80">
-                                        Call Us
-                                    </span>
+                                            Call Us
+                                        </span>
 
-                                    <h3
-                                        class="text-xs md:text-sm font-bold
+                                        <h3
+                                            class="text-xs md:text-sm font-bold
                            text-gray-800
                            group-hover:text-blue-600
                            transition-colors">
-                                        +977 1-555-1234
-                                    </h3>
+                                            +977 1-555-1234
+                                        </h3>
 
-                                    <p class="text-[9px] text-gray-500 mt-0.5">
-                                        Sun-Fri 9AM-7PM, Sat Closed
-                                    </p>
+                                        <p class="text-[9px] text-gray-500 mt-0.5">
+                                            Sun-Fri 9AM-7PM, Sat Closed
+                                        </p>
 
-                                </div>
+                                    </div>
 
-                            </a>
+                                </a>
 
 
-                            {{-- Address --}}
-                            <a href="https://maps.google.com/?q=Kathmandu,Nepal" target="_blank"
-                                rel="noopener noreferrer"
-                                class="group flex items-center
+                                {{-- Address --}}
+                                <a href="https://maps.google.com/?q=Kathmandu,Nepal" target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="group flex items-center
                    gap-3
                    py-3 md:py-1 md:pl-5
                    transition-all duration-300
                    hover:translate-y-[-1px]">
 
-                                <div
-                                    class="flex-shrink-0
+                                    <div
+                                        class="flex-shrink-0
                        w-9 h-9
                        rounded-xl
                        bg-blue-100/80
@@ -1524,44 +1521,44 @@
                        group-hover:text-white
                        transition-all duration-300">
 
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
 
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
 
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    </svg>
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
 
-                                </div>
+                                    </div>
 
-                                <div class="min-w-0">
+                                    <div class="min-w-0">
 
-                                    <span
-                                        class="block text-[9px] font-bold uppercase
+                                        <span
+                                            class="block text-[9px] font-bold uppercase
                            tracking-wider text-blue-600/80">
-                                        Our Location
-                                    </span>
+                                            Our Location
+                                        </span>
 
-                                    <h3
-                                        class="text-xs md:text-sm font-bold
+                                        <h3
+                                            class="text-xs md:text-sm font-bold
                            text-gray-800
                            group-hover:text-blue-600
                            transition-colors">
-                                        Kathmandu, Nepal
-                                    </h3>
+                                            Kathmandu, Nepal
+                                        </h3>
 
-                                    <p class="text-[9px] text-gray-500 mt-0.5">
-                                        Click to view on Google Maps
-                                    </p>
+                                        <p class="text-[9px] text-gray-500 mt-0.5">
+                                            Click to view on Google Maps
+                                        </p>
 
-                                </div>
+                                    </div>
 
-                            </a>
+                                </a>
 
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
 

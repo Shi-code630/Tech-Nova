@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Frontend\KhaltiPaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BrandController;
@@ -9,11 +8,13 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ContactMessageController;
 use App\Http\Controllers\CouponController;
+use App\Http\Controllers\Frontend\KhaltiPaymentController;
 use App\Http\Controllers\Frontend\PageController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ReturnRequestController;
+use App\Http\Controllers\SpinController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\UserOrderController;
 use App\Http\Controllers\WishlistController;
@@ -192,3 +193,13 @@ Route::get('/limited-time', [CategoryController::class, 'limitedTime'])
 
 Route::get('/category/{slug}', [CategoryController::class, 'show'])
     ->name('category.show');
+
+Route::middleware('auth')->group(function () {
+
+    Route::post('/spin-and-win/spin', [SpinController::class, 'spin'])
+        ->name('spin-and-win.spin');
+
+    Route::post('/spin-and-win/claim', [SpinController::class, 'claim'])
+        ->name('spin-and-win.claim');
+
+});
