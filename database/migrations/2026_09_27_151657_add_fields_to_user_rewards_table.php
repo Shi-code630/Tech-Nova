@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 👇 Step 1: Table नै छैन भने पूरै table create गर्ने
+       
         if (!Schema::hasTable('user_rewards')) {
             Schema::create('user_rewards', function (Blueprint $table) {
                 $table->id();
@@ -32,10 +32,10 @@ return new class extends Migration
                 $table->timestamp('claimed_at')->nullable();
                 $table->timestamps();
             });
-            return; // 👈 Create सकेपछि अरू केही नगर्ने
+            return;
         }
 
-        // 👇 Step 2: Table छ भने columns check गरेर थप्ने
+
         Schema::table('user_rewards', function (Blueprint $table) {
             if (!Schema::hasColumn('user_rewards', 'user_id')) {
                 $table->foreignId('user_id')

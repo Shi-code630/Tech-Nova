@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 👇 Step 1: Table नै छैन भने पूरै table create गर्ने
+        
         if (!Schema::hasTable('spin_rewards')) {
             Schema::create('spin_rewards', function (Blueprint $table) {
                 $table->id();
@@ -25,10 +25,10 @@ return new class extends Migration
                 $table->boolean('status')->default(true);
                 $table->timestamps();
             });
-            return; // 👈 Create सकेपछि अरू केही नगर्ने
+            return;
         }
 
-        // 👇 Step 2: Table छ भने columns check गरेर थप्ने
+
         Schema::table('spin_rewards', function (Blueprint $table) {
             if (!Schema::hasColumn('spin_rewards', 'name')) {
                 $table->string('name')->after('id');
