@@ -1,59 +1,193 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚀 Tech-Nova
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### A Modern Web-Based E-Commerce Management System
 
-## About Laravel
+Tech-Nova is a web-based e-commerce platform developed to provide an organized and user-friendly online shopping experience. It includes product management, customer management, content management, and online payment integration.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The project is built using Laravel and modern web technologies, with a focus on usability, maintainability, and efficient management.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📌 Project Overview
 
-## Learning Laravel
+Tech-Nova aims to simplify online shopping and administrative operations through a centralized web application.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+The system provides an administrative dashboard for managing products, customers, blogs, and other essential e-commerce operations.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## ✨ Key Features
 
-## Laravel Sponsors
+- **Product Management** – Manage products and product images.
+- **Category Management** – Organize products into categories.
+- **Customer Management** – Manage customer information and addresses.
+- **Blog Management** – Create, update, and manage blog content.
+- **Admin Dashboard** – Manage important application data through an administrative interface.
+- **Online Payment Integration** – Khalti payment gateway integration.
+- **Shopping Cart** – Manage selected products before checkout.
+- **Order Management** – Manage customer orders and related information.
+- **Responsive User Interface** – Designed for different screen sizes.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🛠️ Technology Stack
 
-### Premium Partners
+| Technology | Purpose |
+|---|---|
+| PHP | Backend Programming |
+| Laravel | Backend Framework |
+| Filament | Admin Panel |
+| MySQL | Database |
+| HTML5 | Structure |
+| CSS3 | Styling |
+| JavaScript | Frontend Interactivity |
+| Tailwind CSS | UI Styling |
+| Blade | Laravel Templating |
+| Git & GitHub | Version Control |
+| Khalti | Payment Integration |
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 📂 Project Structure
 
-## Contributing
+```text
+Tech-Nova/
+│
+├── app/
+│   ├── Http/
+│   │   ├── Controllers/
+│   │   └── Middleware/
+│   ├── Models/
+│   └── Filament/
+│
+├── bootstrap/
+├── config/
+├── database/
+│   ├── migrations/
+│   ├── seeders/
+│   └── factories/
+│
+├── public/
+├── resources/
+│   ├── css/
+│   ├── js/
+│   └── views/
+│
+├── routes/
+├── storage/
+├── tests/
+│
+├── .env.example
+├── artisan
+├── composer.json
+├── package.json
+└── README.md
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ⚙️ Installation and Setup
 
-## Code of Conduct
+Follow these steps to run the project locally.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 1. Clone the Repository
 
-## Security Vulnerabilities
+```bash
+git clone https://github.com/Shi-code630/Tech-Nova.git
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Navigate to Project Directory
 
-## License
+```bash
+cd Tech-Nova
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3. Install PHP Dependencies
+
+```bash
+composer install
+```
+
+### 4. Install Frontend Dependencies
+
+```bash
+npm install
+```
+
+### 5. Configure Environment
+
+Copy the example environment file:
+
+```bash
+copy .env.example .env
+```
+
+Configure your database credentials in the `.env` file.
+
+### 6. Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+### 7. Run Database Migrations
+
+```bash
+php artisan migrate
+```
+
+### 8. Create Storage Link
+
+```bash
+php artisan storage:link
+```
+
+### 9. Run the Application
+
+Start the Laravel development server:
+
+```bash
+php artisan serve
+```
+
+Run the frontend development server in another terminal:
+
+```bash
+npm run dev
+```
+
+Open the application in your browser:
+
+```text
+http://127.0.0.1:8000
+```
+
+## 💳 Payment Integration
+
+Tech-Nova integrates the Khalti payment gateway to support online payment processing.
+
+Payment integration requires valid Khalti credentials and appropriate environment configuration.
+
+Never expose payment secret keys or other sensitive credentials in the repository.
+
+## 🔐 Environment Configuration
+
+Make sure to configure the following in your `.env` file:
+
+- Application environment
+- Database connection
+- Database name
+- Database username and password
+- Payment gateway credentials
+
+**Important:** Never commit your `.env` file or sensitive API credentials to GitHub.
+
+## 🌐 Repository
+
+GitHub: https://github.com/Shi-code630/Tech-Nova
+
+## 👨‍💻 Development
+
+This project was developed as a collaborative software development project.
+
+## 📄 License
+
+No license has been specified for this project yet.
+
+---
+
+⭐ If you find this project interesting, feel free to explore the repository and its features.
+
+**Built with ❤️ using Laravel and modern web technologies.**
